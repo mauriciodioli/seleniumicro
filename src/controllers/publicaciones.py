@@ -61,7 +61,7 @@ def completar_publicaciones(data):
             categoria_id=categoria_id,
             ubicacion=pais  # Asignar el país de la ubicación de la publicación
         )
-        
+        print(f"Publicación creada: {publicacion.titulo}")
         publicaciones_completas.append(publicacion)
     
     return publicaciones_completas
