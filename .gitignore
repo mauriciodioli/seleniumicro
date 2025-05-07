@@ -1,10 +1,10 @@
 # Ignore venv folder
 /venv/
 
-# Ignore pruebasheetpython.json
-/pruebasheetpython.json
+
 
 # Ignore specific credentials files inside src/utils/
+/src/utils/pruebasheetpython.json
 /src/utils/credentials_module.json
 /src/utils/client_secrets.json
 /src/utils/settings.yml
