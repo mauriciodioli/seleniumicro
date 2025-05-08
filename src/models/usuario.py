@@ -3,35 +3,15 @@ from flask import Blueprint
 from utils.db import db
 from sqlalchemy import inspect
 from sqlalchemy.orm import relationship
-# Importar la clase Image
-from models.image import Image
-
-class Usuario(db.Model):
-    __tablename__ = 'usuarios'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    activo = db.Column(db.Boolean, nullable=False, default=False)    
-    correo_electronico = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.LargeBinary(128), nullable=False)
-    token = db.Column(db.String(1000), nullable=True)
-    roll = db.Column(db.String(20), nullable=False, default='regular')
-    refresh_token = db.Column(db.String(1000), nullable=True)
-    calendly_url = db.Column(db.String(255))  # URL de Calendly del usuario
-    
-  
-# Asegúrate de que la clase Image esté definida
-class Image(db.Model):
-    __tablename__ = 'imagenes'
-    id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(255))
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-
-    # Relación inversa
-    usuarios = relationship("Usuario", back_populates="imagenes")
+from sqlalchemy import Column, Integer, String, ForeignKey
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 
 ma = Marshmallow()
 
-usuario = Blueprint('usuario', __name__)
+usuario = Blueprint('usuario',__name__) 
+
+
 
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
@@ -42,12 +22,14 @@ class Usuario(db.Model):
     token = db.Column(db.String(1000), nullable=True)
     roll = db.Column(db.String(20), nullable=False, default='regular')
     refresh_token = db.Column(db.String(1000), nullable=True)
-    calendly_url = db.Column(db.String(255))  # URL de Calendly del usuario
-    imagenes = relationship("Image", back_populates="usuarios")
- 
+  
+  
 
-    # constructor
-    def __init__(self, id, correo_electronico, token, refresh_token, activo, password, roll='USUARIO'):
+
+ 
+   
+ # constructor
+    def __init__(self, id,correo_electronico,token,refresh_token,activo,password,roll='USUARIO'):
         self.id = id
         self.correo_electronico = correo_electronico
         self.token = token
@@ -69,17 +51,17 @@ class Usuario(db.Model):
         return str(self.id)
 
     @classmethod
-    def crear_tabla_usuarios(cls):
-        insp = inspect(db.engine)
-        if not insp.has_table("usuarios"):
-            db.create_all()
-
-# Correct the schema definition
-class MerSchema(ma.SQLAlchemyAutoSchema):
+    def crear_tabla_usuarios(serlf):
+         insp = inspect(db.engine)
+         if not insp.has_table("usuarios"):
+              db.create_all()
+    
+        
+class MerShema(SQLAlchemyAutoSchema):
     class Meta:
-        model = Usuario  # Ensure it's linked to the model
-        fields = ("id", "correo_electronico", "token", "refresh_token", "activo", "password", "roll")
+        model = Usuario  # Indica que este esquema está basado en el modelo Image
+        load_instance = True  # Permite que las instancias de modelos se carguen directamente
+        sqla_session = db.session  # Si usas un `db.session` específico, configúralo aquí
 
-# Instantiate the schema
-mer_schema = MerSchema()
-mer_shema = MerSchema(many=True)
+# Instancia del esquema
+mer_schema = MerShema()

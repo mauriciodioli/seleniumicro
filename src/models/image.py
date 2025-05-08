@@ -4,6 +4,7 @@ from utils.db import db
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import inspect
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 ma = Marshmallow()
 
@@ -43,9 +44,12 @@ class Image(db.Model):
         if not insp.has_table("image"):
             cls.__table__.create(db.engine)
 
-class MerShema(ma.Schema):
+class MerShema(SQLAlchemyAutoSchema):
     class Meta:
-        fields = ("id", "user_id", "title", "description", "filepath", "randomNumber", "colorDescription", "size", "mimetype")
+        model = Image  # Indica que este esquema está basado en el modelo Image
+        load_instance = True  # Permite que las instancias de modelos se carguen directamente
+        sqla_session = db.session  # Si usas un `db.session` específico, configúralo aquí
 
+# Instancia del esquema
 mer_schema = MerShema()
-mer_shema = MerShema(many=True)
+mer_schema_many = MerShema(many=True)  # Para manejar varias instancias de Image

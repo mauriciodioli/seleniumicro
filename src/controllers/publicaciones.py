@@ -1,8 +1,5 @@
-# publicaciones.py
-from flask import Blueprint, render_template, request,current_app, redirect, url_for, flash,jsonify
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-import gspread
+from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
+from app import db  # Importa db desde app.py
 
 from models.usuario import Usuario
 from models.publicaciones.publicaciones import Publicacion
@@ -13,19 +10,10 @@ from models.usuarioUbicacion import UsuarioUbicacion
 from models.usuarioPublicacionUbicacion import UsuarioPublicacionUbicacion
 from models.publicaciones.ambitoCategoria import AmbitoCategoria
 from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
-from models.publicaciones.categoriaPublicacion import CategoriaPublicacion
-
 from models.image import Image
 from models.video import Video
 
-publicaciones = Blueprint('publicaciones',__name__)
-
-# Conexión con la base de datos
-engine = create_engine('mysql://usuario:contraseña@localhost/base_datos')
-Session = sessionmaker(bind=engine)
-session = Session()
-
-
+publicaciones = Blueprint('publicaciones', __name__)
 
 # Completar la publicación con datos del sheet y base de datos
 def completar_publicaciones(data):
@@ -33,23 +21,23 @@ def completar_publicaciones(data):
     
     for row in data:
         # Consulta la categoria_id desde la tabla 'Categoria'
-        categoria = session.query(Categoria).filter(Categoria.nombre == row['Categoría']).first()
+        categoria = db.session.query(AmbitoCategoria).filter(AmbitoCategoria.nombre == row['Categoría']).first()
         categoria_id = categoria.id if categoria else None
         
         # Consulta el user_id desde la tabla 'Usuario'
-        usuario = session.query(Usuario).filter(Usuario.correo_electronico == row['Correo Electronico']).first()
+        usuario = db.session.query(Usuario).filter(Usuario.correo_electronico == row['Correo Electronico']).first()
         user_id = usuario.id if usuario else None
         
         # Consulta las imágenes asociadas (tabla 'Imagen')
-        imagenes = session.query(Imagen).filter(Imagen.producto == row['Producto']).all()
+        imagenes = db.session.query(Image).filter(Image.producto == row['Producto']).all()
         imagen_urls = [img.url for img in imagenes]  # Obtén solo las URLs de las imágenes
         
         # Consulta los videos asociados (tabla 'Video')
-        videos = session.query(Video).filter(Video.producto == row['Producto']).all()
+        videos = db.session.query(Video).filter(Video.producto == row['Producto']).all()
         video_urls = [video.url for video in videos]  # Obtén solo las URLs de los videos
         
         # Consulta la ubicación de la publicación (tabla 'UbicacionPublicacion')
-        ubicacion = session.query(UbicacionPublicacion).filter(UbicacionPublicacion.producto == row['Producto']).first()
+        ubicacion = db.session.query(UbicacionPublicacion).filter(UbicacionPublicacion.producto == row['Producto']).first()
         pais = ubicacion.pais if ubicacion else None
         
         # Crear el objeto de Publicación con los datos obtenidos

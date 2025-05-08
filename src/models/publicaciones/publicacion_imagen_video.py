@@ -3,6 +3,9 @@ from flask import Blueprint
 from utils.db import db
 from sqlalchemy import inspect, Enum
 from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, ForeignKey
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
 
 
 ma = Marshmallow()
@@ -53,9 +56,11 @@ class Public_imagen_video(db.Model):
             # If the table does not exist, create it
             cls.__table__.create(db.engine)
             
-class MerShema(ma.Schema):
+class MerShema(SQLAlchemyAutoSchema):
     class Meta:
-        fields = ("id", "publicacion_id", "imagen_id", "video_id", "fecha_creacion","media_type","size")
+        model = Public_imagen_video  # Indica que este esquema está basado en el modelo Image
+        load_instance = True  # Permite que las instancias de modelos se carguen directamente
+        sqla_session = db.session  # Si usas un `db.session` específico, configúralo aquí
 
+# Instancia del esquema
 mer_schema = MerShema()
-mer_shema = MerShema(many=True)

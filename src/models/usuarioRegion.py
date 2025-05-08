@@ -3,9 +3,9 @@ from flask import Blueprint
 from utils.db import db
 from sqlalchemy import inspect, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-import pyRofex
+
 from models.usuario import Usuario
-from models.brokers import Broker
+
 
 ma = Marshmallow()
 

@@ -1,9 +1,10 @@
 from flask_marshmallow import Marshmallow
 from flask import Blueprint
 from utils.db import db
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import inspect, Enum
 from sqlalchemy.orm import relationship
-from sqlalchemy import inspect
+from sqlalchemy import Column, Integer, String, ForeignKey
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 ma = Marshmallow()
 
@@ -44,9 +45,11 @@ class Video(db.Model):
         if not insp.has_table("video"):
             cls.__table__.create(db.engine)
 
-class MerShema(ma.Schema):
+class MerShema(SQLAlchemyAutoSchema):
     class Meta:
-        fields = ("id", "user_id", "title", "description", "filepath", "randomNumber", "colorDescription", "size", "mimetype")
+        model = Video  # Indica que este esquema está basado en el modelo Image
+        load_instance = True  # Permite que las instancias de modelos se carguen directamente
+        sqla_session = db.session  # Si usas un `db.session` específico, configúralo aquí
 
+# Instancia del esquema
 mer_schema = MerShema()
-mer_shema = MerShema(many=True)
