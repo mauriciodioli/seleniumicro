@@ -37,7 +37,7 @@ def completar_publicaciones(data):
         video_urls = [video.url for video in videos]  # Obtén solo las URLs de los videos
         
         # Consulta la ubicación de la publicación (tabla 'UbicacionPublicacion')
-        ubicacion = db.session.query(UbicacionPublicacion).filter(UbicacionPublicacion.producto == row['Producto']).first()
+        ubicacion = db.session.query(UsuarioPublicacionUbicacion).filter(UsuarioPublicacionUbicacion.producto == row['Producto']).first()
         pais = ubicacion.pais if ubicacion else None
         
         # Crear el objeto de Publicación con los datos obtenidos
