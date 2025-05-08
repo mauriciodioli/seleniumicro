@@ -2,9 +2,21 @@
 from flask import Blueprint, render_template, request,current_app, redirect, url_for, flash,jsonify
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from models import Categoria, Usuario, Publicacion, Imagen, Video, UbicacionPublicacion  # Asegúrate de importar tus modelos
 import gspread
 
+from models.usuario import Usuario
+from models.publicaciones.publicaciones import Publicacion
+from models.publicaciones.estado_publi_usu import Estado_publi_usu
+from models.publicaciones.publicacion_imagen_video import Public_imagen_video
+from models.usuarioRegion import UsuarioRegion
+from models.usuarioUbicacion import UsuarioUbicacion
+from models.usuarioPublicacionUbicacion import UsuarioPublicacionUbicacion
+from models.publicaciones.ambitoCategoria import AmbitoCategoria
+from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
+from models.publicaciones.categoriaPublicacion import CategoriaPublicacion
+
+from models.image import Image
+from models.video import Video
 
 publicaciones = Blueprint('publicaciones',__name__)
 
