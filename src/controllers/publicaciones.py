@@ -31,7 +31,7 @@ def completar_publicaciones(data):
 
         ambito_id = machear_ambito(ambito)
         categoria_id = machear_ambitoCategoria(categoria)
-        usuario_id = machear_usuario(user_id)
+        usuario_id = machear_usuario(int(user_id))
         ubicacion_id = machear_ubicacion(codigoPostal)
 
         imagen_obj = db.session.query(Image).filter(Image.url.ilike(f"%{imagen_url}%")).first()
@@ -40,12 +40,14 @@ def completar_publicaciones(data):
         video_obj = db.session.query(Video).filter(Video.producto.ilike(f"%{producto}%")).first()
         videos_urls = [video_obj.url] if video_obj else []
 
+
+        texto = "$ "+precio_amazon + " " + precio_ebay + " " + precio_aliexpress + " " + proveedor_mas_barato + " " + link_proveedor + " " + producto
         publicacion = Publicacion(
             user_id=usuario_id,
             titulo=producto,
-            texto=motivo_tendencia,
+            texto=texto,
             ambito=ambito_id,
-            correo_electronico=None,
+            correo_electronico="mauriciodioli@gmail.com",
             descripcion=motivo_tendencia,
             color_texto="black",
             color_titulo="black",
@@ -63,7 +65,48 @@ def completar_publicaciones(data):
 
         print(f"✅ Publicación procesada: {publicacion.titulo}")
         publicaciones_completas.append(publicacion)
-
+        # Guardar la publicación en la base de datos
+        db.session.add(publicacion)
+        db.session.commit()
+        # Guardar la relación entre la publicación y el usuario
+        publicacion_ubicacion = UsuarioPublicacionUbicacion(
+            publicacion_id=publicacion.id,
+            ubicacion_id=ubicacion_id
+        )
+        db.session.add(publicacion_ubicacion)
+        db.session.commit()
+        # Guardar la relación entre la publicación y la imagen
+        for imagen_url in imagenes_urls:
+            publicacion_imagen = Public_imagen_video(
+                publicacion_id=publicacion.id,
+                imagen_id=machear_imagen(imagen_url)
+            )
+            db.session.add(publicacion_imagen)
+            db.session.commit()
+        # Guardar la relación entre la publicación y el video
+        for video_url in videos_urls:
+            publicacion_video = Public_imagen_video(
+                publicacion_id=publicacion.id,
+                video_id=machear_video(video_url)
+            )
+            db.session.add(publicacion_video)
+            db.session.commit()
+        # Guardar la relación entre la publicación y el estado
+        estado_publicacion = machear_estado_publicacion("inactivo")
+        publicacion_estado = Estado_publi_usu(
+            publicacion_id=publicacion.id,
+            estado_id=estado_publicacion
+        )
+        db.session.add(publicacion_estado)
+        db.session.commit()
+        # Guardar la relación entre la publicación y la ubicación
+        publicacion_ubicacion = UsuarioUbicacion(
+            publicacion_id=publicacion.id,
+            ubicacion_id=ubicacion_id
+        )
+        db.session.add(publicacion_ubicacion)
+        db.session.commit()
+        db.session.close()
     return publicaciones_completas
 
 
