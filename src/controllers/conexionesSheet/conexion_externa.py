@@ -30,19 +30,29 @@ conexion_externa = Blueprint('conexion_externa',__name__)
 
 autenticado_sheet = False
 
+
+
 @conexion_externa.route("/")
-def loginApi(): 
-    
+def index():
+    # Aquí puedes realizar cualquier lógica adicional que necesites
+    return render_template("index.html")
+
+
+
+@conexion_externa.route("/resultado_carga", methods=["POST"])
+def resultado_carga():
     sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
-    sheet_name = 'alemania'
-    sheet = autenticar_y_abrir_sheet(sheetId, sheet_name) 
-    # Obtener los datos de la hoja
+    sheet_name = request.form.get("sheet_name")  # recibe del AJAX
+    sheet = autenticar_y_abrir_sheet(sheetId, sheet_name)
+
     if sheet:
-        data = sheet.get_all_records()  # Obtiene todas las filas como un diccionario
-        completar_publicaciones(data)  
-        # Imprimir los datos en la consola
+        data = sheet.get_all_records()
+        completar_publicaciones(data)
         print("Contenido del Sheet:")
-        #print(data)
-    return render_template("index.html", data=data)
+        print(data)
+
+    # Podés devolver solo un mensaje si es AJAX
+    return "Datos cargados correctamente", 200
+
 
 

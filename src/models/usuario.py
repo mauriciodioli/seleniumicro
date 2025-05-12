@@ -9,11 +9,11 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 ma = Marshmallow()
 
-usuarios = Blueprint('usuarios',__name__) 
+usuario = Blueprint('usuario',__name__) 
 
 
 
-class Usuarios(db.Model):
+class Usuario(db.Model):
     __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     activo = db.Column(db.Boolean, nullable=False, default=False)    
@@ -59,7 +59,7 @@ class Usuarios(db.Model):
         
 class MerShema(SQLAlchemyAutoSchema):
     class Meta:
-        model = Usuarios  # Indica que este esquema está basado en el modelo Image
+        model = Usuario  # Indica que este esquema está basado en el modelo Image
         load_instance = True  # Permite que las instancias de modelos se carguen directamente
         sqla_session = db.session  # Si usas un `db.session` específico, configúralo aquí
 
