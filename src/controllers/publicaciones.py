@@ -19,29 +19,51 @@ publicaciones = Blueprint('publicaciones', __name__)
 # Completar la publicación con datos del sheet y base de datos
 def completar_publicaciones(data):
     publicaciones_completas = []
-    user_id = '22'  # Usuario fijo, puede venir por parámetro
 
     for row in data:
-        (
-            producto, categoria, pais, ambito, fuente, motivo_tendencia,
-            precio_amazon, precio_ebay, precio_aliexpress,
-            proveedor_mas_barato, link_proveedor, codigoPostal,
-            precio_venta_sugerido, margen_estimado, imagen_url, fecha
-        ) = row
+        producto = row["Producto"]
+        categoria = row["Categoría"]
+        pais = row["País"]
+        fuente = row["Fuente"]
+        motivo_tendencia = row["Motivo de tendencia"]
+        descripcion = row["descripcion"]
+        precio_amazon = str(row["precio_amazon"])
+        precio_ebay = str(row["precio_ebay"])
+        precio_aliexpress = str(row["precio_aliexpress"])
+        precio_venta_sugerido = row["precio_venta_sugerido"]
+        margen_estimado = row["margen_estimado"]
+        imagen_url = row["imagen"]
+        imagen2 = row["imagen2"]
+        imagen3 = row["imagen3"]
+        imagen4 = row["imagen4"]
+        imagen5 = row["imagen5"]
+        imagen6 = row["imagen6"]
+        fecha = row["fecha"]
+        motivo_tendencia_extendido = row["motivo_tendencia_extendido"]
+        busqueda_amazon = row["búsqueda_amazon"]
+        busqueda_ebay = row["búsqueda_ebay"]
+        busqueda_aliexpress = row["búsqueda_aliexpress"]
+        ambito = row["ambito"]
+        codigo_postal = row["codigoPostal"]
+        user_id = row["usuario"]
+        estado = row["estado"]
+        boton_compra = row["botonCompra"]
+        idioma = row["idioma"]
+        pago_online = row["pagoOnline"]
 
         ambito_id = machear_ambito(ambito)
         categoria_id = machear_ambitoCategoria(categoria)
         usuario_id = machear_usuario(int(user_id))
-        ubicacion_id = machear_ubicacion(codigoPostal)
+        ubicacion_id = machear_ubicacion(user_id,codigo_postal)
+        # Conversiones booleanas (TRUE/FALSE → 1/0)
+        boton_compra = 1 if str(row["botonCompra"]).strip().upper() == "TRUE" else 0
+        pago_online = 1 if str(row["pagoOnline"]).strip().upper() == "TRUE" else 0
+       
+        proveedor_mas_barato = "AliExpress"  # Cambialo si lo tenés en la data
+        link_proveedor = row.get("búsqueda_aliexpress", "")
 
-        imagen_obj = db.session.query(Image).filter(Image.url.ilike(f"%{imagen_url}%")).first()
-        imagenes_urls = [imagen_obj.url] if imagen_obj else []
+        texto = "$ " + precio_amazon + " " + precio_ebay + " " + precio_aliexpress + " " + proveedor_mas_barato + " " + link_proveedor + " " + producto
 
-        video_obj = db.session.query(Video).filter(Video.producto.ilike(f"%{producto}%")).first()
-        videos_urls = [video_obj.url] if video_obj else []
-
-
-        texto = "$ "+precio_amazon + " " + precio_ebay + " " + precio_aliexpress + " " + proveedor_mas_barato + " " + link_proveedor + " " + producto
         publicacion = Publicacion(
             user_id=usuario_id,
             titulo=producto,
@@ -52,62 +74,25 @@ def completar_publicaciones(data):
             color_texto="black",
             color_titulo="black",
             fecha_creacion=fecha,
-            estado="inactivo",
-            botonCompra=1,
-            imagen=imagenes_urls,
-            video=videos_urls,
-            idioma="es",
-            codigoPostal=codigoPostal,
-            pagoOnline=0,
-            categoria_id=categoria_id,
-            ubicacion=pais
+            estado=estado,
+            botonCompra=boton_compra,
+            imagen=imagen_url,
+            idioma=idioma,
+            codigoPostal=codigo_postal,
+            pagoOnline=pago_online,
+            categoria_id=categoria_id           
         )
 
         print(f"✅ Publicación procesada: {publicacion.titulo}")
         publicaciones_completas.append(publicacion)
-        # Guardar la publicación en la base de datos
         db.session.add(publicacion)
         db.session.commit()
-        # Guardar la relación entre la publicación y el usuario
-        publicacion_ubicacion = UsuarioPublicacionUbicacion(
-            publicacion_id=publicacion.id,
-            ubicacion_id=ubicacion_id
-        )
-        db.session.add(publicacion_ubicacion)
-        db.session.commit()
-        # Guardar la relación entre la publicación y la imagen
-        for imagen_url in imagenes_urls:
-            publicacion_imagen = Public_imagen_video(
-                publicacion_id=publicacion.id,
-                imagen_id=machear_imagen(imagen_url)
-            )
-            db.session.add(publicacion_imagen)
-            db.session.commit()
-        # Guardar la relación entre la publicación y el video
-        for video_url in videos_urls:
-            publicacion_video = Public_imagen_video(
-                publicacion_id=publicacion.id,
-                video_id=machear_video(video_url)
-            )
-            db.session.add(publicacion_video)
-            db.session.commit()
-        # Guardar la relación entre la publicación y el estado
-        estado_publicacion = machear_estado_publicacion("inactivo")
-        publicacion_estado = Estado_publi_usu(
-            publicacion_id=publicacion.id,
-            estado_id=estado_publicacion
-        )
-        db.session.add(publicacion_estado)
-        db.session.commit()
-        # Guardar la relación entre la publicación y la ubicación
-        publicacion_ubicacion = UsuarioUbicacion(
-            publicacion_id=publicacion.id,
-            ubicacion_id=ubicacion_id
-        )
-        db.session.add(publicacion_ubicacion)
-        db.session.commit()
-        db.session.close()
+
+  
+
+    db.session.close()
     return publicaciones_completas
+
 
 
 
@@ -123,7 +108,7 @@ def machear_ambito(categoria):
     ).first()
 
     if ambito:
-        return ambito.id
+        return ambito.valor
     else:
         print(f"⚠️ No se encontró ámbito para la categoría: '{categoria}'")
         return None
@@ -134,16 +119,14 @@ def machear_ambitoCategoria(categoria):
 
     categoria_normalizada = categoria.strip().lower()
 
-    ambito_categoria = db.session.query(AmbitoCategoria).filter(
-        (AmbitoCategoria.nombre.ilike(f"%{categoria_normalizada}%")) |
-        (AmbitoCategoria.valor.ilike(f"%{categoria_normalizada}%"))
-    ).first()
+    ambito_categoria = db.session.query(AmbitoCategoria).filter_by(valor=categoria_normalizada).first()
 
     if ambito_categoria:
         return ambito_categoria.id
     else:
         print(f"⚠️ No se encontró categoría para la categoría: '{categoria}'")
         return None
+
 def machear_usuario(user_id):
     try:
         usuario = db.session.query(Usuario).filter(Usuario.id == int(user_id)).first()
@@ -187,22 +170,22 @@ def machear_video(video):
     else:
         print(f"⚠️ No se encontró video para la URL: '{video}'")
         return None
-def machear_ubicacion(codigoPostal):    
+def machear_ubicacion(user_id, codigoPostal):    
     if not codigoPostal:
         return None
 
-    codigoPostal_normalizado = codigoPostal.strip().lower()
-
-    ubicacion = db.session.query(UsuarioUbicacion).filter(
-        (UsuarioUbicacion.codigoPostal.ilike(f"%{codigoPostal_normalizado}%")) |
-        (UsuarioUbicacion.pais.ilike(f"%{codigoPostal_normalizado}%"))
-    ).first()
+    try:
+        ubicacion = db.session.query(UsuarioUbicacion).filter_by( user_id=int(user_id),  codigoPostal=codigoPostal ).first()
+    except Exception as e:
+        print(f"❌ Error al machear ubicación: {e}")
+        return None
 
     if ubicacion:
         return ubicacion.id
     else:
         print(f"⚠️ No se encontró ubicación para el código postal: '{codigoPostal}'")
         return None
+
 def machear_publicacion(publicacion):
     if not publicacion:
         return None
