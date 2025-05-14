@@ -9,10 +9,12 @@ from models.usuarioRegion import UsuarioRegion
 from models.usuarioUbicacion import UsuarioUbicacion
 from models.usuarioPublicacionUbicacion import UsuarioPublicacionUbicacion
 from models.publicaciones.ambitoCategoria import AmbitoCategoria
+from models.publicaciones.categoriaPublicacion import CategoriaPublicacion
 from models.publicaciones.ambitos import Ambitos
 from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
 from models.image import Image
 from models.video import Video
+import random
 
 publicaciones = Blueprint('publicaciones', __name__)
 
@@ -88,8 +90,57 @@ def completar_publicaciones(data):
         db.session.add(publicacion)
         db.session.commit()
 
-  
+        publicacion_id = publicacionUbicacion(publicacion.id,codigo_postal,user_id)
+        publicacionCategoriaPublicacion(categoria_id,publicacion.id)
+       
+        for index, file in enumerate(file_metadata_list):
+                filename_pre = file.get("fileName")
+                size = file.get("fileSize")               
+                content_type = file.get("content_type")  # Tipo de contenido MIME
+                print(f"Índice: {index}, Archivo: {filename_pre}, Tamaño: {size} bytes, Content-Type: {content_type}")
+                # Verifica si el archivo tiene un nombre
+                if filename_pre == '':
+                    continue
 
+                # Asegúrate de usar un nombre de archivo seguro
+                filename =  secure_filename(filename_pre).replace("_", "")
+                # Decide si el archivo es una imagen o un video
+                file_ext = filename.rsplit('.', 1)[-1].lower()
+                if file_ext in {'png', 'jpg', 'jpeg', 'gif'}:
+                    # Llama a la función de carga de imagen
+                    color_texto = request.form.get('color_texto')
+                    titulo_publicacion = request.form.get('postTitle_creaPublicacion')
+                    file_path = cargarImagen_crearPublicacion(
+                                                    app, 
+                                                    request, 
+                                                    filename, 
+                                                    id_publicacion, 
+                                                    color_texto, 
+                                                    titulo_publicacion, 
+                                                    content_type,
+                                                    userid=user_id, 
+                                                    index=index,
+                                                    size=size)
+
+
+                    app.logger.info(f'Se cargó una imagen: {filename}, índice: {index}')
+                elif file_ext in {'mp4', 'avi', 'mov'}:
+                    # Llama a la función de carga de video
+                    color_texto = request.form.get('color_texto')   
+                    titulo_publicacion = request.form.get('postTitle_creaPublicacion')
+                    file_path = cargarVideo_crearPublicacion(
+                                                        app,
+                                                        '',                                                         
+                                                        filename, 
+                                                        id_publicacion,
+                                                        color_texto, 
+                                                        titulo_publicacion,
+                                                        content_type,
+                                                        user_id,
+                                                        index,
+                                                        size
+                                                        )
+                
     db.session.close()
     return publicaciones_completas
 
@@ -234,3 +285,202 @@ def machear_publicacion_ubicacion(publicacion_ubicacion):
     else:
         print(f"⚠️ No se encontró publicación de ubicación para el código postal: '{publicacion_ubicacion}'")
         return None
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+def publicacionUbicacion(nueva_publicacion_id,codigoPostal,user_id):
+    try:
+        # Buscar si el usuario ya tiene una ubicación guardada
+       
+        usuarioRegion = db.session.query(UsuarioRegion).filter_by(user_id=user_id).first()
+        usuario_ubicacion = db.session.query(UsuarioUbicacion).filter_by(user_id=user_id).first() # Suponiendo que existe un modelo UsuarioUbicacion
+        publicacion_ubicacion = db.session.query(UsuarioPublicacionUbicacion).filter_by(id=nueva_publicacion_id).first() # Suponiendo que existe un modelo UsuarioUbicacion
+        if publicacion_ubicacion:
+            return True
+        else:
+            
+            if usuario_ubicacion:
+                id_ubicaion = usuario_ubicacion.id
+            else:
+                # Si no existe, creamos un nuevo registro de ubicación
+                id_ubicaion = 0
+                
+            new_publicacion_ubicacion = UsuarioPublicacionUbicacion(
+                        user_id = user_id,
+                        id_region = usuarioRegion.id,
+                        id_publicacion = nueva_publicacion_id,
+                        id_ubicacion = id_ubicaion,
+                        codigoPostal = codigoPostal,
+                    )
+            db.session.add(new_publicacion_ubicacion)
+
+        db.session.commit()
+        
+        return True
+    except Exception as e:
+        print(str(e))
+        db.session.rollback()  # Asegúrate de hacer rollback en caso de error
+        return False
+    
+    
+    
+    
+
+
+def publicacionCategoriaPublicacion(categoria_id,publicacion_id):
+    try:
+        new_categoria_publicacion = CategoriaPublicacion(
+            categoria_id=int(categoria_id),
+            publicacion_id=publicacion_id,
+            estado='activo'
+        )
+        db.session.add(new_categoria_publicacion)
+        db.session.commit()
+        
+        return True
+    except Exception as e:
+        print(str(e))
+        db.session.rollback()  # Asegúrate de hacer rollback en caso de error
+        return False
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+def cargarImagen_crearPublicacion(app, request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
+    size = size
+    # Guardar información en la base de datos   
+   
+    nombre_archivo = filename
+    descriptionImagen = titulo_publicacion
+    randomNumber_ = random.randint(1, 1000000)  # Número aleatorio
+    
+    try:
+        imagen_existente = db.session.query(Image).filter_by(title=filename).first()
+        if imagen_existente:
+            cargar_id_publicacion_id_imagen_video(id_publicacion, imagen_existente.id, 0, 'imagen', size=size)
+            return filename
+        else:
+            nueva_imagen = Image(
+                user_id=userid,
+                title=nombre_archivo,
+                description=descriptionImagen,
+                colorDescription=color_texto,
+                filepath=filename,
+                randomNumber=randomNumber_,
+                size=float(size),
+                mimetype=mimetype
+            )
+            db.session.add(nueva_imagen)
+            db.session.commit()
+            
+            cargar_id_publicacion_id_imagen_video(id_publicacion, nueva_imagen.id, 0, 'imagen', size=size)
+            return filename
+    except Exception as db_error:
+        app.logger.error(f"Error al interactuar con la base de datos: {db_error}")
+        db.session.rollback()  # Deshacer cambios en caso de error
+        db.session.close()  # Asegurarse de cerrar la sesión incluso si ocurre un error
+
+        raise  # Propagar el error para que pueda ser manejado por capas superiores
+      
+
+
+def cargarVideo_crearPublicacion(app, request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
+    print(f"Entering cargarVideo_crearPublicacion with filename: {filename}, userid: {userid}, index: {index}, size: {size}")
+   # Guardar información en la base de datos
+   
+    nombre_archivo = filename
+    descriptionVideo = titulo_publicacion
+    randomNumber_ = random.randint(1, 1000000)  # Número aleatorio
+    
+    try:
+        video_existente = db.session.query(Video).filter_by(title=filename,size=size).first()
+
+        if video_existente:
+            print("Video already exists, saving relation to publicacion_media")
+            # Si la imagen ya existe, solo guarda la relación en publicacion_media
+            
+            cargar_id_publicacion_id_imagen_video(id_publicacion,0,video_existente.id,'video',size=size)
+            return filename
+        else:
+            print("Creating new video")
+            nuevo_video = Video(
+                user_id=userid,
+                title=nombre_archivo,
+                description=descriptionVideo,
+                colorDescription=color_texto,
+                filepath=filename,
+                randomNumber=randomNumber_,
+                size=float(size),
+                mimetype=mimetype
+            )
+            db.session.add(nuevo_video)
+            db.session.commit()
+            print("Saving relation to publicacion_media")
+            cargar_id_publicacion_id_imagen_video(id_publicacion,0,nuevo_video.id,'video',size=size)
+        return filename
+    except Exception as db_error:
+        app.logger.error(f"Error al interactuar con la base de datos: {db_error}")
+        db.session.rollback()  # Deshacer cambios en caso de error
+        db.session.close()  # Asegurarse de cerrar la sesión incluso si ocurre un error
+
+        raise  # Propagar el error para que pueda ser manejado por capas superiores
+
+
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'avi', 'mov'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def es_formato_imagen(filepath):
+    # Extensiones de archivo de imagen comunes
+    extensiones_imagen = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
+
+    # Verificar si la extensión del archivo está en la lista de extensiones de imagen
+    return any(filepath.lower().endswith(ext) for ext in extensiones_imagen)
+
+
+
+def cargar_id_publicacion_id_imagen_video(id_publicacion,nueva_imagen_id,nuevo_video_id,media_type,size=0):
+    nuevo_ids= Public_imagen_video(
+        publicacion_id=id_publicacion,
+        imagen_id=nueva_imagen_id,
+        video_id=nuevo_video_id,
+        fecha_creacion=datetime.now(),
+        media_type=media_type,
+        size=float(size)
+    )
+    db.session.add(nuevo_ids)
+    db.session.commit()
+    db.session.close()
+    return True
