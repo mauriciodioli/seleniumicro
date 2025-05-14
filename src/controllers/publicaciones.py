@@ -15,6 +15,8 @@ from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
 from models.image import Image
 from models.video import Video
 import random
+from datetime import datetime
+from werkzeug.utils import secure_filename
 
 publicaciones = Blueprint('publicaciones', __name__)
 
@@ -52,7 +54,34 @@ def completar_publicaciones(data):
         boton_compra = row["botonCompra"]
         idioma = row["idioma"]
         pago_online = row["pagoOnline"]
+        # Agrupar imágenes en una lista si tienen contenido
+        imagenes_urls = [
+            row.get("imagen"),
+            row.get("imagen2"),
+            row.get("imagen3"),
+            row.get("imagen4"),
+            row.get("imagen5"),
+            row.get("imagen6")
+        ]
 
+        # Filtrar vacíos
+        imagenes_urls = [url for url in imagenes_urls if url and url.strip() != ""]
+        
+        
+        
+        # Convertir a lista de diccionarios como file_metadata_list
+        file_metadata_list = []
+        for i, img_url in enumerate(imagenes_urls):
+            file_metadata_list.append({
+                "fileName": f"imagen_auto_{i}.jpg",  # nombre simulado
+                "fileSize": 0,  # tamaño falso (opcional)
+                "content_type": "image/jpeg",
+                "url": img_url  # extra para mostrarla si querés
+            })
+        
+        
+        
+        
         ambito_id = machear_ambito(ambito)
         categoria_id = machear_ambitoCategoria(categoria)
         usuario_id = machear_usuario(int(user_id))
@@ -94,53 +123,60 @@ def completar_publicaciones(data):
         publicacionCategoriaPublicacion(categoria_id,publicacion.id)
        
         for index, file in enumerate(file_metadata_list):
-                filename_pre = file.get("fileName")
-                size = file.get("fileSize")               
-                content_type = file.get("content_type")  # Tipo de contenido MIME
-                print(f"Índice: {index}, Archivo: {filename_pre}, Tamaño: {size} bytes, Content-Type: {content_type}")
-                # Verifica si el archivo tiene un nombre
-                if filename_pre == '':
-                    continue
+            filename_pre = file.get("fileName")
+            size = file.get("fileSize", 0)
+            content_type = file.get("content_type")
+            imagen_url = file.get("url")  # si querés usar el link directo
 
-                # Asegúrate de usar un nombre de archivo seguro
-                filename =  secure_filename(filename_pre).replace("_", "")
-                # Decide si el archivo es una imagen o un video
-                file_ext = filename.rsplit('.', 1)[-1].lower()
-                if file_ext in {'png', 'jpg', 'jpeg', 'gif'}:
-                    # Llama a la función de carga de imagen
-                    color_texto = request.form.get('color_texto')
-                    titulo_publicacion = request.form.get('postTitle_creaPublicacion')
-                    file_path = cargarImagen_crearPublicacion(
-                                                    app, 
-                                                    request, 
-                                                    filename, 
-                                                    id_publicacion, 
-                                                    color_texto, 
-                                                    titulo_publicacion, 
-                                                    content_type,
-                                                    userid=user_id, 
-                                                    index=index,
-                                                    size=size)
+            print(f"🖼️ Imagen {index}: {imagen_url} ({filename_pre}, {size} bytes, {content_type})")
+            # Verifica si el archivo tiene un nombre
+            if filename_pre == '':
+                continue
+
+            # Asegúrate de usar un nombre de archivo seguro
+            filename =  secure_filename(filename_pre).replace("_", "")
+            # Decide si el archivo es una imagen o un video
+            file_ext = filename.rsplit('.', 1)[-1].lower()
+            if file_ext in {'png', 'jpg', 'jpeg', 'gif'}:
+                # Llama a la función de carga de imagen
+                color_texto = request.form.get('color_texto')
+                titulo_publicacion = request.form.get('postTitle_creaPublicacion')
+                file_path = cargarImagen_crearPublicacion(                                                    
+                                                request, 
+                                                filename, 
+                                                publicacion_id, 
+                                                color_texto, 
+                                                titulo_publicacion, 
+                                                content_type,
+                                                userid=user_id, 
+                                                index=index,
+                                                size=size)
 
 
-                    app.logger.info(f'Se cargó una imagen: {filename}, índice: {index}')
-                elif file_ext in {'mp4', 'avi', 'mov'}:
-                    # Llama a la función de carga de video
-                    color_texto = request.form.get('color_texto')   
-                    titulo_publicacion = request.form.get('postTitle_creaPublicacion')
-                    file_path = cargarVideo_crearPublicacion(
-                                                        app,
-                                                        '',                                                         
-                                                        filename, 
-                                                        id_publicacion,
-                                                        color_texto, 
-                                                        titulo_publicacion,
-                                                        content_type,
-                                                        user_id,
-                                                        index,
-                                                        size
-                                                        )
                 
+            elif file_ext in {'mp4', 'avi', 'mov'}:
+                # Llama a la función de carga de video
+                color_texto = request.form.get('color_texto')   
+                titulo_publicacion = producto
+                file_path = cargarVideo_crearPublicacion(                                                        
+                                                    '',                                                         
+                                                    filename, 
+                                                    publicacion_id,
+                                                    color_texto, 
+                                                    titulo_publicacion,
+                                                    content_type,
+                                                    user_id,
+                                                    index,
+                                                    size
+                                                    )
+        # Obtener todas las publicaciones del usuario
+        publicaciones_user = db.session.query(Publicacion).filter_by(user_id=user_id,ambito=ambito).all()
+        for pub in publicaciones_user:
+            if not pub.imagen:
+                pub.imagen = imagenes_urls[0] if imagenes_urls else None
+                db.session.commit()
+
+   
     db.session.close()
     return publicaciones_completas
 
@@ -377,7 +413,7 @@ def publicacionCategoriaPublicacion(categoria_id,publicacion_id):
 
         
 
-def cargarImagen_crearPublicacion(app, request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
+def cargarImagen_crearPublicacion( request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
     size = size
     # Guardar información en la base de datos   
    
@@ -407,7 +443,7 @@ def cargarImagen_crearPublicacion(app, request, filename, id_publicacion, color_
             cargar_id_publicacion_id_imagen_video(id_publicacion, nueva_imagen.id, 0, 'imagen', size=size)
             return filename
     except Exception as db_error:
-        app.logger.error(f"Error al interactuar con la base de datos: {db_error}")
+      
         db.session.rollback()  # Deshacer cambios en caso de error
         db.session.close()  # Asegurarse de cerrar la sesión incluso si ocurre un error
 
@@ -415,7 +451,7 @@ def cargarImagen_crearPublicacion(app, request, filename, id_publicacion, color_
       
 
 
-def cargarVideo_crearPublicacion(app, request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
+def cargarVideo_crearPublicacion( request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
     print(f"Entering cargarVideo_crearPublicacion with filename: {filename}, userid: {userid}, index: {index}, size: {size}")
    # Guardar información en la base de datos
    
@@ -450,7 +486,7 @@ def cargarVideo_crearPublicacion(app, request, filename, id_publicacion, color_t
             cargar_id_publicacion_id_imagen_video(id_publicacion,0,nuevo_video.id,'video',size=size)
         return filename
     except Exception as db_error:
-        app.logger.error(f"Error al interactuar con la base de datos: {db_error}")
+       
         db.session.rollback()  # Deshacer cambios en caso de error
         db.session.close()  # Asegurarse de cerrar la sesión incluso si ocurre un error
 
