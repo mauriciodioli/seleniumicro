@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
 from app import db  # Importa db desde app.py
 from models.usuario import Usuario
+from sqlalchemy.exc import SQLAlchemyError
 from models.publicaciones.publicaciones import Publicacion
 from models.publicaciones.estado_publi_usu import Estado_publi_usu
 from models.publicaciones.publicacion_imagen_video import Public_imagen_video
@@ -24,205 +25,245 @@ publicaciones = Blueprint('publicaciones', __name__)
 def completar_publicaciones(data):
     publicaciones_completas = []
 
-    for row in data:
-        producto = row["Producto"]
-        categoria = row["Categoría"]
-        pais = row["País"]
-        fuente = row["Fuente"]
-        motivo_tendencia = row["Motivo de tendencia"]
-        descripcion = row["descripcion"]
-        precio_amazon = str(row["precio_amazon"])
-        precio_ebay = str(row["precio_ebay"])
-        precio_aliexpress = str(row["precio_aliexpress"])
-        precio_venta_sugerido = row["precio_venta_sugerido"]
-        margen_estimado = row["margen_estimado"]
-        imagen_url = row["imagen"]
-        imagen2 = row["imagen2"]
-        imagen3 = row["imagen3"]
-        imagen4 = row["imagen4"]
-        imagen5 = row["imagen5"]
-        imagen6 = row["imagen6"]
-        fecha = row["fecha"]
-        motivo_tendencia_extendido = row["motivo_tendencia_extendido"]
-        busqueda_amazon = row["búsqueda_amazon"]
-        busqueda_ebay = row["búsqueda_ebay"]
-        busqueda_aliexpress = row["búsqueda_aliexpress"]
-        ambito = row["ambito"]
-        codigo_postal = row["codigoPostal"]
-        user_id = row["usuario"]
-        estado = row["estado"]
-        boton_compra = row["botonCompra"]
-        idioma = row["idioma"]
-        pago_online = row["pagoOnline"]
-        # Agrupar imágenes en una lista si tienen contenido
-        imagenes_urls = [
-            row.get("imagen"),
-            row.get("imagen2"),
-            row.get("imagen3"),
-            row.get("imagen4"),
-            row.get("imagen5"),
-            row.get("imagen6")
-        ]
+    try:
+        for row in data:
+            # === Extraer datos ===
+            producto = row["Producto"]
+            categoria = row["Categoría"]
+            pais = row["País"]
+            motivo_tendencia = row["Motivo de tendencia"]
+            descripcion = row["descripcion"]
+            precio_amazon = str(row["precio_amazon"])
+            precio_ebay = str(row["precio_ebay"])
+            precio_aliexpress = str(row["precio_aliexpress"])
+            precio_venta_sugerido = row["precio_venta_sugerido"]
+            margen_estimado = row["margen_estimado"]
+            fecha = row["fecha"]
+            motivo_tendencia_extendido = row["motivo_tendencia_extendido"]
+            codigo_postal = row["codigoPostal"]
+            user_id = int(row["usuario"])
+            estado = row["estado"]
+            boton_compra = 1 if str(row["botonCompra"]).strip().upper() == "TRUE" else 0
+            idioma = row["idioma"]
+            pago_online = 1 if str(row["pagoOnline"]).strip().upper() == "TRUE" else 0
+            ambito = row["ambito"]
 
-        # Filtrar vacíos
-        imagenes_urls = [url for url in imagenes_urls if url and url.strip() != ""]
-        
-        # Slug único basado en el título del producto
-        slug_base = generar_slug(producto)
-        slug = slug_base
-        contador = 1
+            imagenes_urls = [
+                row.get("imagen"),
+                row.get("imagen2"),
+                row.get("imagen3"),
+                row.get("imagen4"),
+                row.get("imagen5"),
+                row.get("imagen6")
+            ]
+            imagenes_urls = [url for url in imagenes_urls if url and url.strip() != ""]
 
-        # Verificá que no exista otro producto con el mismo slug
-        while db.session.query(Publicacion).filter_by(slug=slug).first():
-            contador += 1
-            slug = f"{slug_base}-{contador}"
+            slug_base = generar_slug(producto)
+            slug = slug_base
+            contador = 1
+            while db.session.query(Publicacion).filter_by(titulo=slug).first():
+                contador += 1
+                slug = f"{slug_base}-{contador}"
 
-        
-        # Convertir a lista de diccionarios como file_metadata_list
-        file_metadata_list = []
-        for i, img_url in enumerate(imagenes_urls):
-            file_metadata_list.append({
-                "fileName": f"imagen_auto_{i}.jpg",  # nombre simulado
-                "fileSize": 0,  # tamaño falso (opcional)
-                "content_type": "image/jpeg",
-                "url": img_url  # extra para mostrarla si querés
-            })
-        
-        
-        
-        
-        ambito_id = machear_ambito(ambito)
-        categoria_id = machear_ambitoCategoria(categoria)
-        usuario_id = machear_usuario(int(user_id))
-        ubicacion_id = machear_ubicacion(user_id,codigo_postal)
-        # Conversiones booleanas (TRUE/FALSE → 1/0)
-        boton_compra = 1 if str(row["botonCompra"]).strip().upper() == "TRUE" else 0
-        pago_online = 1 if str(row["pagoOnline"]).strip().upper() == "TRUE" else 0
-       
-        proveedor_mas_barato = "AliExpress"  # Cambialo si lo tenés en la data
-        link_proveedor = row.get("búsqueda_aliexpress", "")
+            ambito_class = machear_ambito(ambito)
+            categoria_id = machear_ambitoCategoria(categoria, idioma,ambito_class.id)
 
-        texto = "$ " + precio_amazon + " " + precio_ebay + " " + precio_aliexpress + " " + proveedor_mas_barato + " " + link_proveedor + " " + producto
+            usuario_id = machear_usuario(user_id)
+            ubicacion_id = machear_ubicacion(user_id, codigo_postal)
 
-        publicacion = Publicacion(
-            user_id=usuario_id,
-            titulo=producto,
-       #     slug=slug,  # <- este es el nuevo campo
-            texto=texto,
-            ambito=ambito_id,
-            correo_electronico="mauriciodioli@gmail.com",
-            descripcion=motivo_tendencia,
-            color_texto="black",
-            color_titulo="black",
-            fecha_creacion=fecha,
-            estado=estado,
-            botonCompra=boton_compra,
-            imagen=imagen_url,
-            idioma=idioma,
-            codigoPostal=codigo_postal,
-            pagoOnline=pago_online,
-            categoria_id=categoria_id           
-        )
+            texto = f"$ {precio_amazon} {precio_ebay} {precio_aliexpress} AliExpress {row.get('búsqueda_aliexpress', '')} {producto}"
 
-        print(f"✅ Publicación procesada: {publicacion.titulo}")
-        publicaciones_completas.append(publicacion)
-        db.session.add(publicacion)
+            publicacion = Publicacion(
+                user_id=usuario_id,
+                titulo=slug,
+                texto=texto,
+                ambito=ambito_class.valor,
+                correo_electronico="mauriciodioli@gmail.com",
+                descripcion=motivo_tendencia,
+                color_texto="black",
+                color_titulo="black",
+                fecha_creacion=fecha,
+                estado=estado,
+                botonCompra=boton_compra,
+                imagen=imagenes_urls[0] if imagenes_urls else None,
+                idioma=idioma,
+                codigoPostal=codigo_postal,
+                pagoOnline=pago_online,
+                categoria_id=categoria_id
+            )
+
+            db.session.add(publicacion)
+            db.session.flush()  # Asegura que se genere el ID
+
+            publicaciones_completas.append(publicacion)
+
+            publicacion_id = publicacion.id
+            registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id)
+            registrar_categoria_publicacion(categoria_id, publicacion_id)
+
+            for index, url in enumerate(imagenes_urls):
+                filename = secure_filename(f"{slug}_{index}.jpg")
+                cargar_imagen(request, filename, publicacion_id, "black", producto, "image/jpeg", user_id, index)
+
         db.session.commit()
 
-        publicacion_id = publicacionUbicacion(publicacion.id,codigo_postal,user_id)
-        publicacionCategoriaPublicacion(categoria_id,publicacion.id)
-       
-        for index, file in enumerate(file_metadata_list):
-            filename_pre = file.get("fileName")
-            size = file.get("fileSize", 0)
-            content_type = file.get("content_type")
-            imagen_url = file.get("url")  # si querés usar el link directo
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Error en completar_publicaciones: {e}")
 
-            print(f"🖼️ Imagen {index}: {imagen_url} ({filename_pre}, {size} bytes, {content_type})")
-            # Verifica si el archivo tiene un nombre
-            if filename_pre == '':
-                continue
-
-            # Asegúrate de usar un nombre de archivo seguro
-            filename =  secure_filename(filename_pre).replace("_", "")
-            # Decide si el archivo es una imagen o un video
-            file_ext = filename.rsplit('.', 1)[-1].lower()
-            if file_ext in {'png', 'jpg', 'jpeg', 'gif'}:
-                # Llama a la función de carga de imagen
-                color_texto = request.form.get('color_texto')
-                titulo_publicacion = request.form.get('postTitle_creaPublicacion')
-                file_path = cargarImagen_crearPublicacion(                                                    
-                                                request, 
-                                                filename, 
-                                                publicacion_id, 
-                                                color_texto, 
-                                                titulo_publicacion, 
-                                                content_type,
-                                                userid=user_id, 
-                                                index=index,
-                                                size=size)
-
-
-                
-            elif file_ext in {'mp4', 'avi', 'mov'}:
-                # Llama a la función de carga de video
-                color_texto = request.form.get('color_texto')   
-                titulo_publicacion = producto
-                file_path = cargarVideo_crearPublicacion(                                                        
-                                                    '',                                                         
-                                                    filename, 
-                                                    publicacion_id,
-                                                    color_texto, 
-                                                    titulo_publicacion,
-                                                    content_type,
-                                                    user_id,
-                                                    index,
-                                                    size
-                                                    )
-        # Obtener todas las publicaciones del usuario
-        publicaciones_user = db.session.query(Publicacion).filter_by(user_id=user_id,ambito=ambito).all()
-        for pub in publicaciones_user:
-            if not pub.imagen:
-                pub.imagen = imagenes_urls[0] if imagenes_urls else None
-                db.session.commit()
-
-   
-    db.session.close()
     return publicaciones_completas
 
+def registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id):
+    try:
+        if db.session.query(UsuarioPublicacionUbicacion).filter_by(id=publicacion_id).first():
+            return True
+
+        region = db.session.query(UsuarioRegion).filter_by(user_id=user_id).first()
+        ubicacion = db.session.query(UsuarioUbicacion).filter_by(user_id=user_id).first()
+
+        new = UsuarioPublicacionUbicacion(
+            user_id=user_id,
+            id_region=region.id if region else None,
+            id_publicacion=publicacion_id,
+            id_ubicacion=ubicacion.id if ubicacion else 0,
+            codigoPostal=codigo_postal
+        )
+        db.session.add(new)
+        return True
+    except Exception as e:
+        print(f"❌ Error registrar_publicacion_ubicacion: {e}")
+        return False
+def registrar_categoria_publicacion(categoria_id, publicacion_id):
+    try:
+        new = CategoriaPublicacion(
+            categoria_id=categoria_id,
+            publicacion_id=publicacion_id,
+            estado='activo'
+        )
+        db.session.add(new)
+        return True
+    except Exception as e:
+        print(f"❌ Error registrar_categoria_publicacion: {e}")
+        return False
+def cargar_imagen(request, filename, id_publicacion, color_texto, titulo, mimetype, userid, index, size=0):
+    try:
+        existente = db.session.query(Image).filter_by(title=filename).first()
+        if existente:
+            registrar_media(publicacion_id=id_publicacion, imagen_id=existente.id, video_id=0, tipo='imagen', size=size)
+            return filename
+
+        nueva = Image(
+            user_id=userid,
+            title=filename,
+            description=titulo,
+            colorDescription=color_texto,
+            filepath=filename,
+            randomNumber=random.randint(1, 1_000_000),
+            size=float(size),
+            mimetype=mimetype
+        )
+        db.session.add(nueva)
+        db.session.flush()
+        registrar_media(id_publicacion, nueva.id, 0, 'imagen', size)
+        return filename
+
+    except Exception as e:
+        print(f"❌ Error en cargar_imagen: {e}")
+        return None
+def registrar_media(publicacion_id, imagen_id, video_id, tipo='imagen', size=0):
+    try:
+        media = Public_imagen_video(
+            publicacion_id=publicacion_id,
+            imagen_id=imagen_id,
+            video_id=video_id,
+            fecha_creacion=datetime.now(),
+            media_type=tipo,
+            size=float(size)
+        )
+        db.session.add(media)
+    except Exception as e:
+        print(f"❌ Error en registrar_media: {e}")
 
 
 
-def machear_ambito(categoria):
-    if not categoria:
+
+def machear_ambito(ambito):
+    if not ambito:
         return None
 
-    categoria_normalizada = categoria.strip().lower()
+    ambito_normalizada = ambito.strip().lower()
 
     ambito = db.session.query(Ambitos).filter(
-        (Ambitos.nombre.ilike(f"%{categoria_normalizada}%")) |
-        (Ambitos.valor.ilike(f"%{categoria_normalizada}%"))
+        (Ambitos.nombre.ilike(f"%{ambito_normalizada}%")) |
+        (Ambitos.valor.ilike(f"%{ambito_normalizada}%"))
     ).first()
 
     if ambito:
-        return ambito.valor
+        return ambito
     else:
         print(f"⚠️ No se encontró ámbito para la categoría: '{categoria}'")
         return None
 
-def machear_ambitoCategoria(categoria):
+
+
+
+def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
     if not categoria:
+        print("❌ Categoría vacía")
         return None
 
     categoria_normalizada = categoria.strip().lower()
+    print(f"🔍 Buscando categoría: '{categoria_normalizada}'")
 
-    ambito_categoria = db.session.query(AmbitoCategoria).filter_by(valor=categoria_normalizada).first()
+    try:
+        # Evitar autoflush antes del query por si hay objetos pendientes en session
+        with db.session.no_autoflush:
+            ambito_categoria = db.session.query(AmbitoCategoria).filter_by(valor=categoria_normalizada).first()
 
-    if ambito_categoria:
-        return ambito_categoria.id
-    else:
-        print(f"⚠️ No se encontró categoría para la categoría: '{categoria}'")
+        if ambito_categoria:
+            print(f"✅ Categoría encontrada: ID {ambito_categoria.id}")
+            return ambito_categoria.id
+
+        # Crear color aleatorio
+        COLORES_DISPONIBLES = ["red", "green", "blue", "orange", "purple", "pink", "yellow", "cyan", "teal", "brown"]
+        color_aleatorio = random.choice(COLORES_DISPONIBLES)
+
+        # Crear nueva categoría
+        nueva_categoria = AmbitoCategoria(
+            nombre=categoria.strip().capitalize(),
+            descripcion=f"Categoría generada automáticamente para '{categoria}'",
+            idioma=idioma,
+            valor=categoria_normalizada,
+            estado="ACTIVO",
+            color=color_aleatorio
+        )
+        db.session.add(nueva_categoria)
+        db.session.flush()  # Obtener ID antes de usar
+
+        # Asociar con ámbito si se pasó un ID válido
+        if ambito_id is not None:
+            try:
+                relacion = AmbitoCategoriaRelation(
+                    ambito_id=ambito_id,
+                    ambitoCategoria_id=nueva_categoria.id,
+                    estado="ACTIVO"
+                )
+                db.session.add(relacion)
+            except SQLAlchemyError as err_rel:
+                print(f"⚠️ Se creó la categoría pero falló la relación con el ámbito: {err_rel}")
+
+        print(f"🆕 Categoría creada con ID {nueva_categoria.id} y color {color_aleatorio}")
+        return nueva_categoria.id
+
+    except SQLAlchemyError as e:
+        print(f"❌ Error creando categoría '{categoria}': {e}")
+        db.session.rollback()
         return None
+
+
+
+
+
 
 def machear_usuario(user_id):
     try:

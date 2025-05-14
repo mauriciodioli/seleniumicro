@@ -49,7 +49,7 @@ def resultado_carga():
         data = sheet.get_all_records()
         completar_publicaciones(data)
         print("Contenido del Sheet:")
-        print(data)
+       
 
     # Podés devolver solo un mensaje si es AJAX
     return "Datos cargados correctamente", 200
