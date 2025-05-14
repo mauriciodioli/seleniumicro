@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
 from app import db  # Importa db desde app.py
-
 from models.usuario import Usuario
 from models.publicaciones.publicaciones import Publicacion
 from models.publicaciones.estado_publi_usu import Estado_publi_usu
@@ -15,6 +14,7 @@ from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
 from models.image import Image
 from models.video import Video
 import random
+import re
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
@@ -67,7 +67,16 @@ def completar_publicaciones(data):
         # Filtrar vacíos
         imagenes_urls = [url for url in imagenes_urls if url and url.strip() != ""]
         
-        
+        # Slug único basado en el título del producto
+        slug_base = generar_slug(producto)
+        slug = slug_base
+        contador = 1
+
+        # Verificá que no exista otro producto con el mismo slug
+        while db.session.query(Publicacion).filter_by(slug=slug).first():
+            contador += 1
+            slug = f"{slug_base}-{contador}"
+
         
         # Convertir a lista de diccionarios como file_metadata_list
         file_metadata_list = []
@@ -98,6 +107,7 @@ def completar_publicaciones(data):
         publicacion = Publicacion(
             user_id=usuario_id,
             titulo=producto,
+       #     slug=slug,  # <- este es el nuevo campo
             texto=texto,
             ambito=ambito_id,
             correo_electronico="mauriciodioli@gmail.com",
@@ -520,3 +530,11 @@ def cargar_id_publicacion_id_imagen_video(id_publicacion,nueva_imagen_id,nuevo_v
     db.session.commit()
     db.session.close()
     return True
+
+
+
+def generar_slug(texto):
+    texto = texto.lower()
+    texto = re.sub(r'[^\w\s-]', '', texto)  # quita símbolos raros
+    texto = re.sub(r'[\s_]+', '-', texto)   # reemplaza espacios/guiones bajos por guiones
+    return texto.strip('-')
