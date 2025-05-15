@@ -183,10 +183,6 @@ def registrar_media(publicacion_id, imagen_id, video_id, tipo='imagen', size=0):
         db.session.add(media)
     except Exception as e:
         print(f"❌ Error en registrar_media: {e}")
-
-
-
-
 def machear_ambito(ambito):
     if not ambito:
         return None
@@ -201,12 +197,8 @@ def machear_ambito(ambito):
     if ambito:
         return ambito
     else:
-        print(f"⚠️ No se encontró ámbito para la categoría: '{categoria}'")
+        print(f"⚠️ No se encontró ámbito para la categoría: '{ambito_normalizada}'")
         return None
-
-
-
-
 def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
     if not categoria:
         print("❌ Categoría vacía")
@@ -259,12 +251,6 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
         print(f"❌ Error creando categoría '{categoria}': {e}")
         db.session.rollback()
         return None
-
-
-
-
-
-
 def machear_usuario(user_id):
     try:
         usuario = db.session.query(Usuario).filter(Usuario.id == int(user_id)).first()
@@ -323,7 +309,6 @@ def machear_ubicacion(user_id, codigoPostal):
     else:
         print(f"⚠️ No se encontró ubicación para el código postal: '{codigoPostal}'")
         return None
-
 def machear_publicacion(publicacion):
     if not publicacion:
         return None
@@ -380,75 +365,6 @@ def machear_publicacion_ubicacion(publicacion_ubicacion):
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-def publicacionUbicacion(nueva_publicacion_id,codigoPostal,user_id):
-    try:
-        # Buscar si el usuario ya tiene una ubicación guardada
-       
-        usuarioRegion = db.session.query(UsuarioRegion).filter_by(user_id=user_id).first()
-        usuario_ubicacion = db.session.query(UsuarioUbicacion).filter_by(user_id=user_id).first() # Suponiendo que existe un modelo UsuarioUbicacion
-        publicacion_ubicacion = db.session.query(UsuarioPublicacionUbicacion).filter_by(id=nueva_publicacion_id).first() # Suponiendo que existe un modelo UsuarioUbicacion
-        if publicacion_ubicacion:
-            return True
-        else:
-            
-            if usuario_ubicacion:
-                id_ubicaion = usuario_ubicacion.id
-            else:
-                # Si no existe, creamos un nuevo registro de ubicación
-                id_ubicaion = 0
-                
-            new_publicacion_ubicacion = UsuarioPublicacionUbicacion(
-                        user_id = user_id,
-                        id_region = usuarioRegion.id,
-                        id_publicacion = nueva_publicacion_id,
-                        id_ubicacion = id_ubicaion,
-                        codigoPostal = codigoPostal,
-                    )
-            db.session.add(new_publicacion_ubicacion)
-
-        db.session.commit()
-        
-        return True
-    except Exception as e:
-        print(str(e))
-        db.session.rollback()  # Asegúrate de hacer rollback en caso de error
-        return False
-    
-    
-    
-    
-
-
-def publicacionCategoriaPublicacion(categoria_id,publicacion_id):
-    try:
-        new_categoria_publicacion = CategoriaPublicacion(
-            categoria_id=int(categoria_id),
-            publicacion_id=publicacion_id,
-            estado='activo'
-        )
-        db.session.add(new_categoria_publicacion)
-        db.session.commit()
-        
-        return True
-    except Exception as e:
-        print(str(e))
-        db.session.rollback()  # Asegúrate de hacer rollback en caso de error
-        return False
-    
-    
-
-
 
 
 
@@ -464,84 +380,7 @@ def publicacionCategoriaPublicacion(categoria_id,publicacion_id):
 
         
 
-def cargarImagen_crearPublicacion( request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
-    size = size
-    # Guardar información en la base de datos   
-   
-    nombre_archivo = filename
-    descriptionImagen = titulo_publicacion
-    randomNumber_ = random.randint(1, 1000000)  # Número aleatorio
-    
-    try:
-        imagen_existente = db.session.query(Image).filter_by(title=filename).first()
-        if imagen_existente:
-            cargar_id_publicacion_id_imagen_video(id_publicacion, imagen_existente.id, 0, 'imagen', size=size)
-            return filename
-        else:
-            nueva_imagen = Image(
-                user_id=userid,
-                title=nombre_archivo,
-                description=descriptionImagen,
-                colorDescription=color_texto,
-                filepath=filename,
-                randomNumber=randomNumber_,
-                size=float(size),
-                mimetype=mimetype
-            )
-            db.session.add(nueva_imagen)
-            db.session.commit()
-            
-            cargar_id_publicacion_id_imagen_video(id_publicacion, nueva_imagen.id, 0, 'imagen', size=size)
-            return filename
-    except Exception as db_error:
-      
-        db.session.rollback()  # Deshacer cambios en caso de error
-        db.session.close()  # Asegurarse de cerrar la sesión incluso si ocurre un error
 
-        raise  # Propagar el error para que pueda ser manejado por capas superiores
-      
-
-
-def cargarVideo_crearPublicacion( request, filename, id_publicacion, color_texto, titulo_publicacion=None, mimetype=None, userid=0, index=None, size=0):
-    print(f"Entering cargarVideo_crearPublicacion with filename: {filename}, userid: {userid}, index: {index}, size: {size}")
-   # Guardar información en la base de datos
-   
-    nombre_archivo = filename
-    descriptionVideo = titulo_publicacion
-    randomNumber_ = random.randint(1, 1000000)  # Número aleatorio
-    
-    try:
-        video_existente = db.session.query(Video).filter_by(title=filename,size=size).first()
-
-        if video_existente:
-            print("Video already exists, saving relation to publicacion_media")
-            # Si la imagen ya existe, solo guarda la relación en publicacion_media
-            
-            cargar_id_publicacion_id_imagen_video(id_publicacion,0,video_existente.id,'video',size=size)
-            return filename
-        else:
-            print("Creating new video")
-            nuevo_video = Video(
-                user_id=userid,
-                title=nombre_archivo,
-                description=descriptionVideo,
-                colorDescription=color_texto,
-                filepath=filename,
-                randomNumber=randomNumber_,
-                size=float(size),
-                mimetype=mimetype
-            )
-            db.session.add(nuevo_video)
-            db.session.commit()
-            print("Saving relation to publicacion_media")
-            cargar_id_publicacion_id_imagen_video(id_publicacion,0,nuevo_video.id,'video',size=size)
-        return filename
-    except Exception as db_error:
-       
-        db.session.rollback()  # Deshacer cambios en caso de error
-        db.session.close()  # Asegurarse de cerrar la sesión incluso si ocurre un error
-
-        raise  # Propagar el error para que pueda ser manejado por capas superiores
 
 
 

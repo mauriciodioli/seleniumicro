@@ -10,7 +10,7 @@
                 "FLASK_APP": "src/app",  // Aquí se coloca el nombre de tu archivo Python sin extensión
                 "FLASK_ENV": "development",  // Configuración de entorno, puede ser "production" si estás en producción
                 "FLASK_RUN_HOST": "127.0.0.1",  // Dirección local del servidor
-                "FLASK_RUN_PORT": "5000"  // Puerto en el que Flask correrá
+                "FLASK_RUN_PORT": "8000"  // Puerto en el que Flask correrá
             },
             "args": [
                 "run"

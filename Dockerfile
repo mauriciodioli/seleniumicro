@@ -10,6 +10,7 @@ COPY src/requirements.txt .
 # Capa 4: Instalar dependencias desde el archivo de requisitos
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt update && apt install -y git
 
 # Capa 6: Copiar todo el código fuente
 COPY src/ .
