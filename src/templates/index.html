@@ -62,81 +62,87 @@
     $('#btn-scrapear').click(function () {
       const selectedCountry = $('#pais').val();
 
-      if (!selectedCountry) {
-        Swal.fire("Error", "Por favor, seleccioná un país primero.", "error");
-        return;
-      }
+        if (!selectedCountry) {
+          Swal.fire("Error", "Por favor, seleccioná un país primero.", "error");
+          return;
+        }
 
-      Swal.fire({
-        title: 'Scrapeando...',
-        text: 'Ejecutando búsqueda con Apify para: ' + selectedCountry,
-        didOpen: () => Swal.showLoading()
-      });
-
-
-
-      debugger;
-    $.ajax({
-        url: "/scrape_amazon",
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({ sheet_name: selectedCountry }),
+        Swal.fire({
+          title: 'Scrapeando...',
+          text: 'Ejecutando búsqueda con Apify para: ' + selectedCountry,
+          didOpen: () => Swal.showLoading()
+        });
 
 
-       success: function (response) {
+
+        debugger;
+      $.ajax({
+          url: "/scrape_amazon",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ sheet_name: selectedCountry }),
+
+
+        success: function (response) {
                 if (response.success) {
-                const resultados = response.datos;
+                          const resultados = response.datos;
 
-                let contenidoHTML = `
-                  <h3>Productos encontrados:</h3>
-                  <table border="1" style="width:100%; border-collapse: collapse;">
-                    <thead>
-                      <tr>
-                        <th>Imagen</th>
-                        <th>Título</th>
-                        <th>Precio</th>
-                        <th>Enlace</th>
-                      </tr>
-                    </thead>
-                    <tbody>`;
+                          let contenidoHTML = `
+                            <h3>Productos encontrados:</h3>
+                            <table border="1" style="width:100%; border-collapse: collapse;">
+                              <thead>
+                                <tr>
+                                  <th>Producto</th>
+                                  <th>Imagen</th>
+                                  <th>Título</th>
+                                  <th>Precio</th>
+                                  <th>Enlace</th>
+                                </tr>
+                              </thead>
+                              <tbody>`;
 
-                resultados.forEach(resultado => {
-                  // Si vino con error lo mostramos en una fila
-                  if (resultado.error) {
-                    contenidoHTML += `
-                      <tr>
-                        <td colspan="4" style="text-align:center; color:red;">
-                          ${resultado.producto}: ${resultado.error}
-                        </td>
-                      </tr>`;
-                    return;  // salteamos al siguiente resultado
-                  }
+                          resultados.forEach(resultado => {
+                            // fila de encabezado para el producto
+                            contenidoHTML += `
+                              <tr style="background:#f0f0f0;">
+                                <td colspan="5"><strong>${resultado.producto}</strong> (${resultado.pais})</td>
+                              </tr>`;
 
-                  // Si tenemos items, iteramos cada uno
-                  resultado.items.forEach(item => {
-                    contenidoHTML += `
-                      <tr>
-                        <td><img src="${item.imagen}" alt="img" width="100"></td>
-                        <td>${item.titulo}</td>
-                        <td>${item.precio} €</td>
-                        <td><a href="${item.url}" target="_blank">Ver producto</a></td>
-                      </tr>`;
-                  });
-                });
+                            if (resultado.error) {
+                              contenidoHTML += `
+                                <tr>
+                                  <td colspan="5" style="color:red; text-align:center;">
+                                    ${resultado.error}
+                                  </td>
+                                </tr>`;
+                            } else {
+                              // una fila por cada ítem de ese producto
+                              resultado.items.forEach(item => {
+                                contenidoHTML += `
+                                  <tr>
+                                    <td><!-- vacío, ya mostramos producto arriba --></td>
+                                    <td><img src="${item.imagen}" alt="" width="80"></td>
+                                    <td>${item.titulo}</td>
+                                    <td>${item.precio} €</td>
+                                    <td><a href="${item.url}" target="_blank">Ver producto</a></td>
+                                  </tr>`;
+                              });
+                            }
+                          });
 
-                contenidoHTML += `
-                    </tbody>
-                  </table>`;
+                          contenidoHTML += `
+                              </tbody>
+                            </table>`;
 
-                $('#resultado').html(contenidoHTML);
-                Swal.fire("¡Listo!", "Scraping completado con éxito.", "success");
+                          $('#resultado').html(contenidoHTML);
+                          Swal.fire("¡Listo!", "Scraping completado con éxito.", "success");
+                        } else {
+                          Swal.fire("Error", response.error || "Algo salió mal.", "error");
+                        }
 
-              } else {
-                Swal.fire("Error", response.error || "Algo salió mal.", "error");
-              }
 
-}
-,
+                        }
+                        ,
         error: function () {
           Swal.fire("Error", "No se pudo contactar al backend.", "error");
         }
