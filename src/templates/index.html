@@ -9,6 +9,7 @@
 </head>
 <body>
   <h1>Cargar país del Sheet</h1>
+
   <select id="pais" name="pais">
     <option value="">Seleccione un país</option>
     <option value="argentina">Argentina</option>
@@ -18,12 +19,21 @@
     <option value="estados_unidos">Estados Unidos</option>
     <option value="alemania">Alemania</option>
     <option value="espana">España</option>
+    <option value="poznan">poznan</option>
   </select>
 
-  <script>
-    $('#pais').change(function () {
-      const selectedCountry = $(this).val();
+  <br><br>
 
+  <button id="btn-cargar-sheet">📥 Cargar datos del Sheet</button>
+  <button id="btn-scrapear">🔍 Ejecutar scraping Apify</button>
+
+  <div id="resultado" style="margin-top: 20px;"></div>
+
+  <script>
+    // 🔁 Cargar datos del Sheet
+    $('#btn-cargar-sheet').click(function () {
+      const selectedCountry = $('#pais').val();
+      debugger;
       if (!selectedCountry) {
         Swal.fire("Error", "Por favor, selecciona un país.", "error");
         return;
@@ -41,11 +51,76 @@
         data: { sheet_name: selectedCountry },
         success: function (response) {
           Swal.fire("¡Éxito!", "Los datos se cargaron correctamente.", "success");
-          // Si tu backend responde con HTML completo, podrías también reemplazar una parte del DOM
-          // $('#resultado').html(response);
         },
         error: function () {
           Swal.fire("Error", "No se pudo cargar el sheet.", "error");
+        }
+      });
+    });
+
+    // 🔍 Ejecutar scraping Apify
+    $('#btn-scrapear').click(function () {
+      const selectedCountry = $('#pais').val();
+
+      if (!selectedCountry) {
+        Swal.fire("Error", "Por favor, seleccioná un país primero.", "error");
+        return;
+      }
+
+      Swal.fire({
+        title: 'Scrapeando...',
+        text: 'Ejecutando búsqueda con Apify para: ' + selectedCountry,
+        didOpen: () => Swal.showLoading()
+      });
+
+    $.ajax({
+        url: "/scrape_amazon",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ sheet_name: selectedCountry }),
+
+
+       success: function (response) {
+  if (response.success) {
+    const productos = response.datos;
+
+    let contenidoHTML = `
+      <h3>Productos encontrados:</h3>
+      <table border="1" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Título</th>
+            <th>Precio</th>
+            <th>Enlace</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    productos.forEach(p => {
+      contenidoHTML += `
+        <tr>
+          <td><img src="${p.imagen}" alt="img" width="100"></td>
+          <td>${p.titulo}</td>
+          <td>${p.precio} €</td>
+          <td><a href="${p.url}" target="_blank">Ver producto</a></td>
+        </tr>`;
+    });
+
+    contenidoHTML += `
+        </tbody>
+      </table>`;
+
+    $('#resultado').html(contenidoHTML);
+    Swal.fire("¡Listo!", "Scraping completado con éxito.", "success");
+
+  } else {
+    Swal.fire("Error", response.error || "Algo salió mal.", "error");
+  }
+}
+,
+        error: function () {
+          Swal.fire("Error", "No se pudo contactar al backend.", "error");
         }
       });
     });

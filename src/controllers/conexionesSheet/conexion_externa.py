@@ -41,6 +41,7 @@ def index():
 
 @conexion_externa.route("/resultado_carga", methods=["POST"])
 def resultado_carga():
+    
     sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
     sheet_name = request.form.get("sheet_name")  # recibe del AJAX
     sheet = autenticar_y_abrir_sheet(sheetId, sheet_name)

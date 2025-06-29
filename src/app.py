@@ -26,12 +26,14 @@ from controllers.selenium_controller import selenium_controller
 from controllers.conexionesSheet.datosSheet import datoSheet
 from controllers.publicaciones import publicaciones
 from controllers.conexionesSheet.conexion_externa import conexion_externa
+from controllers.scrape_amazon_dpia import scrape_amazon_dpia
 
 # Registra los Blueprints
 app.register_blueprint(selenium_controller)
 app.register_blueprint(datoSheet)
 app.register_blueprint(conexion_externa)
 app.register_blueprint(publicaciones)
+app.register_blueprint(scrape_amazon_dpia)
 
 # Función para probar la conexión a la base de datos
 def test_db_connection():
