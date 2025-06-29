@@ -1,7 +1,7 @@
 import os
 import requests
 from flask import Blueprint, request, jsonify
-import json
+import json,pathlib
 from collections import defaultdict
 from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet
 
@@ -13,8 +13,50 @@ TASK_ID = "ruly_economy/dpia-amazon"
 ACTOR_ID = "axesso_data~amazon-search-scraper"
 
 
+# Configuración de cada marketplace
+MARKETS = {
+    "amazon": {
+        "actor": "axesso_data~amazon-search-scraper",
+        "domains": {
+            "argentina": "com.ar", "canada": "ca", "francia": "fr", "italia": "it",
+            "estados_unidos": "com", "alemania": "de", "espana": "es", "polonia": "pl"
+        }
+    },
+    "ebay": {
+        "actor": "axesso_data~ebay-search-scraper",
+        "domains": {
+            "argentina": "com.ar", "canada": "ca", "francia": "fr", "italia": "it",
+            "estados_unidos": "com", "alemania": "de", "espana": "es", "polonia": "pl"
+        }
+    },
+    "aliexpress": {
+        "actor": "axesso_data~aliexpress-search-scraper",
+        "domains": {
+            # AliExpress no cambia mucho de dominio, pero podrías mapear países a idiomas
+            "argentina": "com", "canada": "com", "francia": "fr", "italia": "it",
+            "estados_unidos": "com", "alemania": "de", "espana": "es", "polonia": "pl"
+        }
+    },
+    "mercadolibre": {
+        "actor": "apify/mercadolibre-scraper",
+        "domains": {
+            "argentina": "com.ar", "mexico": "com.mx", "colombia": "com.co",
+            "chile": "cl", "brasil": "com.br", "venezuela": "com.ve"
+            # añade los que necesites
+        }
+    }
+}
+
 # 📍 Blueprint
 scrape_amazon_dpia = Blueprint('scrape_amazon_dpia', __name__)
+
+
+
+
+
+# —————— Orquestador en tu endpoint ——————
+
+
 
 # 📍 Endpoint que se invoca desde el botón
 @scrape_amazon_dpia.route('/scrape_amazon', methods=['POST'])
@@ -134,3 +176,162 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
             })
 
     return resultados
+
+def lanzar_scraping_aliexpress(registros: list, pais_defecto: str) -> list:
+    import json, pathlib, requests
+    # actor y dominio para AliExpress
+    ACTOR_ID = "axesso_data~aliexpress-search-scraper"
+    dominio_por_pais = {
+        "argentina":"com","canada":"com","francia":"fr","italia":"it",
+        "estados_unidos":"com","alemania":"de","espana":"es","polonia":"pl"
+    }
+    base_url = f"https://api.apify.com/v2/acts/{ACTOR_ID}/run-sync-get-dataset-items?token={APIFY_TOKEN}"
+
+    # payload idéntico al de Amazon
+    payload = {"input":[
+        {
+            "keyword": fila["Producto"],
+            "domainCode": dominio_por_pais.get(fila.get("País","").lower(),"com"),
+            "sortBy": "recent",
+            "maxPages": 1,
+            "category": "aps"
+        }
+        for fila in registros
+    ]}
+
+    resp = requests.post(base_url, json=payload, timeout=90)
+    resp.raise_for_status()
+    datos = resp.json()
+
+    # agrupo por keyword
+    agrupado = defaultdict(list)
+    for item in datos:
+        kw = item.get("keyword")
+        agrupado[kw].append(item)
+
+    # construyo resultados
+    resultados = []
+    for fila in registros:
+        prod = fila["Producto"]
+        raw = agrupado.get(prod, [])
+        items = []
+        for d in raw:
+            if d.get("productDescription"):
+                items.append({
+                    "titulo": d["productDescription"],
+                    "precio": d.get("price","N/A"),
+                    "imagen": d.get("imgUrl",""),
+                    "url":     f"https://www.aliexpress.{dominio_por_pais.get(fila.get('País','').lower(),'com')}{d.get('dpUrl','')}"
+                })
+        resultados.append({
+            "producto": prod,
+            "pais":     fila["País"],
+            "items":    items or [],
+            "error":    None if items else "Sin productos relevantes"
+        })
+    return resultados
+
+def lanzar_scraping_ebay(registros: list, pais_defecto: str) -> list:
+    # idéntico a Aliexpress pero con actor ebay-search-scraper y su dominio
+    ACTOR_ID = "axesso_data~ebay-search-scraper"
+    dominio_por_pais = {
+        "argentina":"com.ar","canada":"ca","francia":"fr","italia":"it",
+        "estados_unidos":"com","alemania":"de","espana":"es","polonia":"pl"
+    }
+    base_url = f"https://api.apify.com/v2/acts/{ACTOR_ID}/run-sync-get-dataset-items?token={APIFY_TOKEN}"
+    # payload idéntico al de Amazon
+    payload = {"input":[
+        {
+            "keyword": fila["Producto"],
+            "domainCode": dominio_por_pais.get(fila.get("País","").lower(),"com"),
+            "sortBy": "recent",
+            "maxPages": 1,
+            "category": "aps"
+        }
+        for fila in registros
+    ]}
+
+    resp = requests.post(base_url, json=payload, timeout=90)
+    resp.raise_for_status()
+    datos = resp.json()
+
+    # agrupo por keyword
+    agrupado = defaultdict(list)
+    for item in datos:
+        kw = item.get("keyword")
+        agrupado[kw].append(item)
+
+    # construyo resultados
+    resultados = []
+    for fila in registros:
+        prod = fila["Producto"]
+        raw = agrupado.get(prod, [])
+        items = []
+        for d in raw:
+            if d.get("productDescription"):
+                items.append({
+                    "titulo": d["productDescription"],
+                    "precio": d.get("price","N/A"),
+                    "imagen": d.get("imgUrl",""),
+                    "url":     f"https://www.aliexpress.{dominio_por_pais.get(fila.get('País','').lower(),'com')}{d.get('dpUrl','')}"
+                })
+        resultados.append({
+            "producto": prod,
+            "pais":     fila["País"],
+            "items":    items or [],
+            "error":    None if items else "Sin productos relevantes"
+        })
+    return resultados
+
+def lanzar_scraping_ml(registros: list, pais_defecto: str) -> list:
+    # equivalente para MercadoLibre
+    ACTOR_ID = "apify/mercadolibre-scraper"
+    dominio_por_pais = {
+        "argentina":"com.ar","mexico":"com.mx","colombia":"com.co",
+        "chile":"cl","brasil":"com.br","venezuela":"com.ve"
+    }
+    base_url = f"https://api.apify.com/v2/acts/{ACTOR_ID}/run-sync-get-dataset-items?token={APIFY_TOKEN}"
+       # payload idéntico al de Amazon
+    payload = {"input":[
+        {
+            "keyword": fila["Producto"],
+            "domainCode": dominio_por_pais.get(fila.get("País","").lower(),"com"),
+            "sortBy": "recent",
+            "maxPages": 1,
+            "category": "aps"
+        }
+        for fila in registros
+    ]}
+
+    resp = requests.post(base_url, json=payload, timeout=90)
+    resp.raise_for_status()
+    datos = resp.json()
+
+    # agrupo por keyword
+    agrupado = defaultdict(list)
+    for item in datos:
+        kw = item.get("keyword")
+        agrupado[kw].append(item)
+
+    # construyo resultados
+    resultados = []
+    for fila in registros:
+        prod = fila["Producto"]
+        raw = agrupado.get(prod, [])
+        items = []
+        for d in raw:
+            if d.get("productDescription"):
+                items.append({
+                    "titulo": d["productDescription"],
+                    "precio": d.get("price","N/A"),
+                    "imagen": d.get("imgUrl",""),
+                    "url":     f"https://www.aliexpress.{dominio_por_pais.get(fila.get('País','').lower(),'com')}{d.get('dpUrl','')}"
+                })
+        resultados.append({
+            "producto": prod,
+            "pais":     fila["País"],
+            "items":    items or [],
+            "error":    None if items else "Sin productos relevantes"
+        })
+    return resultados
+
