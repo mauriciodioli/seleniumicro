@@ -84,42 +84,57 @@
 
 
        success: function (response) {
-  if (response.success) {
-    const productos = response.datos;
+                if (response.success) {
+                const resultados = response.datos;
 
-    let contenidoHTML = `
-      <h3>Productos encontrados:</h3>
-      <table border="1" style="width:100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th>Imagen</th>
-            <th>Título</th>
-            <th>Precio</th>
-            <th>Enlace</th>
-          </tr>
-        </thead>
-        <tbody>`;
+                let contenidoHTML = `
+                  <h3>Productos encontrados:</h3>
+                  <table border="1" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                      <tr>
+                        <th>Imagen</th>
+                        <th>Título</th>
+                        <th>Precio</th>
+                        <th>Enlace</th>
+                      </tr>
+                    </thead>
+                    <tbody>`;
 
-    productos.forEach(p => {
-      contenidoHTML += `
-        <tr>
-          <td><img src="${p.imagen}" alt="img" width="100"></td>
-          <td>${p.titulo}</td>
-          <td>${p.precio} €</td>
-          <td><a href="${p.url}" target="_blank">Ver producto</a></td>
-        </tr>`;
-    });
+                resultados.forEach(resultado => {
+                  // Si vino con error lo mostramos en una fila
+                  if (resultado.error) {
+                    contenidoHTML += `
+                      <tr>
+                        <td colspan="4" style="text-align:center; color:red;">
+                          ${resultado.producto}: ${resultado.error}
+                        </td>
+                      </tr>`;
+                    return;  // salteamos al siguiente resultado
+                  }
 
-    contenidoHTML += `
-        </tbody>
-      </table>`;
+                  // Si tenemos items, iteramos cada uno
+                  resultado.items.forEach(item => {
+                    contenidoHTML += `
+                      <tr>
+                        <td><img src="${item.imagen}" alt="img" width="100"></td>
+                        <td>${item.titulo}</td>
+                        <td>${item.precio} €</td>
+                        <td><a href="${item.url}" target="_blank">Ver producto</a></td>
+                      </tr>`;
+                  });
+                });
 
-    $('#resultado').html(contenidoHTML);
-    Swal.fire("¡Listo!", "Scraping completado con éxito.", "success");
+                contenidoHTML += `
+                    </tbody>
+                  </table>`;
 
-  } else {
-    Swal.fire("Error", response.error || "Algo salió mal.", "error");
-  }
+                $('#resultado').html(contenidoHTML);
+                Swal.fire("¡Listo!", "Scraping completado con éxito.", "success");
+
+              } else {
+                Swal.fire("Error", response.error || "Algo salió mal.", "error");
+              }
+
 }
 ,
         error: function () {

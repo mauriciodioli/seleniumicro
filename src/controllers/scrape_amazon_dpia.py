@@ -1,6 +1,8 @@
 import os
 import requests
 from flask import Blueprint, request, jsonify
+import json
+from collections import defaultdict
 from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet
 
 # 📌 Token y Task ID de Apify
@@ -44,7 +46,11 @@ def scrape_amazon():
 
         # 3) Llamo al scraper **una sola vez** con la lista entera
         resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
-
+       
+        print("=== DEBUG Scrape Amazon ===")
+        print(f"Filas válidas: {len(filas_validas)}")
+        print(f"Resultados Globales: {len(resultados_globales)} entradas")
+        print(json.dumps(resultados_globales, indent=2, ensure_ascii=False))
         return jsonify(success=True, datos=resultados_globales)
 
     except Exception as e:
@@ -52,6 +58,7 @@ def scrape_amazon():
 
 
 def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
+    import json, pathlib
     dominio_por_pais = {
         "argentina": "com", "canada": "ca", "francia": "fr", "italia": "it",
         "estados_unidos": "com", "alemania": "de", "espana": "es", "polonia": "pl"
@@ -62,56 +69,66 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
         f"?token={APIFY_TOKEN}"
     )
 
-    # 4) Construyo el input array a partir de todas las filas válidas
+    # 1) Payload con searchId
     payload = {
         "input": [
             {
-                "keyword": fila["Producto"],
+                "searchId":   idx,
+                "keyword":    fila["Producto"],
                 "domainCode": dominio_por_pais.get(fila.get("País","").lower(), "com"),
-                "sortBy": "recent",
-                "maxPages": 1,
-                "category": "aps"
+                "sortBy":     "recent",
+                "maxPages":   1,
+                "category":   "aps"
             }
-            for fila in registros
+            for idx, fila in enumerate(registros)
         ]
     }
 
-    # 5) Hago una sola request, Apify procesará todos los keywords de golpe
+    # 2) Petición única
     resp = requests.post(base_url, json=payload, timeout=90)
     resp.raise_for_status()
     datos = resp.json()
 
+    # 3) DEBUG: vuelca los primeros 5 registros para inspección
+    print(">>> DEBUG primeros items de Apify:", json.dumps(datos[:5], indent=2, ensure_ascii=False))
+
     if not isinstance(datos, list) or not datos:
         raise ValueError("Respuesta vacía o inválida.")
 
-    # 6) Mappeo la respuesta en función del input original
-    #    (si tu actor devuelve en orden, sino tendrás que matchear con algún id)
+    # 4) Agrupo PLANO por searchId
+    agrupado = defaultdict(list)
+    for item in datos:
+        sid = item.get("searchId")
+        agrupado[sid].append(item)
+
+    # 5) Reconstruyo resultados por cada fila original
     resultados = []
-    for i, fila in enumerate(registros):
-        batch = datos[i] if i < len(datos) else {}
-        try:
-            items = [
-                {
-                    "titulo":  d["productDescription"],
-                    "precio":  d["price"],
-                    "imagen":  d["imgUrl"],
-                    "url":     f"https://www.amazon.{payload['input'][i]['domainCode']}{d.get('dpUrl','')}"
-                }
-                for d in batch.get("items", [])  # o ajusta según tu estructura real
-                if d.get("productDescription")
-            ]
-            if not items:
-                raise ValueError("Sin productos relevantes.")
+    for idx, fila in enumerate(registros):
+        raw_items = agrupado.get(idx, [])
+        print(f">>> DEBUG fila {idx} ('{fila['Producto']}') tiene {len(raw_items)} items crudos")
+
+        # Transformo cada registro en el formato que quiero
+        items = []
+        for d in raw_items:
+            if d.get("productDescription"):
+                items.append({
+                    "titulo": d["productDescription"],
+                    "precio": d.get("price", "N/A"),
+                    "imagen": d.get("imgUrl", ""),
+                    "url":     f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}"
+                })
+
+        if items:
             resultados.append({
                 "producto": fila["Producto"],
                 "pais":     fila["País"],
                 "items":    items
             })
-        except Exception as err:
+        else:
             resultados.append({
                 "producto": fila["Producto"],
                 "pais":     fila["País"],
-                "error":    str(err)
+                "error":    "Sin productos relevantes o bloque faltante."
             })
 
     return resultados
