@@ -232,57 +232,77 @@ def lanzar_scraping_aliexpress(registros: list, pais_defecto: str) -> list:
     return resultados
 
 def lanzar_scraping_ebay(registros: list, pais_defecto: str) -> list:
-    # idéntico a Aliexpress pero con actor ebay-search-scraper y su dominio
-    ACTOR_ID = "axesso_data~ebay-search-scraper"
+    ACTOR_ID = "dtrungtin/ebay-items-scraper"  # tu Actor ID exacto
     dominio_por_pais = {
-        "argentina":"com.ar","canada":"ca","francia":"fr","italia":"it",
-        "estados_unidos":"com","alemania":"de","espana":"es","polonia":"pl"
+        "argentina": "com.ar","canada": "ca","francia": "fr",
+        "italia": "it","estados_unidos": "com","alemania": "de",
+        "espana": "es","polonia": "pl"
     }
-    base_url = f"https://api.apify.com/v2/acts/{ACTOR_ID}/run-sync-get-dataset-items?token={APIFY_TOKEN}"
-    # payload idéntico al de Amazon
-    payload = {"input":[
+
+    # 1) Construyo la lista de startUrls, una por fila
+    start_urls = [
         {
-            "keyword": fila["Producto"],
-            "domainCode": dominio_por_pais.get(fila.get("País","").lower(),"com"),
-            "sortBy": "recent",
-            "maxPages": 1,
-            "category": "aps"
+          "url": (
+             f"https://www.ebay.{ dominio_por_pais.get(fila['País'].lower(), 'com') }"
+             f"/sch/i.html?_nkw={fila['Producto'].replace(' ', '+')}"
+          )
         }
         for fila in registros
-    ]}
+    ]
+    payload = {
+        "proxyConfig": {"useApifyProxy": True},
+        "maxItems":    5,       # ajusta cuántos items por búsqueda
+        "startUrls":   start_urls
+    }
 
-    resp = requests.post(base_url, json=payload, timeout=90)
+    # 2) Lanzar la petición
+    resp = requests.post(
+      f"https://api.apify.com/v2/acts/{ACTOR_ID}/run-sync-get-dataset-items?token={APIFY_TOKEN}",
+      json=payload,
+      timeout=90
+    )
     resp.raise_for_status()
     datos = resp.json()
 
-    # agrupo por keyword
+    # 3) Agrupo los items por la URL original
     agrupado = defaultdict(list)
-    for item in datos:
-        kw = item.get("keyword")
-        agrupado[kw].append(item)
+    for d in datos:
+        req = d.get("request", {})  # este actor incluye request.url
+        url = req.get("url")
+        if url:
+            agrupado[url].append(d)
 
-    # construyo resultados
+    # 4) Construyo el output paralelo a tus registros
     resultados = []
     for fila in registros:
-        prod = fila["Producto"]
-        raw = agrupado.get(prod, [])
+        code       = dominio_por_pais.get(fila['País'].lower(), 'com')
+        search_url = (
+          f"https://www.ebay.{code}/sch/i.html?_nkw={fila['Producto'].replace(' ', '+')}"
+        )
+        raw_items = agrupado.get(search_url, [])
         items = []
-        for d in raw:
-            if d.get("productDescription"):
+        for d in raw_items:
+            # ajusta estos campos si tu actor los devuelve con otro nombre
+            titulo = d.get("title") or d.get("productDescription")
+            precio = d.get("price")
+            img    = d.get("image") or d.get("imgUrl")
+            link   = d.get("url") or d.get("itemUrl")
+            if titulo and precio:
                 items.append({
-                    "titulo": d["productDescription"],
-                    "precio": d.get("price","N/A"),
-                    "imagen": d.get("imgUrl",""),
-                    "url":     f"https://www.aliexpress.{dominio_por_pais.get(fila.get('País','').lower(),'com')}{d.get('dpUrl','')}"
+                    "titulo": titulo,
+                    "precio": precio,
+                    "imagen": img,
+                    "url":     link
                 })
-        resultados.append({
-            "producto": prod,
-            "pais":     fila["País"],
-            "items":    items or [],
-            "error":    None if items else "Sin productos relevantes"
-        })
-    return resultados
 
+        resultados.append({
+            "producto": fila["Producto"],
+            "pais":     fila["País"],
+            "items":    items,
+            "error":    None if items else "Sin resultados en eBay"
+        })
+
+    return resultados
 def lanzar_scraping_ml(registros: list, pais_defecto: str) -> list:
     # equivalente para MercadoLibre
     ACTOR_ID = "apify/mercadolibre-scraper"
