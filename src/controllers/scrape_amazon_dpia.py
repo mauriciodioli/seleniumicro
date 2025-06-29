@@ -69,50 +69,52 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
         f"?token={APIFY_TOKEN}"
     )
 
-    # 1) Payload con searchId
+    # 1) Payload sin searchId
     payload = {
         "input": [
             {
-                "searchId":   idx,
                 "keyword":    fila["Producto"],
                 "domainCode": dominio_por_pais.get(fila.get("País","").lower(), "com"),
                 "sortBy":     "recent",
                 "maxPages":   1,
                 "category":   "aps"
             }
-            for idx, fila in enumerate(registros)
+            for fila in registros
         ]
     }
 
-    # 2) Petición única
+    # 2) Petición y JSON crudo
     resp = requests.post(base_url, json=payload, timeout=90)
     resp.raise_for_status()
     datos = resp.json()
 
-    # 3) DEBUG: vuelca los primeros 5 registros para inspección
-    print(">>> DEBUG primeros items de Apify:", json.dumps(datos[:5], indent=2, ensure_ascii=False))
+    # DEBUG: vuelca primeros 10 para inspección
+    pathlib.Path("apify_debug.json").write_text(json.dumps(datos[:10], indent=2, ensure_ascii=False))
+    print(">>> DEBUG primeros 10 items de Apify:", json.dumps(datos[:10], indent=2, ensure_ascii=False))
 
     if not isinstance(datos, list) or not datos:
         raise ValueError("Respuesta vacía o inválida.")
 
-    # 4) Agrupo PLANO por searchId
-    agrupado = defaultdict(list)
+    # 3) Agrupo POR keyword
+    agrupado_por_keyword = defaultdict(list)
     for item in datos:
-        sid = item.get("searchId")
-        agrupado[sid].append(item)
+        kw = item.get("keyword")
+        if kw:
+            agrupado_por_keyword[kw].append(item)
 
-    # 5) Reconstruyo resultados por cada fila original
+    # 4) Reconstruyo resultados
     resultados = []
-    for idx, fila in enumerate(registros):
-        raw_items = agrupado.get(idx, [])
-        print(f">>> DEBUG fila {idx} ('{fila['Producto']}') tiene {len(raw_items)} items crudos")
+    for fila in registros:
+        prod = fila["Producto"]
+        raw_items = agrupado_por_keyword.get(prod, [])
+        print(f">>> DEBUG '{prod}' encontró {len(raw_items)} registros crudos")
 
-        # Transformo cada registro en el formato que quiero
         items = []
         for d in raw_items:
-            if d.get("productDescription"):
+            desc = d.get("productDescription")
+            if desc:
                 items.append({
-                    "titulo": d["productDescription"],
+                    "titulo": desc,
                     "precio": d.get("price", "N/A"),
                     "imagen": d.get("imgUrl", ""),
                     "url":     f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}"
@@ -120,15 +122,15 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
 
         if items:
             resultados.append({
-                "producto": fila["Producto"],
+                "producto": prod,
                 "pais":     fila["País"],
                 "items":    items
             })
         else:
             resultados.append({
-                "producto": fila["Producto"],
+                "producto": prod,
                 "pais":     fila["País"],
-                "error":    "Sin productos relevantes o bloque faltante."
+                "error":    "Sin productos relevantes."
             })
 
     return resultados
