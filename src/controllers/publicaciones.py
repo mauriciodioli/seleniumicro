@@ -103,7 +103,8 @@ def completar_publicaciones(data):
 
             for index, url in enumerate(imagenes_urls):
                 filename = secure_filename(f"{slug}_{index}.jpg")
-                cargar_imagen(request, filename, publicacion_id, "black", producto, "image/jpeg", user_id, index)
+                
+                cargar_imagen(request, filename,url, publicacion_id, "black", producto, "image/jpeg", user_id, index)
 
         db.session.commit()
 
@@ -145,7 +146,7 @@ def registrar_categoria_publicacion(categoria_id, publicacion_id):
     except Exception as e:
         print(f"❌ Error registrar_categoria_publicacion: {e}")
         return False
-def cargar_imagen(request, filename, id_publicacion, color_texto, titulo, mimetype, userid, index, size=0):
+def cargar_imagen(request, filename,url, id_publicacion, color_texto, titulo, mimetype, userid, index, size=0):
     try:
         existente = db.session.query(Image).filter_by(title=filename).first()
         if existente:
@@ -157,7 +158,7 @@ def cargar_imagen(request, filename, id_publicacion, color_texto, titulo, mimety
             title=filename,
             description=titulo,
             colorDescription=color_texto,
-            filepath=filename,
+            filepath=url,
             randomNumber=random.randint(1, 1_000_000),
             size=float(size),
             mimetype=mimetype
