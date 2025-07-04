@@ -2,7 +2,9 @@ import os
 import requests
 from flask import Blueprint, request, jsonify
 import json,pathlib
+import re
 from collections import defaultdict
+from json import JSONDecoder
 from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet
 
 # 📌 Token y Task ID de Apify
@@ -51,17 +53,41 @@ MARKETS = {
 scrape_amazon_dpia = Blueprint('scrape_amazon_dpia', __name__)
 
 
+# 1. Calcula la ruta al directorio raíz de tu proyecto (dos niveles arriba de este archivo)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+
 
 
 
 # —————— Orquestador en tu endpoint ——————
 
+def load_many(json_path):
+    # 1) Leemos todo el fichero
+    with open(json_path, "r", encoding="utf-8") as f:
+        text = f.read().strip()
 
+    # 2) Convertimos cualquier ‘}{’ o ‘},\n{’ en '},{' para asegurarnos de que quede "obj1},{obj2"
+    text = re.sub(r'}\s*{', '},{', text)
 
+    # 3) Si no empieza con '[', lo envolvemos en corchetes
+    if not text.startswith('['):
+        text = f'[{text}]'
+
+    # 4) Eliminamos comas finales justo antes del ']'
+    text = re.sub(r',\s*]', ']', text)
+
+    # 5) Parseamos JSON
+    datos = json.loads(text)
+
+    # 6) Tu salida de depuración / resumen
+    for sección in datos:
+        print(f"{sección['producto']} → {len(sección['items'])} items")
+
+    return datos
 # 📍 Endpoint que se invoca desde el botón
 @scrape_amazon_dpia.route('/scrape_amazon', methods=['POST'])
 def scrape_amazon():
-    try:
+   #   try:
         # Recibo sheet_name (p.ej. "Polonia") del front
         sheet_name = request.get_json().get("sheet_name")
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
@@ -87,16 +113,22 @@ def scrape_amazon():
             return jsonify(success=True, datos=[])
 
         # 3) Llamo al scraper **una sola vez** con la lista entera
-        resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
-       
+        # # # # # # # # resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name) # # # # # # # # # # # 
+        
+        
+       # 2. Construye la ruta al JSON dentro de test/
+        json_path = os.path.join(BASE_DIR, "src", "test/productos.json")
+
+        resultados_globales = load_many(json_path)
+        
         print("=== DEBUG Scrape Amazon ===")
         print(f"Filas válidas: {len(filas_validas)}")
         print(f"Resultados Globales: {len(resultados_globales)} entradas")
         print(json.dumps(resultados_globales, indent=2, ensure_ascii=False))
         return jsonify(success=True, datos=resultados_globales)
 
-    except Exception as e:
-        return jsonify(success=False, error=str(e))
+   #   except Exception as e:
+   #       return jsonify(success=False, error=str(e))
 
 
 def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
