@@ -2,22 +2,11 @@
 flask
 sqlalchemy
 flask_sqlalchemy
-<<<<<<< Updated upstream
-pymysql
-
-# Serialización
-marshmallow
-flask-marshmallow
-marshmallow-sqlalchemy
-
-# Google API y OAuth
-=======
 flask-marshmallow
 marshmallow-sqlalchemy
 google-auth
 google-api-core==2.11.0
 google-api-python-client==2.81.0
->>>>>>> Stashed changes
 google-auth==2.16.2
 google-auth-httplib2==0.1.0
 google-auth-oauthlib==1.0.0
@@ -29,14 +18,8 @@ gspread==5.7.2
 # ⚠️ Deprecado, pero si tu código lo usa aún:
 oauth2client==4.1.3
 oauthlib==2.1.0
-<<<<<<< Updated upstream
-
-# Selenium
-selenium
-=======
 PyDrive==1.3.1
 pymysql
->>>>>>> Stashed changes
 webdriver_manager
 
 # Archivos y permisos
