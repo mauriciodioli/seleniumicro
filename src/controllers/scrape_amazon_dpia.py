@@ -3,9 +3,12 @@ import requests
 from flask import Blueprint, request, jsonify
 import json,pathlib
 import re
+
 from collections import defaultdict
 from json import JSONDecoder
 from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet
+from controllers.filtro_publicacion import filtro_publicaciones,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui
+from controllers.publicaciones import completar_publicaciones
 
 # 📌 Token y Task ID de Apify
 APIFY_TOKEN = os.getenv("APIFY_TOKEN")
@@ -81,13 +84,17 @@ def load_many(json_path):
 
     # 6) Tu salida de depuración / resumen
     for sección in datos:
+        #print(f"{sección['asin']} – {sección['productDescription'][:60]}...")
         print(f"{sección['producto']} → {len(sección['items'])} items")
 
     return datos
+
+
+
 # 📍 Endpoint que se invoca desde el botón
 @scrape_amazon_dpia.route('/scrape_amazon', methods=['POST'])
 def scrape_amazon():
-   #   try:
+      try:
         # Recibo sheet_name (p.ej. "Polonia") del front
         sheet_name = request.get_json().get("sheet_name")
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
@@ -113,22 +120,30 @@ def scrape_amazon():
             return jsonify(success=True, datos=[])
 
         # 3) Llamo al scraper **una sola vez** con la lista entera
+        # (a) SCRAPING: aquí usarías lanzar_scraping_amazon(...)
         # # # # # # # # resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name) # # # # # # # # # # # 
-        
+        #resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
         
        # 2. Construye la ruta al JSON dentro de test/
         json_path = os.path.join(BASE_DIR, "src", "test/productos.json")
 
         resultados_globales = load_many(json_path)
+      
         
-        print("=== DEBUG Scrape Amazon ===")
-        print(f"Filas válidas: {len(filas_validas)}")
-        print(f"Resultados Globales: {len(resultados_globales)} entradas")
-        print(json.dumps(resultados_globales, indent=2, ensure_ascii=False))
-        return jsonify(success=True, datos=resultados_globales)
+        # (b) arma filas + top-3
+        publicaciones = armar_publicaciones_validas_match_scrping_sheet(
+            filas_validas, resultados_globales, sheet_name)
 
-   #   except Exception as e:
-   #       return jsonify(success=False, error=str(e))
+        # (c) reduce a la estructura que entiende el front
+        datos_ui = preparar_respuesta_ui(publicaciones)
+
+        #completar_publicaciones(data)
+     
+        
+        return jsonify(success=True, datos=datos_ui)
+
+      except Exception as e:
+          return jsonify(success=False, error=str(e))
 
 
 def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
@@ -163,8 +178,8 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
     datos = resp.json()
 
     # DEBUG: vuelca primeros 10 para inspección
-    pathlib.Path("apify_debug.json").write_text(json.dumps(datos[:10], indent=2, ensure_ascii=False))
-    print(">>> DEBUG primeros 10 items de Apify:", json.dumps(datos[:10], indent=2, ensure_ascii=False))
+    pathlib.Path("apify_debug.json").write_text(json.dumps(datos[:20], indent=2, ensure_ascii=False))
+    print(">>> DEBUG primeros 10 items de Apify:", json.dumps(datos[:20], indent=2, ensure_ascii=False))
 
     if not isinstance(datos, list) or not datos:
         raise ValueError("Respuesta vacía o inválida.")
@@ -188,11 +203,20 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
             desc = d.get("productDescription")
             if desc:
                 items.append({
-                    "titulo": desc,
-                    "precio": d.get("price", "N/A"),
-                    "imagen": d.get("imgUrl", ""),
-                    "url":     f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}"
-                })
+                        "titulo":            desc,
+                        "asin":              d.get("asin"),
+                        "precio":            d.get("price"),
+                        "precio_original":   d.get("retailPrice"),
+                        "rating":            d.get("productRating"),
+                        "reviews":           d.get("countReview"),
+                        "prime":             d.get("prime"),
+                        "entrega":           d.get("deliveryMessage"),
+                        "imagen":            d.get("imgUrl"),
+                        "url":               f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}",
+                        "detalles":          d.get("productDetails", [])
+                    })
+
+                
 
         if items:
             resultados.append({

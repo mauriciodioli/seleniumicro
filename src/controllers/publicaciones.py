@@ -23,7 +23,7 @@ publicaciones = Blueprint('publicaciones', __name__)
 
 # Completar la publicación con datos del sheet y base de datos
 def completar_publicaciones(data):
-    publicaciones_completas = []
+    publicaciones_completas = []    
 
     try:
         for row in data:
