@@ -124,3 +124,25 @@ def preparar_respuesta_ui(publicaciones):
                 "error":    "Sin artículos que cumplan los criterios"
             })
     return datos_ui
+
+
+# ─────────────── helpers ───────────────
+def preparar_tabla_b(publicaciones):
+    """Regresa la lista de filas del sheet + top-3 en 1-solo-dict por fila."""
+    filas = []
+    for pub in publicaciones:
+        for it in pub["items_filtrados"]:
+            fila = pub.copy()                     # copia toda la fila del sheet
+            # quitamos la lista completa (solo guardamos 1 item por fila)
+            fila.pop("items_filtrados", None)
+            # agrega campos del ítem ganador con prefijo item_
+            fila.update({
+                "item_titulo":  it["titulo"],
+                "item_precio":  it["precio"],
+                "item_rating":  it.get("rating"),
+                "item_reviews": it.get("reviews"),
+                "item_imagen":  it["imagen"],
+                "item_url":     it["url"],
+            })
+            filas.append(fila)
+    return filas

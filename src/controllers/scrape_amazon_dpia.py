@@ -7,7 +7,7 @@ import re
 from collections import defaultdict
 from json import JSONDecoder
 from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet
-from controllers.filtro_publicacion import filtro_publicaciones,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui
+from controllers.filtro_publicacion import filtro_publicaciones,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui,preparar_tabla_b
 from controllers.publicaciones import completar_publicaciones
 
 # 📌 Token y Task ID de Apify
@@ -135,12 +135,13 @@ def scrape_amazon():
             filas_validas, resultados_globales, sheet_name)
 
         # (c) reduce a la estructura que entiende el front
-        datos_ui = preparar_respuesta_ui(publicaciones)
+        tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
+        tabla_b = preparar_tabla_b(publicaciones)        # (la nueva)
 
         #completar_publicaciones(data)
      
         
-        return jsonify(success=True, datos=datos_ui)
+        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b)
 
       except Exception as e:
           return jsonify(success=False, error=str(e))
