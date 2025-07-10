@@ -148,33 +148,45 @@ def preparar_respuesta_ui(publicaciones):
 
 # ─────────────── helpers ───────────────
 
-def preparar_tabla_b(publicaciones):
+# helpers.py
+def preparar_tabla_b(publicaciones: list[dict]) -> list[dict]:
     """
-    Devuelve una lista de dicts —uno por ítem ganador— con:
-      • todos los campos originales de la fila del Sheet
-      • + los campos del ítem top-3, prefijo `item_`
+    Devuelve SOLO los ítems ganadores, uno por fila, sin duplicados.
+    Cada fila lleva:
+      · columnas originales del Sheet   (Producto, Categoría, … validado)
+      · + campos del ganador  (prefijo item_… incluidas imagen2…imagen6)
     """
-    filas = []
-    for pub in publicaciones:
-        # copiamos SOLO los campos del sheet que nos interesan
-        base = {k: v for k, v in pub.items()
-                if k not in ("items_filtrados", "__score")}   # ← quita extras
+    filas, vistos = [], set()
 
-        for it in pub["items_filtrados"]:
-            fila = base.copy()        # no tocamos el original
-            fila.update({
-                "item_titulo" :  it["titulo"],
-                "item_precio" :  it["precio"],
-                "item_rating" :  it.get("rating"),
-                "item_reviews":  it.get("reviews"),
-                "item_prime"  :  it.get("prime"),
-                "item_entrega":  it.get("entrega"),
-                "item_imagen" :  it["imagen"],
-                "item_url"    :  it["url"],
-            })
+    for pub in publicaciones:
+        for it in pub["items_filtrados"]:        # ← solo los ganadores
+            asin = it.get("asin") or it["url"]   # llave para detectar duplicados
+            if asin in vistos:
+                continue                         # ya lo añadimos antes
+            vistos.add(asin)
+
+            base = {k: v for k, v in pub.items()
+                    if k not in ("items_filtrados", "__score")}
+
+            fila = base | {                     # “|” = merge dicts (Py 3.9+)
+                "item_titulo" : it["titulo"],
+                "item_precio" : it["precio"],
+                "item_rating" : it.get("rating"),
+                "item_reviews": it.get("reviews"),
+                "item_prime"  : it.get("prime"),
+                "item_entrega": it.get("entrega"),
+                "item_url"    : it["url"],
+                "item_imagen" : it["imagen"],
+                "imagen2"     : it.get("imagen2", ""),
+                "imagen3"     : it.get("imagen3", ""),
+                "imagen4"     : it.get("imagen4", ""),
+                "imagen5"     : it.get("imagen5", ""),
+                "imagen6"     : it.get("imagen6", "")
+            }
             filas.append(fila)
 
     return filas
+
 
 
 

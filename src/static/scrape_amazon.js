@@ -62,36 +62,26 @@
                 htmlA += `</tbody></table>`;
 
                 //---------------- TABLA B  (sheet + top-3) -----------//
-    
+
                     const filas = response.tablaB;
-                    if (filas.length === 0) {
-                    $('#resultado').append('<p>No hay filas para la tabla B.</p>');
-                    return;
-                    }
-
-                    /* 1️⃣  Obtenemos todas las claves de la PRIMERA fila  */
-                    let columnas = Object.keys(filas[0]);
-
-                    /* 2️⃣  (Opcional) mueve los item_ al final para que se vean después del Sheet  */
-                    const itemCols   = columnas.filter(c => c.startsWith('item_'));
-                    const sheetCols  = columnas.filter(c => !c.startsWith('item_'));
-                    columnas = sheetCols.concat(itemCols);
-
-                    /* 3️⃣  Cabecera dinámica */
                     let htmlB = `
-                    <h3 style="margin-top:40px">Selección final (Sheet + Top-3)</h3>
-                    <table border="1" style="width:100%;border-collapse:collapse">
-                        <thead><tr>${columnas.map(c => `<th>${c}</th>`).join("")}</tr></thead>
-                        <tbody>`;
+                    <h3 style="margin-top:40px;">Selección final (Sheet + Top-3)</h3>
+                    <table border="1" style="width:100%;border-collapse:collapse;"><thead><tr>`;
 
-                    /* 4️⃣  Filas */
-                    filas.forEach(fila => {
+                    // cabecera: lee la primera fila
+                    Object.keys(filas[0]).forEach(col => {
+                    htmlB += `<th>${col}</th>`;
+                    });
+                    htmlB += `</tr></thead><tbody>`;
+
+                    // datos
+                    filas.forEach(f => {
                     htmlB += "<tr>";
-                    columnas.forEach(col => {
-                        const val = fila[col] ?? "";
-                        if (col.match(/^imagen\d*$|^item_imagen$/)) {               // cualquier campo imagenX o item_imagen
+                    Object.keys(filas[0]).forEach(col => {
+                        const val = f[col] ?? "";
+                        if (col.startsWith("imagen") || col === "item_imagen") {
                         htmlB += `<td>${val ? `<img src="${val}" width="60">` : ""}</td>`;
-                        } else if (col === "item_url" || col.startsWith("búsqueda_")) {
+                        } else if (col.endsWith("_url") || col.startsWith("búsqueda_")) {
                         htmlB += `<td>${val ? `<a href="${val}" target="_blank">link</a>` : ""}</td>`;
                         } else {
                         htmlB += `<td>${val}</td>`;
@@ -99,8 +89,8 @@
                     });
                     htmlB += "</tr>";
                     });
-
                     htmlB += "</tbody></table>";
+
 
                 //---------------- Inyectar en el DOM ----------------//
                 $('#resultado').html(htmlA + htmlB);
