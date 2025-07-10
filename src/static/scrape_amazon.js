@@ -76,30 +76,30 @@
 
                             htmlA += `</tbody></table>`;
 
-                            // ---------------- TABLA B (Sheet + Selección Final) ----------------
+                            // 1) armar cabecera dinámica
+                            const todasLasColumnas = Object.keys(filas[0] || {});   // confía en la primera fila
                             let htmlB = `
                             <h3 style="margin-top:40px;">Selección final (Sheet + Top-3)</h3>
-                            <table border="1" style="width:100%;border-collapse:collapse;">
-                                <thead>
-                                <tr>
-                                    <th>Producto</th><th>Categoría</th><th>País</th>
-                                    <th>Item título</th><th>Item precio</th><th>Link</th>
-                                </tr>
-                                </thead>
-                                <tbody>`;
+                            <table border="1" style="width:100%;border-collapse:collapse;font-size:13px;">
+                                <thead><tr>`;
+                            todasLasColumnas.forEach(col => { htmlB += `<th>${col}</th>`; });
+                            htmlB += `</tr></thead><tbody>`;
 
+                            // 2) cada fila
                             filas.forEach(f => {
-                            htmlB += `
-                                <tr>
-                                <td>${f.Producto}</td>
-                                <td>${f.Categoría}</td>
-                                <td>${f.País}</td>
-                                <td>${f.item_titulo}</td>
-                                <td>${f.item_precio}</td>
-                                <td><a href="${f.item_url}" target="_blank">Ver</a></td>
-                                </tr>`;
+                            htmlB += `<tr>`;
+                            todasLasColumnas.forEach(col => {
+                                // Si la columna es link lo volvemos clicable
+                                if (col === "item_url") {
+                                htmlB += `<td><a href="${f[col]}" target="_blank">Ver</a></td>`;
+                                } else if (col === "item_imagen") {
+                                htmlB += `<td><img src="${f[col]}" width="60"></td>`;
+                                } else {
+                                htmlB += `<td>${f[col] ?? ""}</td>`;
+                                }
                             });
-
+                            htmlB += `</tr>`;
+                            });
                             htmlB += `</tbody></table>`;
 
                             // ---------------- Inyectar todo en el DOM ----------------

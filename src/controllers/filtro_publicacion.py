@@ -127,22 +127,32 @@ def preparar_respuesta_ui(publicaciones):
 
 
 # ─────────────── helpers ───────────────
+
 def preparar_tabla_b(publicaciones):
-    """Regresa la lista de filas del sheet + top-3 en 1-solo-dict por fila."""
+    """
+    Devuelve una lista de dicts —uno por ítem ganador— con:
+      • todos los campos originales de la fila del Sheet
+      • + los campos del ítem top-3, prefijo `item_`
+    """
     filas = []
     for pub in publicaciones:
+        # copiamos SOLO los campos del sheet que nos interesan
+        base = {k: v for k, v in pub.items()
+                if k not in ("items_filtrados", "__score")}   # ← quita extras
+
         for it in pub["items_filtrados"]:
-            fila = pub.copy()                     # copia toda la fila del sheet
-            # quitamos la lista completa (solo guardamos 1 item por fila)
-            fila.pop("items_filtrados", None)
-            # agrega campos del ítem ganador con prefijo item_
+            fila = base.copy()        # no tocamos el original
             fila.update({
-                "item_titulo":  it["titulo"],
-                "item_precio":  it["precio"],
-                "item_rating":  it.get("rating"),
-                "item_reviews": it.get("reviews"),
-                "item_imagen":  it["imagen"],
-                "item_url":     it["url"],
+                "item_titulo" :  it["titulo"],
+                "item_precio" :  it["precio"],
+                "item_rating" :  it.get("rating"),
+                "item_reviews":  it.get("reviews"),
+                "item_prime"  :  it.get("prime"),
+                "item_entrega":  it.get("entrega"),
+                "item_imagen" :  it["imagen"],
+                "item_url"    :  it["url"],
             })
             filas.append(fila)
+
     return filas
+
