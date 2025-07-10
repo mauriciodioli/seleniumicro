@@ -1,7 +1,7 @@
 import os
 import requests
 from flask import Blueprint, request, jsonify
-import json,pathlib
+import json,pathlib, time
 import re
 
 from collections import defaultdict
@@ -9,6 +9,14 @@ from json import JSONDecoder
 from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet
 from controllers.filtro_publicacion import filtro_publicaciones,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui,preparar_tabla_b
 from controllers.publicaciones import completar_publicaciones
+
+
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 # 📌 Token y Task ID de Apify
 APIFY_TOKEN = os.getenv("APIFY_TOKEN")
@@ -132,7 +140,11 @@ def scrape_amazon():
         
         # (b) arma filas + top-3
         publicaciones = armar_publicaciones_validas_match_scrping_sheet(
-            filas_validas, resultados_globales, sheet_name)
+                                                                            filas_validas,
+                                                                            resultados_globales,
+                                                                            sheet_name,
+                                                                            APIFY_TOKEN,         
+                                                                        )
 
         # (c) reduce a la estructura que entiende el front
         tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
@@ -202,6 +214,11 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
         items = []
         for d in raw_items:
             desc = d.get("productDescription")
+            base_dom = dominio_por_pais.get(fila.get("País","").lower(), "com")
+            url_dp   = d.get("dpUrl")            # puede ser None
+            url_final = f"https://www.amazon.{base_dom}{url_dp}" if url_dp else None
+            
+          
             if desc:
                 items.append({
                         "titulo":            desc,
@@ -212,8 +229,9 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
                         "reviews":           d.get("countReview"),
                         "prime":             d.get("prime"),
                         "entrega":           d.get("deliveryMessage"),
-                        "imagen":            d.get("imgUrl"),
-                        "url":               f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}",
+                        "imagen":            d.get("imgUrl"),                       
+                     #   "url":               f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}",
+                        "url":               url_final,
                         "detalles":          d.get("productDetails", [])
                     })
 
@@ -233,6 +251,55 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
             })
 
     return resultados
+
+
+
+# ── 1)  Configurá el driver ─────────────────────────
+def get_chrome():
+    opts = webdriver.ChromeOptions()
+    opts.add_argument("--headless=new")   # sin UI
+    opts.add_argument("--no-sandbox")
+    opts.add_argument("--disable-dev-shm-usage")
+    return webdriver.Chrome(options=opts)
+
+driver = get_chrome()
+
+# ── 2)  Función que abre el DP y llama al helper ─────
+def extraer_imagenes_por_asin(asin: str, dominio: str, driver) -> list:
+    url = f"https://www.amazon.{dominio}/dp/{asin}"
+    driver.get(url)
+    return extraer_imagenes(driver)
+
+# ── 3)  Helper para tomar hasta 6 URLs hi-res ────────
+def extraer_imagenes(driver):
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "imgTagWrapperId"))
+    )
+
+    thumbs = driver.find_elements(By.CSS_SELECTOR, "#altImages li img")
+    urls = set()
+
+    for thumb in thumbs:
+        try:
+            thumb.click()
+            time.sleep(0.5)  # deja que cambie la imagen grande
+            tag  = driver.find_element(By.ID, "landingImage")
+            data = tag.get_attribute("data-a-dynamic-image")
+            hi_res = list(json.loads(data).keys())[0]
+            urls.add(hi_res)
+        except Exception:
+            pass
+
+    return list(urls)[:6]   # máx 6
+
+
+
+
+
+
+
+
+
 
 def lanzar_scraping_aliexpress(registros: list, pais_defecto: str) -> list:
     import json, pathlib, requests

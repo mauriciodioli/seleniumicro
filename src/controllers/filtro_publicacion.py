@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
 from app import db  # Importa db desde app.py
 from models.usuario import Usuario
+import requests
 from sqlalchemy.exc import SQLAlchemyError
 from models.publicaciones.publicaciones import Publicacion
 from models.publicaciones.estado_publi_usu import Estado_publi_usu
@@ -16,6 +17,7 @@ from models.image import Image
 from models.video import Video
 import random
 import pandas as pd  
+from typing import List, Dict
 import sys
 import re
 import math
@@ -55,36 +57,54 @@ def filtro_publicaciones  (items, k=3):
 # ──────────────────────────────────────────────────────────────
 # ──────────────────────────────────────────────────────────────
 def armar_publicaciones_validas_match_scrping_sheet(
-        filas_validas,
-        resultados_globales,
-        sheet_name):
+    filas_validas: List[Dict],
+    resultados_globales: List[Dict],
+    sheet_name: str,
+    token: str,
+) -> List[Dict]:
     """
-    Devuelve una lista de filas (copias de las del sheet) con los
-    3 mejores items añadidos en 'items_filtrados'.
+    Copia cada fila del Sheet y agrega:
+      · pais_scrapeado
+      · items_filtrados (con campos imagen1 … imagen6 completos)
     """
-    # 1) Índice por palabra-clave → lista de items scrap
     por_kw = {r["producto"]: r["items"] for r in resultados_globales}
+    publicaciones: List[Dict] = []
 
-    publicaciones = []
     for fila in filas_validas:
-        kw         = fila["Producto"]
-        raw_items  = por_kw.get(kw, [])
-        top3       = filtro_publicaciones(raw_items, 3)
+        kw = fila["Producto"]
+        raw_items = por_kw.get(kw, [])
+        top3 = filtro_publicaciones(raw_items, 3)
 
-        fila_cp = fila.copy()  # no tocar el original
+        for it in top3:
+            dominio = (
+                it.get("url", "").split("amazon.")[1][:2]
+                if "amazon." in it.get("url", "")
+                else "com"
+            )
+            galeria = obtener_galeria(it.get("asin", ""), token, dominio)
+
+            fotos = [it.get("imagen", "")] + galeria
+            fotos = fotos[:6] + [""] * (6 - len(fotos))  # asegura 6
+
+            for i in range(6):
+                it[f"imagen{i+1}"] = fotos[i]
+
+        fila_cp = fila.copy()
         fila_cp["pais_scrapeado"] = sheet_name
-        fila_cp["items_filtrados"] = top3        # ← viajan los 3 elegidos
+        fila_cp["items_filtrados"] = top3
         publicaciones.append(fila_cp)
 
-    # DEBUG opcional (mantén si lo necesitas)
-    # --------------------------------------
-    df = pd.DataFrame(publicaciones)
-    print("\n=== PREVIEW FILAS ARMADAS ===")
-    with pd.option_context('display.max_columns', None,
-                           'display.max_colwidth', 70):
-        print(df.head())
+    # --- DEBUG opcional ---
+    if publicaciones:
+        import pandas as pd
+        df = pd.DataFrame(publicaciones)
+        with pd.option_context('display.max_columns', None,
+                               'display.max_colwidth', 60):
+            print("\n=== PREVIEW FILAS ARMADAS ===")
+            print(df.head())
 
     return publicaciones
+
 
 # ──────────────────────────────────────────────────────────────
 # (c) Reduce las publicaciones a la forma que entiende el frontend
@@ -156,3 +176,34 @@ def preparar_tabla_b(publicaciones):
 
     return filas
 
+
+
+
+
+def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[str]:
+    """
+    Llama al actor de detalles (ID 7KgyOHHEiPEcilZXM) y devuelve
+    una lista de hasta 6 URLs de imágenes del producto.
+    """
+    if not asin:
+        return [""] * 6                         # sin ASIN => 6 vacíos
+
+    actor_id = "7KgyOHHEiPEcilZXM"
+    endpoint = (
+        f"https://api.apify.com/v2/acts/{actor_id}/run-sync-get-dataset-items"
+        f"?token={apify_token}&format=json"
+    )
+
+    url_producto = f"https://www.amazon.{dominio}/dp/{asin}"
+    payload      = {"urls": [url_producto]}
+
+    try:
+        items = requests.post(endpoint, json=payload, timeout=90).json() or []
+        imgs  = items[0].get("images", []) if items else []
+    except Exception as e:
+        print("⚠️  Error obteniendo galería:", e)
+        imgs = []
+
+    # Normaliza a exactamente 6 posiciones
+    imgs = imgs[:6] + [""] * (6 - len(imgs))
+    return imgs      # → lista con len == 6

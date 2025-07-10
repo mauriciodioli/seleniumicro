@@ -27,7 +27,7 @@
                         if (response.success) {
                             const resultados = response.tablaA;
                             const filas = response.tablaB;
-
+                            console.log("Tabla b:", filas[0].keys());
                             // ---------------- TABLA A (Scraping Apify) ----------------
                             let htmlA = `
                             <h3>Productos encontrados:</h3>
