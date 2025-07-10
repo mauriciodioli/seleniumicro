@@ -130,12 +130,12 @@ def scrape_amazon():
         # 3) Llamo al scraper **una sola vez** con la lista entera
         # (a) SCRAPING: aquí usarías lanzar_scraping_amazon(...)
         # # # # # # # # resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name) # # # # # # # # # # # 
-        #resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
+        resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
         
        # 2. Construye la ruta al JSON dentro de test/
-        json_path = os.path.join(BASE_DIR, "src", "test/productos.json")
+        #json_path = os.path.join(BASE_DIR, "src", "test/productos.json")
 
-        resultados_globales = load_many(json_path)
+        #resultados_globales = load_many(json_path)
       
         
         # (b) arma filas + top-3
