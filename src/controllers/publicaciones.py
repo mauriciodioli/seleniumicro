@@ -108,9 +108,10 @@ def completar_publicaciones(data):
                 cargar_imagen(request, filename,url, publicacion_id, "black", producto, "image/jpeg", user_id, index)
 
         db.session.commit()
-    #sheet = autenticar_y_abrir_sheet(sheet_id, sheet_name)  # <- usá los tuyos
-    #fila_idx_list = [row["fila_idx"] for row in data]
-    #actualizar_estado_en_sheet(sheet, fila_idx_list)
+ 
+       # fila_idx_list = [row["fila_idx"] for row in data] 
+       # sheet_name =
+       # actualizar_estado_en_sheet(fila_idx_list, sheet_name)
     except Exception as e:
         db.session.rollback()
         print(f"❌ Error en completar_publicaciones: {e}")

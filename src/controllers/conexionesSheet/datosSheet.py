@@ -73,37 +73,24 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
 
 
 
+def actualizar_estado_en_sheet(fila_idx_list: list[int], sheet_name: str, col_name: str = "validado", col_name_dos: str = "estado"):
+    sheet_id = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
+    sheet = autenticar_y_abrir_sheet(sheet_id, sheet_name)
 
-def actualizar_estado_en_sheet(
-        sheet=None,
-        *,
-        sheet_id: str = None,
-        sheet_name: str = None,
-        fila_idx_list: list[int],
-        col_name: str = "validado"
-):
-    """
-    Marca la columna `col_name` en TRUE para las filas dadas (índices 1-based).
-
-    • Pásale `sheet` (objeto gspread Worksheet) **o**
-      `sheet_id` + `sheet_name` para que la función lo abra sola.
-    """
-    # 1. Obtén la worksheet
-    if sheet is None:
-        if not (sheet_id and sheet_name):
-            raise ValueError("Debes pasar sheet OR sheet_id + sheet_name")
-        sheet = autenticar_y_abrir_sheet(sheet_id, sheet_name)
-
-    # 2. Encuentra la columna “validado”
     header = sheet.row_values(1)
     try:
-        col_idx = header.index(col_name) + 1   # 1-based
+        col_idx = header.index(col_name) + 1
     except ValueError:
         raise RuntimeError(f"Columna '{col_name}' no existe")
 
-    # 3. Batch: una petición por fila (simple y seguro)
+    try:
+        col_idx2 = header.index(col_name_dos) + 1
+    except ValueError:
+        raise RuntimeError(f"Columna '{col_name_dos}' no existe")
+
     for row_idx in fila_idx_list:
         sheet.update_cell(row_idx, col_idx, "TRUE")
+        sheet.update_cell(row_idx, col_idx2, "INACTIVO")
 
 
 
