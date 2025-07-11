@@ -20,6 +20,7 @@ import pandas as pd
 from typing import List, Dict
 import sys
 import re
+import json
 import math
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -28,7 +29,7 @@ filtro_publicacion = Blueprint('filtro_publicacion', __name__)
 
 
 # Completar la publicación con datos del sheet y base de datos
-def filtro_publicaciones  (items, k=3):
+def filtro_publicaciones(items, k=3):
  
         # filtra y calcula score
         elegibles = []
@@ -56,6 +57,8 @@ def filtro_publicaciones  (items, k=3):
 
 # ──────────────────────────────────────────────────────────────
 # ──────────────────────────────────────────────────────────────
+from typing import List, Dict
+
 def armar_publicaciones_validas_match_scrping_sheet(
     filas_validas: List[Dict],
     resultados_globales: List[Dict],
@@ -63,7 +66,7 @@ def armar_publicaciones_validas_match_scrping_sheet(
     token: str,
 ) -> List[Dict]:
     """
-    Copia cada fila del Sheet y agrega:
+    Copia cada fila del Sheet y modifica:
       · pais_scrapeado
       · items_filtrados (con campos imagen1 … imagen6 completos)
     """
@@ -83,27 +86,47 @@ def armar_publicaciones_validas_match_scrping_sheet(
             )
             galeria = obtener_galeria(it.get("asin", ""), token, dominio)
 
+            # -- Arma el paquete de fotos —
             fotos = [it.get("imagen", "")] + galeria
-            fotos = fotos[:6] + [""] * (6 - len(fotos))  # asegura 6
+            fotos = fotos[:6] + [""] * (6 - len(fotos))  # fuerza que siempre haya 6
 
+            # Guarda como imagen1 … imagen6
             for i in range(6):
-                it[f"imagen{i+1}"] = fotos[i]
+                it[f"imagen{i + 1}"] = fotos[i]
 
+        # Copia la fila de la hoja y agrega info extra
         fila_cp = fila.copy()
         fila_cp["pais_scrapeado"] = sheet_name
         fila_cp["items_filtrados"] = top3
         publicaciones.append(fila_cp)
 
-    # --- DEBUG opcional ---
+    # ---------- DEBUG opcional ----------
     if publicaciones:
         import pandas as pd
-        df = pd.DataFrame(publicaciones)
-        with pd.option_context('display.max_columns', None,
-                               'display.max_colwidth', 60):
-            print("\n=== PREVIEW FILAS ARMADAS ===")
-            print(df.head())
+
+        # Aplanamos las listas para ver una fila ↔ un ítem (más cómodo de inspeccionar)
+        debug_rows = []
+        for pub in publicaciones:
+            for it in pub["items_filtrados"]:
+                row = {
+                    "kw": pub["Producto"],
+                    "asin": it.get("asin"),
+                    "titulo": it.get("titulo", "")[:50] + "…",
+                    **{f"img{i+1}": it.get(f"imagen{i+1}") for i in range(6)},
+                }
+                debug_rows.append(row)
+
+        df = pd.DataFrame(debug_rows)
+        with pd.option_context(
+            "display.max_columns", None,
+            "display.max_colwidth", 80,
+            "display.width", 0,            # ajuste automático de ancho
+        ):
+            print("\n=== PREVIEW ÍTEMS ARMADOS (con 6 fotos) ===")
+            print(df.head(10))  # muestra las primeras 10 filas
 
     return publicaciones
+
 
 
 # ──────────────────────────────────────────────────────────────
@@ -192,13 +215,11 @@ def preparar_tabla_b(publicaciones: list[dict]) -> list[dict]:
 
 
 
+
+
 def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[str]:
-    """
-    Llama al actor de detalles (ID 7KgyOHHEiPEcilZXM) y devuelve
-    una lista de hasta 6 URLs de imágenes del producto.
-    """
     if not asin:
-        return [""] * 6                         # sin ASIN => 6 vacíos
+        return [""] * 6
 
     actor_id = "7KgyOHHEiPEcilZXM"
     endpoint = (
@@ -211,11 +232,15 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
     try:
         items = requests.post(endpoint, json=payload, timeout=90).json() or []
-        imgs  = items[0].get("images", []) if items else []
+        item  = items[0] if items else {}
+        mini  = item.get("mainImage", "")
+        gal   = item.get("imageUrlList", [])              # <- clave nueva
     except Exception as e:
         print("⚠️  Error obteniendo galería:", e)
-        imgs = []
+        mini, gal = "", []
 
-    # Normaliza a exactamente 6 posiciones
-    imgs = imgs[:6] + [""] * (6 - len(imgs))
-    return imgs      # → lista con len == 6
+    # Quita duplicados y arma las 6
+    fotos = [mini] + [u for u in gal if u and u != mini]
+    fotos = (fotos + [""] * 6)[:6]        # siempre seis slots
+    return fotos
+    # → lista con len == 6
