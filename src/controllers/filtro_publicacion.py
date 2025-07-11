@@ -25,6 +25,7 @@ import math
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
+
 filtro_publicacion = Blueprint('filtro_publicacion', __name__)
 
 
@@ -57,7 +58,7 @@ def filtro_publicaciones(items, k=3):
 
 # ──────────────────────────────────────────────────────────────
 # ──────────────────────────────────────────────────────────────
-from typing import List, Dict
+
 
 def armar_publicaciones_validas_match_scrping_sheet(
     filas_validas: List[Dict],
@@ -86,13 +87,15 @@ def armar_publicaciones_validas_match_scrping_sheet(
             )
             galeria = obtener_galeria(it.get("asin", ""), token, dominio)
 
-            # -- Arma el paquete de fotos —
-            fotos = [it.get("imagen", "")] + galeria
-            fotos = fotos[:6] + [""] * (6 - len(fotos))  # fuerza que siempre haya 6
+            def _url(v):
+                return v.get("imageUrl", "") if isinstance(v, dict) else (v or "")
 
-            # Guarda como imagen1 … imagen6
+            fotos_raw = [it.get("imagen", "")] + galeria
+            fotos = [_url(u) for u in fotos_raw]           # normaliza todo
+            fotos = (fotos + [""] * 6)[:6]
             for i in range(6):
-                it[f"imagen{i + 1}"] = fotos[i]
+                it[f"imagen{i+1}"] = fotos[i]
+
 
         # Copia la fila de la hoja y agrega info extra
         fila_cp = fila.copy()
@@ -128,7 +131,42 @@ def armar_publicaciones_validas_match_scrping_sheet(
     return publicaciones
 
 
+# ─────────────── helpers ───────────────
 
+# helpers.py
+def preparar_tabla_b(publicaciones: list[dict], header_row: list[str]) -> list[dict]:
+    """
+    • `header_row` es la primera fila del Sheet (lista con los nombres de columna).
+    • Devuelve filas completas con la misma estructura, actualizando precio/imágenes
+      con el ítem ganador (items_filtrados[0]).
+    """
+    def _url(v):
+        return v.get("imageUrl", "") if isinstance(v, dict) else (v or "")
+
+    filas_out = []
+
+    for pub in publicaciones:
+        for item in pub["items_filtrados"]:      # ← recorre los 3
+            fila = {c: pub.get(c, "") for c in header_row}
+
+            fila.update({
+                "precio_amazon": item.get("precio", ""),
+                "imagen":  _url(item.get("imagen1", item.get("imagen"))),
+                "imagen2": _url(item.get("imagen2")),
+                "imagen3": _url(item.get("imagen3")),
+                "imagen4": _url(item.get("imagen4")),
+                "imagen5": _url(item.get("imagen5")),
+                "imagen6": _url(item.get("imagen6")),
+            })
+            filas_out.append(fila)
+
+    # preview opcional
+    if filas_out:
+        import pandas as pd
+        print("\n=== PREVIEW ===")
+        print(pd.DataFrame(filas_out).head())
+
+    return filas_out
 # ──────────────────────────────────────────────────────────────
 # (c) Reduce las publicaciones a la forma que entiende el frontend
 # ──────────────────────────────────────────────────────────────
@@ -169,46 +207,8 @@ def preparar_respuesta_ui(publicaciones):
     return datos_ui
 
 
-# ─────────────── helpers ───────────────
 
-# helpers.py
-def preparar_tabla_b(publicaciones: list[dict]) -> list[dict]:
-    """
-    Devuelve SOLO los ítems ganadores, uno por fila, sin duplicados.
-    Cada fila lleva:
-      · columnas originales del Sheet   (Producto, Categoría, … validado)
-      · + campos del ganador  (prefijo item_… incluidas imagen2…imagen6)
-    """
-    filas, vistos = [], set()
 
-    for pub in publicaciones:
-        for it in pub["items_filtrados"]:        # ← solo los ganadores
-            asin = it.get("asin") or it["url"]   # llave para detectar duplicados
-            if asin in vistos:
-                continue                         # ya lo añadimos antes
-            vistos.add(asin)
-
-            base = {k: v for k, v in pub.items()
-                    if k not in ("items_filtrados", "__score")}
-
-            fila = base | {                     # “|” = merge dicts (Py 3.9+)
-                "item_titulo" : it["titulo"],
-                "item_precio" : it["precio"],
-                "item_rating" : it.get("rating"),
-                "item_reviews": it.get("reviews"),
-                "item_prime"  : it.get("prime"),
-                "item_entrega": it.get("entrega"),
-                "item_url"    : it["url"],
-                "item_imagen" : it["imagen"],
-                "imagen2"     : it.get("imagen2", ""),
-                "imagen3"     : it.get("imagen3", ""),
-                "imagen4"     : it.get("imagen4", ""),
-                "imagen5"     : it.get("imagen5", ""),
-                "imagen6"     : it.get("imagen6", "")
-            }
-            filas.append(fila)
-
-    return filas
 
 
 

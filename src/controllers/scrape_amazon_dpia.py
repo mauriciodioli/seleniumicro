@@ -148,8 +148,10 @@ def scrape_amazon():
 
         # (c) reduce a la estructura que entiende el front
         tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
-        tabla_b = preparar_tabla_b(publicaciones)        # (la nueva)
-
+        # header real de la hoja
+        sheet_header = sheet.row_values(1)
+        tabla_b = preparar_tabla_b(publicaciones, sheet_header)
+       
         #completar_publicaciones(data)
      
         
