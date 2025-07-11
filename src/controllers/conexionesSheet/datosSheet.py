@@ -14,6 +14,7 @@ from utils.db import db
 import random
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
+
 #import routes.api_externa_conexion.cuenta as cuenta
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -70,6 +71,52 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
         return None  # Puedes devolver None o manejar de otra manera el error en tu aplicación
 
 
+
+
+
+def actualizar_estado_en_sheet(
+        sheet=None,
+        *,
+        sheet_id: str = None,
+        sheet_name: str = None,
+        fila_idx_list: list[int],
+        col_name: str = "validado"
+):
+    """
+    Marca la columna `col_name` en TRUE para las filas dadas (índices 1-based).
+
+    • Pásale `sheet` (objeto gspread Worksheet) **o**
+      `sheet_id` + `sheet_name` para que la función lo abra sola.
+    """
+    # 1. Obtén la worksheet
+    if sheet is None:
+        if not (sheet_id and sheet_name):
+            raise ValueError("Debes pasar sheet OR sheet_id + sheet_name")
+        sheet = autenticar_y_abrir_sheet(sheet_id, sheet_name)
+
+    # 2. Encuentra la columna “validado”
+    header = sheet.row_values(1)
+    try:
+        col_idx = header.index(col_name) + 1   # 1-based
+    except ValueError:
+        raise RuntimeError(f"Columna '{col_name}' no existe")
+
+    # 3. Batch: una petición por fila (simple y seguro)
+    for row_idx in fila_idx_list:
+        sheet.update_cell(row_idx, col_idx, "TRUE")
+
+
+
+
+
+
+
+
+
+
+
+
+
 #def leerSheet_arbitrador001(): 
 
 def leerSheet(sheetId,sheet_name): 
@@ -95,3 +142,7 @@ def leerSheet(sheetId,sheet_name):
                 
                 # Ejemplo de uso de leerSheet
         return handler.leerSheet()
+    
+    
+    
+    

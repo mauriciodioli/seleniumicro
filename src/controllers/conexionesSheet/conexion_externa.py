@@ -39,7 +39,7 @@ def index():
 
 
 
-@conexion_externa.route("/resultado_carga", methods=["POST"])
+@conexion_externa.route("/resultado_carga_directo_sheet", methods=["POST"])
 def resultado_carga():
     
     sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
@@ -56,4 +56,18 @@ def resultado_carga():
     return "Datos cargados correctamente", 200
 
 
+@conexion_externa.route("/carga_publicacion_en_db/", methods=["POST"])
+def carga_publicacion_en_db():
+    data = request.get_json()
+    sheet_name = data.get("sheet_name")
+    fila       = data.get("fila")          # dict con la fila elegida
+
+    if not fila:
+        return "Fila vacía", 400
+
+    try:
+        completar_publicaciones([fila])    # reusa tu función (recibe lista)
+        return "Fila procesada", 200
+    except Exception as e:
+        return f"Error {e}", 500
 

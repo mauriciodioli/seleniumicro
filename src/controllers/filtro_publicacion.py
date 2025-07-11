@@ -29,6 +29,8 @@ from werkzeug.utils import secure_filename
 filtro_publicacion = Blueprint('filtro_publicacion', __name__)
 
 
+SIZE_TAG = re.compile(r'_[A-Z]{2}_[A-Z0-9]+_\.(jpg|png)$', re.IGNORECASE)
+
 # Completar la publicación con datos del sheet y base de datos
 def filtro_publicaciones(items, k=3):
  
@@ -217,6 +219,17 @@ def preparar_respuesta_ui(publicaciones):
 
 
 
+
+def _as_url(v):
+    """Extrae la URL si viene como dict, si no deja el string tal cual."""
+    if isinstance(v, dict):
+        return v.get("imageUrl", "")
+    return v or ""
+
+def _base(url: str) -> str:
+    """Quita el sufijo de tamaño Amazon (_AC_UL320_, _SX522_, …)."""
+    return SIZE_TAG.sub(r'.\1', url) if url else url
+
 def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[str]:
     if not asin:
         return [""] * 6
@@ -228,19 +241,26 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
     )
 
     url_producto = f"https://www.amazon.{dominio}/dp/{asin}"
-    payload      = {"urls": [url_producto]}
+    payload = {"urls": [url_producto]}
 
     try:
         items = requests.post(endpoint, json=payload, timeout=90).json() or []
         item  = items[0] if items else {}
-        mini  = item.get("mainImage", "")
-        gal   = item.get("imageUrlList", [])              # <- clave nueva
+        mini  = _as_url(item.get("mainImage"))
+        gal   = [_as_url(u) for u in item.get("imageUrlList", [])]
     except Exception as e:
         print("⚠️  Error obteniendo galería:", e)
         mini, gal = "", []
 
-    # Quita duplicados y arma las 6
-    fotos = [mini] + [u for u in gal if u and u != mini]
-    fotos = (fotos + [""] * 6)[:6]        # siempre seis slots
+    # Normaliza y deduplica por “base” (sin sufijo de tamaño)
+    vistas, fotos = set(), []
+    for url in [mini] + gal:
+        if not url:
+            continue
+        key = _base(url)
+        if key not in vistas:
+            vistas.add(key)
+            fotos.append(url)
+
+    fotos = (fotos + [""] * 6)[:6]          # rellena a 6
     return fotos
-    # → lista con len == 6

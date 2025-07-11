@@ -14,6 +14,7 @@ from models.publicaciones.ambitos import Ambitos
 from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
 from models.image import Image
 from models.video import Video
+from controllers.conexionesSheet.datosSheet import  actualizar_estado_en_sheet
 import random
 import re
 from datetime import datetime
@@ -107,7 +108,9 @@ def completar_publicaciones(data):
                 cargar_imagen(request, filename,url, publicacion_id, "black", producto, "image/jpeg", user_id, index)
 
         db.session.commit()
-
+    #sheet = autenticar_y_abrir_sheet(sheet_id, sheet_name)  # <- usá los tuyos
+    #fila_idx_list = [row["fila_idx"] for row in data]
+    #actualizar_estado_en_sheet(sheet, fila_idx_list)
     except Exception as e:
         db.session.rollback()
         print(f"❌ Error en completar_publicaciones: {e}")
