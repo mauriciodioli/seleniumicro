@@ -73,10 +73,8 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
 
 
 
-def actualizar_estado_en_sheet(fila_idx_list: list[int], sheet_name: str, col_name: str = "validado", col_name_dos: str = "estado"):
-    sheet_id = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
-    sheet = autenticar_y_abrir_sheet(sheet_id, sheet_name)
-
+def actualizar_estado_en_sheet(sheet,fila_idx_list: list[int], col_name: str = "validado", col_name_dos: str = "estado"):
+    
     header = sheet.row_values(1)
     try:
         col_idx = header.index(col_name) + 1

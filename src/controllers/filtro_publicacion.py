@@ -19,6 +19,7 @@ import random
 import pandas as pd  
 from typing import List, Dict
 import sys
+import os
 import re
 import json
 import math
@@ -28,7 +29,7 @@ from werkzeug.utils import secure_filename
 
 filtro_publicacion = Blueprint('filtro_publicacion', __name__)
 
-
+BASE_STATIC_DOWNLOADS = os.path.join("src", "static", "downloads")
 SIZE_TAG = re.compile(r'_[A-Z]{2}_[A-Z0-9]+_\.(jpg|png)$', re.IGNORECASE)
 
 # Completar la publicación con datos del sheet y base de datos
@@ -264,3 +265,27 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
     fotos = (fotos + [""] * 6)[:6]          # rellena a 6
     return fotos
+
+
+
+
+def guardar_publicaciones_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
+    """
+    Guarda la lista 'publicaciones' en un archivo JSON dentro de 'src/static/downloads/'.
+    Retorna la ruta absoluta donde se guardó el archivo.
+    """
+    if not nombre_archivo:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        nombre_archivo = f"publicaciones_{timestamp}.json"
+
+    carpeta = BASE_STATIC_DOWNLOADS
+    os.makedirs(carpeta, exist_ok=True)
+
+    ruta_guardado = os.path.join(carpeta, nombre_archivo)
+
+    with open(ruta_guardado, "w", encoding="utf-8") as f:
+        json.dump(publicaciones, f, indent=2, ensure_ascii=False)
+
+    print(f">>> Publicaciones guardadas en: {os.path.abspath(ruta_guardado)}")
+
+    return os.path.abspath(ruta_guardado)
