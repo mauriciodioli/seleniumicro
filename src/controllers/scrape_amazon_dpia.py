@@ -111,7 +111,16 @@ def scrape_amazon():
             return jsonify(success=False, error="No pude abrir la hoja")
 
         # 1) Traigo todas las filas
-        filas = sheet.get_all_records()  
+        # 1) Obtener encabezado
+        header = sheet.row_values(1)
+
+        # 2) Leer todas las filas con índice real del Sheet
+        filas = []
+        for idx, row in enumerate(sheet.get_all_values()[1:], start=2):  # empieza en la fila 2
+            fila_dict = dict(zip(header, row))
+            fila_dict["row_index"] = idx
+            filas.append(fila_dict)
+
 
         # 2) Filtro sólo las que necesito
         #    Ajusta las condiciones al gusto:
@@ -128,33 +137,34 @@ def scrape_amazon():
         # 3) Llamo al scraper **una sola vez** con la lista entera
         # (a) SCRAPING: aquí usarías lanzar_scraping_amazon(...)
         # # # # # # # # resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name) # # # # # # # # # # # 
-       # resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
+        #resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
       
       
       
       
       # esto guarda el primer archivo de test
-       # ruta_abs, url = guardar_respuesta_json(resultados_globales)
+       #ruta_abs, url = guardar_respuesta_json(resultados_globales)
       
       
        # 2. Construye la ruta al JSON dentro de test/
-     #   json_path = os.path.join(BASE_DIR, "src", "test/resultados_scraping_20250712_125820.json")
+        json_path = os.path.join(BASE_DIR, "src", "test/resultados_scraping_20250713_085241.json")
 
-      #  resultados_globales = load_many(json_path)
+        resultados_globales = load_many(json_path)
       # 1. Cargar resultados previamente guardados
       
       #esto abre el archivo de test
-      #  resultados_globales = cargar_resultados_scraping_desde_archivo("resultados_scraping_20250712_144503.json")
+        resultados_globales = cargar_resultados_scraping_desde_archivo("resultados_scraping_20250713_085241.json")
 
         
         # (b) arma filas + top-3
-        #publicaciones = armar_publicaciones_validas_match_scrping_sheet(
-        #                                                                    filas_validas,
-        #                                                                    resultados_globales,
-        #                                                                    sheet_name,
-        #                                                                    APIFY_TOKEN,         
-        # esto sirve para armar el segundo archivo de test                                                               )
-        #ruta_archivo = guardar_publicaciones_json(publicaciones)
+        publicaciones = armar_publicaciones_validas_match_scrping_sheet(
+                                                                            filas_validas,
+                                                                            resultados_globales,
+                                                                            sheet_name,
+                                                                            APIFY_TOKEN,         
+                                                                       )
+        # esto sirve para armar el segundo archivo de test
+        ruta_archivo = guardar_publicaciones_json(publicaciones)
         # (c) reduce a la estructura que entiende el front
         
         json_path_2 = os.path.join(BASE_DIR, "src", "test/publicaciones_20250712_134034.json")
@@ -166,8 +176,7 @@ def scrape_amazon():
         sheet_header = sheet.row_values(1)
         tabla_b = preparar_tabla_b(publicaciones, sheet_header)
        
-       
-        actualizar_estado_en_sheet(sheet,publicaciones, "validado", "estado")
+      
 
         
         return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b)
@@ -227,6 +236,8 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
         prod = fila["Producto"]
         raw_items = agrupado_por_keyword.get(prod, [])
         print(f">>> DEBUG '{prod}' encontró {len(raw_items)} registros crudos")
+        row_index = fila.get("row_index")  # 👈 esto es lo nuevo
+        print(f"📌 Producto '{prod}' corresponde a la fila {row_index} del Sheet")
 
         items = []
         for d in raw_items:
@@ -247,7 +258,6 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
                         "prime":             d.get("prime"),
                         "entrega":           d.get("deliveryMessage"),
                         "imagen":            d.get("imgUrl"),                       
-                     #   "url":               f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}",
                         "url":               url_final,
                         "detalles":          d.get("productDetails", [])
                     })
@@ -258,12 +268,14 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
             resultados.append({
                 "producto": prod,
                 "pais":     fila["País"],
+                "row_index": row_index,
                 "items":    items
             })
         else:
             resultados.append({
                 "producto": prod,
                 "pais":     fila["País"],
+                "row_index": row_index,
                 "error":    "Sin productos relevantes."
             })
    
@@ -367,6 +379,7 @@ def lanzar_scraping_aliexpress(registros: list, pais_defecto: str) -> list:
         resultados.append({
             "producto": prod,
             "pais":     fila["País"],
+           
             "items":    items or [],
             "error":    None if items else "Sin productos relevantes"
         })
@@ -535,7 +548,7 @@ def cargar_resultados_scraping_desde_archivo(nombre_archivo: str) -> List[Dict]:
     """
     Carga y devuelve el contenido JSON del archivo en static/downloads/<nombre_archivo>.
     """
-    ruta = os.path.join("static", "downloads", nombre_archivo)
+    ruta = os.path.join("src", "static/downloads", nombre_archivo)
 
     if not os.path.isfile(ruta):
         raise FileNotFoundError(f"No se encontró el archivo: {ruta}")

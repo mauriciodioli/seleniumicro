@@ -74,12 +74,17 @@ def armar_publicaciones_validas_match_scrping_sheet(
       · pais_scrapeado
       · items_filtrados (con campos imagen1 … imagen6 completos)
     """
-    por_kw = {r["producto"]: r["items"] for r in resultados_globales}
+    
+    por_kw = {r["producto"]: {"items": r["items"], "row_index": r.get("row_index")} for r in resultados_globales}
+
     publicaciones: List[Dict] = []
 
     for fila in filas_validas:
         kw = fila["Producto"]
-        raw_items = por_kw.get(kw, [])
+        datos = por_kw.get(kw, {})
+        raw_items = datos.get("items", [])
+        row_index = datos.get("row_index")
+       
         top3 = filtro_publicaciones(raw_items, 3)
 
         for it in top3:
@@ -104,6 +109,7 @@ def armar_publicaciones_validas_match_scrping_sheet(
         fila_cp = fila.copy()
         fila_cp["pais_scrapeado"] = sheet_name
         fila_cp["items_filtrados"] = top3
+        fila_cp["row_index"] = row_index
         publicaciones.append(fila_cp)
 
     # ---------- DEBUG opcional ----------

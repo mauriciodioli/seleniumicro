@@ -73,23 +73,23 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
 
 
 
-def actualizar_estado_en_sheet(sheet,fila_idx_list: list[int], col_name: str = "validado", col_name_dos: str = "estado"):
-    
+def actualizar_estado_en_sheet(sheet, fila_idx_list: list[int], col_name: str = "validado", col_name_dos: str = "estado"):
     header = sheet.row_values(1)
+
     try:
         col_idx = header.index(col_name) + 1
     except ValueError:
         raise RuntimeError(f"Columna '{col_name}' no existe")
 
-    try:
-        col_idx2 = header.index(col_name_dos) + 1
-    except ValueError:
-        raise RuntimeError(f"Columna '{col_name_dos}' no existe")
-
     for row_idx in fila_idx_list:
-        sheet.update_cell(row_idx, col_idx, "TRUE")
-        sheet.update_cell(row_idx, col_idx2, "INACTIVO")
+        if not isinstance(row_idx, int):
+            raise ValueError(f"Se esperaba un número de fila, pero se recibió: {type(row_idx)} → {row_idx}")
 
+        print(f"✅ Actualizando fila {row_idx}, columna '{col_name}' (índice {col_idx}) → 'TRUE'")
+        sheet.update_cell(row_idx, col_idx, "TRUE")
+
+      
+       
 
 
 
