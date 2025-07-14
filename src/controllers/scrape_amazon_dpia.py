@@ -3,15 +3,13 @@ import requests
 from flask import Blueprint, request, jsonify
 import json,pathlib, time
 import re
-
 from collections import defaultdict
 from json import JSONDecoder
-from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet
-from controllers.filtro_publicacion import filtro_publicaciones,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui,preparar_tabla_b
+from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet,leerSheet,actualizar_estado_en_sheet
+from controllers.filtro_publicacion import filtro_publicaciones,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui,preparar_tabla_b,guardar_publicaciones_json
 from controllers.publicaciones import completar_publicaciones
-
-
-
+from typing import List, Dict
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -25,7 +23,7 @@ TASK_ID = "ruly_economy/dpia-amazon"
 
 ACTOR_ID = "axesso_data~amazon-search-scraper"
 
-
+SHEET_ID_DETECTOR_TENDENCIA = os.environ.get('SHEET_ID_DETECTOR_TENDENCIA')
 # Configuración de cada marketplace
 MARKETS = {
     "amazon": {
@@ -100,20 +98,28 @@ def load_many(json_path):
 
 
 # 📍 Endpoint que se invoca desde el botón
-@scrape_amazon_dpia.route('/scrape_amazon', methods=['POST'])
+@scrape_amazon_dpia.route('/scrape_amazon/', methods=['POST'])
 def scrape_amazon():
       try:
         # Recibo sheet_name (p.ej. "Polonia") del front
         sheet_name = request.get_json().get("sheet_name")
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
-        sheet = autenticar_y_abrir_sheet(sheetId, sheet_name)
-
+        sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
         resultados = []
         if not sheet:
             return jsonify(success=False, error="No pude abrir la hoja")
 
         # 1) Traigo todas las filas
-        filas = sheet.get_all_records()  
+        # 1) Obtener encabezado
+        header = sheet.row_values(1)
+
+        # 2) Leer todas las filas con índice real del Sheet
+        filas = []
+        for idx, row in enumerate(sheet.get_all_values()[1:], start=2):  # empieza en la fila 2
+            fila_dict = dict(zip(header, row))
+            fila_dict["row_index"] = idx
+            filas.append(fila_dict)
+
 
         # 2) Filtro sólo las que necesito
         #    Ajusta las condiciones al gusto:
@@ -130,30 +136,47 @@ def scrape_amazon():
         # 3) Llamo al scraper **una sola vez** con la lista entera
         # (a) SCRAPING: aquí usarías lanzar_scraping_amazon(...)
         # # # # # # # # resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name) # # # # # # # # # # # 
-        resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
-        
-       # 2. Construye la ruta al JSON dentro de test/
-        #json_path = os.path.join(BASE_DIR, "src", "test/productos.json")
-
-        #resultados_globales = load_many(json_path)
+        #resultados_globales = lanzar_scraping_amazon(filas_validas, sheet_name)
       
+      
+      
+      
+      # esto guarda el primer archivo de test
+       #ruta_abs, url = guardar_respuesta_json(resultados_globales)
+      
+      
+       # 2. Construye la ruta al JSON dentro de test/
+        json_path = os.path.join(BASE_DIR, "src", "static/downloads/resultados_scraping_20250713_085241.json")
+
+        resultados_globales = load_many(json_path)
+      # 1. Cargar resultados previamente guardados
+      
+      #esto abre el archivo de test
+        #resultados_globales = cargar_resultados_scraping_desde_archivo("resultados_scraping_20250713_085241.json")
+
         
         # (b) arma filas + top-3
-        publicaciones = armar_publicaciones_validas_match_scrping_sheet(
-                                                                            filas_validas,
-                                                                            resultados_globales,
-                                                                            sheet_name,
-                                                                            APIFY_TOKEN,         
-                                                                        )
-
+        #publicaciones = armar_publicaciones_validas_match_scrping_sheet(
+        #                                                                    filas_validas,
+        #                                                                    resultados_globales,
+        #                                                                    sheet_name,
+        #                                                                    APIFY_TOKEN,         
+        #                                                               )
+        # esto sirve para armar el segundo archivo de test
+        #ruta_archivo = guardar_publicaciones_json(publicaciones)
         # (c) reduce a la estructura que entiende el front
+       # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
+        json_path_2 = os.path.join(BASE_DIR, "src", "static/downloads/publicaciones_20250714_080406.json")
+        with open(json_path_2, "r", encoding="utf-8") as f:
+            publicaciones = json.load(f)
+       
         tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
         # header real de la hoja
         sheet_header = sheet.row_values(1)
         tabla_b = preparar_tabla_b(publicaciones, sheet_header)
        
-        #completar_publicaciones(data)
-     
+      
+
         
         return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b)
 
@@ -162,7 +185,7 @@ def scrape_amazon():
 
 
 def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
-    import json, pathlib
+   
     dominio_por_pais = {
         "argentina": "com", "canada": "ca", "francia": "fr", "italia": "it",
         "estados_unidos": "com", "alemania": "de", "espana": "es", "polonia": "pl"
@@ -212,6 +235,8 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
         prod = fila["Producto"]
         raw_items = agrupado_por_keyword.get(prod, [])
         print(f">>> DEBUG '{prod}' encontró {len(raw_items)} registros crudos")
+        row_index = fila.get("row_index")  # 👈 esto es lo nuevo
+        print(f"📌 Producto '{prod}' corresponde a la fila {row_index} del Sheet")
 
         items = []
         for d in raw_items:
@@ -232,7 +257,6 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
                         "prime":             d.get("prime"),
                         "entrega":           d.get("deliveryMessage"),
                         "imagen":            d.get("imgUrl"),                       
-                     #   "url":               f"https://www.amazon.{dominio_por_pais.get(fila.get('País','').lower(), 'com')}{d.get('dpUrl','')}",
                         "url":               url_final,
                         "detalles":          d.get("productDetails", [])
                     })
@@ -243,15 +267,17 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
             resultados.append({
                 "producto": prod,
                 "pais":     fila["País"],
+                "row_index": row_index,
                 "items":    items
             })
         else:
             resultados.append({
                 "producto": prod,
                 "pais":     fila["País"],
+                "row_index": row_index,
                 "error":    "Sin productos relevantes."
             })
-
+   
     return resultados
 
 
@@ -352,6 +378,7 @@ def lanzar_scraping_aliexpress(registros: list, pais_defecto: str) -> list:
         resultados.append({
             "producto": prod,
             "pais":     fila["País"],
+           
             "items":    items or [],
             "error":    None if items else "Sin productos relevantes"
         })
@@ -481,3 +508,52 @@ def lanzar_scraping_ml(registros: list, pais_defecto: str) -> list:
         })
     return resultados
 
+
+
+
+
+
+
+def guardar_respuesta_json(resultados: list, nombre_archivo: str = None):
+    """
+    Guarda los resultados en 'static/downloads/<archivo>.json' y devuelve:
+    - Ruta absoluta del archivo (para logs)
+    - URL relativa para frontend (/static/downloads/<archivo>)
+    """
+    if not nombre_archivo:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        nombre_archivo = f"resultados_scraping_{timestamp}.json"
+    
+    carpeta = os.path.join("static", "downloads")
+    os.makedirs(carpeta, exist_ok=True)
+
+    new_path = os.path.join(carpeta, nombre_archivo)
+
+    with open(new_path, "w", encoding="utf-8") as f:
+        json.dump(resultados, f, indent=2, ensure_ascii=False)
+
+    ruta_absoluta = os.path.abspath(new_path)
+    url_relativa  = f"/static/downloads/{nombre_archivo}"
+
+    print(f">>> Archivo guardado en: {ruta_absoluta}")
+    print(f">>> URL para frontend: {url_relativa}")
+
+    return ruta_absoluta, url_relativa
+
+
+
+
+def cargar_resultados_scraping_desde_archivo(nombre_archivo: str) -> List[Dict]:
+    """
+    Carga y devuelve el contenido JSON del archivo en static/downloads/<nombre_archivo>.
+    """
+    ruta = os.path.join("src", "static/downloads", nombre_archivo)
+
+    if not os.path.isfile(ruta):
+        raise FileNotFoundError(f"No se encontró el archivo: {ruta}")
+
+    with open(ruta, "r", encoding="utf-8") as f:
+        datos = json.load(f)
+
+    if not isinstance(datos, list):
+        raise ValueError(f"El archivo no contiene una lista válida de resultados: {ruta}")

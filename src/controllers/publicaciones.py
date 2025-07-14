@@ -15,17 +15,24 @@ from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
 from models.image import Image
 from models.video import Video
 from controllers.conexionesSheet.datosSheet import  actualizar_estado_en_sheet
+import controllers.conexionesSheet.datosSheet as datoSheet
+import os
 import random
 import re
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
 publicaciones = Blueprint('publicaciones', __name__)
-
+SHEET_ID_DETECTOR_TENDENCIA = os.environ.get('SHEET_ID_DETECTOR_TENDENCIA')
 # Completar la publicación con datos del sheet y base de datos
-def completar_publicaciones(data):
+def completar_publicaciones(data):  
     publicaciones_completas = []    
+    pais = data[0]["pais_scrapeado"] if data else None
 
+    sheet = datoSheet.autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, pais)
+    fila_idx_list = [row["row_index"] for row in data]
+
+    actualizar_estado_en_sheet(sheet, fila_idx_list)
     try:
         for row in data:
             # === Extraer datos ===
@@ -109,9 +116,8 @@ def completar_publicaciones(data):
 
         db.session.commit()
  
-       # fila_idx_list = [row["fila_idx"] for row in data] 
-       # sheet_name =
-       # actualizar_estado_en_sheet(fila_idx_list, sheet_name)
+        
+       
     except Exception as e:
         db.session.rollback()
         print(f"❌ Error en completar_publicaciones: {e}")

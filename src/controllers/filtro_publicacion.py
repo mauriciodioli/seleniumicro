@@ -19,6 +19,7 @@ import random
 import pandas as pd  
 from typing import List, Dict
 import sys
+import os
 import re
 import json
 import math
@@ -28,7 +29,7 @@ from werkzeug.utils import secure_filename
 
 filtro_publicacion = Blueprint('filtro_publicacion', __name__)
 
-
+BASE_STATIC_DOWNLOADS = os.path.join("src", "static", "downloads")
 SIZE_TAG = re.compile(r'_[A-Z]{2}_[A-Z0-9]+_\.(jpg|png)$', re.IGNORECASE)
 
 # Completar la publicación con datos del sheet y base de datos
@@ -73,12 +74,17 @@ def armar_publicaciones_validas_match_scrping_sheet(
       · pais_scrapeado
       · items_filtrados (con campos imagen1 … imagen6 completos)
     """
-    por_kw = {r["producto"]: r["items"] for r in resultados_globales}
+    
+    por_kw = {r["producto"]: {"items": r["items"], "row_index": r.get("row_index")} for r in resultados_globales}
+
     publicaciones: List[Dict] = []
 
     for fila in filas_validas:
         kw = fila["Producto"]
-        raw_items = por_kw.get(kw, [])
+        datos = por_kw.get(kw, {})
+        raw_items = datos.get("items", [])
+        row_index = datos.get("row_index")
+       
         top3 = filtro_publicaciones(raw_items, 3)
 
         for it in top3:
@@ -103,6 +109,7 @@ def armar_publicaciones_validas_match_scrping_sheet(
         fila_cp = fila.copy()
         fila_cp["pais_scrapeado"] = sheet_name
         fila_cp["items_filtrados"] = top3
+        fila_cp["row_index"] = row_index
         publicaciones.append(fila_cp)
 
     # ---------- DEBUG opcional ----------
@@ -148,6 +155,8 @@ def preparar_tabla_b(publicaciones: list[dict], header_row: list[str]) -> list[d
     filas_out = []
 
     for pub in publicaciones:
+        row_index = pub.get("row_index")          
+        pais_scrapeado = pub.get("pais_scrapeado")
         for item in pub["items_filtrados"]:      # ← recorre los 3
             fila = {c: pub.get(c, "") for c in header_row}
 
@@ -159,6 +168,8 @@ def preparar_tabla_b(publicaciones: list[dict], header_row: list[str]) -> list[d
                 "imagen4": _url(item.get("imagen4")),
                 "imagen5": _url(item.get("imagen5")),
                 "imagen6": _url(item.get("imagen6")),
+                "row_index" : row_index,          
+                "pais_scrapeado" : pais_scrapeado
             })
             filas_out.append(fila)
 
@@ -264,3 +275,27 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
     fotos = (fotos + [""] * 6)[:6]          # rellena a 6
     return fotos
+
+
+
+
+def guardar_publicaciones_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
+    """
+    Guarda la lista 'publicaciones' en un archivo JSON dentro de 'src/static/downloads/'.
+    Retorna la ruta absoluta donde se guardó el archivo.
+    """
+    if not nombre_archivo:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        nombre_archivo = f"publicaciones_{timestamp}.json"
+
+    carpeta = BASE_STATIC_DOWNLOADS
+    os.makedirs(carpeta, exist_ok=True)
+
+    ruta_guardado = os.path.join(carpeta, nombre_archivo)
+
+    with open(ruta_guardado, "w", encoding="utf-8") as f:
+        json.dump(publicaciones, f, indent=2, ensure_ascii=False)
+
+    print(f">>> Publicaciones guardadas en: {os.path.abspath(ruta_guardado)}")
+
+    return os.path.abspath(ruta_guardado)

@@ -20,7 +20,7 @@ $('#btn-scrapear').click(function () {
 
        
       $.ajax({
-          url: "/scrape_amazon",
+          url: "/scrape_amazon/",
           method: "POST",
           contentType: "application/json",
           data: JSON.stringify({ sheet_name: selectedCountry }),
