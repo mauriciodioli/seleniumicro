@@ -144,6 +144,10 @@ def registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id):
     except Exception as e:
         print(f"❌ Error registrar_publicacion_ubicacion: {e}")
         return False
+    
+    
+    
+    
 def registrar_categoria_publicacion(categoria_id, publicacion_id):
     try:
         new = CategoriaPublicacion(
