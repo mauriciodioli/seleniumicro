@@ -10,6 +10,7 @@ from models.usuarioUbicacion import UsuarioUbicacion
 from models.usuarioPublicacionUbicacion import UsuarioPublicacionUbicacion
 from models.publicaciones.ambitoCategoria import AmbitoCategoria
 from models.publicaciones.categoriaPublicacion import CategoriaPublicacion
+from models.publicaciones.publicacionCodigoPostal import PublicacionCodigoPostal
 from models.publicaciones.ambitos import Ambitos
 from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
 from models.image import Image
@@ -75,6 +76,7 @@ def completar_publicaciones(data):
 
             ambito_class = machear_ambito(ambito)
             categoria_id = machear_ambitoCategoria(categoria, idioma,ambito_class.id)
+            registrar_relacion_categoria_ambito(categoria_id, ambito_class.id)
 
             usuario_id = machear_usuario(user_id)
             ubicacion_id = machear_ubicacion(user_id, codigo_postal)
@@ -108,7 +110,9 @@ def completar_publicaciones(data):
             publicacion_id = publicacion.id
             registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id)
             registrar_categoria_publicacion(categoria_id, publicacion_id)
-
+            codigo_postal_id = machear_codigo_postal_id(codigo_postal)
+            if codigo_postal_id:
+                registrar_codigo_postal(publicacion_id, codigo_postal_id)
             for index, url in enumerate(imagenes_urls):
                 filename = secure_filename(f"{slug}_{index}.jpg")
                 
@@ -373,13 +377,65 @@ def machear_publicacion_ubicacion(publicacion_ubicacion):
         print(f"⚠️ No se encontró publicación de ubicación para el código postal: '{publicacion_ubicacion}'")
         return None
     
+
+
+
+
+
+
+
+def registrar_relacion_categoria_ambito(categoria_id, ambito_id):
+    try:
+        existe = db.session.query(AmbitoCategoriaRelation).filter_by(
+            ambito_id=ambito_id,
+            ambitoCategoria_id=categoria_id
+        ).first()
+        if not existe:
+            relacion = AmbitoCategoriaRelation(
+                ambito_id=ambito_id,
+                ambitoCategoria_id=categoria_id,
+                estado="ACTIVO"
+            )
+            db.session.add(relacion)
+    except Exception as e:
+        print(f"❌ Error al registrar relación categoría-ámbito: {e}")
+
+
+
+
+def registrar_codigo_postal(publicacion_id, codigo_postal_id):
+    try:
+        existe = db.session.query(PublicacionCodigoPostal).filter_by(
+            publicacion_id=publicacion_id,
+            codigoPostal_id=codigo_postal_id
+        ).first()
+        if not existe:
+            rel = PublicacionCodigoPostal(
+                publicacion_id=publicacion_id,
+                codigoPostal_id=codigo_postal_id,
+                estado="ACTIVO"
+            )
+            db.session.add(rel)
+    except Exception as e:
+        print(f"❌ Error en registrar_codigo_postal: {e}")
+
     
     
     
     
-    
-    
-    
+def machear_codigo_postal_id(codigo_postal_texto):
+    try:
+        
+        codigo = db.session.query(UsuarioPublicacionUbicacion).filter_by(codigoPostal=codigo_postal_texto).first()
+        if codigo:
+            return codigo.id
+        else:
+            print(f"⚠️ No se encontró ID para código postal: '{codigo_postal_texto}'")
+            return None
+    except Exception as e:
+        print(f"❌ Error en machear_codigo_postal_id: {e}")
+        return None
+
 
 
 
