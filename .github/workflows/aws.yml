@@ -1,0 +1,98 @@
+name: deploy
+on:
+  push:
+    branches:
+      - master
+
+env:
+  DEPLOYMENT_VERSION: "msselenium202501i"
+
+jobs:
+  deploy-to-cluster:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy
+      cancel-in-progress: true
+
+    env:
+      EC2_HOST: ec2-44-223-20-210.compute-1.amazonaws.com # IMAGEN PRODUCCION
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Verify Changes are Checked Out
+        run: |
+          echo "Verifying changes..."
+          ls -l
+
+      - name: Set Dockerfile WORKDIR to /app
+        run: |
+          echo "Setting Dockerfile WORKDIR..."
+          sed -i 's/WORKDIR \/app/WORKDIR \/app/' Dockerfile
+
+      - name: Verify Dockerfile WORKDIR
+        run: |
+          echo "Verifying Dockerfile WORKDIR..."
+          grep WORKDIR Dockerfile
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Verify Docker Hub Login
+        run: |
+          echo "Verifying Docker Hub login..."
+          docker info
+
+      - name: Build and Push to Docker Hub (if needed)
+        id: build_and_push
+        run: |
+          if ! docker pull ${{ secrets.DOCKER_USERNAME }}/msselenium202501i:latest; then
+            echo "Image not found, building and pushing to Docker Hub..."
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/msselenium202501i:latest .
+            docker push ${{ secrets.DOCKER_USERNAME }}/msselenium202501i:latest
+          else
+            echo "Image found in Docker Hub, skipping build."
+          fi
+
+      - name: Verify Docker Image Push
+        run: |
+          echo "Verifying Docker image push..."
+          docker images | grep msselenium202501i
+
+      - name: Stop and remove existing container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker stop ${{ env.DEPLOYMENT_VERSION }} || true
+            docker rm ${{ env.DEPLOYMENT_VERSION }} || true
+
+      - name: Remove existing Docker image
+        uses: appleboy/ssh-action@master
+        with:
+           host: ${{ env.EC2_HOST }}
+           username: ubuntu
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           script: |
+                 IMAGE_ID=$(docker images -q ${{ github.repository_owner }}/msselenium202501i)
+                 echo "IMAGE_ID is $IMAGE_ID"
+                 if [ ! -z "$IMAGE_ID" ]; then
+                   docker rmi $IMAGE_ID
+                 fi
+
+      - name: Copy Docker image to AWS instance
+        uses: appleboy/ssh-action@master
+        with:
+           host: ${{ env.EC2_HOST }}
+           username: ubuntu
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           script: |
+             docker pull docker.io/${{ github.repository_owner }}/msselenium202501i:${{ github.sha }}
+             docker run -d --name ${{ env.DEPLOYMENT_VERSION }} -p 5002:5001 --restart always docker.io/${{ github.repository_owner }}/msselenium202501i:latest
