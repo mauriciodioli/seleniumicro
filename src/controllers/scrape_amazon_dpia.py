@@ -153,7 +153,7 @@ def scrape_amazon():
       # 1. Cargar resultados previamente guardados
       
       #esto abre el archivo de test
-        resultados_globales = cargar_resultados_scraping_desde_archivo("resultados_scraping_20250713_085241.json")
+        #resultados_globales = cargar_resultados_scraping_desde_archivo("resultados_scraping_20250713_085241.json")
 
         
         # (b) arma filas + top-3
