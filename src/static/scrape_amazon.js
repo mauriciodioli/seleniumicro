@@ -4,7 +4,7 @@ let filasData = [];
 
 $('#btn-scrapear').click(function () {
       const selectedCountry = $('#pais').val();
-
+        
         if (!selectedCountry) {
           Swal.fire("Error", "Por favor, seleccioná un país primero.", "error");
           return;
@@ -16,7 +16,7 @@ $('#btn-scrapear').click(function () {
           didOpen: () => Swal.showLoading()
         });
 
-
+      localStorage.setItem('luagarSeleccionado', selectedCountry); // Guardar país en localStorage
 
        
       $.ajax({

@@ -192,11 +192,17 @@ $('#resultado').on('click', '.btn-enviar', function () {
 
 
 
-
+lugar = localStorage.getItem('luagarSeleccionado') || 'Argentina'; // Valor por defecto
 
 $.ajax({
   url: "/scrape_amazon_listar_trabajos/",
   method: "POST",
+  data: JSON.stringify({ lugar: lugar }), // Enviar JSON real
+  dataType: "json",
+  contentType: "application/json",
+  beforeSend: function() {
+    $("#ArchivosCargados").empty().append('<option value="">Cargando archivos...</option>');
+  },
   success: function(response) {
     if (response.success) {
       const archivos = response.archivos;

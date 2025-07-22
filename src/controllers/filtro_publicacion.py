@@ -313,14 +313,18 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
 
 
-def guardar_publicaciones_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
+def guardar_respuesta_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
     """
     Guarda la lista 'publicaciones' en un archivo JSON dentro de 'src/static/downloads/'.
     Retorna la ruta absoluta donde se guardó el archivo.
     """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     if not nombre_archivo:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        nombre_archivo = f"publicaciones_{timestamp}.json"
+       
+        nombre_archivo = f"resultados_scraping_{timestamp}.json"
+    else:
+        # Asegúrate de que el nombre del archivo sea seguro
+        nombre_archivo = f"{nombre_archivo}_{timestamp}.json"
 
     carpeta = BASE_STATIC_DOWNLOADS
     os.makedirs(carpeta, exist_ok=True)

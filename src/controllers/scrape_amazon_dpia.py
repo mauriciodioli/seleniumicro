@@ -7,7 +7,7 @@ import math
 from collections import defaultdict
 from json import JSONDecoder
 from controllers.conexionesSheet.datosSheet import login, autenticar_y_abrir_sheet,leerSheet,actualizar_estado_en_sheet
-from controllers.filtro_publicacion import filtro_publicaciones,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui,preparar_tabla_b,guardar_publicaciones_json
+from controllers.filtro_publicacion import filtro_publicaciones,guardar_respuesta_json,armar_publicaciones_validas_match_scrping_sheet,preparar_respuesta_ui,preparar_tabla_b
 from controllers.publicaciones import completar_publicaciones
 from typing import List, Dict
 from datetime import datetime
@@ -23,6 +23,9 @@ APIFY_TOKEN = os.getenv("APIFY_TOKEN")
 TASK_ID = "ruly_economy/dpia-amazon"
 
 ACTOR_ID = "axesso_data~amazon-search-scraper"
+
+
+BASE_STATIC_DOWNLOADS = os.path.join("src", "static", "downloads")
 
 SHEET_ID_DETECTOR_TENDENCIA = os.environ.get('SHEET_ID_DETECTOR_TENDENCIA')
 # Configuración de cada marketplace
@@ -101,22 +104,23 @@ def load_many(json_path):
 
 
 
-
-
 @scrape_amazon_dpia.route('/scrape_amazon_listar_trabajos/', methods=['POST'])
 def scrape_amazon_listar_trabajos():
     try:
-        folder_path = os.path.join(BASE_DIR, "src", "static", "downloads")
+        data = request.get_json()
+        lugar = data.get('lugar', 'Argentina')
 
+        folder_path = os.path.join(BASE_DIR, "src", "static", "downloads")
         archivos = [
             f for f in os.listdir(folder_path)
-            if f.startswith("resultados_scraping_") and f.endswith(".json")
+            if f.startswith(f"{lugar}") and f.endswith(".json")
         ]
 
         return jsonify(success=True, archivos=archivos)
 
     except Exception as e:
         return jsonify(success=False, error=str(e))
+
     
     
 @scrape_amazon_dpia.route('/scrape_amazon_eliminar_archivo/', methods=['POST'])
@@ -138,7 +142,7 @@ def scrape_amazon_eliminar_archivo():
 
     
     
-    
+ # 📍 Endpoint que se invoca desde el botón Scrapeado Imágenes arma la tabla 2   
 @scrape_amazon_dpia.route('/scrape_amazon_dpia_scraping_imagenes/', methods=['POST'])
 def scrape_amazon_dpia_scraping_imagenes():
       try:
@@ -195,7 +199,7 @@ def scrape_amazon_dpia_scraping_imagenes():
                                                                             APIFY_TOKEN,         
                                                                        )
         # esto sirve para armar el segundo archivo de test
-        ruta_archivo = guardar_publicaciones_json(publicaciones)
+        ruta_archivo = guardar_respuesta_json(publicaciones, 'publicaciones_' + sheet_name)
         nombre_archivo_2 = ruta_archivo
         # (c) reduce a la estructura que entiende el front
        # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
@@ -342,7 +346,7 @@ def scrape_amazon():
       
       
       # esto guarda el primer archivo de test
-        ruta_abs, url = guardar_respuesta_json(resultados_globales,sheet_name)
+        url = guardar_respuesta_json(resultados_globales,sheet_name)
       
        # NAME_ARCHIVO_1 = "resultados_scraping_20250722_120527.json"
        # NAME_ARCHIVO_2 = "publicaciones_20250722_131346.json"
@@ -358,19 +362,19 @@ def scrape_amazon():
 
         
         # (b) arma filas + top-3
-        publicaciones = armar_publicaciones_validas_match_scrping_sheet(
-                                                                            filas_validas,
-                                                                            resultados_globales,
-                                                                            sheet_name,
-                                                                            APIFY_TOKEN,         
-                                                                       )
+       # publicaciones = armar_publicaciones_validas_match_scrping_sheet(
+       #                                                                     filas_validas,
+        #                                                                    resultados_globales,
+         #                                                                   sheet_name,
+         #                                                                   APIFY_TOKEN,         
+        #                                                               )
         # esto sirve para armar el segundo archivo de test
-        ruta_archivo = guardar_publicaciones_json(publicaciones)
+       # ruta_archivo = guardar_publicaciones_json(publicaciones)
      
-        tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
+        tabla_a = preparar_respuesta_ui(resultados_globales)   # (la que ya tenías)
         # header real de la hoja
         sheet_header = sheet.row_values(1)
-        tabla_b = preparar_tabla_b(publicaciones, sheet_header)
+        tabla_b = preparar_tabla_b(resultados_globales, sheet_header)
        
       
 
@@ -708,6 +712,12 @@ def lanzar_scraping_ebay(registros: list, pais_defecto: str) -> list:
         })
 
     return resultados
+
+
+
+
+
+
 def lanzar_scraping_ml(registros: list, pais_defecto: str) -> list:
     # equivalente para MercadoLibre
     ACTOR_ID = "apify/mercadolibre-scraper"
@@ -766,33 +776,6 @@ def lanzar_scraping_ml(registros: list, pais_defecto: str) -> list:
 
 
 
-def guardar_respuesta_json(resultados: list, nombre_archivo: str = None):
-    """
-    Guarda los resultados en 'static/downloads/<archivo>.json' y devuelve:
-    - Ruta absoluta del archivo (para logs)
-    - URL relativa para frontend (/static/downloads/<archivo>)
-    """
-    if not nombre_archivo:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        nombre_archivo = f"resultados_scraping_{timestamp}.json"
-    else:
-        # Asegúrate de que el nombre del archivo sea seguro
-        nombre_archivo = f"resultados_{nombre_archivo}_{timestamp}.json"
-    carpeta = os.path.join("static", "downloads")
-    os.makedirs(carpeta, exist_ok=True)
-
-    new_path = os.path.join(carpeta, nombre_archivo)
-
-    with open(new_path, "w", encoding="utf-8") as f:
-        json.dump(resultados, f, indent=2, ensure_ascii=False)
-
-    ruta_absoluta = os.path.abspath(new_path)
-    url_relativa  = f"/static/downloads/{nombre_archivo}"
-
-    print(f">>> Archivo guardado en: {ruta_absoluta}")
-    print(f">>> URL para frontend: {url_relativa}")
-
-    return ruta_absoluta, url_relativa
 
 
 

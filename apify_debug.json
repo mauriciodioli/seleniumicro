@@ -2,7 +2,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -10,56 +10,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Sneaker All Star Hi Canvas",
-    "asin": "B001AEFO3I",
-    "countReview": 20760,
-    "imgUrl": "https://m.media-amazon.com/images/I/71B0udp-6LL._AC_UL320_.jpg",
-    "price": 52.5,
-    "retailPrice": 75,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Guardini, Stampo apribile plumcake 30x11 cm, Fondo Salvagoccia, Acciaio con rivestimento antiaderente, Nero, Made in Italy, Linea Gardenia",
+    "asin": "B07QRBCDLY",
+    "countReview": 432,
+    "imgUrl": "https://m.media-amazon.com/images/I/61WTEbH2iIL._AC_UL320_.jpg",
+    "price": 22.9,
+    "retailPrice": 0,
+    "productRating": "4,2 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Sneaker-Unisex-Adulto/dp/B001AEFO3I/ref=sr_1_1?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-1",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfYXRmOjMwMDU2ODE1MTI2OTIzMjo6MDo6&url=%2FGuardini-Gardenia-Apribile-rivestimento-antiaderente%2Fdp%2FB07QRBCDLY%2Fref%3Dsr_1_1_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-1-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9hdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
-    "salesVolume": "50+ acquistati nel mese scorso",
-    "manufacturer": "Converse",
+    "salesVolume": null,
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 0
@@ -67,7 +58,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -75,56 +66,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "As Dainty Ox, Scarpa da Skateboard Unisex-Adulto",
-    "asin": "B0002M30VM",
-    "countReview": 14955,
-    "imgUrl": "https://m.media-amazon.com/images/I/51PbnHuHt0L._AC_UL320_.jpg",
-    "price": 48.99,
-    "retailPrice": 70,
+    "productDescription": "Tester per torta in acciaio inossidabile, ago per test torta riutilizzabile con sonda per torta con coperchio Strumento di cottura fai-da-te per focaccina da forno Torta di pane",
+    "asin": "B08L6WV3ND",
+    "countReview": 145,
+    "imgUrl": "https://m.media-amazon.com/images/I/61G2F6ZOTbL._AC_UL320_.jpg",
+    "price": 7.9,
+    "retailPrice": 0,
     "productRating": "4,6 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Chuck-Taylor-Sneakers-Unisex/dp/B0002M30VM/ref=sr_1_2?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-2",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfYXRmOjIwMDU2MzMwMzMyODA0OjowOjo&url=%2Facciaio-riutilizzabile-copertura-strumento-panetteria%2Fdp%2FB08L6WV3ND%2Fref%3Dsr_1_2_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-2-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9hdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 1
@@ -132,7 +114,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -140,56 +122,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor all Stars Lift Hi Womens Egret/Multi/Black Trainers",
-    "asin": "B07CSGZR74",
-    "countReview": 7649,
-    "imgUrl": "https://m.media-amazon.com/images/I/71vR4KTyArL._AC_UL320_.jpg",
-    "price": 45,
-    "retailPrice": 69.99,
-    "productRating": "4,5 su 5 stelle",
+    "productDescription": "Artigianato TESTO PER CRESCIA O Torta DI Gubbio Assisi Italia by Italia",
+    "asin": "B019QQ9RM0",
+    "countReview": 88,
+    "imgUrl": "https://m.media-amazon.com/images/I/41yXJaBKuGL._AC_UL320_.jpg",
+    "price": 44.75,
+    "retailPrice": 0,
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Chucks-Schwarz-M9160C-Taglia/dp/B07CSGZR74/ref=sr_1_3?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-3",
+    "dpUrl": "/TESTO-TORTA-CRESCIA-GUBBIO-UMBRIA/dp/B019QQ9RM0/ref=sr_1_3?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-3",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA lun, 28 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
     "variations": [],
     "productDetails": [],
-    "salesVolume": "100+ acquistati nel mese scorso",
-    "manufacturer": "Converse",
+    "salesVolume": null,
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 2
@@ -197,7 +170,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -205,56 +178,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor Lift High Sneaker Bianca da Donna 560846C",
-    "asin": "B079P74D5D",
-    "countReview": 14167,
-    "imgUrl": "https://m.media-amazon.com/images/I/61GiwsBMDlL._AC_UL320_.jpg",
-    "price": 57.1,
-    "retailPrice": 89.9,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "fonderia grifo Testo per Torta Umbra o crescia di Gubbio (33 cm)",
+    "asin": "B06X1GNC89",
+    "countReview": 55,
+    "imgUrl": "https://m.media-amazon.com/images/I/21OFJjJoYmL._AC_UL320_.jpg",
+    "price": 48.33,
+    "retailPrice": 0,
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Chuck-Taylor-Scarpe-Ginnastica/dp/B079P74D5D/ref=sr_1_4?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-4",
+    "dpUrl": "/Testo-torta-umbra-crescia-gubbio/dp/B06X1GNC89/ref=sr_1_4?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-4",
     "series": null,
-    "deliveryMessage": "Consegna a 5,90 € lun, 28 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 3
@@ -262,7 +226,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -270,56 +234,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor all Star Hi Sneaker, Scarpe da Ginnastica Unisex-Adulto",
-    "asin": "B0000ATC1P",
-    "countReview": 3335,
-    "imgUrl": "https://m.media-amazon.com/images/I/51rqOtA6W0L._AC_UL320_.jpg",
-    "price": 52.5,
-    "retailPrice": 75,
-    "productRating": "4,5 su 5 stelle",
+    "productDescription": "GMU GRANDI MAGAZZINI UMBRI Testo Piastra CRESCIA FOCACCIA Pizza Torta Umbra Ø CM 36",
+    "asin": "B077B421SY",
+    "countReview": 3,
+    "imgUrl": "https://m.media-amazon.com/images/I/71USkIR-POL._AC_UL320_.jpg",
+    "price": 51.87,
+    "retailPrice": 0,
+    "productRating": "5,0 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Scarpe-Ginnastica-Unisex/dp/B0000ATC1P/ref=sr_1_5_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-5",
+    "dpUrl": "/GMU-GRANDI-MAGAZZINI-UMBRI-FOCACCIA/dp/B077B421SY/ref=sr_1_5?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-5",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA 28 - 29 lug",
     "variations": [],
     "productDetails": [],
-    "salesVolume": "50+ acquistati nel mese scorso",
-    "manufacturer": "Converse",
+    "salesVolume": null,
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 4
@@ -327,7 +282,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -335,56 +290,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "C Taylor As High M3310C, Scarpe Sportive",
-    "asin": "B0000ATBYZ",
-    "countReview": 4273,
-    "imgUrl": "https://m.media-amazon.com/images/I/617bombukZL._AC_UL320_.jpg",
-    "price": 45,
-    "retailPrice": 53.95,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Tester Per Torta,Aghi Per Tester Per Torte,Tester Cottura Torta In Acciaio Inox,Pratico Tester Per Torte,Riutilizzabil Tester Per Torta In Metallo,Con Manico In Plastica,Per Torte,Cottura Al Forno",
+    "asin": "B0BNH1YB77",
+    "countReview": 20,
+    "imgUrl": "https://m.media-amazon.com/images/I/61pYwbgdQXL._AC_UL320_.jpg",
+    "price": 7.79,
+    "retailPrice": 0,
+    "productRating": "4,5 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Scarpe-Ginnastica-Unisex/dp/B0000ATBYZ/ref=sr_1_6_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-6",
+    "dpUrl": "/Cottura-Acciaio-Pratico-Riutilizzabil-Plastica/dp/B0BNH1YB77/ref=sr_1_6?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-6",
     "series": null,
-    "deliveryMessage": "Consegna a 5,90 € ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
-    "salesVolume": "50+ acquistati nel mese scorso",
-    "manufacturer": "Converse",
+    "salesVolume": null,
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 5
@@ -392,7 +338,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -400,56 +346,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Scarpe M9696 - Donna",
-    "asin": "B000O55P6A",
-    "countReview": 11224,
-    "imgUrl": "https://m.media-amazon.com/images/I/61Hvw6OwwGL._AC_UL320_.jpg",
-    "price": 49,
-    "retailPrice": 70,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Mulino Bianco Torta al Cacao con Farcitura di Albicocche 100% Italiane, per una Pausa Gustosa, 590 g",
+    "asin": "B095X577NJ",
+    "countReview": 23,
+    "imgUrl": "https://m.media-amazon.com/images/I/81COBjp0E5L._AC_UL320_.jpg",
+    "price": 6.79,
+    "retailPrice": 0,
+    "productRating": "4,2 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Sneaker-Unisex-Bianco/dp/B000O55P6A/ref=sr_1_7_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-7",
+    "dpUrl": "/Mulino-Bianco-Farcitura-Albicocche-Italiane/dp/B095X577NJ/ref=sr_1_7_f3_0o_fs?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-7",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": null,
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 6
@@ -457,7 +394,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -465,64 +402,55 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Scarpe Chuck Taylor all Star Move Hi CODICE 568497C",
-    "asin": "B08CY6FYDP",
-    "countReview": 2485,
-    "imgUrl": "https://m.media-amazon.com/images/I/51RYOQU5CtL._AC_UL320_.jpg",
-    "price": 69.9,
+    "productDescription": "Zenker Tortiera Apribile Rotonda con Base Piatta, diametro 28 Cm, Black Metallic, Rivestimento Antiaderente (Colore: Nero Metallizzato), Quantità: 1 Pezzo",
+    "asin": "B00022446M",
+    "countReview": 1559,
+    "imgUrl": "https://m.media-amazon.com/images/I/61+Cy3Hw+KL._AC_UL320_.jpg",
+    "price": 18.02,
     "retailPrice": 0,
-    "productRating": "4,7 su 5 stelle",
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Seasonal-Scarpe-Ginnastica/dp/B08CY6FYDP/ref=sr_1_8?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-8",
+    "dpUrl": "/Zenker-Metallic-Tortiera-Apribile-Diametro/dp/B00022446M/ref=sr_1_8?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-8",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA lun, 28 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
-    "secondaryOffer": 0,
+    "manufacturer": null,
+    "secondaryOffer": 10.08,
     "sponsored": false,
     "searchResultPosition": 7
   },
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -530,64 +458,55 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor Bas Vint Ox 308800-61-122, Sneaker Uomo",
-    "asin": "B000072UMH",
-    "countReview": 8093,
-    "imgUrl": "https://m.media-amazon.com/images/I/61gFzh-u67L._AC_UL320_.jpg",
-    "price": 44.95,
-    "retailPrice": 70,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Dr. Oetker Back-Freude Teglia Classica con Fondo Staccabile, Ø 26 cm",
+    "asin": "B000UVRGYM",
+    "countReview": 1599,
+    "imgUrl": "https://m.media-amazon.com/images/I/61o8FdUeENL._AC_UL320_.jpg",
+    "price": 17.22,
+    "retailPrice": 19.99,
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Chuck-Taylor-Sneakers-Unisex/dp/B000072UMH/ref=sr_1_9?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-9",
+    "dpUrl": "/Dr-Oetker-Back-Freude-classica-staccabile/dp/B000UVRGYM/ref=sr_1_9?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-9",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
-    "secondaryOffer": 0,
+    "manufacturer": null,
+    "secondaryOffer": 16.48,
     "sponsored": false,
     "searchResultPosition": 8
   },
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -595,56 +514,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor all Star M9160 W, Sneaker Donna",
-    "asin": "B002W7NP8S",
-    "countReview": 1310,
-    "imgUrl": "https://m.media-amazon.com/images/I/71fXr16ZvvL._AC_UL320_.jpg",
-    "price": 45,
-    "retailPrice": 75,
-    "productRating": "4,5 su 5 stelle",
+    "productDescription": "Prestige Disney Bake with Mickey Mouse, 3 stampi per torte con testa di Topolino, antiaderenti, in acciaio al carbonio, rosso e nero",
+    "asin": "B0C7RGJM1H",
+    "countReview": 157,
+    "imgUrl": "https://m.media-amazon.com/images/I/61cLNNkhh3L._AC_UL320_.jpg",
+    "price": 26.18,
+    "retailPrice": 0,
+    "productRating": "4,7 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-M9160-Sneaker-Unisex-adultos/dp/B002W7NP8S/ref=sr_1_10_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-10",
+    "dpUrl": "/PRESTIGE-Topolino-antiaderenti-acciaio-carbonio/dp/B0C7RGJM1H/ref=sr_1_10?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-10",
     "series": null,
-    "deliveryMessage": "Consegna a 5,90 € ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA lun, 28 lug da 35 € su articoli internazionali idonei",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 9
@@ -652,7 +562,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -660,56 +570,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor all Star, Sneakers Unisex-Adulto",
-    "asin": "B000OLTR8Q",
-    "countReview": 2858,
-    "imgUrl": "https://m.media-amazon.com/images/I/61WBcLkPP0L._AC_UL320_.jpg",
-    "price": 53.95,
-    "retailPrice": 75,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Stampi In Silicone Fondente Torta 2Pcs Benedizione Testo Mousse Torta Al Cioccolato Fondente Stampo In Silicone Fatto A Mano Decorazione Fai Da Te",
+    "asin": "B0C1GLP9CT",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/31DiHXZFEbL._AC_UL320_.jpg",
+    "price": 14.56,
+    "retailPrice": 0,
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/Converse-Parent-M7650C-Ct-bianco-M7650/dp/B000OLTR8Q/ref=sr_1_11_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-11",
+    "dpUrl": "/Silicone-Fondente-Benedizione-Cioccolato-Decorazione/dp/B0C1GLP9CT/ref=sr_1_11?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-11",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA 4 - 12 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 10
@@ -717,7 +618,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -725,56 +626,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "All Star Ox Formatori",
-    "asin": "B0000AFSWH",
-    "countReview": 11258,
-    "imgUrl": "https://m.media-amazon.com/images/I/51PbnHuHt0L._AC_UL320_.jpg",
-    "price": 47.95,
-    "retailPrice": 51.95,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Cake Topper Personalizzato | Decorazione della torta | Il tuo testo gratuito | Personalizzabile con nome (qualsiasi testo, D'oro)",
+    "asin": "B0CZJ7ZBYH",
+    "countReview": 4,
+    "imgUrl": "https://m.media-amazon.com/images/I/614qQZRax5L._AC_UL320_.jpg",
+    "price": 5.9,
+    "retailPrice": 0,
+    "productRating": "4,0 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Sneaker-Unisex-Bianco/dp/B0000AFSWH/ref=sr_1_12_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-12",
+    "dpUrl": "/Personalizzato-Decorazione-torta-Personalizzabile-qualsiasi/dp/B0CZJ7ZBYH/ref=sr_1_12?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-12",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna a 12,70 € 31 lug - 5 ago",
     "variations": [],
     "productDetails": [],
-    "salesVolume": "50+ acquistati nel mese scorso",
-    "manufacturer": "Converse",
+    "salesVolume": null,
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 11
@@ -782,7 +674,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -790,56 +682,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Ctas Mono Ox, Sneaker Donna",
-    "asin": "B000EDMSEE",
-    "countReview": 4154,
-    "imgUrl": "https://m.media-amazon.com/images/I/51PbnHuHt0L._AC_UL320_.jpg",
-    "price": 48.99,
-    "retailPrice": 70,
-    "productRating": "4,5 su 5 stelle",
+    "productDescription": "Torta a Testa di Scheletro Mo Ld, Resistente Al Calore, Rilascio Senza Sforzo, Materiale Sicuro, Facile da Pulire, per Mini Torte, Sapone Fatto a Mano, Biscotti, Cioccolatini, Decorazioni di",
+    "asin": "B0F9MLGWBL",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/51Q8vCkRcZL._AC_UL320_.jpg",
+    "price": 11.4,
+    "retailPrice": 0,
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Scarpe-ginnastica-Optical/dp/B000EDMSEE/ref=sr_1_13_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-13",
+    "dpUrl": "/Scheletro-Resistente-Materiale-Cioccolatini-Decorazioni/dp/B0F9MLGWBL/ref=sr_1_13?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-13",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA lun, 28 lug",
+    "deliveryMessage": "Consegna GRATUITA 4 - 11 ago",
     "variations": [],
     "productDetails": [],
-    "salesVolume": "100+ acquistati nel mese scorso",
-    "manufacturer": "Converse",
+    "salesVolume": null,
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 12
@@ -847,7 +730,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -855,56 +738,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "All Star High M9160, Scarpe Sportive",
-    "asin": "B0000AFT6W",
-    "countReview": 9129,
-    "imgUrl": "https://m.media-amazon.com/images/I/718uxo4pvCL._AC_UL320_.jpg",
-    "price": 45,
-    "retailPrice": 75,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Torta a Testa di Scheletro, Stampo da Forno Al Cranio di Rilascio Flessibile per Ampio Disgraziato per la Torta",
+    "asin": "B0FFHMH55T",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/51Q8vCkRcZL._AC_UL320_.jpg",
+    "price": 5.85,
+    "retailPrice": 0,
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Sneaker-Unisex-Adulto/dp/B0000AFT6W/ref=sr_1_14_mod_primary_new?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-14",
+    "dpUrl": "/Scheletro-Stampo-Rilascio-Flessibile-Disgraziato/dp/B0FFHMH55T/ref=sr_1_14?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-14",
     "series": null,
-    "deliveryMessage": "Consegna a 5,90 € ven, 25 lug",
+    "deliveryMessage": "Consegna a 4,95 € 4 - 11 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 13
@@ -912,7 +786,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -920,56 +794,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "All-Star Chuck Taylor M5039F, Scarpe Sportive",
-    "asin": "B000OLTRYU",
-    "countReview": 8400,
-    "imgUrl": "https://m.media-amazon.com/images/I/61cunSrrBWL._AC_UL320_.jpg",
-    "price": 47,
-    "retailPrice": 56,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "BommFu Tester per Torte | Tester per Torta con Sonda per Torta | Ago per Test Torta di Pane con Penna da Forno Fai-da-Te - Ago di Rilevamento in Acciaio Inossidabile per Dispositivo di Cottura",
+    "asin": "B0CZ43RV9G",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/51dIrUEzF3L._AC_UL320_.jpg",
+    "price": 4.69,
+    "retailPrice": 0,
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Sneaker-Unisex-Taglia/dp/B000OLTRYU/ref=sr_1_15?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-15",
+    "dpUrl": "/BommFu-Tester-Torte-Torta-Sonda/dp/B0CZ43RV9G/ref=sr_1_15?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-15",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA 29 - 30 lug",
+    "deliveryMessage": "Consegna a 0,99 € 30 lug - 4 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 14
@@ -977,7 +842,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -985,56 +850,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Scarpe Chuck Taylor all Star Platform Ox Lift CODICE 560250C",
-    "asin": "B073C673JD",
-    "countReview": 7549,
-    "imgUrl": "https://m.media-amazon.com/images/I/51pVQT70onL._AC_UL320_.jpg",
-    "price": 0,
+    "productDescription": "UptVin Stampo per Torta a Forma di Cavallo - Robusto Stampo Tridimensionale per la Testa di Cavallo per Feste di Compleanno per Bambini e Occasioni Speciali",
+    "asin": "B0C33KZRTZ",
+    "countReview": 36,
+    "imgUrl": "https://m.media-amazon.com/images/I/512Pc1vLVYL._AC_UL320_.jpg",
+    "price": 14.98,
     "retailPrice": 0,
-    "productRating": "4,6 su 5 stelle",
+    "productRating": "4,1 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Scarpe-Ginnastica-Bianco/dp/B073C673JD/ref=sr_1_16?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-16",
+    "dpUrl": "/UptVin-Stampo-Torta-Forma-Cavallo/dp/B0C33KZRTZ/ref=sr_1_16?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-16",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 15
@@ -1042,7 +898,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -1050,56 +906,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor all Star Move Canvas Platform, Sneaker Bambini e Ragazzi",
-    "asin": "B09537Y63H",
-    "countReview": 531,
-    "imgUrl": "https://m.media-amazon.com/images/I/61lpe9m0JgL._AC_UL320_.jpg",
-    "price": 39.09,
-    "retailPrice": 65,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "HDGSAFD Set di 2 stampi per torta in silicone rosso, corpo rettangolare con prisma",
+    "asin": "B0D48HMDX1",
+    "countReview": 3,
+    "imgUrl": "https://m.media-amazon.com/images/I/51UuMMninxL._AC_UL320_.jpg",
+    "price": 9.19,
+    "retailPrice": 10.14,
+    "productRating": "5,0 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Chuck-Taylor-Sneaker-Black/dp/B09537Y63H/ref=sr_1_17?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-17",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfbXRmOjMwMDQzNTE2MDYyMzczMjo6MDo6&url=%2Fstampi-torte-numeri-silicone-dolci%2Fdp%2FB0D48HMDX1%2Fref%3Dsr_1_17_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-17-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9tdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": "Consegna a 5,90 € ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 16
@@ -1107,7 +954,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -1115,56 +962,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Sneakers M9621 - Donna",
-    "asin": "B002VSML8I",
-    "countReview": 9069,
-    "imgUrl": "https://m.media-amazon.com/images/I/719cWO-imbL._AC_UL320_.jpg",
-    "price": 49.5,
-    "retailPrice": 75,
-    "productRating": "4,7 su 5 stelle",
+    "productDescription": "Crea La Tua CIALDA per Torta Personalizzata - Cialda in Ostia per Torta Personalizzata a Forma di Rettangolo - Decorazione per Torte - Foglio A4 da Ritagliare - Cialda Torta Personalizzata",
+    "asin": "B09W6Z6W3K",
+    "countReview": 159,
+    "imgUrl": "https://m.media-amazon.com/images/I/71gxARzTi6L._AC_UL320_.jpg",
+    "price": 5.99,
+    "retailPrice": 0,
+    "productRating": "4,2 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Taylor-Sneaker-Unisex-Adulto/dp/B002VSML8I/ref=sr_1_18?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-18",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfbXRmOjMwMDIxOTc1ODgzODkzMjo6MDo6&url=%2FCrea-CIALDA-Ostia-Rettangolare-Personalizzata%2Fdp%2FB09W6Z6W3K%2Fref%3Dsr_1_18_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-18-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9tdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA lun, 28 lug",
+    "deliveryMessage": "Consegna a 5,90 € 30 - 31 lug",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 17
@@ -1172,7 +1010,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -1180,56 +1018,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Chuck Taylor all Star, Sneakers Unisex – Adulto",
-    "asin": "B000O517GW",
-    "countReview": 4332,
-    "imgUrl": "https://m.media-amazon.com/images/I/51PbnHuHt0L._AC_UL320_.jpg",
-    "price": 47.95,
-    "retailPrice": 70,
-    "productRating": "4,6 su 5 stelle",
+    "productDescription": "Biscuiterie de Provence | Torta Mandorle Cioccolato | Torta Mandorle Vaniglia | Torta Senza Glutine Senza Conservanti - 2 x 240 Gr | Dolci Senza Glutine",
+    "asin": "B092RHWDWS",
+    "countReview": 5,
+    "imgUrl": "https://m.media-amazon.com/images/I/61XPwlI+pyL._AC_UL320_.jpg",
+    "price": 34.87,
+    "retailPrice": 0,
+    "productRating": "3,8 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Converse-Chuck-Taylor-Sneakers-Unisex/dp/B000O517GW/ref=sr_1_19?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-19",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfbXRmOjIwMDIzNDIyMzAxMTk4OjowOjo&url=%2FBiscuiterie-Provence-Mandorle-Cioccolato-Conservanti%2Fdp%2FB092RHWDWS%2Fref%3Dsr_1_19_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-19-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9tdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 18
@@ -1237,7 +1066,7 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Converse Chuck Taylor All Star",
+    "keyword": "Torta al Testo",
     "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
@@ -1245,56 +1074,47 @@
     "nodeHierarchy": null,
     "resultCount": 0,
     "categories": [
-      "Moda Uomo",
-      "Sneaker casual da uomo",
-      "Scarpe donna",
-      "Sneaker casual da donna",
-      "Sneaker casual da bambina",
-      "Sneaker casual da bambino"
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
     ],
     "similarKeywords": [
       {
-        "keyword": "converse chuck taylor all star platform",
-        "url": "/s?k=converse+chuck+taylor+all+star+platform&ref=rsl_sug_0_0&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck 70",
-        "url": "/s?k=converse+chuck+70&ref=rsl_sug_0_3&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse chuck taylor",
-        "url": "/s?k=converse+chuck+taylor&ref=rsl_sug_0_1&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       },
       {
-        "keyword": "converse donna platform",
-        "url": "/s?k=converse+donna+platform&ref=rsl_sug_0_4&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse",
-        "url": "/s?k=converse&ref=rsl_sug_0_2&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
-      },
-      {
-        "keyword": "converse chuck taylor all star donna",
-        "url": "/s?k=converse+chuck+taylor+all+star+donna&ref=rsl_sug_0_5&pd_rd_w=5teOH&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=ZA6FPDQ2Y8HRF0NPE3HR&pd_rd_wg=DmjID&pd_rd_r=6eec3ca4-49f6-4ee8-b6df-2b479a6a2f0c&qid=1753185871"
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
       }
     ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "All Star Hi Formatori",
-    "asin": "B006OCAPDA",
-    "countReview": 4828,
-    "imgUrl": "https://m.media-amazon.com/images/I/81zqqhuF9hL._AC_UL320_.jpg",
-    "price": 56.25,
-    "retailPrice": 85,
-    "productRating": "4,4 su 5 stelle",
+    "productDescription": "Diy Strumento Decorazione Di Cottura Buon Compleanno In Silicone Testo Fondente Torta Stampo Strumento Di Cottura Al Cioccolato",
+    "asin": "B0C1Z8N8FM",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/51J0FJl3X7L._AC_UL320_.jpg",
+    "price": 14.74,
+    "retailPrice": 0,
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/Converse-Chuck-Taylor-Sneaker-Unisex/dp/B006OCAPDA/ref=sr_1_20?dib=eyJ2IjoiMSJ9.791ZdsTWk0_pvBD80ElO1hVzacTZsaeJmB-TEYdfYR0wgVG7w457gRXZM-3MC_h_N_loSWyIlXYzRnwDkIFYDhJuCX8yzkWlMFL2u-H6tuSbj4tOKRg9iYBAOMVirYx-bwl3ZA7GSnSJ6PnHrfUuT7tOlY-hsr0vx9D3cEIfo22ZefGdnW5OYSB7K52o5k7OsIRdWFAQHPwZVsSootzgSWjXVhetgfvNsHbWdGrdaX01C5zAZv35EBsOeqcKb3Emhs-Zihrm-6RoGITrc83EKg84Nt7Dl56qO-wXUBhW4ac.yWNxQS_yEvrSG3XoxuR0LXG5sF3S_A_ua96TFhki6rQ&dib_tag=se&keywords=Converse+Chuck+Taylor+All+Star&qid=1753185871&sr=8-20",
+    "dpUrl": "/Strumento-Decorazione-Compleanno-Silicone-Cioccolato/dp/B0C1Z8N8FM/ref=sr_1_20?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-20",
     "series": null,
-    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
+    "deliveryMessage": "Consegna GRATUITA 4 - 12 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
-    "manufacturer": "Converse",
+    "manufacturer": null,
     "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 19
