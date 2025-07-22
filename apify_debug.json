@@ -2,28 +2,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "LifeStraw® Personal // filtr do wody // usuwa bakterie, pierwotniaki i zmętnienie // idealny do wędrówek, trekkingu, na kemping, w podróży i w sytuacjach awaryjnych.",
-    "asin": "B006QF3TW4",
-    "countReview": 93288,
-    "imgUrl": "https://m.media-amazon.com/images/I/61IM+k4lmQL._AC_UL320_.jpg",
-    "price": 109.46,
+    "productDescription": "Guardini, Stampo apribile plumcake 30x11 cm, Fondo Salvagoccia, Acciaio con rivestimento antiaderente, Nero, Made in Italy, Linea Gardenia",
+    "asin": "B07QRBCDLY",
+    "countReview": 432,
+    "imgUrl": "https://m.media-amazon.com/images/I/61WTEbH2iIL._AC_UL320_.jpg",
+    "price": 22.9,
     "retailPrice": 0,
-    "productRating": "4,7 z 5 gwiazdek",
+    "productRating": "4,2 su 5 stelle",
     "prime": false,
-    "dpUrl": "/LifeStraw%C2%AE-Osobisty-filtr-do-wody/dp/B006QF3TW4/ref=sr_1_1?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-1",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfYXRmOjMwMDU2ODE1MTI2OTIzMjo6MDo6&url=%2FGuardini-Gardenia-Apribile-rivestimento-antiaderente%2Fdp%2FB07QRBCDLY%2Fref%3Dsr_1_1_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-1-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9hdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -35,28 +58,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Purewell Zewnętrzny filtr wody filtr do wody osobisty słomka sprzęt do przetrwania awaryjnego oczyszczacz wody na kemping piesze wycieczki wspinaczka plecak na ramię",
-    "asin": "B09JGBMMXN",
-    "countReview": 158,
-    "imgUrl": "https://m.media-amazon.com/images/I/61ZKi2-+kcL._AC_UL320_.jpg",
-    "price": 61.97,
+    "productDescription": "Tester per torta in acciaio inossidabile, ago per test torta riutilizzabile con sonda per torta con coperchio Strumento di cottura fai-da-te per focaccina da forno Torta di pane",
+    "asin": "B08L6WV3ND",
+    "countReview": 145,
+    "imgUrl": "https://m.media-amazon.com/images/I/61G2F6ZOTbL._AC_UL320_.jpg",
+    "price": 7.9,
     "retailPrice": 0,
-    "productRating": "4,6 z 5 gwiazdek",
+    "productRating": "4,6 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Purewell-Zewn%C4%99trzny-przetrwania-awaryjnego-oczyszczacz/dp/B09JGBMMXN/ref=sr_1_2?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-2",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfYXRmOjIwMDU2MzMwMzMyODA0OjowOjo&url=%2Facciaio-riutilizzabile-copertura-strumento-panetteria%2Fdp%2FB08L6WV3ND%2Fref%3Dsr_1_2_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-2-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9hdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -68,28 +114,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Purewell Osobisty filtr wody 1500L Zewnętrzny filtr wody Usuwa 99,99% zanieczyszczeń, trekking, przygodowe podróże i gotowość na wypadek sytuacji awaryjnej",
-    "asin": "B09JG9XQDS",
-    "countReview": 112,
-    "imgUrl": "https://m.media-amazon.com/images/I/7112lzr4JDL._AC_UL320_.jpg",
-    "price": 100.86,
+    "productDescription": "Artigianato TESTO PER CRESCIA O Torta DI Gubbio Assisi Italia by Italia",
+    "asin": "B019QQ9RM0",
+    "countReview": 88,
+    "imgUrl": "https://m.media-amazon.com/images/I/41yXJaBKuGL._AC_UL320_.jpg",
+    "price": 44.75,
     "retailPrice": 0,
-    "productRating": "4,6 z 5 gwiazdek",
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Purewell-Zewn%C4%99trzny-zanieczyszcze%C5%84-przygodowe-awaryjnej/dp/B09JG9XQDS/ref=sr_1_3?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-3",
+    "dpUrl": "/TESTO-TORTA-CRESCIA-GUBBIO-UMBRIA/dp/B019QQ9RM0/ref=sr_1_3?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-3",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -101,28 +170,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "LifeStraw Peak Personal Filtr do Wody (niebieski)",
-    "asin": "B09SBPP9R9",
-    "countReview": 1902,
-    "imgUrl": "https://m.media-amazon.com/images/I/41osV6oj3GL._AC_UL320_.jpg",
-    "price": 118.58,
+    "productDescription": "fonderia grifo Testo per Torta Umbra o crescia di Gubbio (33 cm)",
+    "asin": "B06X1GNC89",
+    "countReview": 55,
+    "imgUrl": "https://m.media-amazon.com/images/I/21OFJjJoYmL._AC_UL320_.jpg",
+    "price": 48.33,
     "retailPrice": 0,
-    "productRating": "4,7 z 5 gwiazdek",
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/LifeStraw-Peak-Personal-Filtr-niebieski/dp/B09SBPP9R9/ref=sr_1_4?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-4",
+    "dpUrl": "/Testo-torta-umbra-crescia-gubbio/dp/B06X1GNC89/ref=sr_1_4?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-4",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -134,28 +226,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Hotut Osobisty filtr do wody, 2 szt. Filtr do wody na zewnątrz z dwoma workami do przechowywania wody, Outdoor Camping Survival przenośny bezpośredni filtr do picia, na wędrówki, kemping, w podróż i w",
-    "asin": "B0DXQ1QPSL",
-    "countReview": 12,
-    "imgUrl": "https://m.media-amazon.com/images/I/51jsQRfVs7L._AC_UL320_.jpg",
-    "price": 54.99,
+    "productDescription": "GMU GRANDI MAGAZZINI UMBRI Testo Piastra CRESCIA FOCACCIA Pizza Torta Umbra Ø CM 36",
+    "asin": "B077B421SY",
+    "countReview": 3,
+    "imgUrl": "https://m.media-amazon.com/images/I/71USkIR-POL._AC_UL320_.jpg",
+    "price": 51.87,
     "retailPrice": 0,
-    "productRating": "4,3 z 5 gwiazdek",
+    "productRating": "5,0 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Osobisty-zewn%C4%85trz-przechowywania-przeno%C5%9Bny-bezpo%C5%9Bredni/dp/B0DXQ1QPSL/ref=sr_1_5?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-5",
+    "dpUrl": "/GMU-GRANDI-MAGAZZINI-UMBRI-FOCACCIA/dp/B077B421SY/ref=sr_1_5?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-5",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA 28 - 29 lug",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -167,28 +282,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Zewnętrzny filtr do wody, zewnętrzny filtr do wody pitnej, filtr wody zewnętrznej, usuwanie 99,99% bakterii i pierwotniaków, na wędrówki, w nagłych wypadkach, na kempingu, survivalu",
-    "asin": "B0CWR53HN5",
-    "countReview": 9,
-    "imgUrl": "https://m.media-amazon.com/images/I/61zj2uNdJAL._AC_UL320_.jpg",
-    "price": 45.5,
+    "productDescription": "Tester Per Torta,Aghi Per Tester Per Torte,Tester Cottura Torta In Acciaio Inox,Pratico Tester Per Torte,Riutilizzabil Tester Per Torta In Metallo,Con Manico In Plastica,Per Torte,Cottura Al Forno",
+    "asin": "B0BNH1YB77",
+    "countReview": 20,
+    "imgUrl": "https://m.media-amazon.com/images/I/61pYwbgdQXL._AC_UL320_.jpg",
+    "price": 7.79,
     "retailPrice": 0,
-    "productRating": "4,5 z 5 gwiazdek",
+    "productRating": "4,5 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Zewn%C4%99trzny-zewn%C4%99trzny-zewn%C4%99trznej-pierwotniak%C3%B3w-wypadkach/dp/B0CWR53HN5/ref=sr_1_6?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-6",
+    "dpUrl": "/Cottura-Acciaio-Pratico-Riutilizzabil-Plastica/dp/B0BNH1YB77/ref=sr_1_6?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-6",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -200,26 +338,49 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Waterdrop Słomka filtrująca wodę, oczyszczacz wody, survival na kemping, podróże, podróże z plecakiem i gotowość na wypadek sytuacji awaryjnych, system filtracji wody, 1 opakowanie",
-    "asin": "B083961ZMY",
-    "countReview": 1630,
-    "imgUrl": "https://m.media-amazon.com/images/I/51wyKBKBCBL._AC_UL320_.jpg",
-    "price": 79.99,
+    "productDescription": "Mulino Bianco Torta al Cacao con Farcitura di Albicocche 100% Italiane, per una Pausa Gustosa, 590 g",
+    "asin": "B095X577NJ",
+    "countReview": 23,
+    "imgUrl": "https://m.media-amazon.com/images/I/81COBjp0E5L._AC_UL320_.jpg",
+    "price": 6.79,
     "retailPrice": 0,
-    "productRating": "4,6 z 5 gwiazdek",
+    "productRating": "4,2 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Waterdrop-filtruj%C4%85ca-oczyszczacz-awaryjnych-opakowanie/dp/B083961ZMY/ref=sr_1_7?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-7",
+    "dpUrl": "/Mulino-Bianco-Farcitura-Albicocche-Italiane/dp/B095X577NJ/ref=sr_1_7_f3_0o_fs?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-7",
     "series": null,
     "deliveryMessage": null,
     "variations": [],
@@ -233,94 +394,163 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "LifeStraw Osobisty filtr wody do wędrówek, biwakowania, podróży i gotowości na wypadek sytuacji awaryjnych, granatowy",
-    "asin": "B0D1M4LQ7F",
-    "countReview": 52,
-    "imgUrl": "https://m.media-amazon.com/images/I/61mFxJ1dAKL._AC_UL320_.jpg",
-    "price": 113.39,
+    "productDescription": "Zenker Tortiera Apribile Rotonda con Base Piatta, diametro 28 Cm, Black Metallic, Rivestimento Antiaderente (Colore: Nero Metallizzato), Quantità: 1 Pezzo",
+    "asin": "B00022446M",
+    "countReview": 1559,
+    "imgUrl": "https://m.media-amazon.com/images/I/61+Cy3Hw+KL._AC_UL320_.jpg",
+    "price": 18.02,
     "retailPrice": 0,
-    "productRating": "4,5 z 5 gwiazdek",
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/LifeStraw-biwakowania-gotowo%C5%9Bci-awaryjnych-granatowy/dp/B0D1M4LQ7F/ref=sr_1_8?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-8",
+    "dpUrl": "/Zenker-Metallic-Tortiera-Apribile-Diametro/dp/B00022446M/ref=sr_1_8?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-8",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
     "manufacturer": null,
-    "secondaryOffer": 0,
+    "secondaryOffer": 10.08,
     "sponsored": false,
     "searchResultPosition": 7
   },
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Osobisty filtr wody, oczyszczacz wody na świeżym powietrzu, przenośny mini system filtracji, awaryjny oczyszczacz wody na kemping, wędrówki i podróże (zielona armia)",
-    "asin": "B09P1R4T94",
-    "countReview": 180,
-    "imgUrl": "https://m.media-amazon.com/images/I/417yyLr90qL._AC_UL320_.jpg",
-    "price": 99.99,
-    "retailPrice": 0,
-    "productRating": "4,4 z 5 gwiazdek",
+    "productDescription": "Dr. Oetker Back-Freude Teglia Classica con Fondo Staccabile, Ø 26 cm",
+    "asin": "B000UVRGYM",
+    "countReview": 1599,
+    "imgUrl": "https://m.media-amazon.com/images/I/61o8FdUeENL._AC_UL320_.jpg",
+    "price": 17.22,
+    "retailPrice": 19.99,
+    "productRating": "4,3 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Osobisty-oczyszczacz-powietrzu-przeno%C5%9Bny-filtracji/dp/B09P1R4T94/ref=sr_1_9?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-9",
+    "dpUrl": "/Dr-Oetker-Back-Freude-classica-staccabile/dp/B000UVRGYM/ref=sr_1_9?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-9",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
     "manufacturer": null,
-    "secondaryOffer": 0,
+    "secondaryOffer": 16.48,
     "sponsored": false,
     "searchResultPosition": 8
   },
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Purewell zewnętrzny filtr wody osobista filtracja wody słomka awaryjne sprzęt survivalowy oczyszczacz wody na kemping wędrówki wspinaczka plecak",
-    "asin": "B08GS8SQ8T",
-    "countReview": 0,
-    "imgUrl": "https://m.media-amazon.com/images/I/61LVZe9JvTL._AC_UL320_.jpg",
-    "price": 66.06,
+    "productDescription": "Prestige Disney Bake with Mickey Mouse, 3 stampi per torte con testa di Topolino, antiaderenti, in acciaio al carbonio, rosso e nero",
+    "asin": "B0C7RGJM1H",
+    "countReview": 157,
+    "imgUrl": "https://m.media-amazon.com/images/I/61cLNNkhh3L._AC_UL320_.jpg",
+    "price": 26.18,
     "retailPrice": 0,
-    "productRating": null,
+    "productRating": "4,7 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Purewell-zewn%C4%99trzny-survivalowy-oczyszczacz-wspinaczka/dp/B08GS8SQ8T/ref=sr_1_10?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-10",
+    "dpUrl": "/PRESTIGE-Topolino-antiaderenti-acciaio-carbonio/dp/B0C7RGJM1H/ref=sr_1_10?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-10",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA lun, 28 lug da 35 € su articoli internazionali idonei",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -332,28 +562,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Sawyer PointONE Squeeze SP129 filtr do wody, 2 x 1 l, składany worek do picia i adapter SP110",
-    "asin": "B00B1OSU4W",
-    "countReview": 9691,
-    "imgUrl": "https://m.media-amazon.com/images/I/71PlK2Jo5uL._AC_UL320_.jpg",
-    "price": 385,
+    "productDescription": "Stampi In Silicone Fondente Torta 2Pcs Benedizione Testo Mousse Torta Al Cioccolato Fondente Stampo In Silicone Fatto A Mano Decorazione Fai Da Te",
+    "asin": "B0C1GLP9CT",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/31DiHXZFEbL._AC_UL320_.jpg",
+    "price": 14.56,
     "retailPrice": 0,
-    "productRating": "4,7 z 5 gwiazdek",
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/PointONE-Squeeze-SP129-skladany-adapter/dp/B00B1OSU4W/ref=sr_1_11?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-11",
+    "dpUrl": "/Silicone-Fondente-Benedizione-Cioccolato-Decorazione/dp/B0C1GLP9CT/ref=sr_1_11?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-11",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA 4 - 12 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -365,28 +618,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Purewell Outdoor filtr do wody, osobista filtracja wody, słomka, awaryjna survival gear, uzdatniacz wody na kemping, wędrówki, wspinaczkę, podróże z plecakiem",
-    "asin": "B0BCHTV7B6",
-    "countReview": 0,
-    "imgUrl": "https://m.media-amazon.com/images/I/61LVZe9JvTL._AC_UL320_.jpg",
-    "price": 52.03,
+    "productDescription": "Cake Topper Personalizzato | Decorazione della torta | Il tuo testo gratuito | Personalizzabile con nome (qualsiasi testo, D'oro)",
+    "asin": "B0CZJ7ZBYH",
+    "countReview": 4,
+    "imgUrl": "https://m.media-amazon.com/images/I/614qQZRax5L._AC_UL320_.jpg",
+    "price": 5.9,
     "retailPrice": 0,
-    "productRating": null,
+    "productRating": "4,0 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Purewell-filtracja-uzdatniacz-wspinaczk%C4%99-plecakiem/dp/B0BCHTV7B6/ref=sr_1_12?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-12",
+    "dpUrl": "/Personalizzato-Decorazione-torta-Personalizzabile-qualsiasi/dp/B0CZJ7ZBYH/ref=sr_1_12?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-12",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna a 12,70 € 31 lug - 5 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -398,28 +674,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Waterdrop Gravity Filtr do wody Waterdrop Gravity, kempingowy system filtracji wody, podróżny oczyszczacz wody, na wypadek sytuacji awaryjnej, worek 5,7 l, 0,1 mikrona, 5-stopniowa filtracja.",
-    "asin": "B086QNLBB4",
-    "countReview": 2227,
-    "imgUrl": "https://m.media-amazon.com/images/I/61uApNCGwCL._AC_UL320_.jpg",
-    "price": 199.99,
+    "productDescription": "Torta a Testa di Scheletro Mo Ld, Resistente Al Calore, Rilascio Senza Sforzo, Materiale Sicuro, Facile da Pulire, per Mini Torte, Sapone Fatto a Mano, Biscotti, Cioccolatini, Decorazioni di",
+    "asin": "B0F9MLGWBL",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/51Q8vCkRcZL._AC_UL320_.jpg",
+    "price": 11.4,
     "retailPrice": 0,
-    "productRating": "4,6 z 5 gwiazdek",
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/Waterdrop-kempingowy-oczyszczacz-5-stopniowa-filtracja/dp/B086QNLBB4/ref=sr_1_13?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-13",
+    "dpUrl": "/Scheletro-Resistente-Materiale-Cioccolatini-Decorazioni/dp/B0F9MLGWBL/ref=sr_1_13?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-13",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA 4 - 11 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -431,61 +730,107 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "LifeStraw filtr wymienny Go (2-stopniowy) biały, biały M",
-    "asin": "B01KOUYVP0",
-    "countReview": 1066,
-    "imgUrl": "https://m.media-amazon.com/images/I/31OIwfQrUbL._AC_UL320_.jpg",
-    "price": 124.11,
+    "productDescription": "Torta a Testa di Scheletro, Stampo da Forno Al Cranio di Rilascio Flessibile per Ampio Disgraziato per la Torta",
+    "asin": "B0FFHMH55T",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/51Q8vCkRcZL._AC_UL320_.jpg",
+    "price": 5.85,
     "retailPrice": 0,
-    "productRating": "4,7 z 5 gwiazdek",
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/LifeStraw-Filtr-wymienny-2-stopniowy-bialy/dp/B01KOUYVP0/ref=sr_1_14?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-14",
+    "dpUrl": "/Scheletro-Stampo-Rilascio-Flessibile-Disgraziato/dp/B0FFHMH55T/ref=sr_1_14?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-14",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna a 4,95 € 4 - 11 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
     "manufacturer": null,
-    "secondaryOffer": 107.85,
+    "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 13
   },
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "D-VITAE Przenośny filtr wody na zewnątrz, osobista słomka do filtrowania wody, sprzęt survivalowy, awaryjny oczyszczacz wody na kemping, wędrówki, wspinaczkę i plecak",
-    "asin": "B0CZLHRCMN",
-    "countReview": 5,
-    "imgUrl": "https://m.media-amazon.com/images/I/61g2oPLztxL._AC_UL320_.jpg",
-    "price": 96.29,
+    "productDescription": "BommFu Tester per Torte | Tester per Torta con Sonda per Torta | Ago per Test Torta di Pane con Penna da Forno Fai-da-Te - Ago di Rilevamento in Acciaio Inossidabile per Dispositivo di Cottura",
+    "asin": "B0CZ43RV9G",
+    "countReview": 0,
+    "imgUrl": "https://m.media-amazon.com/images/I/51dIrUEzF3L._AC_UL320_.jpg",
+    "price": 4.69,
     "retailPrice": 0,
-    "productRating": "4,2 z 5 gwiazdek",
+    "productRating": null,
     "prime": false,
-    "dpUrl": "/D-VITAE-filtrowania-survivalowy-oczyszczacz-wspinaczk%C4%99/dp/B0CZLHRCMN/ref=sr_1_15?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-15",
+    "dpUrl": "/BommFu-Tester-Torte-Torta-Sonda/dp/B0CZ43RV9G/ref=sr_1_15?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-15",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna a 0,99 € 30 lug - 4 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -497,28 +842,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Purewell Osobisty filtr wody 1500L Zewnętrzny filtr wody Usuwa 99,99% zanieczyszczeń, trekking, przygodowe podróże i gotowość na wypadek sytuacji awaryjnej",
-    "asin": "B09JGCHX39",
-    "countReview": 6,
-    "imgUrl": "https://m.media-amazon.com/images/I/61xkFwzZFaL._AC_UL320_.jpg",
-    "price": 247.28,
+    "productDescription": "UptVin Stampo per Torta a Forma di Cavallo - Robusto Stampo Tridimensionale per la Testa di Cavallo per Feste di Compleanno per Bambini e Occasioni Speciali",
+    "asin": "B0C33KZRTZ",
+    "countReview": 36,
+    "imgUrl": "https://m.media-amazon.com/images/I/512Pc1vLVYL._AC_UL320_.jpg",
+    "price": 14.98,
     "retailPrice": 0,
-    "productRating": "4,4 z 5 gwiazdek",
+    "productRating": "4,1 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Purewell-Zewn%C4%99trzny-zanieczyszcze%C5%84-przygodowe-awaryjnej/dp/B09JGCHX39/ref=sr_1_16?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-16",
+    "dpUrl": "/UptVin-Stampo-Torta-Forma-Cavallo/dp/B0C33KZRTZ/ref=sr_1_16?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-16",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -530,28 +898,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "AQUAPHOR Filtr do wody onyks czarny z 1 filtrem MaxFOR+ I 4,2 l filtr do wody o wyglądzie szkła do I karafki I redukuje wapno i chlor, idealny dla rodziny, jakość premium, stylowy pojemnik",
-    "asin": "B07Z5GBMF3",
-    "countReview": 2963,
-    "imgUrl": "https://m.media-amazon.com/images/I/51O1h9K00tL._AC_UL320_.jpg",
-    "price": 61.79,
-    "retailPrice": 0,
-    "productRating": "4,5 z 5 gwiazdek",
+    "productDescription": "HDGSAFD Set di 2 stampi per torta in silicone rosso, corpo rettangolare con prisma",
+    "asin": "B0D48HMDX1",
+    "countReview": 3,
+    "imgUrl": "https://m.media-amazon.com/images/I/51UuMMninxL._AC_UL320_.jpg",
+    "price": 9.19,
+    "retailPrice": 10.14,
+    "productRating": "5,0 su 5 stelle",
     "prime": false,
-    "dpUrl": "/AQUAPHOR-filtrem-wygl%C4%85dzie-redukuje-pojemnik/dp/B07Z5GBMF3/ref=sr_1_17?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-17",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfbXRmOjMwMDQzNTE2MDYyMzczMjo6MDo6&url=%2Fstampi-torte-numeri-silicone-dolci%2Fdp%2FB0D48HMDX1%2Fref%3Dsr_1_17_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-17-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9tdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -563,28 +954,51 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Waterdrop Water Filter Słoma z Grawitacyjną Torbą na Wodę, Przenośny Kempingowy System Filtracji, Oczyszczacz Wody Pitnej do Ratownictwa Pieszego Wędrówki z Plecakiem",
-    "asin": "B08KZDDMVT",
-    "countReview": 139,
-    "imgUrl": "https://m.media-amazon.com/images/I/61DbljmkE7L._AC_UL320_.jpg",
-    "price": 189.99,
+    "productDescription": "Crea La Tua CIALDA per Torta Personalizzata - Cialda in Ostia per Torta Personalizzata a Forma di Rettangolo - Decorazione per Torte - Foglio A4 da Ritagliare - Cialda Torta Personalizzata",
+    "asin": "B09W6Z6W3K",
+    "countReview": 159,
+    "imgUrl": "https://m.media-amazon.com/images/I/71gxARzTi6L._AC_UL320_.jpg",
+    "price": 5.99,
     "retailPrice": 0,
-    "productRating": "4,5 z 5 gwiazdek",
+    "productRating": "4,2 su 5 stelle",
     "prime": false,
-    "dpUrl": "/Waterdrop-Grawitacyjn%C4%85-Kempingowy-Oczyszczacz-Ratownictwa/dp/B08KZDDMVT/ref=sr_1_18?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-18",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfbXRmOjMwMDIxOTc1ODgzODkzMjo6MDo6&url=%2FCrea-CIALDA-Ostia-Rettangolare-Personalizzata%2Fdp%2FB09W6Z6W3K%2Fref%3Dsr_1_18_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-18-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9tdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna a 5,90 € 30 - 31 lug",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
@@ -596,61 +1010,107 @@
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "LifeStraw Peak Series Solo - indywidualny filtr wody na wędrówki, kemping, podróże, przetrwanie, eliminuje bakterie, pasożyty i mikroplastiki, różowa lemoniada",
-    "asin": "B0CVJ8Y62L",
-    "countReview": 24,
-    "imgUrl": "https://m.media-amazon.com/images/I/61jNGTAp+lL._AC_UL320_.jpg",
-    "price": 135.76,
+    "productDescription": "Biscuiterie de Provence | Torta Mandorle Cioccolato | Torta Mandorle Vaniglia | Torta Senza Glutine Senza Conservanti - 2 x 240 Gr | Dolci Senza Glutine",
+    "asin": "B092RHWDWS",
+    "countReview": 5,
+    "imgUrl": "https://m.media-amazon.com/images/I/61XPwlI+pyL._AC_UL320_.jpg",
+    "price": 34.87,
     "retailPrice": 0,
-    "productRating": "4,2 z 5 gwiazdek",
+    "productRating": "3,8 su 5 stelle",
     "prime": false,
-    "dpUrl": "/LifeStraw-Peak-Solo-indywidualny-mikroplastiki/dp/B0CVJ8Y62L/ref=sr_1_19?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-19",
+    "dpUrl": "/sspa/click?ie=UTF8&spc=MTo1MjEzMTY5NTg3NDcxNDgyOjE3NTMxOTY5MjM6c3BfbXRmOjIwMDIzNDIyMzAxMTk4OjowOjo&url=%2FBiscuiterie-Provence-Mandorle-Cioccolato-Conservanti%2Fdp%2FB092RHWDWS%2Fref%3Dsr_1_19_sspa%3Fdib%3DeyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g%26dib_tag%3Dse%26keywords%3DTorta%2Bal%2BTesto%26qid%3D1753196923%26sr%3D8-19-spons%26sp_csd%3Dd2lkZ2V0TmFtZT1zcF9tdGY%26psc%3D1",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA ven, 25 lug sul tuo primo ordine idoneo",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,
     "manufacturer": null,
-    "secondaryOffer": 134.39,
+    "secondaryOffer": 0,
     "sponsored": false,
     "searchResultPosition": 18
   },
   {
     "statusCode": 200,
     "statusMessage": "FOUND",
-    "keyword": "Filtros de agua de bolsillo",
-    "domainCode": "pl",
+    "keyword": "Torta al Testo",
+    "domainCode": "it",
     "page": 1,
     "selectedCategory": "aps",
     "browseNode": null,
     "nodeHierarchy": null,
     "resultCount": 0,
-    "categories": [],
-    "similarKeywords": [],
+    "categories": [
+      "Stampi con forme particolari",
+      "Pasticceria",
+      "Torte",
+      "Teglie per pizza",
+      "Padelle universali"
+    ],
+    "similarKeywords": [
+      {
+        "keyword": "torta al testo umbra",
+        "url": "/s?k=torta+al+testo+umbra&ref=rsl_sug_0_0&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo romagnolo",
+        "url": "/s?k=testo+romagnolo&ref=rsl_sug_0_3&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo umbro",
+        "url": "/s?k=testo+umbro&ref=rsl_sug_0_1&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      },
+      {
+        "keyword": "testo",
+        "url": "/s?k=testo&ref=rsl_sug_0_2&pd_rd_w=tsSXW&content-id=amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc:amzn1.sym.a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_p=a561749b-40df-4230-a289-4983f2b17bdc&pf_rd_r=EHXZ3BZCK2JQDR49S89Z&pd_rd_wg=I1j0V&pd_rd_r=84dcc9d0-f95a-4fb3-99b3-86d4e1370b8b&qid=1753196923"
+      }
+    ],
     "currentPage": 1,
     "sortStrategy": "relevanceblender",
-    "productDescription": "Purewell Outdoor filtr do wody, osobista filtracja wody, słomka, awaryjna survival gear, uzdatniacz wody na kemping, wędrówki, wspinaczkę, podróże z plecakiem",
-    "asin": "B0BCHSY148",
+    "productDescription": "Diy Strumento Decorazione Di Cottura Buon Compleanno In Silicone Testo Fondente Torta Stampo Strumento Di Cottura Al Cioccolato",
+    "asin": "B0C1Z8N8FM",
     "countReview": 0,
-    "imgUrl": "https://m.media-amazon.com/images/I/61Wu6D9KKhL._AC_UL320_.jpg",
-    "price": 161.66,
+    "imgUrl": "https://m.media-amazon.com/images/I/51J0FJl3X7L._AC_UL320_.jpg",
+    "price": 14.74,
     "retailPrice": 0,
     "productRating": null,
     "prime": false,
-    "dpUrl": "/Purewell-filtracja-uzdatniacz-wspinaczk%C4%99-plecakiem/dp/B0BCHSY148/ref=sr_1_20?dib=eyJ2IjoiMSJ9.6NAC6Vdsylpv5dyJIV99oS6PKYJVhMl0NRYJAAHmfzWhtbioXqgYm4WVnnRRr8XAPMjxeQzyM6IfmAvY_HP0BxBCCDvsIikzpcKfQuTy-2hbpFdT-ZytWCwsow4t_ZCu2MsAPfAGGgoJv7QoCT7dqFiCl4AZj2Kn2xrinm0c6mmMBt73czdUpkHT9dCrQS5HIAY85vRLPaTNPBL6x_lJ4WaNY_0OyyUW10yVTzgXinhdspA-JbLqeObLNPPCCr62x0EcBmJsCH0QDL63W_HTlUIpvFC4lejmHeCc0zCLmB4.uisziLwI6Wsl21WaXZMg4Wo43fs3NOJ9GHmn4zb4X_Y&dib_tag=se&keywords=filtro+de+agua+de+bolsillo&qid=1752396712&sr=8-20",
+    "dpUrl": "/Strumento-Decorazione-Compleanno-Silicone-Cioccolato/dp/B0C1Z8N8FM/ref=sr_1_20?dib=eyJ2IjoiMSJ9.Za6061EtYY15klvJP50mSzI14AjltaOs_lrDUyLLMvkuCZ_MA1G6u-6OMAPBhhuPiMWxhBimnAOe9J4CjnL1fbawkJcOynW-CCWe0x83Y2RMCxnCLWibQxlgQTPCtgFFIraz5XeJzxCI6XjDKB2VGNSTLCiM4PUfAAf20lBoDTMCtKA1RdwWuH0yPFvRMNSWijb0fOsBg1TgVJjaLVUM-pnU5Zg1R6KGk8am192uii43sYh8TYUUGD1QTHe5lpXn4PjMonxFTnJNd_59LhKhIl0OYZTDqO5evi6z8deyW6g.OBg17yyVyg3RxsPfWAKkX1KMaSFjeO-mo75nRjKEN2g&dib_tag=se&keywords=Torta+al+Testo&qid=1753196923&sr=8-20",
     "series": null,
-    "deliveryMessage": null,
+    "deliveryMessage": "Consegna GRATUITA 4 - 12 ago",
     "variations": [],
     "productDetails": [],
     "salesVolume": null,

@@ -155,6 +155,8 @@ def preparar_tabla_b(publicaciones: list[dict], header_row: list[str]) -> list[d
     filas_out = []
 
     for pub in publicaciones:
+        row_index = pub.get("row_index")          
+        pais_scrapeado = pub.get("pais_scrapeado")
         for item in pub["items_filtrados"]:      # ← recorre los 3
             fila = {c: pub.get(c, "") for c in header_row}
 
@@ -166,6 +168,8 @@ def preparar_tabla_b(publicaciones: list[dict], header_row: list[str]) -> list[d
                 "imagen4": _url(item.get("imagen4")),
                 "imagen5": _url(item.get("imagen5")),
                 "imagen6": _url(item.get("imagen6")),
+                "row_index" : row_index,          
+                "pais_scrapeado" : pais_scrapeado
             })
             filas_out.append(fila)
 
@@ -237,6 +241,40 @@ def _base(url: str) -> str:
     """Quita el sufijo de tamaño Amazon (_AC_UL320_, _SX522_, …)."""
     return SIZE_TAG.sub(r'.\1', url) if url else url
 
+
+
+
+
+
+
+
+def obtener_galeria_en_batches(asins: List[str], apify_token: str, dominio: str = "com", batch_size: int = 5) -> Dict[str, List[str]]:
+    from time import sleep
+
+    resultados = {}
+
+    for i in range(0, len(asins), batch_size):
+        batch = asins[i:i + batch_size]
+        print(f"🎞️  Procesando batch de galería {i // batch_size + 1}...")
+
+        for asin in batch:
+            try:
+                galeria = obtener_galeria(asin, apify_token, dominio)
+                resultados[asin] = galeria
+            except Exception as e:
+                print(f"❌ Error obteniendo galería para ASIN {asin}: {e}")
+                resultados[asin] = [""] * 6
+
+        sleep(1)  # pausa corta entre batches
+
+    return resultados
+
+
+
+
+
+
+
 def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[str]:
     if not asin:
         return [""] * 6
@@ -275,14 +313,18 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
 
 
-def guardar_publicaciones_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
+def guardar_respuesta_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
     """
     Guarda la lista 'publicaciones' en un archivo JSON dentro de 'src/static/downloads/'.
     Retorna la ruta absoluta donde se guardó el archivo.
     """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     if not nombre_archivo:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        nombre_archivo = f"publicaciones_{timestamp}.json"
+       
+        nombre_archivo = f"resultados_scraping_{timestamp}.json"
+    else:
+        # Asegúrate de que el nombre del archivo sea seguro
+        nombre_archivo = f"{nombre_archivo}_{timestamp}.json"
 
     carpeta = BASE_STATIC_DOWNLOADS
     os.makedirs(carpeta, exist_ok=True)

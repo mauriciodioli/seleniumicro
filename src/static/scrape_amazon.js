@@ -4,7 +4,7 @@ let filasData = [];
 
 $('#btn-scrapear').click(function () {
       const selectedCountry = $('#pais').val();
-
+        
         if (!selectedCountry) {
           Swal.fire("Error", "Por favor, seleccioná un país primero.", "error");
           return;
@@ -16,7 +16,7 @@ $('#btn-scrapear').click(function () {
           didOpen: () => Swal.showLoading()
         });
 
-
+      localStorage.setItem('luagarSeleccionado', selectedCountry); // Guardar país en localStorage
 
        
       $.ajax({
@@ -128,22 +128,41 @@ $('#btn-scrapear').click(function () {
 
 
     // delegación por si recargas la tabla
+// delegación sobre el contenedor #resultado
 $('#resultado').on('click', '.btn-enviar', function () {
-    const idx   = $(this).data('idx');
-    const fila  = filasData[idx];           // objeto JS tal cual vino del backend
-    const pais  = $('#pais').val();      // por coherencia con tu endpoint
 
-    Swal.fire({
-      title: 'Enviando fila…',
-      didOpen: () => Swal.showLoading()
-    });
+    const $btn   = $(this);           // botón clicado
+    const idx    = $btn.data('idx');  // índice que guardaste en data-idx
+    const fila   = filasData[idx];    // el objeto JS con la fila completa
+    const pais   = $('#pais').val();  // país seleccionado en tu combo (o input)
+
+    Swal.fire({ title: 'Enviando fila…', didOpen: () => Swal.showLoading() });
 
     $.ajax({
         url: "/carga_publicacion_en_db/",
         method: "POST",
         contentType: "application/json",
-        data: JSON.stringify({ sheet_name: pais, fila }),   // ← manda solo esa fila
-        success()  { Swal.fire("OK", "Fila cargada", "success"); },
-        error()    { Swal.fire("Error", "No se cargó la fila", "error"); }
+        data: JSON.stringify({ sheet_name: pais, fila }),
+
+        success() {
+            // 1) feedback
+            Swal.fire("OK", "Fila cargada y validada", "success");
+
+            // 2) ocultar o desactivar botón
+            $btn.prop('disabled', true).hide();
+
+            // 3) escribir TRUE en la columna `validado`
+            //    — buscamos la celda cuyo <th> dice “validado”
+            const $tr   = $btn.closest('tr');
+            const colIx = $tr.closest('table')
+                             .find('thead th')
+                             .toArray()
+                             .findIndex(th => $(th).text().trim().toLowerCase() === 'validado');
+            if (colIx !== -1) {
+                $tr.find('td').eq(colIx).text('TRUE');
+            }
+        },
+
+        error() { Swal.fire("Error", "No se cargó la fila", "error"); }
     });
 });

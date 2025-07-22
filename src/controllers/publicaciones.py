@@ -10,22 +10,34 @@ from models.usuarioUbicacion import UsuarioUbicacion
 from models.usuarioPublicacionUbicacion import UsuarioPublicacionUbicacion
 from models.publicaciones.ambitoCategoria import AmbitoCategoria
 from models.publicaciones.categoriaPublicacion import CategoriaPublicacion
+from models.publicaciones.publicacionCodigoPostal import PublicacionCodigoPostal
 from models.publicaciones.ambitos import Ambitos
+from models.publicaciones.ambito_usuario import Ambito_usuario
 from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
 from models.image import Image
 from models.video import Video
+from models.codigoPostal import CodigoPostal
 from controllers.conexionesSheet.datosSheet import  actualizar_estado_en_sheet
+from models.publicaciones.ambito_general import get_or_create_ambito
+from models.publicaciones.categoria_general import get_or_create_categoria
+import controllers.conexionesSheet.datosSheet as datoSheet
+import os
 import random
 import re
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
 publicaciones = Blueprint('publicaciones', __name__)
-
+SHEET_ID_DETECTOR_TENDENCIA = os.environ.get('SHEET_ID_DETECTOR_TENDENCIA')
 # Completar la publicación con datos del sheet y base de datos
-def completar_publicaciones(data):
+def completar_publicaciones(data):  
     publicaciones_completas = []    
+    ciudad = data[0]["pais_scrapeado"] if data else None
 
+    sheet = datoSheet.autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, ciudad)
+    fila_idx_list = [row["row_index"] for row in data]
+
+    actualizar_estado_en_sheet(sheet, fila_idx_list)
     try:
         for row in data:
             # === Extraer datos ===
@@ -68,6 +80,7 @@ def completar_publicaciones(data):
 
             ambito_class = machear_ambito(ambito)
             categoria_id = machear_ambitoCategoria(categoria, idioma,ambito_class.id)
+            registrar_relacion_categoria_ambito(categoria_id, ambito_class.id)
 
             usuario_id = machear_usuario(user_id)
             ubicacion_id = machear_ubicacion(user_id, codigo_postal)
@@ -101,7 +114,10 @@ def completar_publicaciones(data):
             publicacion_id = publicacion.id
             registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id)
             registrar_categoria_publicacion(categoria_id, publicacion_id)
-
+            codigo_postal_id = machear_codigo_postal_id(codigo_postal, ciudad, pais)
+            registrar_ambito_usuario(user_id, ambito_class.id, publicacion.id)
+            if codigo_postal_id:
+                registrar_codigo_postal(publicacion_id, codigo_postal_id)
             for index, url in enumerate(imagenes_urls):
                 filename = secure_filename(f"{slug}_{index}.jpg")
                 
@@ -109,9 +125,8 @@ def completar_publicaciones(data):
 
         db.session.commit()
  
-       # fila_idx_list = [row["fila_idx"] for row in data] 
-       # sheet_name =
-       # actualizar_estado_en_sheet(fila_idx_list, sheet_name)
+        
+       
     except Exception as e:
         db.session.rollback()
         print(f"❌ Error en completar_publicaciones: {e}")
@@ -120,7 +135,7 @@ def completar_publicaciones(data):
 
 def registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id):
     try:
-        if db.session.query(UsuarioPublicacionUbicacion).filter_by(id=publicacion_id).first():
+        if db.session.query(UsuarioPublicacionUbicacion).filter_by(id_publicacion=publicacion_id).first():
             return True
 
         region = db.session.query(UsuarioRegion).filter_by(user_id=user_id).first()
@@ -138,6 +153,10 @@ def registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id):
     except Exception as e:
         print(f"❌ Error registrar_publicacion_ubicacion: {e}")
         return False
+    
+    
+    
+    
 def registrar_categoria_publicacion(categoria_id, publicacion_id):
     try:
         new = CategoriaPublicacion(
@@ -213,7 +232,6 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
     print(f"🔍 Buscando categoría: '{categoria_normalizada}'")
 
     try:
-        # Evitar autoflush antes del query por si hay objetos pendientes en session
         with db.session.no_autoflush:
             ambito_categoria = db.session.query(AmbitoCategoria).filter_by(valor=categoria_normalizada).first()
 
@@ -221,23 +239,26 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
             print(f"✅ Categoría encontrada: ID {ambito_categoria.id}")
             return ambito_categoria.id
 
+        # Crear categoría general y obtener ID
+        categoria_general_id = get_or_create_categoria(categoria, idioma)
+
         # Crear color aleatorio
         COLORES_DISPONIBLES = ["red", "green", "blue", "orange", "purple", "pink", "yellow", "cyan", "teal", "brown"]
         color_aleatorio = random.choice(COLORES_DISPONIBLES)
 
-        # Crear nueva categoría
+        # Crear nueva categoría específica
         nueva_categoria = AmbitoCategoria(
             nombre=categoria.strip().capitalize(),
             descripcion=f"Categoría generada automáticamente para '{categoria}'",
             idioma=idioma,
             valor=categoria_normalizada,
             estado="ACTIVO",
-            color=color_aleatorio
+            color=color_aleatorio,
+            categoria_general_id=categoria_general_id
         )
         db.session.add(nueva_categoria)
-        db.session.flush()  # Obtener ID antes de usar
+        db.session.flush()
 
-        # Asociar con ámbito si se pasó un ID válido
         if ambito_id is not None:
             try:
                 relacion = AmbitoCategoriaRelation(
@@ -256,6 +277,7 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
         print(f"❌ Error creando categoría '{categoria}': {e}")
         db.session.rollback()
         return None
+
 def machear_usuario(user_id):
     try:
         usuario = db.session.query(Usuario).filter(Usuario.id == int(user_id)).first()
@@ -363,14 +385,91 @@ def machear_publicacion_ubicacion(publicacion_ubicacion):
         print(f"⚠️ No se encontró publicación de ubicación para el código postal: '{publicacion_ubicacion}'")
         return None
     
-    
-    
-    
-    
-    
-    
-    
 
+
+
+
+
+
+
+def registrar_relacion_categoria_ambito(categoria_id, ambito_id):
+    try:
+        existe = db.session.query(AmbitoCategoriaRelation).filter_by(
+            ambito_id=ambito_id,
+            ambitoCategoria_id=categoria_id
+        ).first()
+        if not existe:
+            relacion = AmbitoCategoriaRelation(
+                ambito_id=ambito_id,
+                ambitoCategoria_id=categoria_id,
+                estado="ACTIVO"
+            )
+            db.session.add(relacion)
+    except Exception as e:
+        print(f"❌ Error al registrar relación categoría-ámbito: {e}")
+
+
+
+
+def registrar_codigo_postal(publicacion_id, codigo_postal_id):
+    try:
+        existe = db.session.query(PublicacionCodigoPostal).filter_by(
+            publicacion_id=publicacion_id,
+            codigoPostal_id=codigo_postal_id
+        ).first()
+        if not existe:
+            rel = PublicacionCodigoPostal(
+                publicacion_id=publicacion_id,
+                codigoPostal_id=codigo_postal_id,
+                estado="ACTIVO"
+            )
+            db.session.add(rel)
+    except Exception as e:
+        print(f"❌ Error en registrar_codigo_postal: {e}")
+
+    
+    
+    
+    
+def machear_codigo_postal_id(codigo_postal_texto,ciudad,pais, existe=False):
+    try:
+        
+        codigo = db.session.query(CodigoPostal).filter_by(codigoPostal=codigo_postal_texto).first()
+        if codigo:
+            return codigo.id
+        else:
+           if not existe:
+                rel = CodigoPostal(
+                    codigoPostal=codigo_postal_texto,
+                    ciudad=ciudad,
+                    pais=pais
+                   )
+                db.session.add(rel)
+                db.session.flush()
+                return rel.id
+
+    except Exception as e:
+        print(f"❌ Error en machear_codigo_postal_id: {e}")
+        return None
+
+
+def registrar_ambito_usuario(user_id, ambito_id, publicacion_id):
+    try:
+        existe = db.session.query(Ambito_usuario).filter_by(
+            user_id=user_id,
+            ambito_id=ambito_id,
+            publicacion_id=publicacion_id
+        ).first()
+        if not existe:
+            rel = Ambito_usuario(
+                user_id=user_id,
+                ambito_id=ambito_id,
+                publicacion_id=publicacion_id,
+                estado="ACTIVO"
+            )
+            db.session.add(rel)
+    except Exception as e:
+        print(f"❌ Error en registrar_ambito_usuario: {e}")
 
 
 

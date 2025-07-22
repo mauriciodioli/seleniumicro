@@ -33,7 +33,8 @@ datoSheet = Blueprint('datoSheet',__name__)
 
 newPath = os.path.join(os.getcwd(), 'src/utils/credentials_module.json') 
 directorio_credenciales = newPath 
-
+autenticado_sheet = False
+sheet_manager = False
 #SPREADSHEET_ID='1pyPq_2tZJncV3tqOWKaiR_3mt1hjchw12Bl_V8Leh74'#drpiBot2
 #SPREADSHEET_ID='1yQeBg8AWinDLaErqjIy6OFn2lp2UM8SRFIcVYyLH4Tg'#drpiBot3 de pruba
 SPREADSHEET_ID='1GMv6fwa1-4iwhPBZqY6ZNEVppPeyZY0R4JB39Xmkc5s'#drpiBot de produccion
@@ -73,7 +74,7 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
 
 
 
-def actualizar_estado_en_sheet(sheet, fila_idx_list: list[int], col_name: str = "validado", col_name_dos: str = "estado"):
+def actualizar_estado_en_sheet(sheet, fila_idx_list: list[int], col_name: str = "validado"):
     header = sheet.row_values(1)
 
     try:
@@ -105,24 +106,25 @@ def actualizar_estado_en_sheet(sheet, fila_idx_list: list[int], col_name: str = 
 #def leerSheet_arbitrador001(): 
 
 def leerSheet(sheetId,sheet_name): 
-     
-        if not get.autenticado_sheet:        
+        global autenticado_sheet, sheet_manager
+        if not autenticado_sheet:        
             # recibo la tupla pero como este es para el bot leo el primer elemento 
-            credentials_path = os.path.join(os.getcwd(), 'strategies/pruebasheetpython.json')
+          
+            credentials_path = os.path.join(os.getcwd(), 'utils/pruebasheetpython.json')
             # Crear instancia del gestor de hojas
-            get.sheet_manager = GoogleSheetManager(credentials_path)
+            sheet_manager = GoogleSheetManager(credentials_path)
 
-            if get.sheet_manager.autenticar():
-                get.autenticado_sheet = True
-                handler = SheetHandler(get.sheet_manager, sheetId, sheet_name)
+            if sheet_manager.autenticar():
+                autenticado_sheet = True
+                handler = SheetHandler(sheet_manager, sheetId, sheet_name)
         else:
             # Autenticar
-            if  get.autenticado_sheet:
+            if  autenticado_sheet:
                 # Crear instancia del manejador de hoja con el gestor y los datos de la hoja
-                handler = SheetHandler(get.sheet_manager, sheetId, sheet_name)
+                handler = SheetHandler(sheet_manager, sheetId, sheet_name)
             else:
                     print("Error al autenticar. Revisa los detalles del error.")
-                    get.autenticado_sheet = False
+                    autenticado_sheet = False
                     return render_template('notificaciones/noPoseeDatos.html',layout = 'layout_fichas')    
                 
                 # Ejemplo de uso de leerSheet
