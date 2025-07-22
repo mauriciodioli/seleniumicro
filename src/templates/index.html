@@ -8,10 +8,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-  <h1>Cargar país del Sheet</h1>
+  <h1>Cargar lugar del Sheet</h1>
 
   <select id="pais" name="pais">
-    <option value="">Seleccione un país</option>
+    <option value="">Seleccione un lugar</option>
     <option value="argentina">Argentina</option>
     <option value="canada">Canadá</option>
     <option value="francia">Francia</option>
@@ -21,12 +21,22 @@
     <option value="barcelona">barcelona</option>
     <option value="perugia">perugia</option>
     <option value="poznan">poznan</option>
+    <option value="spoleto">spoleto</option>
   </select>
+
+
+
+    <select id="ArchivosCargados" name="ArchivosCargados">
+     <option value="">Seleccione un Archivo</option>    
+    </select>
+
+    <button id="btnEliminarArchivo" class="btn btn-danger ms-2" disabled>Eliminar Archivo</button>
 
   <br><br>
 
-  <button id="btn-cargar-sheet">📥 Cargar datos del Sheet</button>
+  <button id="btn-cargar-sheet">📥 Cargar de Scrapeado</button>
   <button id="btn-scrapear">🔍 Ejecutar scraping Apify</button>
+   <button id="btn-scrapear-imagenes"> 🧠 Ejecutar scraping Para imagenes</button>
 
   <div id="resultado" style="margin-top: 20px;"></div>
 

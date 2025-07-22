@@ -241,6 +241,40 @@ def _base(url: str) -> str:
     """Quita el sufijo de tamaño Amazon (_AC_UL320_, _SX522_, …)."""
     return SIZE_TAG.sub(r'.\1', url) if url else url
 
+
+
+
+
+
+
+
+def obtener_galeria_en_batches(asins: List[str], apify_token: str, dominio: str = "com", batch_size: int = 5) -> Dict[str, List[str]]:
+    from time import sleep
+
+    resultados = {}
+
+    for i in range(0, len(asins), batch_size):
+        batch = asins[i:i + batch_size]
+        print(f"🎞️  Procesando batch de galería {i // batch_size + 1}...")
+
+        for asin in batch:
+            try:
+                galeria = obtener_galeria(asin, apify_token, dominio)
+                resultados[asin] = galeria
+            except Exception as e:
+                print(f"❌ Error obteniendo galería para ASIN {asin}: {e}")
+                resultados[asin] = [""] * 6
+
+        sleep(1)  # pausa corta entre batches
+
+    return resultados
+
+
+
+
+
+
+
 def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[str]:
     if not asin:
         return [""] * 6
