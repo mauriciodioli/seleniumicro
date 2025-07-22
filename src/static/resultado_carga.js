@@ -1,29 +1,54 @@
 // 🔍 Ejecutar scraping Apify
+ document.addEventListener("DOMContentLoaded", function () {
+    const selectPais = document.getElementById("pais");
 
+    // Cargar valor guardado si existe
+    const paisGuardado = localStorage.getItem("lugarSeleccionado");
+    if (paisGuardado) {
+      selectPais.value = paisGuardado;
+    }
+
+    // Guardar nuevo valor cuando cambia
+    selectPais.addEventListener("change", function () {
+      const lugar = selectPais.value;
+      if (lugar) {
+        localStorage.setItem("lugarSeleccionado", lugar);
+      } else {
+        localStorage.removeItem("lugarSeleccionado"); // Si elige vacío, lo borra
+      }
+    });
+  });
 
 
 $('#btn-cargar-sheet').click(function () {
-      const selectedCountry = $('#pais').val();
+      
+         const selectedCountry =  localStorage.getItem('lugarSeleccionado'); // Guardar país en localStorage
 
-        if (!selectedCountry) {
-          Swal.fire("Error", "Por favor, seleccioná un país primero.", "error");
-          return;
+         const selectedFile = $('#ArchivosCargados').val(); // 2. Tomamos el archivo
+
+        if (!selectedCountry || !selectedFile) {
+            Swal.fire("Error", "Por favor, seleccioná un país y un archivo primero.", "error");
+            return;
         }
 
-        Swal.fire({
-          title: 'Scrapeando...',
-          text: 'Ejecutando búsqueda con Apify para: ' + selectedCountry,
-          didOpen: () => Swal.showLoading()
-        });
+        
+            Swal.fire({
+                title: 'Scrapeando...',
+                text: `Procesando archivo ${selectedFile} para ${selectedCountry}`,
+                didOpen: () => Swal.showLoading()
+            });
 
 
+     $.ajax({
+            url: "/scrape_amazon_scrapeado/",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+            sheet_name: selectedCountry,
+            nombre_archivo: selectedFile
+            }),
 
-       
-      $.ajax({
-          url: "/scrape_amazon_scrapeado/",
-          method: "POST",
-          contentType: "application/json",
-          data: JSON.stringify({ sheet_name: selectedCountry }),
+
 
 
           success: function (response) {
@@ -192,7 +217,7 @@ $('#resultado').on('click', '.btn-enviar', function () {
 
 
 
-lugar = localStorage.getItem('luagarSeleccionado') || 'Argentina'; // Valor por defecto
+lugar = localStorage.getItem('lugarSeleccionado') || 'Argentina'; // Valor por defecto
 
 $.ajax({
   url: "/scrape_amazon_listar_trabajos/",

@@ -24,6 +24,7 @@ TASK_ID = "ruly_economy/dpia-amazon"
 
 ACTOR_ID = "axesso_data~amazon-search-scraper"
 
+SHEET_ID_DETECTOR_TENDENCIA = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
 
 BASE_STATIC_DOWNLOADS = os.path.join("src", "static", "downloads")
 
@@ -143,6 +144,12 @@ def scrape_amazon_eliminar_archivo():
     
     
  # 📍 Endpoint que se invoca desde el botón Scrapeado Imágenes arma la tabla 2   
+
+
+
+
+
+
 @scrape_amazon_dpia.route('/scrape_amazon_dpia_scraping_imagenes/', methods=['POST'])
 def scrape_amazon_dpia_scraping_imagenes():
       try:
@@ -200,10 +207,10 @@ def scrape_amazon_dpia_scraping_imagenes():
                                                                        )
         # esto sirve para armar el segundo archivo de test
         ruta_archivo = guardar_respuesta_json(publicaciones, 'publicaciones_' + sheet_name)
-        nombre_archivo_2 = ruta_archivo
+        guardar_relacion_archivos(sheet_name, ruta_archivo)
         # (c) reduce a la estructura que entiende el front
        # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
-        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", nombre_archivo_2)
+        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", ruta_archivo)
         with open(json_path_2, "r", encoding="utf-8") as f:
             publicaciones = json.load(f)
         tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
@@ -228,8 +235,10 @@ def scrape_amazon_dpia_scraping_imagenes():
 @scrape_amazon_dpia.route('/scrape_amazon_scrapeado/', methods=['POST'])
 def scrape_amazon_scrapeado():
     try:
+        data = request.get_json()
         # Recibo sheet_name (p.ej. "Polonia") del front
         sheet_name = request.get_json().get("sheet_name")
+        lugar = data.get('lugar', 'Argentina')
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
         sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
         resultados = []
@@ -262,10 +271,10 @@ def scrape_amazon_scrapeado():
 
        
       
-        NAME_ARCHIVO_1 = "resultados_scraping_20250722_120527.json"
+     
         NAME_ARCHIVO_2 = "publicaciones_20250722_131346.json"
        # 2. Construye la ruta al JSON dentro de test/
-        json_path = os.path.join(BASE_DIR, "src", "static", "downloads", NAME_ARCHIVO_1)
+        json_path = os.path.join(BASE_DIR, "src", "static", "downloads", lugar)
 
 
         resultados_globales = load_many(json_path)
@@ -794,3 +803,46 @@ def cargar_resultados_scraping_desde_archivo(nombre_archivo: str) -> List[Dict]:
 
     if not isinstance(datos, list):
         raise ValueError(f"El archivo no contiene una lista válida de resultados: {ruta}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def guardar_relacion_archivos(sheet_name, nombre_archivo):
+
+    # Crear archivo si no existe
+    if not os.path.exists(BASE_STATIC_DOWNLOADS):
+        relaciones = {}
+    else:
+        with open(BASE_STATIC_DOWNLOADS, "r", encoding="utf-8") as f:
+            try:
+                relaciones = json.load(f)
+            except Exception:
+                relaciones = {}
+
+    # Agregar relación
+    if sheet_name not in relaciones:
+        relaciones[sheet_name] = []
+
+    if nombre_archivo not in relaciones[sheet_name]:
+        relaciones[sheet_name].append(nombre_archivo)
+
+    # Guardar actualizado
+    with open(BASE_STATIC_DOWNLOADS, "w", encoding="utf-8") as f:
+        json.dump(relaciones, f, indent=2, ensure_ascii=False)
+  
+    return True
