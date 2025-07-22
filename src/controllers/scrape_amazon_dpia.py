@@ -139,7 +139,82 @@ def scrape_amazon_eliminar_archivo():
     
     
     
+@scrape_amazon_dpia.route('/scrape_amazon_dpia_scraping_imagenes/', methods=['POST'])
+def scrape_amazon_dpia_scraping_imagenes():
+      try:
+        # Recibo sheet_name (p.ej. "Polonia") del front
+        sheet_name = request.get_json().get("sheet_name")
+        sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
+        sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
+        nombre_archivo = request.get_json().get("nombre_archivo")
+        resultados = []
+        if not sheet:
+            return jsonify(success=False, error="No pude abrir la hoja")
+
+        # 1) Traigo todas las filas
+        # 1) Obtener encabezado
+        header = sheet.row_values(1)
+
+        # 2) Leer todas las filas con índice real del Sheet
+        filas = []
+        for idx, row in enumerate(sheet.get_all_values()[1:], start=2):  # empieza en la fila 2
+            fila_dict = dict(zip(header, row))
+            fila_dict["row_index"] = idx
+            filas.append(fila_dict)
+
+
+        # 2) Filtro sólo las que necesito
+        #    Ajusta las condiciones al gusto:
+        filas_validas = [
+            f for f in filas 
+            if f.get("Producto")
+            and f.get("estado", "").upper() == "ACTIVO"
+            and str(f.get("validado", "")).upper() == "FALSE"
+        ]
+
+        if not filas_validas:
+            return jsonify(success=True, datos=[])
+        
+        
+        
+       
+     
+       # 2. Construye la ruta al JSON dentro de test/
+        json_path = os.path.join(BASE_DIR, "src", "static", "downloads", nombre_archivo)
+
+
+        resultados_globales = load_many(json_path)
     
+    
+        
+        # (b) arma filas + top-3
+        publicaciones = armar_publicaciones_validas_match_scrping_sheet(
+                                                                            filas_validas,
+                                                                            resultados_globales,
+                                                                            sheet_name,
+                                                                            APIFY_TOKEN,         
+                                                                       )
+        # esto sirve para armar el segundo archivo de test
+        ruta_archivo = guardar_publicaciones_json(publicaciones)
+        nombre_archivo_2 = ruta_archivo
+        # (c) reduce a la estructura que entiende el front
+       # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
+        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", nombre_archivo_2)
+        with open(json_path_2, "r", encoding="utf-8") as f:
+            publicaciones = json.load(f)
+        tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
+        # header real de la hoja
+        sheet_header = sheet.row_values(1)
+        tabla_b = preparar_tabla_b(publicaciones, sheet_header)
+       
+      
+
+        
+        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b)
+
+      except Exception as e:
+          return jsonify(success=False, error=str(e))
+
     
     
     
