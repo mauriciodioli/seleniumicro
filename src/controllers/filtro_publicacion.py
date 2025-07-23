@@ -311,8 +311,7 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
 
 
-
-sin def guardar_respuesta_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
+def guardar_respuesta_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
     """
     Guarda la lista 'publicaciones' en un archivo JSON dentro de 'src/static/downloads/'.
     Retorna la ruta absoluta donde se guardó el archivo.
