@@ -122,5 +122,5 @@ jobs:
                chromium-browser &&
              rm -rf /var/lib/apt/lists/* &&
              echo '✅ Dependencias instaladas exitosamente dentro del contenedor'
-           "
+            "
           
