@@ -61,15 +61,21 @@ jobs:
         script: |
           docker pull docker.io/${{ github.repository_owner }}/msselenium202501i:${{ github.sha }}
      
-          docker run -d --name ${{ env.DEPLOYMENT_VERSION }} --network red_app -p 5000:5000 --restart always docker.io/${{ github.repository_owner }}/msselenium202501i:${{ github.sha }}
+          docker run -d --name ${{ env.DEPLOYMENT_VERSION }} --network red_app -p 8000:8000 --restart always docker.io/${{ github.repository_owner }}/msselenium202501i:${{ github.sha }}
 
 
-    - name: Wait until container is running
-      run: |
-        until docker ps -q --filter name=${{ env.DEPLOYMENT_VERSION }}; do
-          echo "Waiting for container to start..."
-          sleep 5
-        done
+    - name: Wait until container is running (remote)
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          until docker ps -q --filter name=${{ env.DEPLOYMENT_VERSION }}; do
+            echo "Esperando a que el contenedor arranque..."
+            sleep 5
+          done
+
 
               
     - name: Install and start vim and ffmpeg inside the container
