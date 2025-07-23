@@ -56,7 +56,9 @@ $('#btn-cargar-sheet').click(function () {
                     Swal.fire("Error", response.error || "Algo salió mal", "error");
                     return;
                 }
-
+                if (response.archivo_relacionado) {
+                        localStorage.setItem("archivoRelacionado", response.archivo_relacionado);
+                    }
                 //---------------- TABLA A  (scraping) ----------------//
                 const resultados = response.tablaA;
                 let htmlA = `
@@ -160,14 +162,14 @@ $('#resultado').on('click', '.btn-enviar', function () {
     const idx    = $btn.data('idx');  // índice que guardaste en data-idx
     const fila   = filasData[idx];    // el objeto JS con la fila completa
     const pais   = $('#pais').val();  // país seleccionado en tu combo (o input)
-
+    let archivo_relacionado = localStorage.getItem("archivoRelacionado"); // nombre del archivo relacionado
     Swal.fire({ title: 'Enviando fila…', didOpen: () => Swal.showLoading() });
 
     $.ajax({
         url: "/carga_publicacion_en_db/",
         method: "POST",
         contentType: "application/json",
-        data: JSON.stringify({ sheet_name: pais, fila }),
+        data: JSON.stringify({ sheet_name: pais, fila, archivo_relacionado: archivo_relacionado }),
 
         success() {
             // 1) feedback

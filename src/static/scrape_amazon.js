@@ -176,7 +176,7 @@ $('#btn-scrapear-imagenes').click(function () {
          const selectedCountry =  localStorage.getItem('lugarSeleccionado'); // Guardar país en localStorage
 
          const selectedFile = $('#ArchivosCargados').val(); // 2. Tomamos el archivo
-
+      
         if (!selectedCountry || !selectedFile) {
             Swal.fire("Error", "Por favor, seleccioná un país y un archivo primero.", "error");
             return;
@@ -197,6 +197,7 @@ $('#btn-scrapear-imagenes').click(function () {
             data: JSON.stringify({
             sheet_name: selectedCountry,
             nombre_archivo: selectedFile
+          
             }),
 
           success: function (response) {

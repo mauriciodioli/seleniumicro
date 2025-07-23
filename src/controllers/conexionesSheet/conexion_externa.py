@@ -61,13 +61,48 @@ def carga_publicacion_en_db():
     data = request.get_json()
     sheet_name = data.get("sheet_name")
     fila       = data.get("fila")          # dict con la fila elegida
+    archivoRelacionado = data.get("archivo_relacionado")  # nombre del archivo relacionado
 
     if not fila:
         return "Fila vacía", 400
 
     try:
         completar_publicaciones([fila])    # reusa tu función (recibe lista)
+        ruta = "src/static/downloads/"+archivoRelacionado
+        producto = fila["Producto"]
+        validar_publicacion_en_json(ruta,producto)
+       
+
         return "Fila procesada", 200
     except Exception as e:
         return f"Error {e}", 500
 
+
+
+def validar_publicacion_en_json(path_json, nombre_producto):
+    """
+    Marca como 'TRUE' el campo 'validado' de la publicación cuyo 'Producto' coincida.
+    
+    Args:
+        path_json (str): Ruta al archivo JSON
+        nombre_producto (str): Nombre exacto del producto a validar
+    """
+    try:
+        with open(path_json, "r", encoding="utf-8") as f:
+            publicaciones = json.load(f)
+
+        modificadas = 0
+        for pub in publicaciones:
+            if pub.get("Producto") == nombre_producto:
+                pub["validado"] = "TRUE"
+                modificadas += 1
+
+        if modificadas > 0:
+            with open(path_json, "w", encoding="utf-8") as f:
+                json.dump(publicaciones, f, ensure_ascii=False, indent=2)
+            print(f"✅ {modificadas} publicación(es) actualizada(s) en '{path_json}'")
+        else:
+            print(f"⚠️ No se encontró ninguna publicación con el producto: '{nombre_producto}'")
+
+    except Exception as e:
+        print(f"❌ Error al procesar el archivo JSON: {e}")

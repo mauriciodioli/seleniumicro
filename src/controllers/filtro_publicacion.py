@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
+from app import db  # Importa db desde app.py
 from models.usuario import Usuario
 import requests
 from sqlalchemy.exc import SQLAlchemyError
@@ -308,6 +309,7 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
     fotos = (fotos + [""] * 6)[:6]          # rellena a 6
     return fotos
+
 
 
 

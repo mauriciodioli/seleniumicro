@@ -304,7 +304,7 @@ def scrape_amazon_scrapeado():
       
 
         
-        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b)
+        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b, archivo_relacionado=archivo_relacionado)
 
     except Exception as e:
           return jsonify(success=False, error=str(e))

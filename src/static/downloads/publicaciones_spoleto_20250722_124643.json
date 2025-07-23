@@ -29,7 +29,7 @@
     "botonCompra": "TRUE",
     "idioma": "it",
     "pagoOnline": "TRUE",
-    "validado": "FALSE",
+    "validado": "TRUE",
     "row_index": 41,
     "pais_scrapeado": "spoleto",
     "items_filtrados": [
@@ -722,7 +722,7 @@
     "botonCompra": "TRUE",
     "idioma": "it",
     "pagoOnline": "TRUE",
-    "validado": "FALSE",
+    "validado": "TRUE",
     "row_index": 48,
     "pais_scrapeado": "spoleto",
     "items_filtrados": [
