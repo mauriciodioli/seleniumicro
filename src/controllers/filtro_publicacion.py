@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
-from app import db  # Importa db desde app.py
 from models.usuario import Usuario
 import requests
 from sqlalchemy.exc import SQLAlchemyError
