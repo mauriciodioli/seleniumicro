@@ -207,7 +207,8 @@ def scrape_amazon_dpia_scraping_imagenes():
                                                                        )
         # esto sirve para armar el segundo archivo de test
         ruta_archivo = guardar_respuesta_json(publicaciones, 'publicaciones_' + sheet_name)
-        guardar_relacion_archivos(sheet_name, ruta_archivo)
+        guardar_relacion_archivos_con_principal(sheet_name, ruta_archivo,None)
+      
         # (c) reduce a la estructura que entiende el front
        # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
         json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", ruta_archivo)
@@ -238,7 +239,7 @@ def scrape_amazon_scrapeado():
         data = request.get_json()
         # Recibo sheet_name (p.ej. "Polonia") del front
         sheet_name = request.get_json().get("sheet_name")
-        lugar = data.get('lugar', 'Argentina')
+        nombre_archivo = data.get('nombre_archivo')
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
         sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
         resultados = []
@@ -269,19 +270,29 @@ def scrape_amazon_scrapeado():
         if not filas_validas:
             return jsonify(success=True, datos=[])
 
+        
        
       
-     
-        NAME_ARCHIVO_2 = "publicaciones_20250722_131346.json"
+        obtener_archivos = obtener_set_por_principal(sheet_name, nombre_archivo)
+        if not obtener_archivos:
+            return jsonify(success=False, error="No hay archivos disponibles para este sheet.")
+        
+        print(f"Archivos disponibles para {sheet_name}: {obtener_archivos}")
+       
+        archivo_relacionado = obtener_archivos.get("relacionados", [None])[0]
+        if not archivo_relacionado:
+            return jsonify(success=False, error="No hay archivo relacionado.")
+
+       
        # 2. Construye la ruta al JSON dentro de test/
-        json_path = os.path.join(BASE_DIR, "src", "static", "downloads", lugar)
+        json_path = os.path.join(BASE_DIR, "src", "static", "downloads", nombre_archivo)
 
 
         resultados_globales = load_many(json_path)
     
         # (c) reduce a la estructura que entiende el front
        # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
-        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", NAME_ARCHIVO_2)
+        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", archivo_relacionado)
         with open(json_path_2, "r", encoding="utf-8") as f:
             publicaciones = json.load(f)
        
@@ -289,7 +300,7 @@ def scrape_amazon_scrapeado():
         # header real de la hoja
         sheet_header = sheet.row_values(1)
         tabla_b = preparar_tabla_b(publicaciones, sheet_header)
-       
+        
       
 
         
@@ -383,8 +394,8 @@ def scrape_amazon():
         tabla_a = preparar_respuesta_ui(resultados_globales)   # (la que ya tenías)
         # header real de la hoja
         sheet_header = sheet.row_values(1)
-        tabla_b = preparar_tabla_b(resultados_globales, sheet_header)
-       
+       # tabla_b = preparar_tabla_b(resultados_globales, sheet_header)
+        tabla_b = [] 
       
 
         
@@ -822,27 +833,70 @@ def cargar_resultados_scraping_desde_archivo(nombre_archivo: str) -> List[Dict]:
 
 
 
-def guardar_relacion_archivos(sheet_name, nombre_archivo):
+def guardar_relacion_archivos_con_principal(sheet_name, archivo_principal, nombre_archivo: str = None) -> str:
+    relacion_path = os.path.join(BASE_STATIC_DOWNLOADS, "relaciones_archivos.json")
 
-    # Crear archivo si no existe
-    if not os.path.exists(BASE_STATIC_DOWNLOADS):
-        relaciones = {}
-    else:
-        with open(BASE_STATIC_DOWNLOADS, "r", encoding="utf-8") as f:
+    # Cargar si ya existe
+    if os.path.exists(relacion_path):
+        with open(relacion_path, "r", encoding="utf-8") as f:
             try:
                 relaciones = json.load(f)
-            except Exception:
+            except:
                 relaciones = {}
+    else:
+        relaciones = {}
 
-    # Agregar relación
+    # Generar nombre del archivo relacionado
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    if not nombre_archivo:
+        archivo_relacionado = f"resultados_scraping_imagen_{timestamp}.json"
+    else:
+        archivo_relacionado = f"{nombre_archivo}_{timestamp}.json"
+
+    # Estructura del set nuevo
+    nuevo_set = {
+        "principal": archivo_principal,
+        "relacionados": [archivo_relacionado]
+    }
+
+    # Inicializar si no hay entrada
     if sheet_name not in relaciones:
         relaciones[sheet_name] = []
 
-    if nombre_archivo not in relaciones[sheet_name]:
-        relaciones[sheet_name].append(nombre_archivo)
+    # Evitar duplicados exactos
+    ya_existe = any(
+        r["principal"] == archivo_principal and archivo_relacionado in r.get("relacionados", [])
+        for r in relaciones[sheet_name]
+    )
+
+    if not ya_existe:
+        relaciones[sheet_name].append(nuevo_set)
 
     # Guardar actualizado
-    with open(BASE_STATIC_DOWNLOADS, "w", encoding="utf-8") as f:
+    with open(relacion_path, "w", encoding="utf-8") as f:
         json.dump(relaciones, f, indent=2, ensure_ascii=False)
-  
-    return True
+
+    return archivo_relacionado  # Devuelve el nombre generado si querés usarlo luego
+
+
+
+
+def obtener_set_por_principal(sheet_name, archivo_principal_buscado):
+    sets = obtener_archivos_por_sheet(sheet_name)  # devuelve la lista de sets
+    for s in sets:
+        if s.get("principal") == archivo_principal_buscado:
+            return s
+    return None
+
+
+
+def obtener_archivos_por_sheet(sheet_name):
+    relacion_path = os.path.join(BASE_STATIC_DOWNLOADS, "relaciones_archivos.json")
+    
+    if not os.path.exists(relacion_path):
+        return None
+
+    with open(relacion_path, "r", encoding="utf-8") as f:
+        relaciones = json.load(f)
+    
+    return relaciones.get(sheet_name)

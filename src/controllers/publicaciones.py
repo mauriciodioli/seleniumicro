@@ -14,12 +14,13 @@ from models.publicaciones.publicacionCodigoPostal import PublicacionCodigoPostal
 from models.publicaciones.ambitos import Ambitos
 from models.publicaciones.ambito_usuario import Ambito_usuario
 from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
+from models.publicaciones.categoria_general import CategoriaGeneral, CategoriaTraduccion, normalizar_slug
 from models.image import Image
 from models.video import Video
 from models.codigoPostal import CodigoPostal
 from controllers.conexionesSheet.datosSheet import  actualizar_estado_en_sheet
 from models.publicaciones.ambito_general import get_or_create_ambito
-from models.publicaciones.categoria_general import get_or_create_categoria
+
 import controllers.conexionesSheet.datosSheet as datoSheet
 import os
 import random
@@ -85,7 +86,11 @@ def completar_publicaciones(data):
             usuario_id = machear_usuario(user_id)
             ubicacion_id = machear_ubicacion(user_id, codigo_postal)
 
-            texto = f"$ {precio_amazon} {precio_ebay} {precio_aliexpress} AliExpress {row.get('búsqueda_aliexpress', '')} {producto}"
+            
+            
+            
+   
+            texto = f"$ {precio_venta_sugerido} DPI {motivo_tendencia} {producto}"
 
             publicacion = Publicacion(
                 user_id=usuario_id,
@@ -257,8 +262,7 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
             categoria_general_id=categoria_general_id
         )
         db.session.add(nueva_categoria)
-        db.session.flush()
-
+        db.session.commit()
         if ambito_id is not None:
             try:
                 relacion = AmbitoCategoriaRelation(
@@ -269,7 +273,7 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
                 db.session.add(relacion)
             except SQLAlchemyError as err_rel:
                 print(f"⚠️ Se creó la categoría pero falló la relación con el ámbito: {err_rel}")
-
+        db.session.commit()
         print(f"🆕 Categoría creada con ID {nueva_categoria.id} y color {color_aleatorio}")
         return nueva_categoria.id
 
@@ -522,3 +526,33 @@ def generar_slug(texto):
     texto = re.sub(r'[^\w\s-]', '', texto)  # quita símbolos raros
     texto = re.sub(r'[\s_]+', '-', texto)   # reemplaza espacios/guiones bajos por guiones
     return texto.strip('-')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def get_or_create_categoria(valor_original, idioma):
+    slug = normalizar_slug(valor_original)
+    categoria = db.session.query(CategoriaGeneral).filter_by(slug=slug).first()
+    if not categoria:
+        categoria = CategoriaGeneral(slug=slug, descripcion=valor_original.strip())
+        db.session.add(categoria)
+        db.session.flush()
+
+    traduccion = db.session.query(CategoriaTraduccion).filter_by(categoria_id=categoria.id, idioma=idioma).first()
+    if not traduccion:
+        nueva = CategoriaTraduccion(categoria_id=categoria.id, idioma=idioma, valor=valor_original.strip())
+        db.session.add(nueva)
+    db.session.commit()    
+    return categoria.id
