@@ -63,12 +63,19 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
         scope = ['https://spreadsheets.google.com/feeds', 
                  'https://www.googleapis.com/auth/drive']
         newPath = os.path.join(os.getcwd(), 'src/utils/pruebasheetpython.json')
+        
+        print(f"[DEBUG] cwd: {os.getcwd()}")
+        print(f"[DEBUG] buscando credenciales en: {newPath}")
+        print(f"[DEBUG] existe?: {os.path.exists(newPath)}")
+        
         creds = ServiceAccountCredentials.from_json_keyfile_name(newPath, scope)
         client = gspread.authorize(creds)
         sheet = client.open_by_key(sheetId).worksheet(sheet_name)  # Abre el sheet especificado
+      
+        print(f"[DEBUG] hoja abierta correctamente: {sheet.title}")
         return sheet
     except Exception as e:
-        print(f"Error al autenticar y abrir la hoja de cálculo: {e}")
+        print(f"[ERROR] Error al autenticar y abrir la hoja: {e}")
         return None  # Puedes devolver None o manejar de otra manera el error en tu aplicación
 
 
