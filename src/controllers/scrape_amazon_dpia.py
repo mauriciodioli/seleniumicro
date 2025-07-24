@@ -158,6 +158,7 @@ def scrape_amazon_dpia_scraping_imagenes():
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
         sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
         nombre_archivo = request.get_json().get("nombre_archivo")
+        archivo_base = request.get_json().get("archivo_base")
         resultados = []
         if not sheet:
             return jsonify(success=False, error="No pude abrir la hoja")
@@ -207,7 +208,8 @@ def scrape_amazon_dpia_scraping_imagenes():
                                                                        )
         # esto sirve para armar el segundo archivo de test
         ruta_archivo = guardar_respuesta_json(publicaciones, 'publicaciones_' + sheet_name)
-        guardar_relacion_archivos_con_principal(sheet_name, ruta_archivo,None)
+        
+        guardar_relacion_archivos_con_principal(sheet_name, ruta_archivo, archivo_base)
       
         # (c) reduce a la estructura que entiende el front
        # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
@@ -366,7 +368,7 @@ def scrape_amazon():
       
       
       # esto guarda el primer archivo de test
-        url = guardar_respuesta_json(resultados_globales,sheet_name)
+     
       
        # NAME_ARCHIVO_1 = "resultados_scraping_20250722_120527.json"
        # NAME_ARCHIVO_2 = "publicaciones_20250722_131346.json"
@@ -392,6 +394,8 @@ def scrape_amazon():
        # ruta_archivo = guardar_publicaciones_json(publicaciones)
      
         tabla_a = preparar_respuesta_ui(resultados_globales)   # (la que ya tenías)
+        nombre_archivo = guardar_respuesta_json(tabla_a,sheet_name)
+        
         # header real de la hoja
         sheet_header = sheet.row_values(1)
        # tabla_b = preparar_tabla_b(resultados_globales, sheet_header)
@@ -399,7 +403,7 @@ def scrape_amazon():
       
 
         
-        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b)
+        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b, archivo_base=nombre_archivo)
 
       except Exception as e:
           return jsonify(success=False, error=str(e))
@@ -833,7 +837,7 @@ def cargar_resultados_scraping_desde_archivo(nombre_archivo: str) -> List[Dict]:
 
 
 
-def guardar_relacion_archivos_con_principal(sheet_name, archivo_principal, nombre_archivo: str = None) -> str:
+def guardar_relacion_archivos_con_principal(sheet_name, archivo_relacionado, archivo_base: str = None) -> str:
     relacion_path = os.path.join(BASE_STATIC_DOWNLOADS, "relaciones_archivos.json")
 
     # Cargar si ya existe
@@ -848,14 +852,12 @@ def guardar_relacion_archivos_con_principal(sheet_name, archivo_principal, nombr
 
     # Generar nombre del archivo relacionado
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    if not nombre_archivo:
-        archivo_relacionado = f"resultados_scraping_imagen_{timestamp}.json"
-    else:
-        archivo_relacionado = f"{nombre_archivo}_{timestamp}.json"
+    if not archivo_relacionado:      
+        archivo_relacionado = f"publicaciones_{sheet_name}_{timestamp}.json"
 
     # Estructura del set nuevo
     nuevo_set = {
-        "principal": archivo_principal,
+        "principal": archivo_base,
         "relacionados": [archivo_relacionado]
     }
 
@@ -865,7 +867,7 @@ def guardar_relacion_archivos_con_principal(sheet_name, archivo_principal, nombr
 
     # Evitar duplicados exactos
     ya_existe = any(
-        r["principal"] == archivo_principal and archivo_relacionado in r.get("relacionados", [])
+        r["principal"] == archivo_base and archivo_relacionado in r.get("relacionados", [])
         for r in relaciones[sheet_name]
     )
 

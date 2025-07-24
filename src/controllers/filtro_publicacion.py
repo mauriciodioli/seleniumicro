@@ -186,39 +186,56 @@ def preparar_tabla_b(publicaciones: list[dict], header_row: list[str]) -> list[d
 # ──────────────────────────────────────────────────────────────
 def preparar_respuesta_ui(publicaciones):
     """
-    Reduce las 'publicaciones' a la forma que usa tu frontend AJAX:
-    [
-      { producto, pais, items:[{titulo, imagen, precio, url, ...}, …] },
-      { producto, pais, error:"sin datos" }
-    ]
+    Reduce las 'publicaciones' a los 3 mejores items por producto, 
+    basados en reviews > rating > precio válido.
     """
     datos_ui = []
+
     for pub in publicaciones:
-        if pub["items_filtrados"]:
+        items = pub.get("items", [])
+
+        # Filtrar con precio > 0
+        items_filtrados = [it for it in items if it.get("precio", 0) > 0]
+
+        # Ordenar por reviews (desc), luego rating (desc), luego precio (asc)
+        def criterio(it):
+            try:
+                revs = int(it.get("reviews", 0))
+                rating_txt = it.get("rating", "0 su 5 stelle")
+                rating = float(rating_txt.replace(",", ".").split(" ")[0])
+            except:
+                revs, rating = 0, 0
+            return (-revs, -rating)
+
+        mejores = sorted(items_filtrados, key=criterio)[:3]
+
+        if mejores:
             datos_ui.append({
-                "producto": pub["Producto"],
-                "pais":     pub["pais_scrapeado"],
+                "producto": pub["producto"],
+                "pais": pub["pais"],
                 "items": [
                     {
-                        "titulo" : it["titulo"],
-                        "imagen" : it["imagen"],
-                        "precio" : it["precio"],
-                        "url"    : it["url"],
-                        "rating" : it.get("rating"),
+                        "titulo": it["titulo"],
+                        "imagen": it["imagen"],
+                        "precio": it["precio"],
+                        "url": it["url"],
+                        "rating": it.get("rating"),
                         "reviews": it.get("reviews"),
-                        "prime"  : it.get("prime"),
+                        "prime": it.get("prime"),
                         "entrega": it.get("entrega")
                     }
-                    for it in pub["items_filtrados"]
+                    for it in mejores
                 ]
             })
         else:
             datos_ui.append({
-                "producto": pub["Producto"],
-                "pais":     pub["pais_scrapeado"],
-                "error":    "Sin artículos que cumplan los criterios"
+                "producto": pub.get("producto"),
+                "pais": pub.get("pais"),
+                "error": "Sin artículos válidos con precio"
             })
+
     return datos_ui
+
 
 
 
@@ -337,4 +354,4 @@ def guardar_respuesta_json(publicaciones: List[Dict], nombre_archivo: str = None
 
     print(f">>> Publicaciones guardadas en: {os.path.abspath(ruta_guardado)}")
 
-    return os.path.abspath(ruta_guardado)
+    return nombre_archivo
