@@ -337,6 +337,7 @@ def scrape_amazon():
         # Recibo sheet_name (p.ej. "Polonia") del front
         sheet_name = request.get_json().get("sheet_name")
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
+        print("[DEBUG] Llamando a autenticar_y_abrir_sheet()")
         sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
         resultados = []
         if not sheet:

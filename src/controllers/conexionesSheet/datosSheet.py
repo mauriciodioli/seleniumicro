@@ -59,11 +59,16 @@ def login():
     return credenciales
 
 def autenticar_y_abrir_sheet(sheetId, sheet_name):
+    print("[DEBUG] Entrando a autenticar_y_abrir_sheet")
+    print(f"[DEBUG] nuevo path absoluto: {newPath}")
+    print(f"[DEBUG] existe?: {os.path.exists(newPath)}")
     try:
         scope = ['https://spreadsheets.google.com/feeds', 
                  'https://www.googleapis.com/auth/drive']
-        newPath = os.path.join(os.getcwd(), 'src/utils/pruebasheetpython.json')
-        
+        newPath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../utils/pruebasheetpython.json'))
+
+      
+
         print(f"[DEBUG] cwd: {os.getcwd()}")
         print(f"[DEBUG] buscando credenciales en: {newPath}")
         print(f"[DEBUG] existe?: {os.path.exists(newPath)}")
