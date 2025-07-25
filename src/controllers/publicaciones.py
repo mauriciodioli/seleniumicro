@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
 from extensions import db
-
+from sqlalchemy import func
 from models.usuario import Usuario
 from sqlalchemy.exc import SQLAlchemyError
 from models.publicaciones.publicaciones import Publicacion
@@ -80,7 +80,7 @@ def completar_publicaciones(data):
                 contador += 1
                 slug = f"{slug_base}-{contador}"
 
-            ambito_class = machear_ambito(ambito)
+            ambito_class = machear_ambito(ambito, idioma)
             categoria_id = machear_ambitoCategoria(categoria, idioma,ambito_class.id)
             registrar_relacion_categoria_ambito(categoria_id, ambito_class.id)
 
@@ -88,10 +88,12 @@ def completar_publicaciones(data):
             ubicacion_id = machear_ubicacion(user_id, codigo_postal)
 
             
-            
+            precio_formateado = normalizar_precio(precio_venta_sugerido)
+
+
             
    
-            texto = f"$ {precio_venta_sugerido} DPI {motivo_tendencia} {producto}"
+            texto = f" {precio_formateado} DPI {motivo_tendencia} {producto}"
 
             publicacion = Publicacion(
                 user_id=usuario_id,
@@ -213,21 +215,25 @@ def registrar_media(publicacion_id, imagen_id, video_id, tipo='imagen', size=0):
         db.session.add(media)
     except Exception as e:
         print(f"❌ Error en registrar_media: {e}")
-def machear_ambito(ambito):
-    if not ambito:
+def machear_ambito(ambito_input, idioma='es'):
+    if not ambito_input:
         return None
 
-    ambito_normalizada = ambito.strip().lower()
+    ambito_normalizado = ambito_input.strip().lower()
 
-    ambito = db.session.query(Ambitos).filter(
-        (Ambitos.nombre.ilike(f"%{ambito_normalizada}%")) |
-        (Ambitos.valor.ilike(f"%{ambito_normalizada}%"))
-    ).first()
+    ambito = (
+        db.session.query(Ambitos)
+        .filter(
+            func.lower(Ambitos.valor) == ambito_normalizado,
+            Ambitos.idioma == idioma
+        )
+        .first()
+    )
 
     if ambito:
         return ambito
     else:
-        print(f"⚠️ No se encontró ámbito para la categoría: '{ambito_normalizada}'")
+        print(f"⚠️ No se encontró ámbito para la categoría: '{ambito_normalizado}'")
         return None
 def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
     if not categoria:
@@ -239,44 +245,34 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
 
     try:
         with db.session.no_autoflush:
-            ambito_categoria = db.session.query(AmbitoCategoria).filter_by(valor=categoria_normalizada).first()
+            ambito_categoria = db.session.query(AmbitoCategoria).filter_by(valor=categoria_normalizada,idioma=idioma).first()
 
         if ambito_categoria:
-            print(f"✅ Categoría encontrada: ID {ambito_categoria.id}")
-            return ambito_categoria.id
-
-        # Crear categoría general y obtener ID
+            categoria_id = ambito_categoria.id
+            print(f"✅ Categoría encontrada: ID {ambito_categoria.id}")         
+            # Crear categoría general y obtener ID
         categoria_general_id = get_or_create_categoria(categoria, idioma)
 
         # Crear color aleatorio
         COLORES_DISPONIBLES = ["red", "green", "blue", "orange", "purple", "pink", "yellow", "cyan", "teal", "brown"]
         color_aleatorio = random.choice(COLORES_DISPONIBLES)
-
-        # Crear nueva categoría específica
-        nueva_categoria = AmbitoCategoria(
-            nombre=categoria.strip().capitalize(),
-            descripcion=f"Categoría generada automáticamente para '{categoria}'",
-            idioma=idioma,
-            valor=categoria_normalizada,
-            estado="ACTIVO",
-            color=color_aleatorio,
-            categoria_general_id=categoria_general_id
-        )
-        db.session.add(nueva_categoria)
-        db.session.commit()
-        if ambito_id is not None:
-            try:
-                relacion = AmbitoCategoriaRelation(
-                    ambito_id=ambito_id,
-                    ambitoCategoria_id=nueva_categoria.id,
-                    estado="ACTIVO"
-                )
-                db.session.add(relacion)
-            except SQLAlchemyError as err_rel:
-                print(f"⚠️ Se creó la categoría pero falló la relación con el ámbito: {err_rel}")
-        db.session.commit()
-        print(f"🆕 Categoría creada con ID {nueva_categoria.id} y color {color_aleatorio}")
-        return nueva_categoria.id
+        
+        if not ambito_categoria:
+            # Crear nueva categoría específica
+            nueva_categoria = AmbitoCategoria(
+                nombre=categoria.strip().capitalize(),
+                descripcion=f"Categoría generada automáticamente para '{categoria}'",
+                idioma=idioma,
+                valor=categoria_normalizada,
+                estado="ACTIVO",
+                color=color_aleatorio,
+                categoria_general_id=categoria_general_id
+            )
+            db.session.add(nueva_categoria)
+            db.session.commit()
+            categoria_id = nueva_categoria.id
+    
+        return categoria_id
 
     except SQLAlchemyError as e:
         print(f"❌ Error creando categoría '{categoria}': {e}")
@@ -557,3 +553,54 @@ def get_or_create_categoria(valor_original, idioma):
         db.session.add(nueva)
     db.session.commit()    
     return categoria.id
+
+
+
+
+
+
+def normalizar_precio(precio):
+    if not precio:
+        return "$ 0"
+
+    precio_str = str(precio).strip()
+
+    # Eliminar caracteres invisibles o espacios especiales (U+202F, NO-BREAK SPACE, etc.)
+    precio_str = re.sub(r"[\u202f\u00a0]", "", precio_str)
+
+    # Detectar monedas conocidas
+    monedas_detectadas = {
+        "EUR": "$",
+        "€": "$",
+        "USD": "$",
+        "$": "$",
+        "ARS": "$",
+        "GBP": "$",  # Libra esterlina
+        "£": "$",
+        "AUD": "$",
+        "CAD": "$",
+        "BRL": "$",
+        "MXN": "$",
+        "COP": "$",
+    }
+
+    simbolo = "$"  # Default
+    for clave, reemplazo in monedas_detectadas.items():
+        if clave in precio_str:
+            simbolo = reemplazo
+            break
+
+    # Extraer el número: soporta "." o "," como separador decimal
+    match = re.search(r"[\d]+[.,]?\d*", precio_str)
+    if match:
+        valor = match.group(0).replace(",", ".")
+        try:
+            valor_float = float(valor)
+            valor_formateado = (
+                f"{int(valor_float)}" if valor_float.is_integer() else f"{valor_float:.2f}"
+            )
+            return f"{simbolo} {valor_formateado}"
+        except ValueError:
+            pass
+
+    return "$ 0"
