@@ -84,7 +84,7 @@ def armar_publicaciones_validas_match_scrping_sheet(
         kw = fila["Producto"]
         datos = por_kw.get(kw, {})
         raw_items = datos.get("items", [])
-        row_index = datos.get("row_index")
+        row_index = fila.get("row_index")
        
         top3 = filtro_publicaciones(raw_items, 3)
 
@@ -94,6 +94,7 @@ def armar_publicaciones_validas_match_scrping_sheet(
                 if "amazon." in it.get("url", "")
                 else "com"
             )
+            galeria = []
             galeria = obtener_galeria(it.get("asin", ""), token, dominio)
 
             def _url(v):
@@ -222,6 +223,7 @@ def preparar_respuesta_ui(publicaciones):
                         "rating": it.get("rating"),
                         "reviews": it.get("reviews"),
                         "prime": it.get("prime"),
+                        "asin": it.get("asin"),
                         "entrega": it.get("entrega")
                     }
                     for it in mejores

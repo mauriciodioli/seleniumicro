@@ -200,6 +200,7 @@ def scrape_amazon_dpia_scraping_imagenes():
     
         
         # (b) arma filas + top-3
+        # aqui se llama al scraping de imágenes
         publicaciones = armar_publicaciones_validas_match_scrping_sheet(
                                                                             filas_validas,
                                                                             resultados_globales,
@@ -207,19 +208,25 @@ def scrape_amazon_dpia_scraping_imagenes():
                                                                             APIFY_TOKEN,         
                                                                        )
         # esto sirve para armar el segundo archivo de test
-        ruta_archivo = guardar_respuesta_json(publicaciones, 'publicaciones_' + sheet_name)
+        ruta_archivo_con_imagenes = guardar_respuesta_json(publicaciones, 'publicaciones_' + sheet_name)
         
-        guardar_relacion_archivos_con_principal(sheet_name, ruta_archivo, archivo_base)
+        guardar_relacion_archivos_con_principal(sheet_name, ruta_archivo_con_imagenes, archivo_base)
       
         # (c) reduce a la estructura que entiende el front
        # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
-        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", ruta_archivo)
+        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", archivo_base)
         with open(json_path_2, "r", encoding="utf-8") as f:
-            publicaciones = json.load(f)
-        tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
+            publicaciones_tablaa = json.load(f)
+        tabla_a = preparar_respuesta_ui(publicaciones_tablaa)   # (la que ya tenías)
+        
+        
+        json_path_3 = os.path.join(BASE_DIR, "src", "static", "downloads", ruta_archivo_con_imagenes)
+        with open(json_path_3, "r", encoding="utf-8") as f:
+            publicaciones_tablab = json.load(f)
+       
         # header real de la hoja
         sheet_header = sheet.row_values(1)
-        tabla_b = preparar_tabla_b(publicaciones, sheet_header)
+        tabla_b = preparar_tabla_b(publicaciones_tablab, sheet_header)
        
       
 
@@ -298,7 +305,7 @@ def scrape_amazon_scrapeado():
         with open(json_path_2, "r", encoding="utf-8") as f:
             publicaciones = json.load(f)
        
-        tabla_a = preparar_respuesta_ui(publicaciones)   # (la que ya tenías)
+        tabla_a = preparar_respuesta_ui(resultados_globales)   # (la que ya tenías)
         # header real de la hoja
         sheet_header = sheet.row_values(1)
         tabla_b = preparar_tabla_b(publicaciones, sheet_header)
