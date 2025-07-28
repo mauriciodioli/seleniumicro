@@ -8,7 +8,7 @@
 /src/utils/credentials_module.json
 /src/utils/client_secrets.json
 /src/utils/settings.yml
-/src/.env
+
 
 # Ignore other sensitive files
 google-chrome-stable_current_amd64.deb
