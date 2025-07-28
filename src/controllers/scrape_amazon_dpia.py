@@ -247,6 +247,7 @@ def scrape_amazon_scrapeado():
         sheet_name = data.get("sheet_name")
         nombre_archivo = data.get('nombre_archivo')
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
+        
 
         print("[DEBUG] cwd:", os.getcwd())
         print(f"[DEBUG] sheet_name recibido: {sheet_name}")
