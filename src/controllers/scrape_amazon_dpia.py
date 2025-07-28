@@ -243,7 +243,10 @@ def scrape_amazon_dpia_scraping_imagenes():
 @scrape_amazon_dpia.route('/scrape_amazon_scrapeado/', methods=['POST'])
 def scrape_amazon_scrapeado():
     try:
+        print("[DEBUG] 🔄 Iniciando función scrape_amazon_scrapeado")
+
         data = request.get_json()
+        print("[DEBUG] ✅ JSON recibido:", data)
         sheet_name = data.get("sheet_name")
         nombre_archivo = data.get('nombre_archivo')
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
