@@ -88,12 +88,12 @@ def completar_publicaciones(data):
             ubicacion_id = machear_ubicacion(user_id, codigo_postal)
 
             
-            precio_formateado = normalizar_precio(precio_venta_sugerido)
+            precio_formateado, moneda = normalizar_precio(precio_venta_sugerido)
 
 
             
    
-            texto = f" {precio_formateado} DPI {motivo_tendencia} {producto}"
+            texto = f"{moneda+' '+precio_formateado} DPI {motivo_tendencia} {producto}"
 
             publicacion = Publicacion(
                 user_id=usuario_id,
@@ -561,46 +561,45 @@ def get_or_create_categoria(valor_original, idioma):
 
 def normalizar_precio(precio):
     if not precio:
-        return "$ 0"
+        return "0", None  # precio, moneda
 
     precio_str = str(precio).strip()
 
-    # Eliminar caracteres invisibles o espacios especiales (U+202F, NO-BREAK SPACE, etc.)
+    # Eliminar caracteres invisibles (espacios raros, NO-BREAK SPACE, etc.)
     precio_str = re.sub(r"[\u202f\u00a0]", "", precio_str)
 
-    # Detectar monedas conocidas
+    # Mapas de símbolos a códigos de moneda
     monedas_detectadas = {
-        "EUR": "$",
-        "€": "$",
-        "USD": "$",
-        "$": "$",
-        "ARS": "$",
-        "GBP": "$",  # Libra esterlina
-        "£": "$",
-        "AUD": "$",
-        "CAD": "$",
-        "BRL": "$",
-        "MXN": "$",
-        "COP": "$",
+        "EUR": "EUR",
+        "€": "EUR",
+        "USD": "USD",
+        "$": "USD",
+        "ARS": "ARS",
+        "GBP": "GBP",
+        "£": "GBP",
+        "AUD": "AUD",
+        "CAD": "CAD",
+        "BRL": "BRL",
+        "MXN": "MXN",
+        "COP": "COP",
     }
 
-    simbolo = "$"  # Default
-    for clave, reemplazo in monedas_detectadas.items():
+    moneda = "USD"  # por defecto
+    for clave, codigo in monedas_detectadas.items():
         if clave in precio_str:
-            simbolo = reemplazo
+            moneda = codigo
             break
 
-    # Extraer el número: soporta "." o "," como separador decimal
+    # Extraer valor numérico
     match = re.search(r"[\d]+[.,]?\d*", precio_str)
     if match:
-        valor = match.group(0).replace(",", ".")
         try:
-            valor_float = float(valor)
+            valor_float = float(match.group(0).replace(",", "."))
             valor_formateado = (
                 f"{int(valor_float)}" if valor_float.is_integer() else f"{valor_float:.2f}"
             )
-            return f"{simbolo} {valor_formateado}"
+            return valor_formateado, moneda
         except ValueError:
             pass
 
-    return "$ 0"
+    return "0", None

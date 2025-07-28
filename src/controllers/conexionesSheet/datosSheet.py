@@ -24,14 +24,15 @@ import json
 import sys
 import csv
 
+
 #import drive
 #drive.mount('/content/gdrive')
 
 
 
 datoSheet = Blueprint('datoSheet',__name__)
-
-newPath = os.path.join(os.getcwd(), 'src/utils/credentials_module.json') 
+PAHT_SHEET =os.environ["PAHT_SHEET"]
+newPath = os.path.join(os.getcwd(), PAHT_SHEET) 
 directorio_credenciales = newPath 
 autenticado_sheet = False
 sheet_manager = False
@@ -63,7 +64,7 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
     try:
         scope = ['https://spreadsheets.google.com/feeds', 
                  'https://www.googleapis.com/auth/drive']
-        newPath = os.path.join(os.getcwd(), 'src/utils/pruebasheetpython.json')
+       
         
         print(f"[DEBUG] cwd: {os.getcwd()}")
         print(f"[DEBUG] buscando credenciales en: {newPath}")
