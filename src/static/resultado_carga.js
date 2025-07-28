@@ -26,6 +26,9 @@ $('#btn-cargar-sheet').click(function () {
 
          const selectedFile = $('#ArchivosCargados').val(); // 2. Tomamos el archivo
 
+         console.log("[DEBUG] selectedCountry:", selectedCountry);
+         console.log("[DEBUG] selectedFile:", selectedFile);
+
         if (!selectedCountry || !selectedFile) {
             Swal.fire("Error", "Por favor, seleccioná un país y un archivo primero.", "error");
             return;
@@ -38,6 +41,7 @@ $('#btn-cargar-sheet').click(function () {
                 didOpen: () => Swal.showLoading()
             });
 
+    console.log("[DEBUG] Payload que se envía al backend:", payload);
 
      $.ajax({
             url: "/scrape_amazon_scrapeado/",
@@ -52,6 +56,7 @@ $('#btn-cargar-sheet').click(function () {
 
 
           success: function (response) {
+              console.log("[DEBUG] Respuesta del backend:", response);
                 if (!response.success) {
                     Swal.fire("Error", response.error || "Algo salió mal", "error");
                     return;
