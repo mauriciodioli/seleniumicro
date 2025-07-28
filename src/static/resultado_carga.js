@@ -21,38 +21,35 @@
 
 
 $('#btn-cargar-sheet').click(function () {
-      
-         const selectedCountry =  localStorage.getItem('lugarSeleccionado'); // Guardar país en localStorage
+    const selectedCountry = localStorage.getItem('lugarSeleccionado');
+    const selectedFile = $('#ArchivosCargados').val();
 
-         const selectedFile = $('#ArchivosCargados').val(); // 2. Tomamos el archivo
+    console.log("[DEBUG] selectedCountry:", selectedCountry);
+    console.log("[DEBUG] selectedFile:", selectedFile);
 
-         console.log("[DEBUG] selectedCountry:", selectedCountry);
-         console.log("[DEBUG] selectedFile:", selectedFile);
+    if (!selectedCountry || !selectedFile) {
+        Swal.fire("Error", "Por favor, seleccioná un país y un archivo primero.", "error");
+        return;
+    }
 
-        if (!selectedCountry || !selectedFile) {
-            Swal.fire("Error", "Por favor, seleccioná un país y un archivo primero.", "error");
-            return;
-        }
+    Swal.fire({
+        title: 'Scrapeando...',
+        text: `Procesando archivo ${selectedFile} para ${selectedCountry}`,
+        didOpen: () => Swal.showLoading()
+    });
 
-        
-            Swal.fire({
-                title: 'Scrapeando...',
-                text: `Procesando archivo ${selectedFile} para ${selectedCountry}`,
-                didOpen: () => Swal.showLoading()
-            });
+    const payload = {
+        sheet_name: selectedCountry,
+        nombre_archivo: selectedFile
+    };
 
     console.log("[DEBUG] Payload que se envía al backend:", payload);
 
-     $.ajax({
-            url: "/scrape_amazon_scrapeado/",
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-            sheet_name: selectedCountry,
-            nombre_archivo: selectedFile
-            }),
-
-
+    $.ajax({
+        url: "/scrape_amazon_scrapeado/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(payload),
 
 
           success: function (response) {
