@@ -15,6 +15,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # 📌 Token y Task ID de Apify
@@ -290,14 +292,14 @@ def scrape_amazon_scrapeado():
             return jsonify(success=False, error="No hay archivo relacionado.")
 
         # Ruta al archivo principal
-        json_path = os.path.join(BASE_DIR, "src", "static", "downloads", nombre_archivo)
+        json_path = os.path.join(BASE_DIR, "static", "downloads", nombre_archivo)
         print(f"[DEBUG] Ruta al archivo JSON principal: {json_path}")
         print(f"[DEBUG] ¿Existe archivo principal?: {os.path.exists(json_path)}")
 
         resultados_globales = load_many(json_path)
 
         # Ruta al archivo relacionado
-        json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", archivo_relacionado)
+        json_path_2 = os.path.join(BASE_DIR,  "static", "downloads", archivo_relacionado)
         print(f"[DEBUG] Ruta al archivo relacionado: {json_path_2}")
         print(f"[DEBUG] ¿Existe archivo relacionado?: {os.path.exists(json_path_2)}")
 
