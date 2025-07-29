@@ -303,6 +303,13 @@ def scrape_amazon_scrapeado():
         sheet_header = sheet.row_values(1)
         tabla_b = preparar_tabla_b(publicaciones, sheet_header)
 
+
+        print(f"[DEBUG]  tabla_a (primer item): {tabla_a[0] if tabla_a else 'VACÍO'}", flush=True)
+        print(f"[DEBUG]  tabla_b (primer item): {tabla_b[0] if tabla_b else 'VACÍO'}", flush=True)
+        print(f"[DEBUG] Total items en tabla_a: {len(tabla_a)}", flush=True)
+        print(f"[DEBUG] Total items en tabla_b: {len(tabla_b)}", flush=True)
+
+
         return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b, archivo_relacionado=archivo_relacionado)
 
     except Exception as e:

@@ -97,12 +97,12 @@ $('#btn-cargar-sheet').click(function () {
                 //---------------- TABLA B  (sheet + top-3) -----------//
 
                     filasData = response.tablaB;
-                    if (response.tablaB && Array.isArray(response.tablaB)) {
+                  
                         let htmlB = `
                         <h3 style="margin-top:40px;">Selección final (Sheet + Top-3)</h3>
                         <table border="1" style="width:100%;border-collapse:collapse;">
                         <thead><tr>`;
-
+                    if (response.tablaB && Array.isArray(response.tablaB)) {
                         // Cabecera dinámica
                         Object.keys(filasData[0]).forEach(col => {
                         htmlB += `<th>${col}</th>`;
