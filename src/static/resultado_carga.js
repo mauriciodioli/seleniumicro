@@ -104,29 +104,31 @@ $('#btn-cargar-sheet').click(function () {
                         <thead><tr>`;
                     if (response.tablaB && Array.isArray(response.tablaB)) {
                         // Cabecera dinámica
-                        Object.keys(filasData[0]).forEach(col => {
-                        htmlB += `<th>${col}</th>`;
-                        });
-                        htmlB += `<th>Acción</th></tr></thead><tbody>`;   // ← “Acción” aquí, todavía en thead
-
-                        // Filas de datos
                         filasData.forEach((f, idx) => {
-                        htmlB += "<tr>";
-                        Object.keys(filasData[0]).forEach(col => {
-                            const val = f[col] ?? "";
-                            if (col.startsWith("imagen") || col === "item_imagen") {
-                            htmlB += `<td>${val ? `<img src="${val}" width="60">` : ""}</td>`;
-                            } else if (col.endsWith("_url") || col.startsWith("búsqueda_")) {
-                            htmlB += `<td>${val ? `<a href="${val}" target="_blank">link</a>` : ""}</td>`;
+                            htmlB += "<tr>";
+                            Object.keys(filasData[0]).forEach(col => {
+                                const val = f[col] ?? "";
+                                if (col.startsWith("imagen") || col === "item_imagen") {
+                                    htmlB += `<td>${val ? `<img src="${val}" width="60">` : ""}</td>`;
+                                } else if (col.endsWith("_url") || col.startsWith("búsqueda_")) {
+                                    htmlB += `<td>${val ? `<a href="${val}" target="_blank">link</a>` : ""}</td>`;
+                                } else {
+                                    htmlB += `<td>${val}</td>`;
+                                }
+                            });
+
+                            // Verificamos si está validado
+                            const validado = (f["validado"] || "").toString().toUpperCase();
+                            if (validado !== "TRUE") {
+                                htmlB += `<td><button class="btn-enviar" data-idx="${idx}">Enviar</button></td>`;
                             } else {
-                            htmlB += `<td>${val}</td>`;
+                                htmlB += `<td><span class="badge bg-success">Validado</span></td>`;  // opcional: muestra un badge en lugar del botón
                             }
+
+                            htmlB += "</tr>";
                         });
-                        // Botón individual con índice correcto
-                        htmlB += `<td><button class="btn-enviar" data-idx="${idx}">Enviar</button></td>`;
-                        htmlB += "</tr>";
-                        });
-                }
+
+                 }
                     htmlB += "</tbody></table>";
 
 
