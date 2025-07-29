@@ -278,9 +278,13 @@ def scrape_amazon_scrapeado():
             and f.get("estado", "").upper() == "ACTIVO"
             and str(f.get("validado", "")).upper() == "FALSE"
         ]
-        print(f"[DEBUG] Total filas obtenidas del sheet: {len(filas)}", flush=True)
+        
+        print(f"[DEBUG] Total filas: {len(filas)} - Filas válidas: {len(filas_validas)}", flush=True)
+
         if not filas_validas:
-            print(f"[DEBUG] Fila cruda: {f}", flush=True)
+            print("[DEBUG] No hay filas válidas. Mostrando primeras 5 filas para analizar:", flush=True)
+            for i, f in enumerate(filas[:5]):
+                print(f"[DEBUG] Fila {i}: {f}", flush=True)
             return jsonify(success=True, datos=[])
 
         obtener_archivos = obtener_set_por_principal(sheet_name, nombre_archivo)
@@ -294,7 +298,7 @@ def scrape_amazon_scrapeado():
             return jsonify(success=False, error="No hay archivo relacionado.")
 
         # Ruta al archivo principal
-        json_path = os.path.join(BASE_DIR, "src","static", "downloads", nombre_archivo, flush=True)
+        json_path = os.path.join(BASE_DIR, "src","static", "downloads", nombre_archivo)
         print(f"[DEBUG] Ruta al archivo JSON principal: {json_path}", flush=True)
         print(f"[DEBUG] ¿Existe archivo principal?: {os.path.exists(json_path)}", flush=True)
 
