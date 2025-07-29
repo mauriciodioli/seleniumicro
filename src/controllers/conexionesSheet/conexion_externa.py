@@ -30,6 +30,9 @@ conexion_externa = Blueprint('conexion_externa',__name__)
 
 autenticado_sheet = False
 
+# 1. Calcula la ruta al directorio raíz de tu proyecto (dos niveles arriba de este archivo)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+
 
 
 @conexion_externa.route("/")
@@ -60,18 +63,20 @@ def resultado_carga():
 def carga_publicacion_en_db():
     data = request.get_json()
     sheet_name = data.get("sheet_name")
-    fila       = data.get("fila")          # dict con la fila elegida
-    archivoRelacionado = data.get("archivo_relacionado")  # nombre del archivo relacionado
+    fila       = data.get("fila")
+    archivoRelacionado = data.get("archivo_relacionado")
 
     if not fila:
         return "Fila vacía", 400
 
     try:
-        completar_publicaciones([fila])    # reusa tu función (recibe lista)
-        ruta = "src/static/downloads/"+archivoRelacionado
+        completar_publicaciones([fila])  # debe recibir una lista
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        ruta = os.path.join(BASE_DIR, "src", "static", "downloads", archivoRelacionado)
+        print(f"[DEBUG] Verificando ruta: {ruta} - ¿Existe?: {os.path.exists(ruta)}", flush=True)
+
         producto = fila["Producto"]
-        validar_publicacion_en_json(ruta,producto)
-       
+        validar_publicacion_en_json(ruta, producto)
 
         return "Fila procesada", 200
     except Exception as e:
