@@ -69,62 +69,64 @@ $('#btn-cargar-sheet').click(function () {
                     <thead>
                         <tr><th>Producto</th><th>Imagen</th><th>Título</th><th>Precio</th><th>Enlace</th></tr>
                     </thead><tbody>`;
+                  if (response.tablaA && Array.isArray(response.tablaA)) {
+                      resultados.forEach((res, idx) => {
+                          htmlA += `
+                          <tr class="group-header" data-group="${idx}" style="cursor:pointer;background:#f0f0f0">
+                              <td colspan="5"><strong>${res.producto}</strong> (${res.pais}) <span class="toggle-icon">▼</span></td>
+                          </tr>`;
 
-                resultados.forEach((res, idx) => {
-                    htmlA += `
-                    <tr class="group-header" data-group="${idx}" style="cursor:pointer;background:#f0f0f0">
-                        <td colspan="5"><strong>${res.producto}</strong> (${res.pais}) <span class="toggle-icon">▼</span></td>
-                    </tr>`;
-
-                    if (res.error) {
-                    htmlA += `<tr class="group-${idx}" style="display:none"><td colspan="5" style="color:red;text-align:center">${res.error}</td></tr>`;
-                    return;
-                    }
-                    res.items.forEach(item => {
-                    htmlA += `
-                        <tr class="group-${idx}" style="display:none">
-                        <td></td>
-                        <td><img src="${item.imagen}" width="80"></td>
-                        <td>${item.titulo}</td>
-                        <td>${item.precio} €</td>
-                        <td><a href="${item.url}" target="_blank">Ver producto</a></td>
-                        </tr>`;
-                    });
-                });
+                          if (res.error) {
+                          htmlA += `<tr class="group-${idx}" style="display:none"><td colspan="5" style="color:red;text-align:center">${res.error}</td></tr>`;
+                          return;
+                          }
+                          res.items.forEach(item => {
+                          htmlA += `
+                              <tr class="group-${idx}" style="display:none">
+                              <td></td>
+                              <td><img src="${item.imagen}" width="80"></td>
+                              <td>${item.titulo}</td>
+                              <td>${item.precio} €</td>
+                              <td><a href="${item.url}" target="_blank">Ver producto</a></td>
+                              </tr>`;
+                          });
+                      });
+                }
                 htmlA += `</tbody></table>`;
 
                 //---------------- TABLA B  (sheet + top-3) -----------//
 
                     filasData = response.tablaB;
-                    let htmlB = `
-                    <h3 style="margin-top:40px;">Selección final (Sheet + Top-3)</h3>
-                    <table border="1" style="width:100%;border-collapse:collapse;">
-                    <thead><tr>`;
+                    if (response.tablaB && Array.isArray(response.tablaB)) {
+                        let htmlB = `
+                        <h3 style="margin-top:40px;">Selección final (Sheet + Top-3)</h3>
+                        <table border="1" style="width:100%;border-collapse:collapse;">
+                        <thead><tr>`;
 
-                    // Cabecera dinámica
-                    Object.keys(filasData[0]).forEach(col => {
-                    htmlB += `<th>${col}</th>`;
-                    });
-                    htmlB += `<th>Acción</th></tr></thead><tbody>`;   // ← “Acción” aquí, todavía en thead
+                        // Cabecera dinámica
+                        Object.keys(filasData[0]).forEach(col => {
+                        htmlB += `<th>${col}</th>`;
+                        });
+                        htmlB += `<th>Acción</th></tr></thead><tbody>`;   // ← “Acción” aquí, todavía en thead
 
-                    // Filas de datos
-                    filasData.forEach((f, idx) => {
-                    htmlB += "<tr>";
-                    Object.keys(filasData[0]).forEach(col => {
-                        const val = f[col] ?? "";
-                        if (col.startsWith("imagen") || col === "item_imagen") {
-                        htmlB += `<td>${val ? `<img src="${val}" width="60">` : ""}</td>`;
-                        } else if (col.endsWith("_url") || col.startsWith("búsqueda_")) {
-                        htmlB += `<td>${val ? `<a href="${val}" target="_blank">link</a>` : ""}</td>`;
-                        } else {
-                        htmlB += `<td>${val}</td>`;
-                        }
-                    });
-                    // Botón individual con índice correcto
-                    htmlB += `<td><button class="btn-enviar" data-idx="${idx}">Enviar</button></td>`;
-                    htmlB += "</tr>";
-                    });
-
+                        // Filas de datos
+                        filasData.forEach((f, idx) => {
+                        htmlB += "<tr>";
+                        Object.keys(filasData[0]).forEach(col => {
+                            const val = f[col] ?? "";
+                            if (col.startsWith("imagen") || col === "item_imagen") {
+                            htmlB += `<td>${val ? `<img src="${val}" width="60">` : ""}</td>`;
+                            } else if (col.endsWith("_url") || col.startsWith("búsqueda_")) {
+                            htmlB += `<td>${val ? `<a href="${val}" target="_blank">link</a>` : ""}</td>`;
+                            } else {
+                            htmlB += `<td>${val}</td>`;
+                            }
+                        });
+                        // Botón individual con índice correcto
+                        htmlB += `<td><button class="btn-enviar" data-idx="${idx}">Enviar</button></td>`;
+                        htmlB += "</tr>";
+                        });
+                }
                     htmlB += "</tbody></table>";
 
 
