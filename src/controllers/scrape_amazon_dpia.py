@@ -28,7 +28,7 @@ ACTOR_ID = "axesso_data~amazon-search-scraper"
 
 SHEET_ID_DETECTOR_TENDENCIA = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
 
-BASE_STATIC_DOWNLOADS = os.path.join("src", "static", "downloads")
+BASE_STATIC_DOWNLOADS = os.path.join( "static", "downloads")
 
 SHEET_ID_DETECTOR_TENDENCIA = os.environ.get('SHEET_ID_DETECTOR_TENDENCIA')
 # Configuración de cada marketplace
