@@ -272,20 +272,7 @@ def scrape_amazon_scrapeado():
             filas.append(fila_dict)
 
         # Filtrar solo filas activas y no validadas
-        filas_validas = [
-            f for f in filas
-            if f.get("Producto")
-            and f.get("estado", "").upper() == "ACTIVO"
-            and str(f.get("validado", "")).upper() == "FALSE"
-        ]
-        
-        print(f"[DEBUG] Total filas: {len(filas)} - Filas válidas: {len(filas_validas)}", flush=True)
-
-        if not filas_validas:
-            print("[DEBUG] No hay filas válidas. Mostrando primeras 5 filas para analizar:", flush=True)
-            for i, f in enumerate(filas[:5]):
-                print(f"[DEBUG] Fila {i}: {f}", flush=True)
-            return jsonify(success=True, datos=[])
+       
 
         obtener_archivos = obtener_set_por_principal(sheet_name, nombre_archivo)
         if not obtener_archivos:
