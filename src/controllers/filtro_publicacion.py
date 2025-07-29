@@ -29,9 +29,13 @@ from werkzeug.utils import secure_filename
 
 
 filtro_publicacion = Blueprint('filtro_publicacion', __name__)
-
-BASE_STATIC_DOWNLOADS = os.path.join("src", "static", "downloads")
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+BASE_STATIC_DOWNLOADS = os.path.join(BASE_DIR, "src", "static", "downloads")
 SIZE_TAG = re.compile(r'_[A-Z]{2}_[A-Z0-9]+_\.(jpg|png)$', re.IGNORECASE)
+# 1. Calcula la ruta al directorio raíz de tu proyecto (dos niveles arriba de este archivo)
+
+
+
 
 # Completar la publicación con datos del sheet y base de datos
 def filtro_publicaciones(items, k=3):
@@ -332,28 +336,30 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
 
 
-
 def guardar_respuesta_json(publicaciones: List[Dict], nombre_archivo: str = None) -> str:
     """
     Guarda la lista 'publicaciones' en un archivo JSON dentro de 'src/static/downloads/'.
-    Retorna la ruta absoluta donde se guardó el archivo.
+    Retorna el nombre del archivo guardado (no la ruta completa).
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     if not nombre_archivo:
-       
         nombre_archivo = f"resultados_scraping_{timestamp}.json"
     else:
-        # Asegúrate de que el nombre del archivo sea seguro
-        nombre_archivo = f"{nombre_archivo}_{timestamp}.json"
+        # Asegura nombre sin caracteres inválidos
+        nombre_archivo = f"{nombre_archivo}_{timestamp}.json".replace(" ", "_")
 
-    carpeta = BASE_STATIC_DOWNLOADS
-    os.makedirs(carpeta, exist_ok=True)
+    # Crear carpeta si no existe
+    os.makedirs(BASE_STATIC_DOWNLOADS, exist_ok=True)
 
-    ruta_guardado = os.path.join(carpeta, nombre_archivo)
+    ruta_guardado = os.path.join(BASE_STATIC_DOWNLOADS, nombre_archivo)
 
-    with open(ruta_guardado, "w", encoding="utf-8") as f:
-        json.dump(publicaciones, f, indent=2, ensure_ascii=False)
-
-    print(f">>> Publicaciones guardadas en: {os.path.abspath(ruta_guardado)}")
+    try:
+        with open(ruta_guardado, "w", encoding="utf-8") as f:
+            json.dump(publicaciones, f, indent=2, ensure_ascii=False)
+        print(f">>> Publicaciones guardadas en: {os.path.abspath(ruta_guardado)}", flush=True)
+    except Exception as e:
+        print(f"❌ Error al guardar el JSON: {e}", flush=True)
+        raise  # Opcional: lanzar el error para que el caller lo maneje
 
     return nombre_archivo
