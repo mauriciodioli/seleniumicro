@@ -23,6 +23,9 @@ import os #obtener el directorio de trabajo actual
 import json
 import sys
 import csv
+from dotenv import load_dotenv
+load_dotenv()
+#load_dotenv(Path('/app/.env'))
 
 #import drive
 #drive.mount('/content/gdrive')

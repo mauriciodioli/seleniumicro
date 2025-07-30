@@ -34,6 +34,7 @@ BASE_STATIC_DOWNLOADS = os.path.join(BASE_DIR, "src", "static", "downloads")
 SIZE_TAG = re.compile(r'_[A-Z]{2}_[A-Z0-9]+_\.(jpg|png)$', re.IGNORECASE)
 # 1. Calcula la ruta al directorio raíz de tu proyecto (dos niveles arriba de este archivo)
 
+MARCAS_RESTRINGIDAS = ["adidas", "nike", "apple", "samsung", "sony", "puma", "lenovo", "huawei", "lg"]
 
 
 
@@ -109,13 +110,14 @@ def armar_publicaciones_validas_match_scrping_sheet(
             fotos = (fotos + [""] * 6)[:6]
             for i in range(6):
                 it[f"imagen{i+1}"] = fotos[i]
+            it["precio_venta_sugerido"] = it.get("precio", 0.0)
 
 
         # Copia la fila de la hoja y agrega info extra
         fila_cp = fila.copy()
         fila_cp["pais_scrapeado"] = sheet_name
         fila_cp["items_filtrados"] = top3
-        fila_cp["row_index"] = row_index
+        fila_cp["row_index"] = row_index       
         publicaciones.append(fila_cp)
 
     # ---------- DEBUG opcional ----------
@@ -143,49 +145,63 @@ def armar_publicaciones_validas_match_scrping_sheet(
             print("\n=== PREVIEW ÍTEMS ARMADOS (con 6 fotos) ===")
             print(df.head(10))  # muestra las primeras 10 filas
 
-    return publicaciones
-
+    return publicaciones 
 
 # ─────────────── helpers ───────────────
-
-# helpers.py
 def preparar_tabla_b(publicaciones: list[dict], header_row: list[str]) -> list[dict]:
-    """
-    • `header_row` es la primera fila del Sheet (lista con los nombres de columna).
-    • Devuelve filas completas con la misma estructura, actualizando precio/imágenes
-      con el ítem ganador (items_filtrados[0]).
-    """
-    def _url(v):
-        return v.get("imageUrl", "") if isinstance(v, dict) else (v or "")
-
     filas_out = []
 
     for pub in publicaciones:
-        row_index = pub.get("row_index")          
+        row_index = pub.get("row_index")
         pais_scrapeado = pub.get("pais_scrapeado")
-        for item in pub["items_filtrados"]:      # ← recorre los 3
-            fila = {c: pub.get(c, "") for c in header_row}
+        precio_aliexpress = float_safe(pub.get("precio_aliexpress"))
+
+        for item in pub["items_filtrados"]:
+            fila = {col: pub.get(col, "") for col in header_row}
+
+            precio_amazon = float_safe(item.get("precio"))
+            reviews = int(item.get("reviews") or 0)
+            producto = item.get("titulo", "") or pub.get("Producto", "")
+
+            # Control de marca
+            if es_producto_de_marca(producto):
+                precio_venta_sugerido = precio_amazon  # mostrar precio real
+                margen_estimado = ""                   # no mostrar ganancia inventada
+            else:
+                margen_ratio = calcular_margen_ratio(precio_amazon, pais_scrapeado, reviews)
+                precio_venta_sugerido = round(precio_amazon * (1 + margen_ratio), 2)
+                margen_estimado = round(precio_venta_sugerido - precio_aliexpress, 2)
 
             fila.update({
-                "precio_amazon": item.get("precio", ""),
-                "imagen":  _url(item.get("imagen1", item.get("imagen"))),
-                "imagen2": _url(item.get("imagen2")),
-                "imagen3": _url(item.get("imagen3")),
-                "imagen4": _url(item.get("imagen4")),
-                "imagen5": _url(item.get("imagen5")),
-                "imagen6": _url(item.get("imagen6")),
-                "row_index" : row_index,          
-                "pais_scrapeado" : pais_scrapeado
+                "precio_amazon": precio_amazon,
+                "precio_venta_sugerido": precio_venta_sugerido,
+                "margen_estimado": margen_estimado,
+                "imagen": url_safe(item.get("imagen1", item.get("imagen"))),
+                "imagen2": url_safe(item.get("imagen2")),
+                "imagen3": url_safe(item.get("imagen3")),
+                "imagen4": url_safe(item.get("imagen4")),
+                "imagen5": url_safe(item.get("imagen5")),
+                "imagen6": url_safe(item.get("imagen6")),
+                "row_index": row_index,
+                "pais_scrapeado": pais_scrapeado
             })
+
             filas_out.append(fila)
 
-    # preview opcional
+    # Preview opcional
     if filas_out:
         import pandas as pd
-        print("\n=== PREVIEW ===")
-        print(pd.DataFrame(filas_out).head())
+        pd.set_option("display.max_columns", None)
+        pd.set_option("display.max_rows", None)
+        pd.set_option("display.max_colwidth", None)
+        pd.set_option("display.width", 0)
+
+        print("\n=== PREVIEW COMPLETO TABLA B ===")
+        print(pd.DataFrame(filas_out))
 
     return filas_out
+
+
 # ──────────────────────────────────────────────────────────────
 # (c) Reduce las publicaciones a la forma que entiende el frontend
 # ──────────────────────────────────────────────────────────────
@@ -363,3 +379,53 @@ def guardar_respuesta_json(publicaciones: List[Dict], nombre_archivo: str = None
         raise  # Opcional: lanzar el error para que el caller lo maneje
 
     return nombre_archivo
+
+
+
+
+
+
+def es_producto_de_marca(producto: str) -> bool:
+    if not producto:
+        return False
+    producto_lower = producto.lower()
+    return any(marca in producto_lower for marca in MARCAS_RESTRINGIDAS)
+
+
+def float_safe(v) -> float:
+    try:
+        return float(str(v).replace(",", "."))
+    except:
+        return 0.0
+
+def url_safe(v) -> str:
+    return v.get("imageUrl", "") if isinstance(v, dict) else (v or "")
+
+def calcular_margen_ratio(precio: float, pais: str, reviews: int = 0) -> float:
+    if precio <= 0:
+        return 0.0
+
+    # Margen base según precio
+    if precio < 10:
+        base = 1.2  # 120%
+    elif precio < 25:
+        base = 0.7  # 70%
+    else:
+        base = 0.5  # 50%
+
+    # Ajuste por país
+    pais = (pais or "").lower()
+    if pais in ["alemania", "italia", "estados_unidos"]:
+        base += 0.1
+    elif pais in ["argentina", "peru", "colombia"]:
+        base -= 0.1
+
+    # Ajuste por popularidad
+    if reviews > 5000:
+        base += 0.15
+    elif reviews > 1000:
+        base += 0.05
+
+    # Variabilidad controlada
+    ruido = random.uniform(-0.05, 0.05)
+    return round(base + ruido, 2)

@@ -17,7 +17,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
-load_dotenv(Path('/app/.env'))
+load_dotenv()
+#load_dotenv(Path('/app/.env'))
 
 
 # 📌 Token y Task ID de Apify
