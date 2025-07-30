@@ -127,23 +127,53 @@ def scrape_amazon_listar_trabajos():
         return jsonify(success=False, error=str(e))
 
     
-    
-@scrape_amazon_dpia.route('/scrape_amazon_eliminar_archivo/', methods=['POST'])
+@scrape_amazon_dpia.route('/scrape_amazon_eliminar_archivo/', methods=['POST']) 
 def scrape_amazon_eliminar_archivo():
     try:
         archivo = request.form.get("archivo")
         if not archivo:
             return jsonify(success=False, error="Nombre de archivo no especificado.")
         
-        path = os.path.join(BASE_DIR, "src", "static", "downloads", archivo)
-        if not os.path.exists(path):
+        base_path = os.path.join(BASE_DIR, "src", "static", "downloads")
+        archivo_path = os.path.join(base_path, archivo)
+        
+        if not os.path.exists(archivo_path):
             return jsonify(success=False, error="El archivo no existe.")
 
-        os.remove(path)
+        # Cargar relaciones
+        relaciones_path = os.path.join(base_path, "relaciones_archivos.json")
+        with open(relaciones_path, "r", encoding="utf-8") as f:
+            relaciones = json.load(f)
+
+        nuevas_relaciones = []
+        for relacion in relaciones.get("spoleto", []):
+            if relacion["principal"] == archivo:
+                # Eliminar archivos relacionados
+                for dependiente in relacion.get("relacionados", []):
+                    dep_path = os.path.join(base_path, dependiente)
+                    if os.path.exists(dep_path):
+                        os.remove(dep_path)
+                        print(f"Eliminado archivo dependiente: {dependiente}")
+            elif archivo not in relacion.get("relacionados", []):
+                nuevas_relaciones.append(relacion)
+            # Si el archivo está en 'relacionados', también se elimina la relación completa
+            # (esto es lo que hacías ya)
+        
+        # Eliminar archivo principal
+        os.remove(archivo_path)
+
+        # Guardar nuevas relaciones
+        relaciones["spoleto"] = nuevas_relaciones
+        with open(relaciones_path, "w", encoding="utf-8") as f:
+            json.dump(relaciones, f, indent=2, ensure_ascii=False)
+
         return jsonify(success=True)
 
     except Exception as e:
         return jsonify(success=False, error=str(e))
+
+
+
 
     
     

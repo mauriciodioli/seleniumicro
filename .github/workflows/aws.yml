@@ -97,6 +97,6 @@ jobs:
          key: ${{ secrets.SSH_PRIVATE_KEY }}
          script: |               
                    docker exec $(docker ps -q --filter name=${{ env.DEPLOYMENT_VERSION }}) bash -c "
-                   apt update &&  apt-get install -y vim 
+                   apt update &&  apt-get install -y vim nano
                    "
           
