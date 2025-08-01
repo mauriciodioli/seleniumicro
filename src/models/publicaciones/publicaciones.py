@@ -16,22 +16,31 @@ class Publicacion(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('usuarios.id'))   
     titulo = db.Column(db.String(120), unique=True, nullable=False)
-    texto = db.Column(db.Text, nullable=False)  # Cambiado a db.Text
+    texto = db.Column(db.Text, nullable=False)
     ambito = db.Column(db.String(120), nullable=False)
-    categoria_id = db.Column(db.Integer,nullable=True)
+    categoria_id = db.Column(db.Integer, nullable=True)
     correo_electronico = db.Column(db.String(120), nullable=False)
     descripcion = db.Column(db.String(1000), nullable=False)
     color_texto = db.Column(db.String(120), nullable=False)
     color_titulo = db.Column(db.String(120), nullable=False)
     fecha_creacion = db.Column(db.DateTime)
     estado = db.Column(db.String(120), nullable=False)
-    botonCompra = db.Column(db.Boolean, default=False)  # Nuevo campo
+    botonCompra = db.Column(db.Boolean, default=False)
     imagen = db.Column(db.String(255), nullable=True)
     idioma = db.Column(db.String(255), nullable=True)
     codigoPostal = db.Column(db.String(255), nullable=True)
     pagoOnline = db.Column(db.Boolean, default=True)
-    
-    def __init__(self, user_id, titulo, texto, ambito,categoria_id, correo_electronico, descripcion, color_texto, color_titulo, fecha_creacion, estado,codigoPostal,pagoOnline, botonCompra=False, imagen=None,idioma=None):
+
+    # NUEVOS CAMPOS
+    precio = db.Column(db.Float, nullable=True)
+    moneda = db.Column(db.String(10), nullable=True)
+
+    def __init__(
+        self, user_id, titulo, texto, ambito, categoria_id, correo_electronico,
+        descripcion, color_texto, color_titulo, fecha_creacion, estado,
+        codigoPostal, pagoOnline, botonCompra=False, imagen=None,
+        idioma=None, precio=None, moneda=None
+    ):
         self.user_id = user_id       
         self.titulo = titulo
         self.texto = texto
@@ -48,10 +57,20 @@ class Publicacion(db.Model):
         self.idioma = idioma
         self.codigoPostal = codigoPostal
         self.pagoOnline = pagoOnline
+        self.precio = precio
+        self.moneda = moneda
 
     def __repr__(self):
-        return f"Publicacion(id={self.id}, user_id={self.user_id}, titulo={self.titulo}, texto={self.texto}, ambito={self.ambito}, categoria_id={self.categoria_id}, correo_electronico={self.correo_electronico}, descripcion={self.descripcion}, color_texto={self.color_texto}, color_titulo={self.color_titulo}, fecha_creacion={self.fecha_creacion}, botonCompra={self.botonCompra}, imagen={self.imagen}, idioma={self.idioma}, codigoPostal={self.codigoPostal}, pagoOnline={self.pagoOnline})"
-
+        return (
+            f"Publicacion(id={self.id}, user_id={self.user_id}, titulo={self.titulo}, "
+            f"texto={self.texto}, ambito={self.ambito}, categoria_id={self.categoria_id}, "
+            f"correo_electronico={self.correo_electronico}, descripcion={self.descripcion}, "
+            f"color_texto={self.color_texto}, color_titulo={self.color_titulo}, "
+            f"fecha_creacion={self.fecha_creacion}, botonCompra={self.botonCompra}, "
+            f"imagen={self.imagen}, idioma={self.idioma}, codigoPostal={self.codigoPostal}, "
+            f"pagoOnline={self.pagoOnline}, precio={self.precio}, moneda={self.moneda})"
+        )
+        
     @classmethod
     def crear_tabla_publicacion(cls):
         insp = inspect(db.engine)

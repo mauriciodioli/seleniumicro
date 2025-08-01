@@ -532,10 +532,7 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
     resp.raise_for_status()
     datos = resp.json()
 
-    # DEBUG: vuelca primeros 10 para inspección
-    pathlib.Path("apify_debug.json").write_text(json.dumps(datos[:20], indent=2, ensure_ascii=False))
-    print(">>> DEBUG primeros 10 items de Apify:", json.dumps(datos[:20], indent=2, ensure_ascii=False))
-
+    
     if not isinstance(datos, list) or not datos:
         raise ValueError("Respuesta vacía o inválida.")
 

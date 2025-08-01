@@ -111,7 +111,9 @@ def completar_publicaciones(data):
                 idioma=idioma,
                 codigoPostal=codigo_postal,
                 pagoOnline=pago_online,
-                categoria_id=categoria_id
+                categoria_id=categoria_id,
+                precio= float(precio_formateado),
+                moneda=moneda
             )
 
             db.session.add(publicacion)
@@ -254,7 +256,7 @@ def machear_ambitoCategoria(categoria, idioma='es', ambito_id=None):
         categoria_general_id = get_or_create_categoria(categoria, idioma)
 
         # Crear color aleatorio
-        COLORES_DISPONIBLES = ["red", "green", "blue", "orange", "purple", "pink", "yellow", "cyan", "teal", "brown"]
+        COLORES_DISPONIBLES = ["red", "green", "blue", "orange", "purple", "yellow", "cyan", "teal", "brown"]
         color_aleatorio = random.choice(COLORES_DISPONIBLES)
         
         if not ambito_categoria:
