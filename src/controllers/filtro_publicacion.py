@@ -86,11 +86,12 @@ def armar_publicaciones_validas_match_scrping_sheet(
     publicaciones: List[Dict] = []
 
     for fila in filas_validas:
+       
         kw = fila["Producto"]
         datos = por_kw.get(kw, {})
         raw_items = datos.get("items", [])
         row_index = fila.get("row_index")
-       
+        print(f"[DEBUG] Ruta al archivo JSON principal: {kw}", flush=True)
         top3 = filtro_publicaciones(raw_items, 3)
 
         for it in top3:
@@ -295,14 +296,14 @@ def obtener_galeria_en_batches(asins: List[str], apify_token: str, dominio: str 
 
     for i in range(0, len(asins), batch_size):
         batch = asins[i:i + batch_size]
-        print(f"🎞️  Procesando batch de galería {i // batch_size + 1}...")
+        print(f"🎞️  Procesando batch de galería {i // batch_size + 1}...", flush=True)
 
         for asin in batch:
             try:
                 galeria = obtener_galeria(asin, apify_token, dominio)
                 resultados[asin] = galeria
             except Exception as e:
-                print(f"❌ Error obteniendo galería para ASIN {asin}: {e}")
+                print(f"❌ Error obteniendo galería para ASIN {asin}: {e}", flush=True)
                 resultados[asin] = [""] * 6
 
         sleep(1)  # pausa corta entre batches
@@ -327,14 +328,14 @@ def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[s
 
     url_producto = f"https://www.amazon.{dominio}/dp/{asin}"
     payload = {"urls": [url_producto]}
-
+    
     try:
         items = requests.post(endpoint, json=payload, timeout=90).json() or []
         item  = items[0] if items else {}
         mini  = _as_url(item.get("mainImage"))
         gal   = [_as_url(u) for u in item.get("imageUrlList", [])]
     except Exception as e:
-        print("⚠️  Error obteniendo galería:", e)
+        print("⚠️  Error obteniendo galería:", e, flush=True)
         mini, gal = "", []
 
     # Normaliza y deduplica por “base” (sin sufijo de tamaño)

@@ -17,8 +17,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
-load_dotenv()
-#load_dotenv(Path('/app/.env'))
+#load_dotenv()
+load_dotenv(Path('/src/.env'))
 
 
 # 📌 Token y Task ID de Apify
@@ -208,7 +208,7 @@ def scrape_amazon_dpia_scraping_imagenes():
             fila_dict["row_index"] = idx
             filas.append(fila_dict)
 
-
+        
         # 2) Filtro sólo las que necesito
         #    Ajusta las condiciones al gusto:
         filas_validas = [
@@ -228,10 +228,14 @@ def scrape_amazon_dpia_scraping_imagenes():
        # 2. Construye la ruta al JSON dentro de test/
         json_path = os.path.join(BASE_DIR, "src", "static", "downloads", nombre_archivo)
 
+        print(f"[DEBUG] Ruta al archivo JSON principal: {json_path}", flush=True)
+        print(f"[DEBUG] ¿Existe archivo principal?: {os.path.exists(json_path)}", flush=True)
 
         resultados_globales = load_many(json_path)
     
-    
+        print(f"[DEBUG] Ruta al archivo JSON principa44444444444444444l: {json_path}", flush=True)
+        print(f"[DEBUG] Total filas encontradas: {len(filas)}", flush=True)
+        print(f"[DEBUG] Filas validadas encontradas: {len(filas_validas)}", flush=True)
         
         # (b) arma filas + top-3
         # aqui se llama al scraping de imágenes
@@ -249,12 +253,18 @@ def scrape_amazon_dpia_scraping_imagenes():
         # (c) reduce a la estructura que entiende el front
        # '/workspaces/seleniumicro/src/static/downloads/publicaciones_20250714_080406.json'
         json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", archivo_base)
+        print(f"[DEBUG] Ruta al archivo JSON principal: {json_path_2}", flush=True)
+        print(f"[DEBUG] ¿Existe archivo principal?: {os.path.exists(json_path_2)}", flush=True)
+
         with open(json_path_2, "r", encoding="utf-8") as f:
             publicaciones_tablaa = json.load(f)
         tabla_a = preparar_respuesta_ui(publicaciones_tablaa)   # (la que ya tenías)
         
         
         json_path_3 = os.path.join(BASE_DIR, "src", "static", "downloads", ruta_archivo_con_imagenes)
+        print(f"[DEBUG] Ruta al archivo JSON principal: {json_path_3}", flush=True)
+        print(f"[DEBUG] ¿Existe archivo principal?: {os.path.exists(json_path_3)}", flush=True)
+
         with open(json_path_3, "r", encoding="utf-8") as f:
             publicaciones_tablab = json.load(f)
        
@@ -291,7 +301,8 @@ def scrape_amazon_scrapeado():
         print(f"[DEBUG] nombre_archivo recibido: {nombre_archivo}", flush=True)
 
         sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
-        if not sheet:
+        if not sheet:         
+
             return jsonify(success=False, error="No pude abrir la hoja")
 
         # Obtener encabezado y todas las filas

@@ -72,9 +72,9 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
                  'https://www.googleapis.com/auth/drive']
         newPath = os.path.join(os.getcwd(), PAHT_SHEET)
         
-        print(f"[DEBUG] cwd: {os.getcwd()}", flush=True)
+       # print(f"[DEBUG] cwd: {os.getcwd()}", flush=True)
         print(f"[DEBUG] buscando credenciales en: {newPath}", flush=True)
-        print(f"[DEBUG] existe?: {os.path.exists(newPath)}", flush=True)
+       # print(f"[DEBUG] existe?: {os.path.exists(newPath)}", flush=True)
         
         creds = ServiceAccountCredentials.from_json_keyfile_name(newPath, scope)
         client = gspread.authorize(creds)
