@@ -25,9 +25,8 @@ import sys
 import csv
 from pathlib import Path
 from dotenv import load_dotenv
-#load_dotenv()
-load_dotenv(Path('/src/.env'))
-
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 #import drive
 #drive.mount('/content/gdrive')
 
@@ -70,7 +69,7 @@ def autenticar_y_abrir_sheet(sheetId, sheet_name):
     try:
         scope = ['https://spreadsheets.google.com/feeds', 
                  'https://www.googleapis.com/auth/drive']
-        newPath = os.path.join(os.getcwd(), PAHT_SHEET)
+        newPath = Path(__file__).resolve().parent.parent / PAHT_SHEET
         
        # print(f"[DEBUG] cwd: {os.getcwd()}", flush=True)
         print(f"[DEBUG] buscando credenciales en: {newPath}", flush=True)
