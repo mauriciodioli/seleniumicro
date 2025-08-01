@@ -285,10 +285,10 @@ def scrape_amazon_scrapeado():
         nombre_archivo = data.get('nombre_archivo')
         sheetId = '1munTyxoLc5px45cz4cO_lLRrqyFsOwjTUh8xDPOiHOg'
         
-      #  print("[DEBUG] cwd:jjjjjjjjjjjjjjjjjjjjjjjjjjjjj", flush=True)  
-      #  print("[DEBUG] cwd:", os.getcwd(), flush=True)
-      #  print(f"[DEBUG] sheet_name recibido: {sheet_name}", flush=True)
-      #  print(f"[DEBUG] nombre_archivo recibido: {nombre_archivo}", flush=True)
+        print("[DEBUG] cwd:jjjjjjjjjjjjjjjjjjjjjjjjjjjjj", flush=True)  
+        print("[DEBUG] cwd:", os.getcwd(), flush=True)
+        print(f"[DEBUG] sheet_name recibido: {sheet_name}", flush=True)
+        print(f"[DEBUG] nombre_archivo recibido: {nombre_archivo}", flush=True)
 
         sheet = autenticar_y_abrir_sheet(SHEET_ID_DETECTOR_TENDENCIA, sheet_name)
         if not sheet:
@@ -309,7 +309,7 @@ def scrape_amazon_scrapeado():
         if not obtener_archivos:
             return jsonify(success=False, error="No hay archivos disponibles para este sheet.")
         
-       # print(f"[DEBUG] Archivos disponibles para {sheet_name}: {obtener_archivos}", flush=True)
+        print(f"[DEBUG] Archivos disponibles para {sheet_name}: {obtener_archivos}", flush=True)
 
         archivo_relacionado = obtener_archivos.get("relacionados", [None])[0]
         if not archivo_relacionado:
@@ -317,15 +317,15 @@ def scrape_amazon_scrapeado():
 
         # Ruta al archivo principal
         json_path = os.path.join(BASE_DIR, "src","static", "downloads", nombre_archivo)
-       # print(f"[DEBUG] Ruta al archivo JSON principal: {json_path}", flush=True)
-       # print(f"[DEBUG] ¿Existe archivo principal?: {os.path.exists(json_path)}", flush=True)
+        print(f"[DEBUG] Ruta al archivo JSON principal: {json_path}", flush=True)
+        print(f"[DEBUG] ¿Existe archivo principal?: {os.path.exists(json_path)}", flush=True)
 
         resultados_globales = load_many(json_path)
 
         # Ruta al archivo relacionado
         json_path_2 = os.path.join(BASE_DIR, "src", "static", "downloads", archivo_relacionado)
-       # print(f"[DEBUG] Ruta al archivo relacionado: {json_path_2}", flush=True)
-       # print(f"[DEBUG] ¿Existe archivo relacionado?: {os.path.exists(json_path_2)}", flush=True)
+        print(f"[DEBUG] Ruta al archivo relacionado: {json_path_2}", flush=True)
+        print(f"[DEBUG] ¿Existe archivo relacionado?: {os.path.exists(json_path_2)}", flush=True)
 
         with open(json_path_2, "r", encoding="utf-8") as f:
             publicaciones = json.load(f)
@@ -335,10 +335,10 @@ def scrape_amazon_scrapeado():
         tabla_b = preparar_tabla_b(publicaciones, sheet_header)
 
 
-       # print(f"[DEBUG]  tabla_a (primer item): {tabla_a[0] if tabla_a else 'VACÍO'}", flush=True)
-       # print(f"[DEBUG]  tabla_b (primer item): {tabla_b[0] if tabla_b else 'VACÍO'}", flush=True)
-       # print(f"[DEBUG] Total items en tabla_a: {len(tabla_a)}", flush=True)
-       # print(f"[DEBUG] Total items en tabla_b: {len(tabla_b)}", flush=True)
+        print(f"[DEBUG]  tabla_a (primer item): {tabla_a[0] if tabla_a else 'VACÍO'}", flush=True)
+        print(f"[DEBUG]  tabla_b (primer item): {tabla_b[0] if tabla_b else 'VACÍO'}", flush=True)
+        print(f"[DEBUG] Total items en tabla_a: {len(tabla_a)}", flush=True)
+        print(f"[DEBUG] Total items en tabla_b: {len(tabla_b)}", flush=True)
 
 
         return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b, archivo_relacionado=archivo_relacionado)
