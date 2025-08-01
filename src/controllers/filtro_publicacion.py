@@ -80,7 +80,8 @@ def armar_publicaciones_validas_match_scrping_sheet(
       · pais_scrapeado
       · items_filtrados (con campos imagen1 … imagen6 completos)
     """
-    
+    print(f"[DEBUG] armar_publicaciones_validas_match_scrping_shee", flush=True)
+      
     por_kw = {r["producto"]: {"items": r["items"], "row_index": r.get("row_index")} for r in resultados_globales}
 
     publicaciones: List[Dict] = []
@@ -91,7 +92,7 @@ def armar_publicaciones_validas_match_scrping_sheet(
         datos = por_kw.get(kw, {})
         raw_items = datos.get("items", [])
         row_index = fila.get("row_index")
-        print(f"[DEBUG] Ruta al archivo JSON principal: {kw}", flush=True)
+        print(f"[DEBUG] armar_publicaciones_validas_match_scrping_sheet Ruta al archivo JSON principal: {kw}", flush=True)
         top3 = filtro_publicaciones(raw_items, 3)
 
         for it in top3:

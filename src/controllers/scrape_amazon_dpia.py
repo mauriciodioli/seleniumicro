@@ -315,7 +315,8 @@ def scrape_amazon_scrapeado():
 
         # Filtrar solo filas activas y no validadas
        
-
+        print(f"[DEBUG] scrape_amazon_scrapeado Total filas encontradas: {len(filas)}", flush=True)
+      
         obtener_archivos = obtener_set_por_principal(sheet_name, nombre_archivo)
         if not obtener_archivos:
             return jsonify(success=False, error="No hay archivos disponibles para este sheet.")
