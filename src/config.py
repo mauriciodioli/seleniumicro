@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 
 from pathlib import Path
-load_dotenv(Path('/app/.env'))
+load_dotenv(Path('/src/.env'))
 
 user = os.environ["MYSQL_USER"]
 password = os.environ["MYSQL_PASSWORD"]
