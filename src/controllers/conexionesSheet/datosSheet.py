@@ -23,9 +23,10 @@ import os #obtener el directorio de trabajo actual
 import json
 import sys
 import csv
+from pathlib import Path
 from dotenv import load_dotenv
-load_dotenv()
-#load_dotenv(Path('/app/.env'))
+#load_dotenv()
+load_dotenv(Path('/src/.env'))
 
 #import drive
 #drive.mount('/content/gdrive')
@@ -65,24 +66,24 @@ def login():
     return credenciales
 
 def autenticar_y_abrir_sheet(sheetId, sheet_name):
-    print("[DEBUG] Entrando a autenticar_y_abrir_sheet")
+    print("[DEBUG] Entrando a autenticar_y_abrir_sheet", flush=True)
     try:
         scope = ['https://spreadsheets.google.com/feeds', 
                  'https://www.googleapis.com/auth/drive']
         newPath = os.path.join(os.getcwd(), PAHT_SHEET)
         
-        print(f"[DEBUG] cwd: {os.getcwd()}")
-        print(f"[DEBUG] buscando credenciales en: {newPath}")
-        print(f"[DEBUG] existe?: {os.path.exists(newPath)}")
+        print(f"[DEBUG] cwd: {os.getcwd()}", flush=True)
+        print(f"[DEBUG] buscando credenciales en: {newPath}", flush=True)
+        print(f"[DEBUG] existe?: {os.path.exists(newPath)}", flush=True)
         
         creds = ServiceAccountCredentials.from_json_keyfile_name(newPath, scope)
         client = gspread.authorize(creds)
         sheet = client.open_by_key(sheetId).worksheet(sheet_name)  # Abre el sheet especificado
       
-        print(f"[DEBUG] hoja abierta correctamente: {sheet.title}")
+        print(f"[DEBUG] hoja abierta correctamente: {sheet.title}", flush=True)
         return sheet
     except Exception as e:
-        print(f"[ERROR] Error al autenticar y abrir la hoja: {e}")
+        print(f"[ERROR] Error al autenticar y abrir la hoja: {e}", flush=True)
         return None  # Puedes devolver None o manejar de otra manera el error en tu aplicación
 
 
