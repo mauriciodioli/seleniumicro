@@ -39,7 +39,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Capa 6: Copiar todo el código fuente
 COPY src/ .
-COPY src/.env /app/.env
+
 COPY src/config.py /app/config.py
 
 # Capa 7: Comando por defecto para ejecutar la aplicación

@@ -73,7 +73,7 @@ def carga_publicacion_en_db():
         completar_publicaciones([fila])  # debe recibir una lista
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         ruta = os.path.join(BASE_DIR, "src", "static", "downloads", archivoRelacionado)
-        print(f"[DEBUG] Verificando ruta: {ruta} - ¿Existe?: {os.path.exists(ruta)}", flush=True)
+        print(f"[DEBUG] Verificando ruta: {ruta} - ¿Existe?: {ruta}", flush=True)
 
         producto = fila["Producto"]
         validar_publicacion_en_json(ruta, producto)
