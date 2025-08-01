@@ -39,27 +39,52 @@ MARCAS_RESTRINGIDAS = ["adidas", "nike", "apple", "samsung", "sony", "puma", "le
 
 
 # Completar la publicación con datos del sheet y base de datos
-def filtro_publicaciones(items, k=3):
- 
-        # filtra y calcula score
-        elegibles = []
-        for d in items:
-            rating_txt = d.get("rating")
-            if not rating_txt:
-                continue
-            rating = float(rating_txt.split()[0].replace(",", "."))
-            reviews = d.get("reviews", 0)
-            precio  = d.get("precio", 0)
-            if rating < 4.4 or reviews < 50 or precio <= 0:
-                continue
-            score = precio / (rating * math.log(reviews + 1))
-            d["__score"] = score
-            d["__rating_val"] = rating
-            elegibles.append(d)
 
-        # ordena por score ascendente
-        elegibles.sort(key=lambda x: x["__score"])
-        return elegibles[:k]
+
+def filtro_publicaciones(items, k=3):
+    elegibles = []
+    descartados = []
+
+    for d in items:
+        motivo = ""
+        rating_txt = d.get("rating")
+        if not rating_txt:
+            motivo = "Sin rating"
+        else:
+            try:
+                rating = float(rating_txt.split()[0].replace(",", "."))
+                reviews = int(d.get("reviews", 0))
+                precio = float(d.get("precio", 0))
+
+                if rating < 4.4:
+                    motivo = f"Rating bajo ({rating})"
+                elif reviews < 50:
+                    motivo = f"Pocas reviews ({reviews})"
+                elif precio <= 0:
+                    motivo = "Precio no válido"
+                else:
+                    score = precio / (rating * math.log(reviews + 1))
+                    d["__score"] = score
+                    d["__rating_val"] = rating
+                    elegibles.append(d)
+                    continue  # pasó el filtro, no se descarta
+            except Exception as e:
+                motivo = f"Error al procesar: {e}"
+
+        d["__motivo_descartado"] = motivo
+        descartados.append(d)
+
+    # Ordenar y limitar los válidos
+    elegibles.sort(key=lambda x: x["__score"])
+    top_k = elegibles[:k]
+
+    # Si no hay elegibles, devolvemos al menos un descartado como placeholder
+    if not top_k:
+        return [{"titulo": d.get("titulo", "Sin título"), "descartado": True, "motivo": d.get("__motivo_descartado")} for d in descartados[:1]]
+
+    return top_k
+
+
 
 
 
@@ -80,7 +105,6 @@ def armar_publicaciones_validas_match_scrping_sheet(
       · pais_scrapeado
       · items_filtrados (con campos imagen1 … imagen6 completos)
     """
-    print(f"[DEBUG] armar_publicaciones_validas_match_scrping_shee", flush=True)
       
     por_kw = {r["producto"]: {"items": r["items"], "row_index": r.get("row_index")} for r in resultados_globales}
 
@@ -94,7 +118,11 @@ def armar_publicaciones_validas_match_scrping_sheet(
         row_index = fila.get("row_index")
         print(f"[DEBUG] armar_publicaciones_validas_match_scrping_sheet Ruta al archivo JSON principal: {kw}", flush=True)
         top3 = filtro_publicaciones(raw_items, 3)
+        for d in top3:
+            print("DEBUG ORIGINAL:", json.dumps(d, indent=2, ensure_ascii=False))
 
+        print(f"[DEBUG] armar_publicaciones_validas_match_scrping_shee :filtro_publicaciones()", flush=True)
+  
         for it in top3:
             dominio = (
                 it.get("url", "").split("amazon.")[1][:2]
@@ -103,7 +131,8 @@ def armar_publicaciones_validas_match_scrping_sheet(
             )
             galeria = []
             galeria = obtener_galeria(it.get("asin", ""), token, dominio)
-
+            print(f"[DEBUG] armar_publicaciones_validas_match_scrping_shee :obtener_galeria()", flush=True)
+  
             def _url(v):
                 return v.get("imageUrl", "") if isinstance(v, dict) else (v or "")
 
@@ -320,7 +349,7 @@ def obtener_galeria_en_batches(asins: List[str], apify_token: str, dominio: str 
 def obtener_galeria(asin: str, apify_token: str, dominio: str = "com") -> List[str]:
     if not asin:
         return [""] * 6
-
+    print(f"[DEBUG] dentro 8888888888888888888   obtener_galeria()", flush=True)
     actor_id = "7KgyOHHEiPEcilZXM"
     endpoint = (
         f"https://api.apify.com/v2/acts/{actor_id}/run-sync-get-dataset-items"
