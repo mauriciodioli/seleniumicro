@@ -76,7 +76,16 @@ def completar_publicaciones(data):
             ]
             imagenes_urls = [url for url in imagenes_urls if url and url.strip() != ""]
 
+
+
+
             slug_base = generar_slug(producto)
+            
+            
+            
+            
+            
+            
             slug = slug_base
             contador = 1
             while db.session.query(Publicacion).filter_by(titulo=slug).first():
@@ -150,6 +159,28 @@ def completar_publicaciones(data):
         print(f"❌ Error en completar_publicaciones: {e}")
 
     return publicaciones_completas
+
+
+
+
+
+def publicacion_ya_existe(texto, descripcion, user_id, codigo_postal, categoria_id, idioma):
+    """
+    Verifica si ya existe una publicación con los mismos datos principales (excepto slug).
+    """
+    return db.session.query(Publicacion).filter_by(
+        texto=texto,
+        descripcion=descripcion,
+        user_id=user_id,
+        codigoPostal=codigo_postal,
+        categoria_id=categoria_id,
+        idioma=idioma
+    ).first() is not None
+
+
+
+
+
 
 def registrar_publicacion_ubicacion(publicacion_id, codigo_postal, user_id):
     try:

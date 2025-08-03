@@ -1,0 +1,34 @@
+{
+  "spoleto": [
+    {
+      "principal": "spoleto_20250725_070224.json",
+      "relacionados": [
+        "publicaciones_spoleto_20250725_074007.json"
+      ]
+    },
+    {
+      "principal": "spoleto_20250725_083028.json",
+      "relacionados": [
+        "publicaciones_spoleto_20250725_083211.json"
+      ]
+    },
+    {
+      "principal": "spoleto_20250725_101815.json",
+      "relacionados": [
+        "publicaciones_spoleto_20250725_102014.json"
+      ]
+    },
+    {
+      "principal": "spoleto_20250726_082228.json",
+      "relacionados": [
+        "publicaciones_spoleto_20250726_082253.json"
+      ]
+    },
+    {
+      "principal": "spoleto_20250726_084812.json",
+      "relacionados": [
+        "publicaciones_spoleto_20250726_085114.json"
+      ]
+    }
+  ]
+}
