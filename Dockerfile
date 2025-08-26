@@ -1,27 +1,27 @@
 # Capa 1: Imagen base
 FROM python:3.12-slim
 
-# Capa 2: Configurar el directorio de trabajo
+# Capa 2: Directorio de trabajo
 WORKDIR /app
 
-# Capa 3: Copiar solo el archivo de requisitos para aprovechar la caché
+# Capa 3: Requisitos Python
 COPY src/requirements.txt .
 
-# Capa 4: Instalar dependencias del sistema
-RUN apt-get update && \
-    apt-get install -y \
+# Capa 4: Dependencias del sistema (bookworm-friendly)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
     git \
     wget \
     curl \
     unzip \
     fonts-liberation \
-    libappindicator3-1 \
+    libayatana-appindicator3-1 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
     libcups2 \
     libdbus-1-3 \
-    libgdk-pixbuf2.0-0 \
+    libgdk-pixbuf-2.0-0 \
     libnspr4 \
     libnss3 \
     libx11-xcb1 \
@@ -29,18 +29,21 @@ RUN apt-get update && \
     libxdamage1 \
     libxrandr2 \
     xdg-utils \
-    chromium-driver \
     chromium \
- && apt-get clean \
+    chromium-driver \
  && rm -rf /var/lib/apt/lists/*
 
-# Capa 5: Instalar dependencias Python
+# (Opcional) Rutas útiles para Selenium/Playwright
+ENV CHROME_BIN=/usr/bin/chromium \
+    CHROMIUM_PATH=/usr/bin/chromium \
+    CHROMEDRIVER_PATH=/usr/bin/chromedriver
+
+# Capa 5: Dependencias Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Capa 6: Copiar todo el código fuente
+# Capa 6: Código fuente
 COPY src/ .
-
 COPY src/config.py /app/config.py
 
-# Capa 7: Comando por defecto para ejecutar la aplicación
+# Capa 7: Comando por defecto
 CMD ["python", "./app.py"]
