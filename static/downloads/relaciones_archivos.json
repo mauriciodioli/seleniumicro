@@ -139,6 +139,30 @@
       "relacionados": [
         "publicaciones_poznan_20250826_072000.json"
       ]
+    },
+    {
+      "principal": "poznan_20250826_085508.json",
+      "relacionados": [
+        "publicaciones_poznan_20250826_085659.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250826_110723.json",
+      "relacionados": [
+        "publicaciones_poznan_20250826_110832.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250826_123637.json",
+      "relacionados": [
+        "publicaciones_poznan_20250826_123746.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250826_124149.json",
+      "relacionados": [
+        "publicaciones_poznan_20250826_124219.json"
+      ]
     }
   ]
 }

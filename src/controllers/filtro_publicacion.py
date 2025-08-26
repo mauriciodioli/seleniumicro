@@ -315,12 +315,7 @@ def preparar_respuesta_ui(publicaciones):
                     for it in mejores
                 ]
             })
-        else:
-            datos_ui.append({
-                "producto": pub.get("producto"),
-                "pais": pub.get("pais"),
-                "error": "Sin artículos válidos con precio"
-            })
+        
 
     return datos_ui
 

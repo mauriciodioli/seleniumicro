@@ -31,7 +31,7 @@ conexion_externa = Blueprint('conexion_externa',__name__)
 autenticado_sheet = False
 
 # 1. Calcula la ruta al directorio raíz de tu proyecto (dos niveles arriba de este archivo)
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 
 
@@ -71,8 +71,8 @@ def carga_publicacion_en_db():
 
     try:
         completar_publicaciones([fila])  # debe recibir una lista
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        ruta = os.path.join(BASE_DIR, "src", "static", "downloads", archivoRelacionado)
+        
+        ruta = os.path.join(BASE_DIR, "static", "downloads", archivoRelacionado)
         print(f"[DEBUG] Verificando ruta: {ruta} - ¿Existe?: {ruta}", flush=True)
 
         producto = fila["Producto"]
