@@ -18,7 +18,7 @@ from models.image import Image
 from models.video import Video
 import random
 import pandas as pd  
-from typing import List, Dict
+from typing import List, Dict, Any
 import sys
 import os
 import re
@@ -41,48 +41,83 @@ MARCAS_RESTRINGIDAS = ["adidas", "nike", "apple", "samsung", "sony", "puma", "le
 # Completar la publicación con datos del sheet y base de datos
 
 
-def filtro_publicaciones(items, k=3):
-    elegibles = []
+def _to_float(val):
+    if val is None or val == "":
+        return None
+    if isinstance(val, (int, float)):
+        return float(val)
+    m = re.search(r'(\d+[.,]?\d*)', str(val))
+    return float(m.group(1).replace(',', '.')) if m else None
+
+def _to_int(val):
+    if val is None or val == "":
+        return 0
+    if isinstance(val, int):
+        return val
+    m = re.search(r'(\d[\d.,]*)', str(val))
+    return int(m.group(1).replace('.', '').replace(',', '')) if m else 0
+
+def filtro_publicaciones(items: List[Dict[str, Any]], k: int = 3) -> List[Dict[str, Any]]:
+    """
+    - Guarda ítems sin rating siempre que tengan precio > 0.
+    - Si hay rating, aplica filtros mínimos y pondera:
+        score = precio / (rating * log(reviews + 1))
+      (menor score = mejor)
+    - Devuelve hasta k ítems: primero los ponderados por score, luego
+      los sin rating ordenados por menor precio.
+    """
+    con_rating = []
+    sin_rating = []
     descartados = []
 
     for d in items:
-        motivo = ""
-        rating_txt = d.get("rating")
-        if not rating_txt:
-            motivo = "Sin rating"
-        else:
-            try:
-                rating = float(rating_txt.split()[0].replace(",", "."))
-                reviews = int(d.get("reviews", 0))
-                precio = float(d.get("precio", 0))
+        precio = _to_float(d.get("precio"))
+        if not precio or precio <= 0:
+            d["__motivo_descartado"] = "Precio no válido"
+            descartados.append(d)
+            continue
 
-                if rating < 4.4:
-                    motivo = f"Rating bajo ({rating})"
-                elif reviews < 50:
-                    motivo = f"Pocas reviews ({reviews})"
-                elif precio <= 0:
-                    motivo = "Precio no válido"
-                else:
-                    score = precio / (rating * math.log(reviews + 1))
-                    d["__score"] = score
-                    d["__rating_val"] = rating
-                    elegibles.append(d)
-                    continue  # pasó el filtro, no se descarta
-            except Exception as e:
-                motivo = f"Error al procesar: {e}"
+        rating = _to_float(d.get("rating"))
+        reviews = _to_int(d.get("reviews"))
 
-        d["__motivo_descartado"] = motivo
-        descartados.append(d)
+        if rating is None:
+            # Guardar SIN rating (ordenaremos por menor precio)
+            d["__score_fallback"] = precio
+            sin_rating.append(d)
+            continue
 
-    # Ordenar y limitar los válidos
-    elegibles.sort(key=lambda x: x["__score"])
-    top_k = elegibles[:k]
+        # Con rating: aplicar umbrales mínimos
+        if rating < 4.4:
+            d["__motivo_descartado"] = f"Rating bajo ({rating})"
+            descartados.append(d)
+            continue
+        if reviews < 50:
+            d["__motivo_descartado"] = f"Pocas reviews ({reviews})"
+            descartados.append(d)
+            continue
 
-    # Si no hay elegibles, devolvemos al menos un descartado como placeholder
-    if not top_k:
-        return [{"titulo": d.get("titulo", "Sin título"), "descartado": True, "motivo": d.get("__motivo_descartado")} for d in descartados[:1]]
+        # Ponderación
+        score = precio / (rating * math.log(reviews + 1))
+        d["__score"] = score
+        d["__rating_val"] = rating
+        d["__reviews_val"] = reviews
+        con_rating.append(d)
 
-    return top_k
+    # Orden y selección
+    con_rating.sort(key=lambda x: x["__score"])
+    sin_rating.sort(key=lambda x: x["__score_fallback"])
+
+    top = (con_rating + sin_rating)[:k]
+
+    # Si no quedó nada elegible, devolvemos 1 descartado como placeholder
+    if not top:
+        return [{
+            "titulo": d.get("titulo", "Sin título"),
+            "descartado": True,
+            "motivo": d.get("__motivo_descartado", "No elegible")
+        } for d in descartados[:1]]
+
+    return top
 
 
 

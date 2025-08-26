@@ -16,6 +16,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+
 from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
@@ -511,10 +513,7 @@ def lanzar_scraping_amazon_en_batches(registros: list, pais_defecto: str, batch_
 
 
 
-
-
-def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
-   
+def lanzar_scraping_amazon(registros: list, pais_defecto: str = "com") -> list:
     dominio_por_pais = {
         "argentina": "com", "canada": "ca", "francia": "fr", "italia": "it",
         "estados_unidos": "com", "alemania": "de", "espana": "es", "polonia": "pl"
@@ -525,85 +524,89 @@ def lanzar_scraping_amazon(registros: list, pais_defecto: str) -> list:
         f"?token={APIFY_TOKEN}"
     )
 
-    # 1) Payload sin searchId
+    # 1) Payload
     payload = {
         "input": [
             {
                 "keyword":    fila["Producto"],
-                "domainCode": dominio_por_pais.get(fila.get("País","").lower(), "com"),
+                "domainCode": dominio_por_pais.get(fila.get("País", "").lower(), pais_defecto),
                 "sortBy":     "recent",
                 "maxPages":   1,
-                "category":   "aps"
+                "category":   "aps",
             }
             for fila in registros
         ]
     }
 
-    # 2) Petición y JSON crudo
+    # 2) Request
     resp = requests.post(base_url, json=payload, timeout=90)
     resp.raise_for_status()
     datos = resp.json()
-
-    
     if not isinstance(datos, list) or not datos:
         raise ValueError("Respuesta vacía o inválida.")
 
-    # 3) Agrupo POR keyword
-    agrupado_por_keyword = defaultdict(list)
-    for item in datos:
-        kw = item.get("keyword")
+    # 3) Agrupar por keyword
+    por_kw = defaultdict(list)
+    for it in datos:
+        kw = it.get("keyword")
         if kw:
-            agrupado_por_keyword[kw].append(item)
+            por_kw[kw].append(it)
 
-    # 4) Reconstruyo resultados
+    # 4) Reconstruir resultados (solo si hay items válidos)
     resultados = []
     for fila in registros:
         prod = fila["Producto"]
-        raw_items = agrupado_por_keyword.get(prod, [])
-        print(f">>> DEBUG '{prod}' encontró {len(raw_items)} registros crudos")
-        row_index = fila.get("row_index")  # 👈 esto es lo nuevo
-        print(f"📌 Producto '{prod}' corresponde a la fila {row_index} del Sheet")
+        pais = fila.get("País", "")
+        row_index = fila.get("row_index")
+
+        raw_items = por_kw.get(prod, [])
+        base_dom = dominio_por_pais.get(pais.lower(), pais_defecto)
 
         items = []
+        vistos_asin = set()
+
         for d in raw_items:
-            desc = d.get("productDescription")
-            base_dom = dominio_por_pais.get(fila.get("País","").lower(), "com")
-            url_dp   = d.get("dpUrl")            # puede ser None
+            desc = (d.get("productDescription") or "").strip()
+            price = d.get("price")
+
+            # Debe tener descripción y precio válido
+            if not desc or price in (None, "", 0):
+                continue
+
+            asin = d.get("asin")
+            if asin and asin in vistos_asin:
+                continue  # dedupe
+            if asin:
+                vistos_asin.add(asin)
+
+            url_dp = d.get("dpUrl")
             url_final = f"https://www.amazon.{base_dom}{url_dp}" if url_dp else None
-            
-          
-            if desc:
-                items.append({
-                        "titulo":            desc,
-                        "asin":              d.get("asin"),
-                        "precio":            d.get("price"),
-                        "precio_original":   d.get("retailPrice"),
-                        "rating":            d.get("productRating"),
-                        "reviews":           d.get("countReview"),
-                        "prime":             d.get("prime"),
-                        "entrega":           d.get("deliveryMessage"),
-                        "imagen":            d.get("imgUrl"),                       
-                        "url":               url_final,
-                        "detalles":          d.get("productDetails", [])
-                    })
 
-                
+            items.append({
+                "titulo":          desc,
+                "asin":            asin,
+                "precio":          price,
+                "precio_original": d.get("retailPrice"),
+                "rating":          d.get("productRating"),
+                "reviews":         d.get("countReview"),
+                "prime":           d.get("prime"),
+                "entrega":         d.get("deliveryMessage"),
+                "imagen":          d.get("imgUrl"),
+                "url":             url_final,
+                "detalles":        d.get("productDetails", []),
+            })
 
-        if items:
-            resultados.append({
-                "producto": prod,
-                "pais":     fila["País"],
-                "row_index": row_index,
-                "items":    items
-            })
-        else:
-            resultados.append({
-                "producto": prod,
-                "pais":     fila["País"],
-                "row_index": row_index,
-                "error":    "Sin productos relevantes."
-            })
-   
+        # ⬇️ Clave: si NO hay items válidos, NO agregamos nada
+        if not items:
+            continue
+
+        resultados.append({
+            "producto":  prod,
+            "pais":      pais,
+            "row_index": row_index,
+            "items":     items,
+        })
+
     return resultados
 
 

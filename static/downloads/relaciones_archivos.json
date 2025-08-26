@@ -126,5 +126,19 @@
         "publicaciones_spoleto_20250801_135752.json"
       ]
     }
+  ],
+  "poznan": [
+    {
+      "principal": "poznan_20250826_064156.json",
+      "relacionados": [
+        "publicaciones_poznan_20250826_064213.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250826_071815.json",
+      "relacionados": [
+        "publicaciones_poznan_20250826_072000.json"
+      ]
+    }
   ]
 }
