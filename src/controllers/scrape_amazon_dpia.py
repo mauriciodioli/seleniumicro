@@ -277,7 +277,7 @@ def scrape_amazon_dpia_scraping_imagenes():
       
 
         
-        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b)
+        return jsonify(success=True, tablaA=tabla_a, tablaB=tabla_b,archivo_relacionado=ruta_archivo_con_imagenes)
 
       except Exception as e:
           return jsonify(success=False, error=str(e))

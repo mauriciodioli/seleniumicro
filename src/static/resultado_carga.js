@@ -58,6 +58,8 @@ $('#btn-cargar-sheet').click(function () {
                     Swal.fire("Error", response.error || "Algo salió mal", "error");
                     return;
                 }
+                debugger;
+                print(response.archivo_relacionado);
                 if (response.archivo_relacionado) {
                         localStorage.setItem("archivoRelacionado", response.archivo_relacionado);
                     }
@@ -238,14 +240,27 @@ $.ajax({
   },
   success: function(response) {
     if (response.success) {
-      const archivos = response.archivos;
-      const select = $("#ArchivosCargados");
-      select.empty(); // Limpia las opciones anteriores
+      let archivos = response.archivos;
 
-      select.append(`<option value="">Seleccione un Archivo</option>`);
+      // 🔄 ordenar por fecha/hora en el nombre (descendente)
+      archivos.sort((a, b) => {
+        const dateA = a.match(/(\d{8}_\d{6})/)[0];
+        const dateB = b.match(/(\d{8}_\d{6})/)[0];
+        return dateB.localeCompare(dateA); // más nuevo primero
+      });
+
+      const select = $("#ArchivosCargados");
+      select.empty().append(`<option value="">Seleccione un Archivo</option>`);
+
       archivos.forEach(nombre => {
         select.append(`<option value="${nombre}">${nombre}</option>`);
       });
+
+      // 👉 opcional: preseleccionar automáticamente el más nuevo
+      if (archivos.length > 0) {
+        select.val(archivos[0]);
+      }
+
     } else {
       alert("⚠️ Error al cargar archivos: " + response.error);
     }
@@ -254,6 +269,7 @@ $.ajax({
     console.error("❌ Error en la petición AJAX:", error);
   }
 });
+
 
 
 
@@ -293,8 +309,7 @@ $("#btnEliminarArchivo").on("click", function () {
 
 
 
-
-function cargarListadoArchivos() {
+function cargarListadoArchivos() { 
   $.ajax({
     url: "/scrape_amazon_listar_trabajos/",
     method: "POST",
@@ -302,6 +317,14 @@ function cargarListadoArchivos() {
       if (response.success) {
         const select = $("#ArchivosCargados");
         select.empty().append(`<option value="">Seleccione un Archivo</option>`);
+
+        // 🔄 ordenar por fecha/hora en el nombre (descendente)
+        response.archivos.sort((a, b) => {
+          const dateA = a.match(/(\d{8}_\d{6})/)[0];
+          const dateB = b.match(/(\d{8}_\d{6})/)[0];
+          return dateB.localeCompare(dateA); // más nuevo primero
+        });
+
         response.archivos.forEach(nombre => {
           select.append(`<option value="${nombre}">${nombre}</option>`);
         });
@@ -309,6 +332,7 @@ function cargarListadoArchivos() {
     }
   });
 }
+
 
 // Llamar al cargar la página
 $(document).ready(function () {

@@ -26,25 +26,20 @@ class SheetHandler:
                 'H:H',  # precio_ebay
                 'I:I',  # precio_aliexpress
                 'J:J',  # precio_venta_sugerido
-                'K:K',  # margen_estimado
-                'L:L',  # imagen
-                'M:M',  # imagen2
-                'N:N',  # imagen3
-                'O:O',  # imagen4
-                'P:P',  # imagen5
-                'Q:Q',  # imagen6
-                'R:R',  # fecha
-                'S:S',  # motivo_tendencia_extendido
-                'T:T',  # búsqueda_amazon
-                'U:U',  # búsqueda_ebay
-                'V:V',  # búsqueda_aliexpress
-                'W:W',  # ambito
-                'X:X',  # codigoPostal
-                'Y:Y',  # usuario
-                'Z:Z',  # estado
-                'AA:AA',# botonCompra
-                'AB:AB',# idioma
-                'AC:AC' # pagoOnline
+                'K:K',  # margen_estimado               
+                'L:L',  # fecha
+                'M:M',  # motivo_tendencia_extendido
+                'N:N',  # búsqueda_amazon
+                'O:O',  # búsqueda_ebay
+                'P:P',  # búsqueda_aliexpress
+                'Q:Q',  # ambito
+                'R:R',  # codigoPostal
+                'S:S',  # usuario
+                'T:T',  # estado
+                'U:U',# botonCompra
+                'V:V',# idioma
+                'W:W' # pagoOnline
+                'X:X',# validado
             ]
 
             for _ in range(3):  # Hasta 3 intentos
