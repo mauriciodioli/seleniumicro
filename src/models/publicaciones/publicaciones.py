@@ -30,7 +30,7 @@ class Publicacion(db.Model):
     idioma = db.Column(db.String(255), nullable=True)
     codigoPostal = db.Column(db.String(255), nullable=True)
     pagoOnline = db.Column(db.Boolean, default=True)
-
+    afiliado_link = db.Column(db.String(500), nullable=True)
     # NUEVOS CAMPOS
     precio = db.Column(db.Float, nullable=True)
     moneda = db.Column(db.String(10), nullable=True)
@@ -38,7 +38,7 @@ class Publicacion(db.Model):
     def __init__(
         self, user_id, titulo, texto, ambito, categoria_id, correo_electronico,
         descripcion, color_texto, color_titulo, fecha_creacion, estado,
-        codigoPostal, pagoOnline, botonCompra=False, imagen=None,
+        codigoPostal, pagoOnline,afiliado_link, botonCompra=False, imagen=None,
         idioma=None, precio=None, moneda=None
     ):
         self.user_id = user_id       
@@ -59,6 +59,7 @@ class Publicacion(db.Model):
         self.pagoOnline = pagoOnline
         self.precio = precio
         self.moneda = moneda
+        self.afiliado_link = afiliado_link
 
     def __repr__(self):
         return (
@@ -68,6 +69,7 @@ class Publicacion(db.Model):
             f"color_texto={self.color_texto}, color_titulo={self.color_titulo}, "
             f"fecha_creacion={self.fecha_creacion}, botonCompra={self.botonCompra}, "
             f"imagen={self.imagen}, idioma={self.idioma}, codigoPostal={self.codigoPostal}, "
+            f"afiliado_link={self.afiliado_link}, estado={self.estado}, "
             f"pagoOnline={self.pagoOnline}, precio={self.precio}, moneda={self.moneda})"
         )
         

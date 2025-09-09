@@ -15,6 +15,7 @@ from models.publicaciones.publicacionCodigoPostal import PublicacionCodigoPostal
 from models.publicaciones.ambitos import Ambitos
 from models.publicaciones.ambito_usuario import Ambito_usuario
 from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
+from models.categoriaCodigoPostal import CategoriaCodigoPostal
 from models.publicaciones.categoria_general import CategoriaGeneral, CategoriaTraduccion, normalizar_slug
 from models.image import Image
 from models.video import Video
@@ -62,6 +63,7 @@ def completar_publicaciones(data):
             idioma = row["idioma"]
             pago_online = 1 if str(row["pagoOnline"]).strip().upper() == "TRUE" else 0
             ambito = row["ambito"]
+            afiliado_link = row["afiliado_link"]
 
             imagenes_urls = [
                 row.get("imagen"),
@@ -87,6 +89,8 @@ def completar_publicaciones(data):
             usuario_id = machear_usuario(user_id)
             ubicacion_id = machear_ubicacion(user_id, codigo_postal)
 
+
+         
             
             precio_formateado, moneda = normalizar_precio(precio_venta_sugerido)
 
@@ -110,6 +114,7 @@ def completar_publicaciones(data):
                 imagen=imagenes_urls[0] if imagenes_urls else None,
                 idioma=idioma,
                 codigoPostal=codigo_postal,
+                afiliado_link=afiliado_link,
                 pagoOnline=pago_online,
                 categoria_id=categoria_id,
                 precio= float(precio_formateado),
@@ -127,7 +132,9 @@ def completar_publicaciones(data):
             codigo_postal_id = machear_codigo_postal_id(codigo_postal, ciudad, pais)
             registrar_ambito_usuario(user_id, ambito_class.id, publicacion.id)
             if codigo_postal_id:
-                registrar_codigo_postal(publicacion_id, codigo_postal_id)
+                registrar_codigo_postal(publicacion_id, codigo_postal_id) 
+                machear_categoria_codigoPostal(categoria_id,codigo_postal_id)
+
             for index, url in enumerate(imagenes_urls):
                 filename = secure_filename(f"{slug}_{index}.jpg")
                 
@@ -335,10 +342,44 @@ def machear_ubicacion(user_id, codigoPostal):
         return None
 
     if ubicacion:
-        return ubicacion.id
+        return ubicacion
     else:
         print(f"⚠️ No se encontró ubicación para el código postal: '{codigoPostal}'")
         return None
+    
+    
+def machear_categoria_codigoPostal(categoria_id, codigo_postal_id):
+    """
+    Verifica si existe la relación categoria-codigo_postal.
+    Si no existe, la crea. Devuelve True si todo va bien, False si hay error.
+    """
+    if not codigo_postal_id:
+        return False
+
+    try:
+       
+
+        # Verificar si ya existe la relación
+        relacion = (
+            db.session.query(CategoriaCodigoPostal)
+            .filter_by(categoria_id=categoria_id, codigo_postal_id=int(codigo_postal_id))
+            .first()
+        )
+
+        if not relacion:
+            # Crear la relación
+            relacion = CategoriaCodigoPostal(categoria_id=categoria_id, codigo_postal_id=int(codigo_postal_id))
+            db.session.add(relacion)
+
+        db.session.commit()
+        return True
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ Error en machear_categoria_codigoPostal: {e}")
+        return False
+
+    
 def machear_publicacion(publicacion):
     if not publicacion:
         return None

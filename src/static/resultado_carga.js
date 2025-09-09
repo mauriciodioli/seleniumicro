@@ -58,8 +58,8 @@ $('#btn-cargar-sheet').click(function () {
                     Swal.fire("Error", response.error || "Algo salió mal", "error");
                     return;
                 }
-                debugger;
-                print(response.archivo_relacionado);
+                
+               
                 if (response.archivo_relacionado) {
                         localStorage.setItem("archivoRelacionado", response.archivo_relacionado);
                     }

@@ -36,10 +36,11 @@ class SheetHandler:
                 'R:R',  # codigoPostal
                 'S:S',  # usuario
                 'T:T',  # estado
-                'U:U',# botonCompra
-                'V:V',# idioma
-                'W:W' # pagoOnline
-                'X:X',# validado
+                'U:U',  # botonCompra
+                'V:V',  # idioma
+                'W:W',   # pagoOnline
+                'X:X',  # validado
+                'Y:Y',  # afiliado_link
             ]
 
             for _ in range(3):  # Hasta 3 intentos

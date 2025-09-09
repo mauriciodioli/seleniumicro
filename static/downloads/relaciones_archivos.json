@@ -217,6 +217,50 @@
       "relacionados": [
         "publicaciones_poznan_20250827_090049.json"
       ]
+    },
+    {
+      "principal": "poznan_20250827_093424.json",
+      "relacionados": [
+        "publicaciones_poznan_20250827_093447.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250827_093424.json",
+      "relacionados": [
+        "publicaciones_poznan_20250827_093555.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250827_093424.json",
+      "relacionados": [
+        "publicaciones_poznan_20250827_093703.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250827_093839.json",
+      "relacionados": [
+        "publicaciones_poznan_20250827_093945.json"
+      ]
+    }
+  ],
+  "cerdenia": [
+    {
+      "principal": "cerdenia_20250909_114630.json",
+      "relacionados": [
+        "publicaciones_cerdenia_20250909_114713.json"
+      ]
+    },
+    {
+      "principal": "cerdenia_20250909_115958.json",
+      "relacionados": [
+        "publicaciones_cerdenia_20250909_120100.json"
+      ]
+    },
+    {
+      "principal": "cerdenia_20250909_120949.json",
+      "relacionados": [
+        "publicaciones_cerdenia_20250909_121229.json"
+      ]
     }
   ]
 }
