@@ -1,50 +1,1065 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Datos del Sheet</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DPIA · Chat Contextual (MVP UI)</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root{
+      --bg:#0f172a;           /* slate-900 */
+      --panel:#111827ee;      /* gray-900 */
+      --card:#0b1222;         /* azul neón dark */
+      --muted:#9aa4b2;
+      --accent:#38bdf8;       /* sky-400 */
+      --accent-2:#22d3ee;     /* cyan-400 */
+      --ok:#22c55e;           /* green-500 */
+      --danger:#ef4444;       /* red-500 */
+      --border:rgba(255,255,255,.08);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(135deg,#0b1222 0%, #0f172a 60%, #111827 100%);
+      color:#e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+    }
+    /* Navbar */
+    .nav{
+      position:sticky; top:0; z-index:100;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding:14px 18px; background:#0b1020cc; backdrop-filter: blur(6px); border-bottom:1px solid var(--border);
+    }
+    .nav .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.3px}
+    .nav .brand .dot{width:10px; height:10px; border-radius:99px; background:conic-gradient(from 0deg,var(--accent),var(--accent-2)); box-shadow:0 0 12px var(--accent)}
+    .btn{
+      appearance:none; border:1px solid var(--border); background:#0f1a2f; color:#eaf3ff;
+      padding:10px 14px; border-radius:12px; cursor:pointer; box-shadow: var(--shadow); transition:.18s ease;
+    }
+    .btn:hover{transform: translateY(-1px); border-color:#1f2a44}
+    .btn-accent{background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%); color:#001018; border:0; font-weight:700}
+    .btn-ghost{background:transparent}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--border);
+      border-radius:999px; color:#cfe7ff; background:#0c1527; font-size:.9rem;
+    }
+
+    /* Layout principal */
+    .wrap{max-width:1200px; margin:18px auto; padding:0 16px;}
+    .grid{
+      display:grid; grid-template-columns: 380px 1fr; gap:18px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    /* Panel izquierdo */
+    .panel{
+      border:1px solid var(--border); border-radius: var(--radius); background: #0d1426; box-shadow: var(--shadow); overflow:hidden;
+    }
+    .panel-header{
+      padding:14px; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:center; justify-content:space-between;
+      background:linear-gradient(180deg,#0f1a31 0%, #0d1426 100%);
+    }
+    .search{
+      display:flex; gap:8px; align-items:center; width:100%;
+      background:#091127; border:1px solid var(--border); border-radius:12px; padding:8px 10px;
+    }
+    .search input{
+      width:100%; background:transparent; border:0; outline:0; color:#e5f0ff; font-size:14px;
+    }
+
+    .cards{padding:14px; display:grid; gap:12px}
+    .card{
+      border:1px solid var(--border); border-radius:14px; background: radial-gradient(1200px 180px at 0% 0%, rgba(56,189,248,.14), transparent 40%), #0a1324;
+      padding:12px;
+    }
+    .card h4{margin:0 0 8px 0; font-size:14px; color:#cde8ff; letter-spacing:.2px}
+    .badge{display:inline-block; padding:4px 8px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:#cdd7e5; margin:0 6px 6px 0}
+    .list{display:flex; flex-wrap:wrap; gap:8px}
+    .list .item{
+      padding:8px 10px; background:#0b1222; border:1px solid var(--border); border-radius:10px; font-size:13px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .row-actions{display:flex; gap:8px; margin-top:10px}
+
+    /* Chat a la derecha */
+    .chat{
+      display:grid; grid-template-rows: auto auto 1fr auto; gap:10px;
+      border:1px solid var(--border); border-radius: var(--radius); background:#0d1426; box-shadow: var(--shadow); min-height:560px;
+    }
+    .chat-head{padding:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; justify-content:space-between}
+    .ctx{display:flex; flex-wrap:wrap; gap:8px}
+    .msgs{
+      padding:14px; overflow:auto; display:flex; flex-direction:column; gap:10px; background:
+        radial-gradient(1000px 120px at 0% 0%, rgba(34,211,238,.06), transparent 40%),
+        radial-gradient(1000px 120px at 100% 0%, rgba(56,189,248,.06), transparent 40%);
+    }
+    .bubble{
+      max-width: 78%; padding:10px 12px; border-radius:14px; border:1px solid var(--border);
+      background:#0b1222; line-height:1.35; font-size:14px;
+    }
+    .me{align-self:flex-end; background: linear-gradient(135deg, rgba(56,189,248,.25), rgba(34,211,238,.2));}
+    .meta{font-size:12px; color:var(--muted); margin-top:4px}
+    .chat-input{padding:12px; border-top:1px solid var(--border); display:flex; gap:8px}
+    .chat-input input{flex:1; border:1px solid var(--border); background:#0b1222; color:#eaf3ff; padding:10px 12px; border-radius:12px; outline:0}
+    .hint{color:var(--muted); font-size:12px}
+
+    /* Zona existente de tu página */
+    .tools{
+      margin-top:24px; border:1px dashed var(--border); border-radius:14px; padding:14px; background:#0a1222;
+    }
+    label, select, option{color:#eaf3ff}
+    select, button{background:#0b1222; border:1px solid var(--border); border-radius:10px; padding:8px 10px}
+    #resultado{margin-top:12px}
+    .btn-danger{background:#2a0b0d; border-color:#3b0f12; color:#ffb3b3}
+    .ms-2{margin-left:.5rem}
+    /* === Alto Contraste DPIA — parche rápido === */
+:root{
+  --bg:#070b13;
+  --panel:#0a1220;          /* más oscuro */
+  --card:#091426;           /* más contraste en cards */
+  --text:#eef4ff;           /* texto principal más claro */
+  --muted:#c1cbe0;          /* texto secundario más legible */
+  --accent:#67d9ff;         /* acentos más brillantes */
+  --accent-2:#00eaff;
+  --ok:#32ff92;
+  --danger:#ff6666;
+  --border:rgba(255,255,255,.22); /* borde más marcado */
+  --shadow:0 14px 36px rgba(0,0,0,.55);
+  --radius:16px;
+}
+
+/* Fondo general un toque más oscuro */
+body{
+  color:var(--text);
+  background:linear-gradient(135deg,#071022 0%, #0a1220 60%, #0b1424 100%);
+}
+
+/* Navbar y paneles con contraste y borde visibles */
+.nav{ background:#091228e6; border-bottom:1px solid var(--border); }
+.panel, .chat{
+  background:var(--panel);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+/* Cards con capa de brillo y bordes más visibles */
+.card{
+  background:
+    radial-gradient(900px 140px at 0% 0%, rgba(103,217,255,.18), transparent 45%),
+    var(--card);
+  border:1px solid rgba(255,255,255,.24);
+}
+.card h4{ color:#e7f2ff; font-weight:700; }
+
+/* Búsqueda: input y placeholder más claros */
+.search{ background:#0a1733; border-color:rgba(255,255,255,.28); }
+.search input{ color:var(--text); }
+.search input::placeholder{ color:#9fb3d9; opacity:1; }
+
+/* Badges/items con línea más clara */
+.badge, .list .item{
+  border-color: rgba(255,255,255,.28);
+  background:#0b1833;
+  color:#e6efff;
+}
+
+/* Botones: texto oscuro en acento y foco visible */
+.btn{ border-color:rgba(255,255,255,.26); background:#0b1731; color:#e8f2ff; }
+.btn:hover{ border-color:#6ccfff; }
+.btn-accent{
+  background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%);
+  color:#02121a; font-weight:800; text-shadow:0 1px 0 rgba(255,255,255,.35);
+  border:0;
+}
+.btn:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
+
+/* Pills (contexto) con mayor contraste */
+.pill{
+  background:#0a1938;
+  border-color:rgba(255,255,255,.30);
+  color:#e9f3ff;
+  font-weight:600;
+}
+
+/* Burbujas de chat: diferencia fuerte entre emisor y receptor */
+.bubble{
+  background:#0a1630;
+  border-color:rgba(255,255,255,.26);
+  color:#eaf2ff;
+}
+.bubble.me{
+  background:linear-gradient(135deg, rgba(103,217,255,.35), rgba(0,234,255,.28));
+  color:#071018; font-weight:600;
+  border-color:rgba(103,217,255,.55);
+}
+
+/* Hints más legibles */
+.hint{ color:var(--muted); }
+
+/* Tabs de hilos: que “salten” visualmente */
+#threadTabs .btn{ background:#0b1731; }
+#threadTabs .btn.btn-accent{ box-shadow:0 0 0 2px rgba(0,234,255,.35) inset; }
+/* ===== DPIA THEME: LIGHT MODE ===== */
+body.theme-light{
+  color:#0b1020;
+  background:linear-gradient(135deg,#f4f7fb 0%, #eef3fa 60%, #e9f0f9 100%);
+}
+
+/* Variables de claro */
+body.theme-light{
+  --bg:#f4f7fb;
+  --panel:#ffffff;
+  --card:#f9fbff;
+  --text:#0b1020;
+  --muted:#5b6b8a;
+  --accent:#0ea5e9;      /* blue-cyan */
+  --accent-2:#22d3ee;
+  --ok:#16a34a;
+  --danger:#dc2626;
+  --border:rgba(2,6,23,.12);  /* borde suave oscuro */
+  --shadow:0 10px 24px rgba(2,6,23,.08);
+}
+
+/* Navbar / paneles */
+body.theme-light .nav{
+  background:#ffffffcc; border-bottom:1px solid var(--border);
+  color:var(--text);
+}
+body.theme-light .panel,
+body.theme-light .chat{
+  background:var(--panel); border:1px solid var(--border); box-shadow:var(--shadow);
+}
+
+/* Cards */
+body.theme-light .card{
+  background:
+    radial-gradient(900px 140px at 0% 0%, rgba(14,165,233,.10), transparent 45%),
+    var(--card);
+  border:1px solid var(--border);
+}
+body.theme-light .card h4{ color:#0b1020; }
+
+/* Buscador */
+body.theme-light .search{ background:#f1f5fb; border-color:var(--border); }
+body.theme-light .search input{ color:#0b1020; }
+body.theme-light .search input::placeholder{ color:#7b8aa3; }
+
+/* Chips y badges */
+body.theme-light .badge, 
+body.theme-light .list .item{
+  border-color:var(--border);
+  background:#f3f7ff;
+  color:#0b1020;
+}
+
+/* Botones */
+body.theme-light .btn{ background:#f3f7ff; border-color:var(--border); color:#0b1020; }
+body.theme-light .btn:hover{ border-color:#94d9f7 }
+body.theme-light .btn-accent{
+  background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%);
+  color:#041018; border:0; text-shadow:none;
+}
+
+/* Pills (contexto) */
+body.theme-light .pill{
+  background:#eef5ff; border-color:var(--border); color:#0b1020; font-weight:600;
+}
+
+/* Chat bubbles */
+body.theme-light .bubble{
+  background:#f3f7ff; border-color:var(--border); color:#0b1020;
+}
+body.theme-light .bubble.me{
+  background:linear-gradient(135deg, rgba(14,165,233,.20), rgba(34,211,238,.18));
+  color:#041018; border-color:rgba(14,165,233,.35); font-weight:600;
+}
+
+/* Hints y tabs */
+body.theme-light .hint{ color:#5b6b8a; }
+body.theme-light #threadTabs .btn{ background:#f3f7ff; }
+body.theme-light #threadTabs .btn.btn-accent{ box-shadow:0 0 0 2px rgba(14,165,233,.28) inset; }
+
+
+/* ---- Ribbon: DÓNDE ESTÁS ---- */
+.ctx-now{
+  display:flex; align-items:center; gap:10px;
+  margin:10px 12px 6px; padding:10px 12px;
+  border:1px solid var(--border); border-radius:12px;
+  background:linear-gradient(135deg, rgba(14,165,233,.18), rgba(6,182,212,.16));
+  box-shadow:0 4px 12px rgba(2,8,23,.06);
+}
+.ctx-now .dot{width:10px; height:10px; border-radius:999px; background:#06b6d4; box-shadow:0 0 0 3px rgba(6,182,212,.25)}
+.ctx-now .crumbs{display:flex; flex-wrap:wrap; gap:6px}
+.ctx-now .crumb{
+  padding:6px 10px; border-radius:999px; background:#ffffffaa; color:#0f172a;
+  border:1px solid #bae6fd; font-weight:600; font-size:12px;
+}
+
+/* ---- Tabs: CONVERSACIONES ---- */
+.tabs-wrap{padding:6px 12px}
+.tabs-title, .goto-title{font-size:12px; color:var(--muted); margin-bottom:6px}
+.tabs{display:flex; flex-wrap:wrap; gap:8px}
+.tab{
+  padding:6px 10px; border:1px solid var(--border); border-radius:999px;
+  background:#f1f5f9; color:#0f172a; font-size:12px; cursor:pointer;
+}
+.theme-light .tab{background:#eef2f7}
+.tab.active{
+  background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%);
+  color:#001018; border:0; font-weight:800; box-shadow:0 0 0 2px rgba(6,182,212,.25) inset;
+}
+
+/* ---- Chips: IR A… ---- */
+.goto{display:flex; flex-wrap:wrap; gap:8px; padding-bottom:6px}
+.goto .chip{
+  padding:6px 10px; border:1px dashed var(--border); border-radius:10px;
+  background:#ffffff; color:#0f172a; font-size:12px; cursor:pointer;
+}
+.theme-light .goto .chip{background:#fff}
+.goto .chip:hover{border-style:solid}
+/* 3 columnas: izquierda (filtros), medio (micrositios/categorías), derecha (chat) */
+.grid{
+  display:grid;
+  grid-template-columns: 360px 360px 1fr;
+  gap:18px;
+}
+@media (max-width: 1200px){
+  .grid{ grid-template-columns: 340px 1fr; }
+  .middle-panel{ order: 2; }  /* se irá debajo del panel izquierdo */
+  .chat{ order: 3; }
+}
+@media (max-width: 900px){
+  .grid{ grid-template-columns: 1fr; }
+  .middle-panel, .chat { order: initial; }
+}
+/* ==== Identidades (aislado con prefijo id-) ==== */
+.id-card{
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding:12px;
+  box-shadow: var(--shadow);
+}
+.id-card h4{ margin:0 0 8px 0; }
+
+.id-accordion{ display:grid; gap:10px; }
+.id-item{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background: var(--panel);
+  padding:6px 8px;
+}
+.id-summary{
+  list-style:none;
+  display:flex; align-items:center; gap:8px;
+  cursor:pointer; padding:6px; border-radius:10px;
+}
+.id-summary::-webkit-details-marker{ display:none; }
+.id-chev{ transition: transform .18s ease; font-size:12px; opacity:.9; }
+.id-item[open] .id-chev{ transform: rotate(90deg); }
+
+.id-name{ font-weight:700; }
+.id-badge{
+  margin-left:auto;
+  padding:4px 8px; border:1px solid var(--border);
+  border-radius:999px; font-size:12px;
+}
+.id-body{
+  margin:8px 6px; display:flex; flex-wrap:wrap; gap:8px;
+}
+.id-field{
+  padding:6px 10px; border:1px solid var(--border);
+  border-radius:10px; background:#0b1222;
+}
+.theme-light .id-field{ background:#f8fafc; }
+
+.id-actions{ margin:6px; display:flex; gap:8px; flex-wrap:wrap; }
+
+
+/* Sub-cards de categorías dentro de cada Ámbito */
+.subcards{ display:grid; gap:10px; margin-top:10px; }
+.subcard{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--panel);
+  padding:10px;
+}
+.subcard-head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:8px; font-weight:700;
+}
+.subcard-body .item{ background:transparent; }
+.theme-light .subcard{ background:#f8fafc; }
+
+
+/* === Selección de contexto en panel del medio === */
+.is-active-ambito{
+  box-shadow: 0 0 0 2px rgba(0,234,255,.45) inset, 0 8px 24px rgba(0,0,0,.25);
+  border-color: rgba(0,234,255,.65);
+}
+.is-active-subcard{
+  box-shadow: 0 0 0 2px rgba(0,234,255,.35) inset;
+  border-color: rgba(0,234,255,.55);
+}
+.is-active-item{
+  background: linear-gradient(135deg, rgba(0,234,255,.22), rgba(103,217,255,.18));
+  box-shadow: 0 0 0 2px rgba(0,234,255,.45) inset;
+  border-color: rgba(0,234,255,.55);
+}
+
+/* Extras para que “salte” visualmente */
+.subcard .btn.is-active-item { filter: saturate(1.2); }
+.subcard .mini-card.is-active-item .mini-title { font-weight: 800; }
+
+
+
+
+/* === Badge de contexto (chat derecho) === */
+.ctx-badge{
+  padding:8px 12px;
+}
+.ctx-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.14);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 12px; font-weight:700;
+}
+.theme-light .ctx-pill{ background:#eef2f7; }
+.ctx-dot{
+  width:10px; height:10px; border-radius:999px;
+  background:var(--accent);
+  box-shadow:0 0 0 3px rgba(6,182,212,.25);
+}
+
+
+
+
+
+
+
+/* ====== Layout del panel de chat ====== */
+.chat{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* Cuerpo de mensajes */
+.msgs{
+  flex:1;
+  overflow-y:auto;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(15,23,42,.45), rgba(2,8,23,.55));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Scrollbar sutil */
+.msgs::-webkit-scrollbar{ width:8px; }
+.msgs::-webkit-scrollbar-thumb{
+  background:rgba(148,163,184,.35);
+  border-radius:999px;
+}
+.msgs::-webkit-scrollbar-track{ background:transparent; }
+
+/* Input de chat: fila, botón de altura fija */
+.chat-input{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 0 0;
+}
+.chat-input input{
+  flex:1;
+  height:40px;
+  border-radius:12px;
+  padding:0 12px;
+}
+.chat-input .btn{
+  height:40px;             /* evita “botón columna” */
+  padding:0 16px;
+  border-radius:12px;
+}
+
+/* ====== Burbujas ====== */
+.bubble{
+  display:inline-block;
+  max-width:72%;
+  margin:8px 0;
+  padding:10px 12px;
+  border-radius:14px 14px 14px 6px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.08);
+  line-height:1.25;
+}
+.bubble.me{
+  margin-left:auto;
+  border-radius:14px 14px 6px 14px;
+  background:linear-gradient(135deg, rgba(34,211,238,.28), rgba(59,130,246,.28));
+  border:1px solid rgba(56,189,248,.45);
+  color:#e6f9ff;
+}
+
+/* Badge de contexto (arriba del chat si lo usas) */
+.ctx-badge{ padding:8px 0 10px; }
+.ctx-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.14);
+  border:1px solid var(--border);
+  border-radius:999px; padding:6px 12px; font-weight:700;
+}
+.ctx-dot{
+  width:10px; height:10px; border-radius:999px;
+  background:var(--accent);
+  box-shadow:0 0 0 3px rgba(6,182,212,.25);
+}
+
+  </style>
 </head>
 <body>
-  <h1 style="color: aliceblue;">Cargar lugar del Sheet</h1>
 
-  <select id="pais" name="pais">
-    <option value="">Seleccione un lugar</option>
-    <option value="argentina">Argentina</option>
-    <option value="canada">Canadá</option>
-    <option value="francia">Francia</option>
-    <option value="italia">Italia</option>
-    <option value="estados_unidos">Estados Unidos</option>
-    <option value="alemania">Alemania</option>
-    <option value="barcelona">barcelona</option>
-    <option value="perugia">perugia</option>
-    <option value="poznan">poznan</option>
-    <option value="spoleto">spoleto</option>
-    <option value="cerdenia">cerdenia</option>
-  </select>
+  <!-- NAVBAR -->
+  <div class="nav">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>DPIA · Chat Contextual</span>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center">
+      <span class="pill">MVP de interfaz</span>
+      <button id="toggleTheme" class="btn">☀️ Claro / 🌙 Oscuro</button>
+
+      <button id="btnGoChat" class="btn btn-accent">💬 Ir al chat</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid">
+
+     <!-- Identidades (colapsables) — bloque aislado -->
+<div class="id-card">
+  <h4>Identidades</h4>
+  <div class="panel-header">
+          <div class="search" style="flex:1">
+            <span>🔎</span>
+            <input id="q" placeholder="Buscar por teléfono +E.164, @alias o nombre…  Ej: +54938385478 o @DrPeralta">
+          </div>
+          <button id="btnSearch" class="btn">Buscar</button>
+        </div>
+
+  <div class="id-accordion">
+    <!-- 1) Carlos Peralta -->
+    <details class="id-item">
+      <summary class="id-summary">
+        <span class="id-chev">▶</span>
+        <span class="id-name">👤 Dr. Carlos Peralta</span>
+        <span class="id-badge">verificado</span>
+      </summary>
+      <div class="id-body">
+        <span class="id-field">📞 +54938385478</span>
+        <span class="id-field">@DrPeralta</span>
+        <span class="id-field">🌐 drperalta.salud.dpia.site</span>
+      </div>
+      <div class="id-actions">
+        <button class="btn btn-accent"
+          data-scope='{"micrositio":"salud","idioma":"es"}'
+          onclick="chatHere(this)">Chatear aquí</button>
+        <button class="btn btn-ghost"
+          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+      </div>
+    </details>
+
+    <!-- 2) Valeria Ceballos -->
+    <details class="id-item">
+      <summary class="id-summary">
+        <span class="id-chev">▶</span>
+        <span class="id-name">👤 Valeria Ceballos</span>
+        <span class="id-badge">verificado</span>
+      </summary>
+      <div class="id-body">
+        <span class="id-field">📞 +54935157885478</span>
+        <span class="id-field">@ValeriaCeballos</span>
+        <span class="id-field">🌐 valeria.tramites.dpia.site</span>
+      </div>
+      <div class="id-actions">
+        <button class="btn btn-accent"
+          data-scope='{"micrositio":"salud","idioma":"es"}'
+          onclick="chatHere(this)">Chatear aquí</button>
+        <button class="btn btn-ghost"
+          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+      </div>
+    </details>
+
+    <!-- 3) Dr. Ola -->
+    <details class="id-item">
+      <summary class="id-summary">
+        <span class="id-chev">▶</span>
+        <span class="id-name">👤 Dr. Ola</span>
+        <span class="id-badge">verificado</span>
+      </summary>
+      <div class="id-body">
+        <span class="id-field">📞 +599838385478</span>
+        <span class="id-field">@DrOla</span>
+        <span class="id-field">🌐 drola.salud.dpia.site</span>
+      </div>
+      <div class="id-actions">
+        <button class="btn btn-accent"
+          data-scope='{"micrositio":"salud","idioma":"es"}'
+          onclick="chatHere(this)">Chatear aquí</button>
+        <button class="btn btn-ghost"
+          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+      </div>
+    </details>
+  </div>
+</div>
 
 
 
-    <select id="ArchivosCargados" name="ArchivosCargados">
-     <option value="">Seleccione un Archivo</option>    
-    </select>
-
-    <button id="btnEliminarArchivo" class="btn btn-danger ms-2" disabled>Eliminar Archivo</button>
-
-  <br><br>
-
- 
- <button id="btn-scrapear" style="display: block; margin-bottom: 10px;">🔍 Ejecutar scraping Apify</button>
-<button id="btn-scrapear-imagenes" style="display: block; margin-bottom: 10px;">🧠 Ejecutar scraping Para imágenes</button>
-<button id="btn-cargar-sheet" style="display: block;">📥 Cargar de Scrapeado</button>
 
 
-  <div id="resultado" style="margin-top: 20px;"></div>
 
+
+<!-- PANEL INTERMEDIO: Ámbitos (una tarjeta por ámbito) -->
+<div class="panel middle-panel">
+  <div class="cards">
+
+    
+    <div class="card ambito-card">
+  <h4>Ámbito · Salud</h4>
+  <div class="list">
+    <span class="item">🏥 Estado: activo</span>
+    <span class="item">🌐 Idioma: es</span>
+    <span class="item">📍 CP: 28080</span>
+  </div>
+
+
+<details class="ambito">
+  <summary class="ambito-summary">
+   
+    <span class="ambito-title">Ámbito · Salud</span>
+  </summary>
+
+
+  <div class="subcards">
+    <!-- Categoría: Médicos -->
+    <div class="subcard">
+      <div class="subcard-head">
+        <span>💬 Médicos</span>
+        <button class="btn"
+          data-scope='{"ambito":"salud","categoria":"medicos","cp":"28080","idioma":"es"}'
+          onclick="chatHere(this)">Chatear en Médicos</button>
+      </div>
+
+      <!-- Mini-cards (cada item es tarjeta) -->
+      <div class="mini-grid">
+        <div class="mini-card">
+          <span class="mini-title">Consultas presenciales</span>
+          <div class="mini-actions">
+            <button class="btn"
+              data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"consultas_presenciales","cp":"28080","idioma":"es"}'
+              onclick="chatHere(this)">Chatear</button>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <span class="mini-title">Telemedicina</span>
+          <div class="mini-actions">
+            <button class="btn"
+              data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"telemedicina","cp":"28080","idioma":"es"}'
+              onclick="chatHere(this)">Chatear</button>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <span class="mini-title">Turnos online</span>
+          <div class="mini-actions">
+            <button class="btn"
+              data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"turnos_online","cp":"28080","idioma":"es"}'
+              onclick="chatHere(this)">Chatear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categoría: Equipos -->
+    <div class="subcard">
+      <div class="subcard-head">
+        <span>🩺 Equipos</span>
+        <button class="btn"
+          data-scope='{"ambito":"salud","categoria":"equipos","idioma":"es"}'
+          onclick="chatHere(this)">Chatear en Equipos</button>
+      </div>
+
+      <div class="mini-grid">
+        <div class="mini-card">
+          <span class="mini-title">Oxímetros</span>
+          <div class="mini-actions">
+            <button class="btn"
+              data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"oximetros","idioma":"es"}'
+              onclick="chatHere(this)">Chatear</button>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <span class="mini-title">Tensiómetros</span>
+          <div class="mini-actions">
+            <button class="btn"
+              data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"tensiometros","idioma":"es"}'
+              onclick="chatHere(this)">Chatear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</details>
+
+
+
+
+<div class="card ambito-card">
+  <h4>Ámbito · Tecnología</h4>
+  <div class="list">
+    <span class="item">📱 Estado: activo</span>
+    <span class="item">🌐 Idioma: es</span>
+    <span class="item">📍 CP: 28080</span>
+  </div>
+
+
+
+<details class="ambito">
+  <summary class="ambito-summary">
+   
+    <span class="ambito-title">Ámbito · Tecnología</span>
+  </summary>
+
+
+
+  <div class="subcards">
+    <div class="subcard">
+      <div class="subcard-head">
+        <span>📦 Telefonía</span>
+        <button class="btn"
+          data-scope='{"ambito":"tecnologia","categoria":"telefonia","cp":"28080","idioma":"es"}'
+          onclick="chatHere(this)">Chatear en Telefonía</button>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-card"><span class="mini-title">Smartphones</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"telefonia","subcategoria":"smartphones","cp":"28080","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+        <div class="mini-card"><span class="mini-title">Accesorios</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"telefonia","subcategoria":"accesorios","cp":"28080","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+        <div class="mini-card"><span class="mini-title">Soporte técnico</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"telefonia","subcategoria":"soporte","cp":"28080","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+      </div>
+    </div>
+
+    <div class="subcard">
+      <div class="subcard-head">
+        <span>🖥️ Informática</span>
+        <button class="btn"
+          data-scope='{"ambito":"tecnologia","categoria":"informatica","idioma":"es"}'
+          onclick="chatHere(this)">Chatear en Informática</button>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-card"><span class="mini-title">PCs</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"informatica","subcategoria":"pcs","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+        <div class="mini-card"><span class="mini-title">Periféricos</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"informatica","subcategoria":"perifericos","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+        <div class="mini-card"><span class="mini-title">Reparaciones</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"informatica","subcategoria":"reparaciones","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</details>
+
+
+
+
+<div class="card ambito-card">
+  <h4>Ámbito · Turismo</h4>
+  <div class="list">
+    <span class="item">🧳 Estado: presencia</span>
+    <span class="item">🌐 Idioma: es</span>
+    <span class="item">📍 CP: 00138</span>
+  </div>
+
+
+<details class="ambito">
+  <summary class="ambito-summary">
+   
+    <span class="ambito-title">Ámbito · Tecnología</span>
+  </summary>
+
+
+
+  <div class="subcards">
+    <div class="subcard">
+      <div class="subcard-head">
+        <span>🛫 Paquetes</span>
+        <button class="btn"
+          data-scope='{"ambito":"turismo","categoria":"paquetes","cp":"00138","idioma":"es"}'
+          onclick="chatHere(this)">Chatear en Paquetes</button>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-card"><span class="mini-title">Escapadas</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"paquetes","subcategoria":"escapadas","cp":"00138","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+        <div class="mini-card"><span class="mini-title">Tours guiados</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"paquetes","subcategoria":"tours_guiados","cp":"00138","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+      </div>
+    </div>
+
+    <div class="subcard">
+      <div class="subcard-head">
+        <span>🏨 Hospedaje</span>
+        <button class="btn"
+          data-scope='{"ambito":"turismo","categoria":"hospedaje","idioma":"es"}'
+          onclick="chatHere(this)">Chatear en Hospedaje</button>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-card"><span class="mini-title">Hoteles</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"hospedaje","subcategoria":"hoteles","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+        <div class="mini-card"><span class="mini-title">Deptos temporarios</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"hospedaje","subcategoria":"deptos_temporarios","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</details>
+
+  </div>
+</div>
+
+<!-- DERECHA: CHAT (limpio) -->
+<!-- DERECHA: CHAT — minimal, sin tabs ni breadcrumb -->
+<div class="chat">
+  <!-- Label de contexto actual -->
+<div id="ctxBadge" class="ctx-badge"></div>
+
+  <div class="msgs" id="msgs">
+    <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
+      <div>
+        <div style="font-size:28px; line-height:1">💬</div>
+        <div style="margin-top:6px">Elegí un ámbito/categoría en el panel del medio y tocá <b>“Chatear”</b>.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input id="msgText" placeholder="Escribí un mensaje…">
+    <button class="btn btn-accent" id="sendBtn">Enviar</button>
+  </div>
+</div>
+
+
+
+
+    <!-- TUS HERRAMIENTAS EXISTENTES (quedan intactas) -->
+    <div class="tools">
+      <h3 style="margin:0 0 10px">Cargar lugar del Sheet</h3>
+
+      <select id="pais" name="pais">
+        <option value="">Seleccione un lugar</option>
+        <option value="argentina">Argentina</option>
+        <option value="canada">Canadá</option>
+        <option value="francia">Francia</option>
+        <option value="italia">Italia</option>
+        <option value="estados_unidos">Estados Unidos</option>
+        <option value="alemania">Alemania</option>
+        <option value="barcelona">barcelona</option>
+        <option value="perugia">perugia</option>
+        <option value="poznan">poznan</option>
+        <option value="spoleto">spoleto</option>
+        <option value="cerdenia">cerdenia</option>
+      </select>
+
+      <select id="ArchivosCargados" name="ArchivosCargados">
+        <option value="">Seleccione un Archivo</option>
+      </select>
+      <button id="btnEliminarArchivo" class="btn btn-danger ms-2" disabled>Eliminar Archivo</button>
+
+      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+        <button id="btn-scrapear">🔍 Ejecutar scraping Apify</button>
+        <button id="btn-scrapear-imagenes">🧠 Ejecutar scraping Para imágenes</button>
+        <button id="btn-cargar-sheet">📥 Cargar de Scrapeado</button>
+      </div>
+
+      <div id="resultado"></div>
+    </div>
+  </div>
+
+<script>
+
+
+
+
+  function renderCtxBadge(){
+  const el = document.getElementById('ctxBadge');
+  if (!el) return;
+  const scope = threads[activeThreadId]?.scope || {};
+  // Orden y nombres legibles
+  const order = ['ambito','categoria','subcategoria','micrositio','cp','idioma','query','publicacion_id'];
+  const nice = {
+    ambito: 'ámbito', categoria:'categoría', subcategoria:'subcategoría',
+    micrositio:'micrositio', cp:'CP', idioma:'idioma', query:'búsqueda', publicacion_id:'pub'
+  };
+  const parts = [];
+  for (const k of order){
+    if (scope[k] != null) parts.push(`${nice[k]||k}: ${scope[k]}`);
+  }
+  const label = parts.length ? parts.join(' · ') : 'default';
+  el.innerHTML = `<span class="ctx-pill"><span class="ctx-dot"></span>${label}</span>`;
+}
+
+/* ===================== TEMA (light/dark) ===================== */
+(function initTheme(){
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') document.body.classList.add('theme-light');
+  if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    document.body.classList.add('theme-light');
+  }
+  const btn = document.getElementById('toggleTheme');
+  if (btn) btn.addEventListener('click', () => {
+    document.body.classList.toggle('theme-light');
+    localStorage.setItem('theme', document.body.classList.contains('theme-light') ? 'light' : 'dark');
+  });
+})();
+
+/* ===================== CHAT: ESTADO ===================== */
+const threads = {};              // { id: { scope, messages: [], title } }
+let activeThreadId = null;
+
+/* ===================== HELPERS ===================== */
+function scopeKey(scope){
+  if (!scope || Object.keys(scope).length === 0) return 'default';
+  const o = {}; Object.keys(scope).sort().forEach(k => o[k] = scope[k]);
+  return 'ctx:' + btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+}
+function scopeTitle(scope){
+  if (!scope || Object.keys(scope).length === 0) return 'default';
+  return Object.entries(scope).map(([k,v]) => `${k}:${v}`).join(' · ');
+}
+function ensureThread(scope){
+  const id = scopeKey(scope);
+  if (!threads[id]) threads[id] = { scope: scope ? {...scope} : {}, messages: [], title: scopeTitle(scope) };
+  return id;
+}
+
+/* ===================== RENDER ===================== */
+
+function renderMessages(){
+  const box = document.getElementById('msgs'); box.innerHTML='';
+  const msgs = threads[activeThreadId]?.messages || [];
+  msgs.forEach(m=>{
+    const b = document.createElement('div');
+    b.className = 'bubble' + (m.me ? ' me' : '');
+    b.textContent = m.text;
+    box.appendChild(b);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+function setActiveThread(id){
+  activeThreadId = id;
+  renderCtxBadge();   // <-- muestra “default” o el contexto actual
+  renderMessages();   // solo mensajes
+}
+
+
+
+/* ===================== ACCIONES ===================== */
+function pushMsg(text, me=false){
+  if (!activeThreadId) setActiveThread(ensureThread(null));
+  threads[activeThreadId].messages.push({ text, me, ts: Date.now() });
+  renderMessages();
+}
+window.chatHere = function(btn){
+  try{
+    const scope = JSON.parse(btn.getAttribute('data-scope') || '{}');
+    const id = ensureThread(scope);
+    setActiveThread(id);
+
+    // ==== LIMPIAR MARCAS PREVIAS SOLO EN EL PANEL DEL MEDIO ====
+    document.querySelectorAll('.ambito, .ambito-card').forEach(el => el.classList.remove('is-active-ambito'));
+    document.querySelectorAll('.subcard').forEach(el => el.classList.remove('is-active-subcard'));
+    document.querySelectorAll('.mini-card, .subcard .btn').forEach(el => el.classList.remove('is-active-item'));
+
+    // ==== MARCAR JERARQUÍA ACTUAL ====
+    // Item (mini-card o botón dentro de subcard)
+    const mini = btn.closest('.mini-card');
+    if (mini) mini.classList.add('is-active-item');
+    // Si es un botón directo de subcard, marcalo como item activo
+    if (btn.closest('.subcard') && !mini) btn.classList.add('is-active-item');
+
+    // Categoría (subcard)
+    const subcard = btn.closest('.subcard');
+    if (subcard) subcard.classList.add('is-active-subcard');
+
+    // Ámbito
+    const ambito = btn.closest('.ambito, .ambito-card');
+    if (ambito) ambito.classList.add('is-active-ambito');
+
+    // ==== SCROLL A LA VISTA PARA QUE SE NOTE ====
+    (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
+
+  }catch(e){
+    console.error(e);
+    Swal.fire('Error', 'Scope inválido', 'error');
+  }
+};
+
+
+window.elevateScope = function(){
+  Swal.fire({
+    title:'Nuevo contexto',
+    html:`<input id="sc1" class="swal2-input" placeholder="clave:valor">
+          <input id="sc2" class="swal2-input" placeholder="otra:valor">`,
+    focusConfirm:false,
+    preConfirm:()=>{
+      const p=v=>v.includes(':') ? v.split(':',2) : null;
+      const a=p((document.getElementById('sc1').value||'').trim());
+      const b=p((document.getElementById('sc2').value||'').trim());
+      const s={}; if(a) s[a[0]]=a[1]; if(b) s[b[0]]=b[1]; return s;
+    }
+  }).then(res=>{
+    if(res.isConfirmed){
+      const id = ensureThread(res.value);
+      setActiveThread(id);
+      // (sin logs de sistema)
+    }
+  });
+};
+window.clearScope = function(){
+  setActiveThread(ensureThread(null));
+  // (sin logs de sistema)
+};
+
+/* ===================== HANDLERS UI ===================== */
+document.getElementById('sendBtn').addEventListener('click', ()=>{
+  const t = document.getElementById('msgText');
+  const msg = t.value.trim();
+  if (!msg) return;
+  pushMsg(msg, true);
+  t.value='';
+  // (sin eco automático)
+});
+document.getElementById('btnSearch').addEventListener('click', ()=>{
+  const q=(document.getElementById('q').value||'').trim();
+  if(!q) return Swal.fire('Buscar','Ingresá teléfono +E.164, @alias o nombre','info');
+  // (sin logs de sistema)
+  if(q.startsWith('+') || q.startsWith('@')){
+    const scope = { query:q };
+    const id = ensureThread(scope);
+    setActiveThread(id);
+  }
+});
+
+/* ===================== INIT ===================== */
+(function init(){
+  setActiveThread(ensureThread(null));
+  // (sin tip en mensajes)
+})();
+</script>
+
+  <!-- Tus scripts existentes -->
   <script src="{{ url_for('static', filename='scrape_amazon.js') }}"></script>
   <script src="{{ url_for('static', filename='resultado_carga.js') }}"></script>
-
 </body>
 </html>
