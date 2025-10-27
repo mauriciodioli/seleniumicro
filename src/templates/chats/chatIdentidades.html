@@ -10,68 +10,77 @@
   <!-- PANEL BUSQUEDA POR USUARIO O AMBITO: CHAT (limpio) -->
   {% include 'chats/busquedas/busquedaAmbito.html' %}
   <div class="id-accordion">
-    <!-- 1) Carlos Peralta -->
-    <details class="id-item">
-      <summary class="id-summary">
-        <span class="id-chev">▶</span>
-        <span class="id-name">👤 Dr. Carlos Peralta</span>
-        <span class="id-badge">verificado</span>
-      </summary>
-      <div class="id-body">
-        <span class="id-field">📞 +54938385478</span>
-        <span class="id-field">@DrPeralta</span>
-        <span class="id-field">🌐 drperalta.salud.dpia.site</span>
-      </div>
-      <div class="id-actions">
-        <button class="btn btn-accent"
-          data-scope='{"micrositio":"salud","idioma":"es"}'
-          onclick="chatHere(this)">Chatear aquí</button>
-        <button class="btn btn-ghost"
-          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-      </div>
-    </details>
+    
+ <!-- 1) Carlos Peralta -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrPeralta","tel":"+54938385478"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Dr. Carlos Peralta</span>
+    <span class="id-badge">verificado</span>
+  </summary>
 
-    <!-- 2) Valeria Ceballos -->
-    <details class="id-item">
-      <summary class="id-summary">
-        <span class="id-chev">▶</span>
-        <span class="id-name">👤 Valeria Ceballos</span>
-        <span class="id-badge">verificado</span>
-      </summary>
-      <div class="id-body">
-        <span class="id-field">📞 +54935157885478</span>
-        <span class="id-field">@ValeriaCeballos</span>
-        <span class="id-field">🌐 valeria.tramites.dpia.site</span>
-      </div>
-      <div class="id-actions">
-        <button class="btn btn-accent"
-          data-scope='{"micrositio":"salud","idioma":"es"}'
-          onclick="chatHere(this)">Chatear aquí</button>
-        <button class="btn btn-ghost"
-          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-      </div>
-    </details>
+  <div class="id-body">
+    <span class="id-field">📞 +54938385478</span>
+    <span class="id-field">@DrPeralta</span>
+    <span class="id-field">🌐 drperalta.salud.dpia.site</span>
+  </div>
 
-    <!-- 3) Dr. Ola -->
-    <details class="id-item">
-      <summary class="id-summary">
-        <span class="id-chev">▶</span>
-        <span class="id-name">👤 Dr. Ola</span>
-        <span class="id-badge">verificado</span>
-      </summary>
-      <div class="id-body">
-        <span class="id-field">📞 +599838385478</span>
-        <span class="id-field">@DrOla</span>
-        <span class="id-field">🌐 drola.salud.dpia.site</span>
-      </div>
-      <div class="id-actions">
-        <button class="btn btn-accent"
-          data-scope='{"micrositio":"salud","idioma":"es"}'
-          onclick="chatHere(this)">Chatear aquí</button>
-        <button class="btn btn-ghost"
-          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-      </div>
-    </details>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrPeralta","tel":"+54938385478"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost"
+            onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+<!-- 2) Valeria Ceballos -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"salud","idioma":"es","alias":"@ValeriaCeballos","tel":"+54935157885478"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Valeria Ceballos</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+
+  <div class="id-body">
+    <span class="id-field">📞 +54935157885478</span>
+    <span class="id-field">@ValeriaCeballos</span>
+    <span class="id-field">🌐 valeria.tramites.dpia.site</span>
+  </div>
+
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"salud","idioma":"es","alias":"@ValeriaCeballos","tel":"+54935157885478"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 3) Dr. Ola -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrOla","tel":"+599838385478"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Dr. Ola</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+
+  <div class="id-body">
+    <span class="id-field">📞 +599838385478</span>
+    <span class="id-field">@DrOla</span>
+    <span class="id-field">🌐 drola.salud.dpia.site</span>
+  </div>
+
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrOla","tel":"+599838385478"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+
   </div>
 </div>
 

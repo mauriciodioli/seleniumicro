@@ -63,3 +63,5 @@ details[open] .id-chev{ transform:rotate(90deg); }
 
 /* Quita bordes y radios del contenedor padre de la columna si tuviera */
 .col-identidades > *{ border-radius:0 !important; }
+
+

@@ -1,0 +1,20 @@
+/* Chat header con flecha fija */
+.chat{ display:flex; flex-direction:column; }
+.chat-head{
+  display:flex; align-items:center; gap:8px;
+  padding:8px 10px; border-bottom:1px solid var(--border);
+}
+.toggle-ambitos{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:32px; height:32px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:#0b1426;
+  color:#cbd5e1;
+  cursor:pointer;
+}
+
+/* (opcional) en mobile solo cambiás el icono vía JS, no el estilo */
+@media (max-width:768px){
+  /* sin cambios de layout necesarios */
+}

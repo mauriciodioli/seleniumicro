@@ -1,8 +1,11 @@
 <div class="chat">
-  <button id="ambitosHandle" class="ambitos-handle hidden" title="Mostrar ámbitos">⟶</button>
-  <!-- Label de contexto actual -->
-<div id="ctxBadge" class="ctx-badge"></div>
+  <!-- Header del chat: flecha + badge -->
+  <div class="chat-head">
+    <button id="toggleAmbitos" class="toggle-ambitos" aria-label="Colapsar ámbitos">⟵</button>
+    <div id="ctxBadge" class="ctx-badge">default</div>
+  </div>
 
+  <!-- Mensajes -->
   <div class="msgs" id="msgs">
     <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
       <div>
@@ -12,12 +15,12 @@
     </div>
   </div>
 
+  <!-- Input -->
   <div class="chat-input">
     <input id="msgText" placeholder="Escribí un mensaje…">
     <button class="btn btn-accent" id="sendBtn">Enviar</button>
   </div>
 </div>
-
 
 
     <!-- TUS HERRAMIENTAS EXISTENTES (quedan intactas) -->
@@ -53,3 +56,5 @@
       <div id="resultado"></div>
     </div>
   </div>
+
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
