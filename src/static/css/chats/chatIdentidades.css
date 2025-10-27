@@ -1,0 +1,511 @@
+
+    :root{
+      --bg:#0f172a;           /* slate-900 */
+      --panel:#111827ee;      /* gray-900 */
+      --card:#0b1222;         /* azul neón dark */
+      --muted:#9aa4b2;
+      --accent:#38bdf8;       /* sky-400 */
+      --accent-2:#22d3ee;     /* cyan-400 */
+      --ok:#22c55e;           /* green-500 */
+      --danger:#ef4444;       /* red-500 */
+      --border:rgba(255,255,255,.08);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(135deg,#0b1222 0%, #0f172a 60%, #111827 100%);
+      color:#e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+    }
+    /* Navbar */
+    .nav{
+      position:sticky; top:0; z-index:100;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding:14px 18px; background:#0b1020cc; backdrop-filter: blur(6px); border-bottom:1px solid var(--border);
+    }
+    .nav .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.3px}
+    .nav .brand .dot{width:10px; height:10px; border-radius:99px; background:conic-gradient(from 0deg,var(--accent),var(--accent-2)); box-shadow:0 0 12px var(--accent)}
+    .btn{
+      appearance:none; border:1px solid var(--border); background:#0f1a2f; color:#eaf3ff;
+      padding:10px 14px; border-radius:12px; cursor:pointer; box-shadow: var(--shadow); transition:.18s ease;
+    }
+    .btn:hover{transform: translateY(-1px); border-color:#1f2a44}
+    .btn-accent{background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%); color:#001018; border:0; font-weight:700}
+    .btn-ghost{background:transparent}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--border);
+      border-radius:999px; color:#cfe7ff; background:#0c1527; font-size:.9rem;
+    }
+
+    /* Layout principal */
+    .wrap{max-width:1200px; margin:18px auto; padding:0 16px;}
+    .grid{
+      display:grid; grid-template-columns: 380px 1fr; gap:18px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    /* Panel izquierdo */
+    .panel{
+      border:1px solid var(--border); border-radius: var(--radius); background: #0d1426; box-shadow: var(--shadow); overflow:hidden;
+    }
+    .panel-header{
+      padding:14px; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:center; justify-content:space-between;
+      background:linear-gradient(180deg,#0f1a31 0%, #0d1426 100%);
+    }
+    .search{
+      display:flex; gap:8px; align-items:center; width:100%;
+      background:#091127; border:1px solid var(--border); border-radius:12px; padding:8px 10px;
+    }
+    .search input{
+      width:100%; background:transparent; border:0; outline:0; color:#e5f0ff; font-size:14px;
+    }
+
+    .cards{padding:14px; display:grid; gap:12px}
+    .card{
+      border:1px solid var(--border); border-radius:14px; background: radial-gradient(1200px 180px at 0% 0%, rgba(56,189,248,.14), transparent 40%), #0a1324;
+      padding:12px;
+    }
+    .card h4{margin:0 0 8px 0; font-size:14px; color:#cde8ff; letter-spacing:.2px}
+    .badge{display:inline-block; padding:4px 8px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:#cdd7e5; margin:0 6px 6px 0}
+    .list{display:flex; flex-wrap:wrap; gap:8px}
+    .list .item{
+      padding:8px 10px; background:#0b1222; border:1px solid var(--border); border-radius:10px; font-size:13px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .row-actions{display:flex; gap:8px; margin-top:10px}
+
+    /* Chat a la derecha */
+    .chat{
+      display:grid; grid-template-rows: auto auto 1fr auto; gap:10px;
+      border:1px solid var(--border); border-radius: var(--radius); background:#0d1426; box-shadow: var(--shadow); min-height:560px;
+    }
+    .chat-head{padding:12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; justify-content:space-between}
+    .ctx{display:flex; flex-wrap:wrap; gap:8px}
+    .msgs{
+      padding:14px; overflow:auto; display:flex; flex-direction:column; gap:10px; background:
+        radial-gradient(1000px 120px at 0% 0%, rgba(34,211,238,.06), transparent 40%),
+        radial-gradient(1000px 120px at 100% 0%, rgba(56,189,248,.06), transparent 40%);
+    }
+    .bubble{
+      max-width: 78%; padding:10px 12px; border-radius:14px; border:1px solid var(--border);
+      background:#0b1222; line-height:1.35; font-size:14px;
+    }
+    .me{align-self:flex-end; background: linear-gradient(135deg, rgba(56,189,248,.25), rgba(34,211,238,.2));}
+    .meta{font-size:12px; color:var(--muted); margin-top:4px}
+    .chat-input{padding:12px; border-top:1px solid var(--border); display:flex; gap:8px}
+    .chat-input input{flex:1; border:1px solid var(--border); background:#0b1222; color:#eaf3ff; padding:10px 12px; border-radius:12px; outline:0}
+    .hint{color:var(--muted); font-size:12px}
+
+    /* Zona existente de tu página */
+    .tools{
+      margin-top:24px; border:1px dashed var(--border); border-radius:14px; padding:14px; background:#0a1222;
+    }
+    label, select, option{color:#eaf3ff}
+    select, button{background:#0b1222; border:1px solid var(--border); border-radius:10px; padding:8px 10px}
+    #resultado{margin-top:12px}
+    .btn-danger{background:#2a0b0d; border-color:#3b0f12; color:#ffb3b3}
+    .ms-2{margin-left:.5rem}
+    /* === Alto Contraste DPIA — parche rápido === */
+:root{
+  --bg:#070b13;
+  --panel:#0a1220;          /* más oscuro */
+  --card:#091426;           /* más contraste en cards */
+  --text:#eef4ff;           /* texto principal más claro */
+  --muted:#c1cbe0;          /* texto secundario más legible */
+  --accent:#67d9ff;         /* acentos más brillantes */
+  --accent-2:#00eaff;
+  --ok:#32ff92;
+  --danger:#ff6666;
+  --border:rgba(255,255,255,.22); /* borde más marcado */
+  --shadow:0 14px 36px rgba(0,0,0,.55);
+  --radius:16px;
+}
+
+/* Fondo general un toque más oscuro */
+body{
+  color:var(--text);
+  background:linear-gradient(135deg,#071022 0%, #0a1220 60%, #0b1424 100%);
+}
+
+/* Navbar y paneles con contraste y borde visibles */
+.nav{ background:#091228e6; border-bottom:1px solid var(--border); }
+.panel, .chat{
+  background:var(--panel);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+/* Cards con capa de brillo y bordes más visibles */
+.card{
+  background:
+    radial-gradient(900px 140px at 0% 0%, rgba(103,217,255,.18), transparent 45%),
+    var(--card);
+  border:1px solid rgba(255,255,255,.24);
+}
+.card h4{ color:#e7f2ff; font-weight:700; }
+
+/* Búsqueda: input y placeholder más claros */
+.search{ background:#0a1733; border-color:rgba(255,255,255,.28); }
+.search input{ color:var(--text); }
+.search input::placeholder{ color:#9fb3d9; opacity:1; }
+
+/* Badges/items con línea más clara */
+.badge, .list .item{
+  border-color: rgba(255,255,255,.28);
+  background:#0b1833;
+  color:#e6efff;
+}
+
+/* Botones: texto oscuro en acento y foco visible */
+.btn{ border-color:rgba(255,255,255,.26); background:#0b1731; color:#e8f2ff; }
+.btn:hover{ border-color:#6ccfff; }
+.btn-accent{
+  background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%);
+  color:#02121a; font-weight:800; text-shadow:0 1px 0 rgba(255,255,255,.35);
+  border:0;
+}
+.btn:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
+
+/* Pills (contexto) con mayor contraste */
+.pill{
+  background:#0a1938;
+  border-color:rgba(255,255,255,.30);
+  color:#e9f3ff;
+  font-weight:600;
+}
+
+/* Burbujas de chat: diferencia fuerte entre emisor y receptor */
+.bubble{
+  background:#0a1630;
+  border-color:rgba(255,255,255,.26);
+  color:#eaf2ff;
+}
+.bubble.me{
+  background:linear-gradient(135deg, rgba(103,217,255,.35), rgba(0,234,255,.28));
+  color:#071018; font-weight:600;
+  border-color:rgba(103,217,255,.55);
+}
+
+/* Hints más legibles */
+.hint{ color:var(--muted); }
+
+/* Tabs de hilos: que “salten” visualmente */
+#threadTabs .btn{ background:#0b1731; }
+#threadTabs .btn.btn-accent{ box-shadow:0 0 0 2px rgba(0,234,255,.35) inset; }
+/* ===== DPIA THEME: LIGHT MODE ===== */
+body.theme-light{
+  color:#0b1020;
+  background:linear-gradient(135deg,#f4f7fb 0%, #eef3fa 60%, #e9f0f9 100%);
+}
+
+/* Variables de claro */
+body.theme-light{
+  --bg:#f4f7fb;
+  --panel:#ffffff;
+  --card:#f9fbff;
+  --text:#0b1020;
+  --muted:#5b6b8a;
+  --accent:#0ea5e9;      /* blue-cyan */
+  --accent-2:#22d3ee;
+  --ok:#16a34a;
+  --danger:#dc2626;
+  --border:rgba(2,6,23,.12);  /* borde suave oscuro */
+  --shadow:0 10px 24px rgba(2,6,23,.08);
+}
+
+/* Navbar / paneles */
+body.theme-light .nav{
+  background:#ffffffcc; border-bottom:1px solid var(--border);
+  color:var(--text);
+}
+body.theme-light .panel,
+body.theme-light .chat{
+  background:var(--panel); border:1px solid var(--border); box-shadow:var(--shadow);
+}
+
+/* Cards */
+body.theme-light .card{
+  background:
+    radial-gradient(900px 140px at 0% 0%, rgba(14,165,233,.10), transparent 45%),
+    var(--card);
+  border:1px solid var(--border);
+}
+body.theme-light .card h4{ color:#0b1020; }
+
+/* Buscador */
+body.theme-light .search{ background:#f1f5fb; border-color:var(--border); }
+body.theme-light .search input{ color:#0b1020; }
+body.theme-light .search input::placeholder{ color:#7b8aa3; }
+
+/* Chips y badges */
+body.theme-light .badge, 
+body.theme-light .list .item{
+  border-color:var(--border);
+  background:#f3f7ff;
+  color:#0b1020;
+}
+
+/* Botones */
+body.theme-light .btn{ background:#f3f7ff; border-color:var(--border); color:#0b1020; }
+body.theme-light .btn:hover{ border-color:#94d9f7 }
+body.theme-light .btn-accent{
+  background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%);
+  color:#041018; border:0; text-shadow:none;
+}
+
+/* Pills (contexto) */
+body.theme-light .pill{
+  background:#eef5ff; border-color:var(--border); color:#0b1020; font-weight:600;
+}
+
+/* Chat bubbles */
+body.theme-light .bubble{
+  background:#f3f7ff; border-color:var(--border); color:#0b1020;
+}
+body.theme-light .bubble.me{
+  background:linear-gradient(135deg, rgba(14,165,233,.20), rgba(34,211,238,.18));
+  color:#041018; border-color:rgba(14,165,233,.35); font-weight:600;
+}
+
+/* Hints y tabs */
+body.theme-light .hint{ color:#5b6b8a; }
+body.theme-light #threadTabs .btn{ background:#f3f7ff; }
+body.theme-light #threadTabs .btn.btn-accent{ box-shadow:0 0 0 2px rgba(14,165,233,.28) inset; }
+
+
+/* ---- Ribbon: DÓNDE ESTÁS ---- */
+.ctx-now{
+  display:flex; align-items:center; gap:10px;
+  margin:10px 12px 6px; padding:10px 12px;
+  border:1px solid var(--border); border-radius:12px;
+  background:linear-gradient(135deg, rgba(14,165,233,.18), rgba(6,182,212,.16));
+  box-shadow:0 4px 12px rgba(2,8,23,.06);
+}
+.ctx-now .dot{width:10px; height:10px; border-radius:999px; background:#06b6d4; box-shadow:0 0 0 3px rgba(6,182,212,.25)}
+.ctx-now .crumbs{display:flex; flex-wrap:wrap; gap:6px}
+.ctx-now .crumb{
+  padding:6px 10px; border-radius:999px; background:#ffffffaa; color:#0f172a;
+  border:1px solid #bae6fd; font-weight:600; font-size:12px;
+}
+
+/* ---- Tabs: CONVERSACIONES ---- */
+.tabs-wrap{padding:6px 12px}
+.tabs-title, .goto-title{font-size:12px; color:var(--muted); margin-bottom:6px}
+.tabs{display:flex; flex-wrap:wrap; gap:8px}
+.tab{
+  padding:6px 10px; border:1px solid var(--border); border-radius:999px;
+  background:#f1f5f9; color:#0f172a; font-size:12px; cursor:pointer;
+}
+.theme-light .tab{background:#eef2f7}
+.tab.active{
+  background:linear-gradient(135deg,var(--accent) 0%, var(--accent-2) 100%);
+  color:#001018; border:0; font-weight:800; box-shadow:0 0 0 2px rgba(6,182,212,.25) inset;
+}
+
+/* ---- Chips: IR A… ---- */
+.goto{display:flex; flex-wrap:wrap; gap:8px; padding-bottom:6px}
+.goto .chip{
+  padding:6px 10px; border:1px dashed var(--border); border-radius:10px;
+  background:#ffffff; color:#0f172a; font-size:12px; cursor:pointer;
+}
+.theme-light .goto .chip{background:#fff}
+.goto .chip:hover{border-style:solid}
+/* 3 columnas: izquierda (filtros), medio (micrositios/categorías), derecha (chat) */
+.grid{
+  display:grid;
+  grid-template-columns: 360px 360px 1fr;
+  gap:18px;
+}
+@media (max-width: 1200px){
+  .grid{ grid-template-columns: 340px 1fr; }
+  .middle-panel{ order: 2; }  /* se irá debajo del panel izquierdo */
+  .chat{ order: 3; }
+}
+@media (max-width: 900px){
+  .grid{ grid-template-columns: 1fr; }
+  .middle-panel, .chat { order: initial; }
+}
+/* ==== Identidades (aislado con prefijo id-) ==== */
+.id-card{
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding:12px;
+  box-shadow: var(--shadow);
+}
+.id-card h4{ margin:0 0 8px 0; }
+
+.id-accordion{ display:grid; gap:10px; }
+
+.id-summary{
+  list-style:none;
+  display:flex; align-items:center; gap:8px;
+  cursor:pointer; padding:6px; border-radius:10px;
+}
+.id-summary::-webkit-details-marker{ display:none; }
+.id-chev{ transition: transform .18s ease; font-size:12px; opacity:.9; }
+
+
+.id-name{ font-weight:700; }
+.id-badge{
+  margin-left:auto;
+  padding:4px 8px; border:1px solid var(--border);
+  border-radius:999px; font-size:12px;
+}
+.id-body{
+  margin:8px 6px; display:flex; flex-wrap:wrap; gap:8px;
+}
+.id-field{
+  padding:6px 10px; border:1px solid var(--border);
+  border-radius:10px; background:#0b1222;
+}
+.theme-light .id-field{ background:#f8fafc; }
+
+.id-actions{ margin:6px; display:flex; gap:8px; flex-wrap:wrap; }
+
+
+/* Sub-cards de categorías dentro de cada Ámbito */
+.subcards{ display:grid; gap:10px; margin-top:10px; }
+.subcard{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--panel);
+  padding:10px;
+}
+.subcard-head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:8px; font-weight:700;
+}
+.subcard-body .item{ background:transparent; }
+.theme-light .subcard{ background:#f8fafc; }
+
+
+/* === Selección de contexto en panel del medio === */
+.is-active-ambito{
+  box-shadow: 0 0 0 2px rgba(0,234,255,.45) inset, 0 8px 24px rgba(0,0,0,.25);
+  border-color: rgba(0,234,255,.65);
+}
+.is-active-subcard{
+  box-shadow: 0 0 0 2px rgba(0,234,255,.35) inset;
+  border-color: rgba(0,234,255,.55);
+}
+.is-active-item{
+  background: linear-gradient(135deg, rgba(0,234,255,.22), rgba(103,217,255,.18));
+  box-shadow: 0 0 0 2px rgba(0,234,255,.45) inset;
+  border-color: rgba(0,234,255,.55);
+}
+
+/* Extras para que “salte” visualmente */
+.subcard .btn.is-active-item { filter: saturate(1.2); }
+.subcard .mini-card.is-active-item .mini-title { font-weight: 800; }
+
+
+
+
+/* === Badge de contexto (chat derecho) === */
+.ctx-badge{
+  padding:8px 12px;
+}
+.ctx-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.14);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 12px; font-weight:700;
+}
+.theme-light .ctx-pill{ background:#eef2f7; }
+.ctx-dot{
+  width:10px; height:10px; border-radius:999px;
+  background:var(--accent);
+  box-shadow:0 0 0 3px rgba(6,182,212,.25);
+}
+
+
+
+
+
+
+
+/* ====== Layout del panel de chat ====== */
+.chat{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* Cuerpo de mensajes */
+.msgs{
+  flex:1;
+  overflow-y:auto;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(15,23,42,.45), rgba(2,8,23,.55));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Scrollbar sutil */
+.msgs::-webkit-scrollbar{ width:8px; }
+.msgs::-webkit-scrollbar-thumb{
+  background:rgba(148,163,184,.35);
+  border-radius:999px;
+}
+.msgs::-webkit-scrollbar-track{ background:transparent; }
+
+/* Input de chat: fila, botón de altura fija */
+.chat-input{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 0 0;
+}
+.chat-input input{
+  flex:1;
+  height:40px;
+  border-radius:12px;
+  padding:0 12px;
+}
+.chat-input .btn{
+  height:40px;             /* evita “botón columna” */
+  padding:0 16px;
+  border-radius:12px;
+}
+
+/* ====== Burbujas ====== */
+.bubble{
+  display:inline-block;
+  max-width:72%;
+  margin:8px 0;
+  padding:10px 12px;
+  border-radius:14px 14px 14px 6px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.08);
+  line-height:1.25;
+}
+.bubble.me{
+  margin-left:auto;
+  border-radius:14px 14px 6px 14px;
+  background:linear-gradient(135deg, rgba(34,211,238,.28), rgba(59,130,246,.28));
+  border:1px solid rgba(56,189,248,.45);
+  color:#e6f9ff;
+}
+
+/* Badge de contexto (arriba del chat si lo usas) */
+.ctx-badge{ padding:8px 0 10px; }
+.ctx-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.14);
+  border:1px solid var(--border);
+  border-radius:999px; padding:6px 12px; font-weight:700;
+}
+.ctx-dot{
+  width:10px; height:10px; border-radius:999px;
+  background:var(--accent);
+  box-shadow:0 0 0 3px rgba(6,182,212,.25);
+}
+
+
+

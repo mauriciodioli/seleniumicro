@@ -1,0 +1,268 @@
+/* =========================
+   Vars + Reset
+========================= */
+:root{
+  --bg:#0b1220;            /* fondo principal */
+  --panel:#0e1627;         /* panel cards */
+  --card:#111b2f;          /* cards internas */
+  --muted:#9aa4b2;
+  --text:#e5edf5;
+  --border:rgba(255,255,255,.08);
+  --accent:#22d3ee;        /* cyan */
+  --accent-strong:#06f0ff; /* botón */
+  --ok:#22c55e;
+  --danger:#ef4444;
+  --badge:#1b2437;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0; color:var(--text); background:linear-gradient(180deg,#091019,#0b1220 30%, #0b1220);
+  font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+
+/* =========================
+   Navbar mínima
+========================= */
+.nav{
+  position:sticky; top:0; z-index:50;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 16px; background:rgba(9,16,25,.6); backdrop-filter:saturate(140%) blur(8px);
+  border-bottom:1px solid var(--border);
+}
+.brand{ display:flex; align-items:center; gap:8px; font-weight:600; }
+.dot{ width:10px; height:10px; background:#16f2ff; border-radius:999px; display:inline-block; box-shadow:0 0 10px #16f2ff88; }
+.pill{ padding:6px 12px; border:1px solid var(--border); border-radius:20px; color:#cbd5e1; background:#0f182b; }
+
+/* Botones */
+.btn{
+  padding:8px 12px; border-radius:10px; border:1px solid var(--border);
+  background:#0f182b; color:#cbd5e1; cursor:pointer; transition:transform .08s ease, box-shadow .12s ease, background .12s;
+}
+.btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.25); }
+.btn-accent{ background:var(--accent-strong); color:#00313a; border-color:transparent; }
+.btn-accent:hover{ box-shadow:0 8px 20px rgba(6,240,255,.25); }
+
+/* =========================
+   Contenedor + Grid 12 (3-3-6)
+========================= */
+.wrap{
+  /* Usá todo el ancho sin “playas” */
+  max-width:none; width:100%;
+  padding-inline: clamp(8px, 1.2vw, 16px);
+  padding-block:16px;
+}
+.app-grid{
+  display:grid;
+  grid-template-columns:repeat(12, minmax(0,1fr));
+  gap: clamp(12px, 1vw, 24px);
+}
+.col-identidades{ grid-column:1 / span 3; }
+.col-ambitos    { grid-column:4 / span 3; }
+.col-chat       { grid-column:7 / span 6; }
+
+/* =========================
+   Cards comunes
+========================= */
+.card, .id-card, .ambito-board, .chat{
+  background:linear-gradient(180deg, #0f1a2b, #0e1627 60%);
+  border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow);
+}
+.id-card h4{ margin:12px 16px; font-size:16px; letter-spacing:.2px; }
+
+/* =========================
+   Buscador + Tabs User/Domain
+========================= */
+.panel-header{ padding:12px; border-bottom:1px solid var(--border); }
+.search{
+  display:flex; align-items:center; gap:8px; background:#0b1426; border:1px solid var(--border);
+  padding:10px 12px; border-radius:12px;
+}
+.search span{ opacity:.8; }
+.search input{
+  flex:1; border:none; outline:none; color:var(--text); background:transparent;
+  font-size:14px;
+}
+.search-tabs{ display:flex; gap:8px; margin-top:10px; }
+.search-tabs .tab{
+  flex:0 0 auto; padding:6px 12px; border:1px solid var(--border);
+  border-radius:999px; background:#0b1426; color:#cbd5e1; cursor:pointer;
+}
+.search-tabs .tab.active{
+  background:#111827; color:var(--accent); border-color:#22d3ee80;
+  box-shadow:0 0 0 1px #22d3ee40 inset;
+}
+
+/* =========================
+   Identidades (accordion)
+========================= */
+.id-accordion{ padding:10px; }
+.id-item{ background:var(--card); border:1px solid var(--border); border-radius:12px; margin:10px 0; overflow:hidden; }
+.id-summary{
+  display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer; user-select:none;
+}
+.id-summary:hover{ background:#0f1a2b; }
+.id-chev{ opacity:.7; }
+details[open] .id-chev{ transform:rotate(90deg); transition:transform .12s ease; }
+.id-name{ font-weight:600; }
+.id-badge{
+  margin-left:auto; font-size:12px; color:#cbd5e1; background:#0b1426; padding:4px 8px; border-radius:999px; border:1px solid var(--border);
+}
+.id-body{ display:flex; flex-wrap:wrap; gap:10px; padding:8px 14px 12px; color:#cbd5e1; }
+.id-field{ background:#0b1426; padding:6px 8px; border-radius:8px; border:1px solid var(--border); }
+.id-actions{ display:flex; gap:10px; padding:10px 14px 14px; }
+
+/* =========================
+   Ámbitos / Badges
+========================= */
+.ambito-board{ padding:12px; }
+.ambito-card{
+  background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px;
+  margin:12px 0;
+}
+.badge{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--badge); border:1px solid var(--border); color:#cbd5e1;
+  padding:6px 10px; border-radius:999px; font-size:12px;
+}
+
+/* =========================
+   Chat
+========================= */
+.col-chat .chat{
+  display:flex; flex-direction:column; min-height:560px; height:100%;
+}
+.ctx-badge{
+  position:relative; top:10px; left:10px;
+  display:inline-flex; align-items:center; gap:8px;
+  background:#0b1426; border:1px solid var(--border); color:#cbe7ff;
+  padding:6px 10px; border-radius:999px; box-shadow:0 4px 16px rgba(0,0,0,.25);
+}
+.msgs{
+  flex:1; overflow:auto; margin:12px; border-radius:12px; background:radial-gradient(1200px 600px at 80% -40%, rgba(34,211,238,.06), transparent 60%);
+  border:1px solid var(--border);
+}
+.chat-input{
+  display:flex; gap:10px; padding:10px 12px; border-top:1px solid var(--border);
+  background:linear-gradient(180deg, #0d1728, #0b1426 70%);
+  border-radius:0 0 14px 14px;
+}
+.chat-input input{
+  flex:1; border:none; outline:none; padding:10px 12px; border-radius:10px;
+  background:#0b1426; color:var(--text); border:1px solid var(--border);
+}
+
+/* Mensajes (opcional básico) */
+.message{ padding:10px 14px; margin:10px 12px; border-radius:12px; max-width:70%; }
+.message.me{ margin-left:auto; background:#15324a; }
+.message.other{ background:#0f1a2b; }
+
+/* Scrollbar bonito */
+.msgs::-webkit-scrollbar{ width:10px; }
+.msgs::-webkit-scrollbar-thumb{ background:#1f2a3d; border-radius:8px; }
+.msgs::-webkit-scrollbar-track{ background:transparent; }
+
+/* =========================
+   Utilidades
+========================= */
+.hidden{ display:none!important; }
+.center{ display:flex; align-items:center; justify-content:center; }
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 1200px){
+  .wrap{ padding-inline: clamp(8px, 2vw, 12px); }
+}
+@media (max-width: 992px){
+  /* 4-4-4 en tablets */
+  .col-identidades{ grid-column:1 / span 4; }
+  .col-ambitos    { grid-column:5 / span 4; }
+  .col-chat       { grid-column:9 / span 4; }
+}
+@media (max-width: 768px){
+  /* Stack en móvil */
+  .col-identidades,
+  .col-ambitos,
+  .col-chat{ grid-column:1 / -1; }
+  .col-chat .chat{ min-height:420px; }
+  .search-tabs{ gap:6px; }
+}
+
+/* =========================
+   Modo claro rápido (si algún día lo alternás)
+========================= */
+body.light{
+  --bg:#f4f7fb; --panel:#ffffff; --card:#ffffff; --text:#0b1220; --border:rgba(0,0,0,.08);
+  --badge:#eef2f7;
+  background:#f7f9fc;
+}
+body.light .btn{ background:#f3f6fb; color:#0b1220; }
+body.light .btn-accent{ color:#00313a; }
+body.light .id-summary:hover{ background:#f6f8fc; }
+body.light .search, body.light .id-field, body.light .chat-input input{ background:#f6f8fc; }
+
+
+
+
+
+/* --- Head de Ámbitos con botón --- */
+.ambito-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px; border-bottom:1px solid var(--border);
+}
+.btn-ghost-sm{
+  padding:6px 10px; border-radius:8px; border:1px solid var(--border);
+  background:#0b1426; color:#cbd5e1; cursor:pointer;
+}
+
+/* --- Animación/colapso del medio --- */
+/* Estado normal (3-3-6) ya existente */
+.col-identidades{ grid-column:1 / span 3; }
+.col-ambitos    { grid-column:4 / span 3; transition:transform .18s ease, opacity .18s ease, max-height .18s ease; }
+.col-chat       { grid-column:7 / span 6; position:relative; }
+
+/* Estado colapsado: ocultamos Ámbitos y expandimos Chat */
+.ambitos-collapsed .col-ambitos{
+  pointer-events:none;
+  opacity:0;
+  transform:translateX(-12px);           /* PC: pliega hacia la izquierda */
+  display:none;                           /* saca del flujo para que el chat se expanda */
+}
+.ambitos-collapsed .col-chat{
+  grid-column:4 / span 9;                 /* ocupa 4..12 (9/12) */
+}
+
+/* Handle para reabrir (apoyado en el borde izquierdo del chat) */
+.ambitos-handle{
+  position:absolute; left:-10px; top:56px;
+  transform:translateX(-100%);
+  padding:6px 8px; border-radius:8px;
+  background:#0b1426; border:1px solid var(--border);
+  color:#cbd5e1; cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+.hidden{ display:none!important; }
+
+/* --- Comportamiento en pantallas pequeñas --- */
+@media (max-width: 768px){
+  /* En móvil, las columnas ya se apilan 1/-1. Colapsar = deslizar hacia arriba */
+  .col-identidades,
+  .col-ambitos,
+  .col-chat{ grid-column:1 / -1; }
+
+  .ambitos-collapsed .col-ambitos{
+    display:none;                 /* fuera del flujo */
+    opacity:0; transform:translateY(-12px); /* pliega hacia arriba */
+  }
+  .ambitos-collapsed .col-chat{
+    grid-column:1 / -1;           /* chat full width */
+  }
+
+  /* Reubicar handle en móvil (pegado arriba a la izquierda del chat) */
+  .ambitos-handle{
+    left:10px; top:-10px; transform:none;
+  }
+}

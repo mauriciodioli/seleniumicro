@@ -1,0 +1,80 @@
+<div class="id-card">
+  <h4>Identidades</h4>
+  <div class="panel-header">
+          <div class="search" style="flex:1">
+            <span>🔎</span>
+            <input id="q" placeholder="Buscar por teléfono +E.164, @alias o nombre…  Ej: +54938385478 o @DrPeralta">
+          </div>
+          <button id="btnSearch" class="btn">Buscar</button>
+        </div>
+  <!-- PANEL BUSQUEDA POR USUARIO O AMBITO: CHAT (limpio) -->
+  {% include 'chats/busquedas/busquedaAmbito.html' %}
+  <div class="id-accordion">
+    <!-- 1) Carlos Peralta -->
+    <details class="id-item">
+      <summary class="id-summary">
+        <span class="id-chev">▶</span>
+        <span class="id-name">👤 Dr. Carlos Peralta</span>
+        <span class="id-badge">verificado</span>
+      </summary>
+      <div class="id-body">
+        <span class="id-field">📞 +54938385478</span>
+        <span class="id-field">@DrPeralta</span>
+        <span class="id-field">🌐 drperalta.salud.dpia.site</span>
+      </div>
+      <div class="id-actions">
+        <button class="btn btn-accent"
+          data-scope='{"micrositio":"salud","idioma":"es"}'
+          onclick="chatHere(this)">Chatear aquí</button>
+        <button class="btn btn-ghost"
+          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+      </div>
+    </details>
+
+    <!-- 2) Valeria Ceballos -->
+    <details class="id-item">
+      <summary class="id-summary">
+        <span class="id-chev">▶</span>
+        <span class="id-name">👤 Valeria Ceballos</span>
+        <span class="id-badge">verificado</span>
+      </summary>
+      <div class="id-body">
+        <span class="id-field">📞 +54935157885478</span>
+        <span class="id-field">@ValeriaCeballos</span>
+        <span class="id-field">🌐 valeria.tramites.dpia.site</span>
+      </div>
+      <div class="id-actions">
+        <button class="btn btn-accent"
+          data-scope='{"micrositio":"salud","idioma":"es"}'
+          onclick="chatHere(this)">Chatear aquí</button>
+        <button class="btn btn-ghost"
+          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+      </div>
+    </details>
+
+    <!-- 3) Dr. Ola -->
+    <details class="id-item">
+      <summary class="id-summary">
+        <span class="id-chev">▶</span>
+        <span class="id-name">👤 Dr. Ola</span>
+        <span class="id-badge">verificado</span>
+      </summary>
+      <div class="id-body">
+        <span class="id-field">📞 +599838385478</span>
+        <span class="id-field">@DrOla</span>
+        <span class="id-field">🌐 drola.salud.dpia.site</span>
+      </div>
+      <div class="id-actions">
+        <button class="btn btn-accent"
+          data-scope='{"micrositio":"salud","idioma":"es"}'
+          onclick="chatHere(this)">Chatear aquí</button>
+        <button class="btn btn-ghost"
+          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+      </div>
+    </details>
+  </div>
+</div>
+
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/usuariosChat.css') }}">
+  <script src="{{ url_for('static', filename='js/chats/usuariosChat.js') }}"></script>

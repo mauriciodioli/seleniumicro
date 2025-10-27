@@ -1,0 +1,14 @@
+/* Tabs */
+.search-tabs{
+  display:flex; gap:6px; margin-top:8px; width:100%;
+}
+.search-tabs .tab{
+  flex:1; padding:6px 10px; border:1px solid var(--border, #2b2f3a);
+  background:#0b1222; color:#cbd5e1; border-radius:8px;
+  cursor:pointer; transition:transform .08s ease;
+}
+.search-tabs .tab:hover{ transform:translateY(-1px) }
+.search-tabs .tab.active{
+  background:#111827; color:#22d3ee; border-color:#22d3ee80;
+  box-shadow:0 0 0 1px #22d3ee40 inset;
+}
