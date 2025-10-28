@@ -79,40 +79,57 @@ function pushMsg(text, me=false){
   threads[activeThreadId].messages.push({ text, me, ts: Date.now() });
   renderMessages();
 }
+// helpers
+const esc = s => String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const ctxBadgeEl = () => document.getElementById('ctxBadge');
+
+function buildCtxLabel(scope){
+  const parts = [];
+  if (scope.micrositio)   parts.push(`ámbito: ${esc(scope.micrositio)}`);
+  if (scope.categoria)    parts.push(`categoría: ${esc(scope.categoria)}`);
+  if (scope.subcategoria) parts.push(`subcategoría: ${esc(scope.subcategoria)}`);
+  if (scope.cp)           parts.push(`CP: ${esc(scope.cp)}`);
+  if (scope.idioma)       parts.push(`idioma: ${esc(scope.idioma)}`);
+  if (scope.alias)        parts.push(`alias: ${esc(scope.alias)}`);   // ← AQUI el alias
+  return parts.join(' · ');
+}
+
 window.chatHere = function(btn){
   try{
     const scope = JSON.parse(btn.getAttribute('data-scope') || '{}');
     const id = ensureThread(scope);
     setActiveThread(id);
 
-    // ==== LIMPIAR MARCAS PREVIAS SOLO EN EL PANEL DEL MEDIO ====
+    // pinta badge con alias incluido
+    const badge = ctxBadgeEl();
+    if (badge){
+      const label = buildCtxLabel(scope);
+      badge.innerHTML = `<span class="ctx-text">${label}</span>`;
+      badge.setAttribute('title', label); // tooltip con el texto completo
+    }
+
+    // ---- marcado visual (lo que ya tenías) ----
     document.querySelectorAll('.ambito, .ambito-card').forEach(el => el.classList.remove('is-active-ambito'));
     document.querySelectorAll('.subcard').forEach(el => el.classList.remove('is-active-subcard'));
     document.querySelectorAll('.mini-card, .subcard .btn').forEach(el => el.classList.remove('is-active-item'));
 
-    // ==== MARCAR JERARQUÍA ACTUAL ====
-    // Item (mini-card o botón dentro de subcard)
     const mini = btn.closest('.mini-card');
     if (mini) mini.classList.add('is-active-item');
-    // Si es un botón directo de subcard, marcalo como item activo
     if (btn.closest('.subcard') && !mini) btn.classList.add('is-active-item');
 
-    // Categoría (subcard)
     const subcard = btn.closest('.subcard');
     if (subcard) subcard.classList.add('is-active-subcard');
 
-    // Ámbito
     const ambito = btn.closest('.ambito, .ambito-card');
     if (ambito) ambito.classList.add('is-active-ambito');
 
-    // ==== SCROLL A LA VISTA PARA QUE SE NOTE ====
     (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
-
   }catch(e){
     console.error(e);
     Swal.fire('Error', 'Scope inválido', 'error');
   }
 };
+
 
 
 window.elevateScope = function(){

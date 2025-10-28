@@ -1,210 +1,131 @@
+<div class="amb-card">
+  <h4>Ámbitos</h4>
 
-<!-- chats/chatAmbitos.html -->
-<div class="ambito-board">
-  <div class="ambito-head">
-  
-<!-- PANEL INTERMEDIO: Ámbitos (una tarjeta por ámbito) -->
-<div class="panel middle-panel">
-  <div class="cards">
-
-    
-    <div class="card ambito-card">
-  <h4>Ámbito · Salud</h4>
-  <div class="list">
-    <span class="item">🏥 Estado: activo</span>
-    <span class="item">🌐 Idioma: es</span>
-    <span class="item">📍 CP: 28080</span>
+  <div class="amb-panel-header">
+    <div class="amb-search" style="flex:1">
+      <span>🔎</span>
+      <input id="amb-q" placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta">
+    </div>
+    <button id="amb-btnSearch" class="btn">Buscar</button>
   </div>
 
+  <!-- PANEL BÚSQUEDA POR ÁMBITO (limpio) -->
+  {% include 'chats/busquedas/busquedaAmbito.html' %}
 
-<details class="ambito">
-  <summary class="ambito-summary">
-   
-    <span class="ambito-title">Ámbito · Salud</span>
-  </summary>
+  <div class="amb-accordion">
 
+    <!-- 1) Tecnología (Ámbito) -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"tecnologia","idioma":"es","alias":"@Tech","tel":"+54938385478"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🧠 Tecnología</span>
+        <span class="amb-badge">activo</span>
+      </summary>
 
-  <div class="subcards">
-    <!-- Categoría: Médicos -->
-    <div class="subcard">
-      <div class="subcard-head">
-        <span>💬 Médicos</span>
-        <button class="btn"
-          data-scope='{"ambito":"salud","categoria":"medicos","cp":"28080","idioma":"es"}'
-          onclick="chatHere(this)">Chatear en Médicos</button>
+      <div class="amb-list">
+        <span class="amb-list-item">🟢 Estado: activo</span>
+        <span class="amb-list-item">🌐 Idioma: es</span>
+        <span class="amb-list-item">📍 CP: 28080</span>
       </div>
 
-      <!-- Mini-cards (cada item es tarjeta) -->
-      <div class="mini-grid">
-        <div class="mini-card">
-          <span class="mini-title">Consultas presenciales</span>
-          <div class="mini-actions">
+      <summary class="amb-section-summary">
+        <span class="amb-section-title">Categorías</span>
+      </summary>
+
+      <div class="amb-subcards">
+        <!-- Categoría: Médicos (ejemplo portado) -->
+        <div class="amb-subcard">
+          <div class="amb-subcard-head">
+            <span>💬 Médicos</span>
             <button class="btn"
-              data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"consultas_presenciales","cp":"28080","idioma":"es"}'
-              onclick="chatHere(this)">Chatear</button>
+                    data-scope='{"ambito":"salud","categoria":"medicos","cp":"28080","idioma":"es"}'
+                    onclick="chatHere(this)">Chatear en Médicos</button>
+          </div>
+
+          <div class="amb-mini-grid">
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Consultas presenciales</span>
+              <div class="amb-mini-actions">
+                <button class="btn"
+                        data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"consultas_presenciales","cp":"28080","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
+
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Telemedicina</span>
+              <div class="amb-mini-actions">
+                <button class="btn"
+                        data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"telemedicina","cp":"28080","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
+
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Turnos online</span>
+              <div class="amb-mini-actions">
+                <button class="btn"
+                        data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"turnos_online","cp":"28080","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="mini-card">
-          <span class="mini-title">Telemedicina</span>
-          <div class="mini-actions">
+        <!-- Categoría: Equipos -->
+        <div class="amb-subcard">
+          <div class="amb-subcard-head">
+            <span>🩺 Equipos</span>
             <button class="btn"
-              data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"telemedicina","cp":"28080","idioma":"es"}'
-              onclick="chatHere(this)">Chatear</button>
+                    data-scope='{"ambito":"salud","categoria":"equipos","idioma":"es"}'
+                    onclick="chatHere(this)">Chatear en Equipos</button>
           </div>
-        </div>
 
-        <div class="mini-card">
-          <span class="mini-title">Turnos online</span>
-          <div class="mini-actions">
-            <button class="btn"
-              data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"turnos_online","cp":"28080","idioma":"es"}'
-              onclick="chatHere(this)">Chatear</button>
-          </div>
-        </div>
-      </div>
-    </div>
+          <div class="amb-mini-grid">
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Oxímetros</span>
+              <div class="amb-mini-actions">
+                <button class="btn"
+                        data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"oximetros","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
 
-    <!-- Categoría: Equipos -->
-    <div class="subcard">
-      <div class="subcard-head">
-        <span>🩺 Equipos</span>
-        <button class="btn"
-          data-scope='{"ambito":"salud","categoria":"equipos","idioma":"es"}'
-          onclick="chatHere(this)">Chatear en Equipos</button>
-      </div>
-
-      <div class="mini-grid">
-        <div class="mini-card">
-          <span class="mini-title">Oxímetros</span>
-          <div class="mini-actions">
-            <button class="btn"
-              data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"oximetros","idioma":"es"}'
-              onclick="chatHere(this)">Chatear</button>
-          </div>
-        </div>
-
-        <div class="mini-card">
-          <span class="mini-title">Tensiómetros</span>
-          <div class="mini-actions">
-            <button class="btn"
-              data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"tensiometros","idioma":"es"}'
-              onclick="chatHere(this)">Chatear</button>
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Tensiómetros</span>
+              <div class="amb-mini-actions">
+                <button class="btn"
+                        data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"tensiometros","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-</details>
+    </details>
 
+    <!-- 2) Salud -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"salud","idioma":"es","alias":"@ValeriaCeballos","tel":"+54935157885478"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🩺 Salud</span>
+        <span class="amb-badge">verificado</span>
+      </summary>
+    </details>
 
-
-
-<div class="card ambito-card">
-  <h4>Ámbito · Tecnología</h4>
-  <div class="list">
-    <span class="item">📱 Estado: activo</span>
-    <span class="item">🌐 Idioma: es</span>
-    <span class="item">📍 CP: 28080</span>
-  </div>
-
-
-
-<details class="ambito">
-  <summary class="ambito-summary">
-   
-    <span class="ambito-title">Ámbito · Tecnología</span>
-  </summary>
-
-
-
-  <div class="subcards">
-    <div class="subcard">
-      <div class="subcard-head">
-        <span>📦 Telefonía</span>
-        <button class="btn"
-          data-scope='{"ambito":"tecnologia","categoria":"telefonia","cp":"28080","idioma":"es"}'
-          onclick="chatHere(this)">Chatear en Telefonía</button>
-      </div>
-      <div class="mini-grid">
-        <div class="mini-card"><span class="mini-title">Smartphones</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"telefonia","subcategoria":"smartphones","cp":"28080","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-        <div class="mini-card"><span class="mini-title">Accesorios</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"telefonia","subcategoria":"accesorios","cp":"28080","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-        <div class="mini-card"><span class="mini-title">Soporte técnico</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"telefonia","subcategoria":"soporte","cp":"28080","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-      </div>
-    </div>
-
-    <div class="subcard">
-      <div class="subcard-head">
-        <span>🖥️ Informática</span>
-        <button class="btn"
-          data-scope='{"ambito":"tecnologia","categoria":"informatica","idioma":"es"}'
-          onclick="chatHere(this)">Chatear en Informática</button>
-      </div>
-      <div class="mini-grid">
-        <div class="mini-card"><span class="mini-title">PCs</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"informatica","subcategoria":"pcs","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-        <div class="mini-card"><span class="mini-title">Periféricos</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"informatica","subcategoria":"perifericos","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-        <div class="mini-card"><span class="mini-title">Reparaciones</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"tecnologia","categoria":"informatica","subcategoria":"reparaciones","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-</details>
-
-
-
-
-<div class="card ambito-card">
-  <h4>Ámbito · Turismo</h4>
-  <div class="list">
-    <span class="item">🧳 Estado: presencia</span>
-    <span class="item">🌐 Idioma: es</span>
-    <span class="item">📍 CP: 00138</span>
-  </div>
-
-
-<details class="ambito">
-  <summary class="ambito-summary">
-   
-    <span class="ambito-title">Ámbito · Tecnología</span>
-  </summary>
-
-
-
-  <div class="subcards">
-    <div class="subcard">
-      <div class="subcard-head">
-        <span>🛫 Paquetes</span>
-        <button class="btn"
-          data-scope='{"ambito":"turismo","categoria":"paquetes","cp":"00138","idioma":"es"}'
-          onclick="chatHere(this)">Chatear en Paquetes</button>
-      </div>
-      <div class="mini-grid">
-        <div class="mini-card"><span class="mini-title">Escapadas</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"paquetes","subcategoria":"escapadas","cp":"00138","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-        <div class="mini-card"><span class="mini-title">Tours guiados</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"paquetes","subcategoria":"tours_guiados","cp":"00138","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-      </div>
-    </div>
-
-    <div class="subcard">
-      <div class="subcard-head">
-        <span>🏨 Hospedaje</span>
-        <button class="btn"
-          data-scope='{"ambito":"turismo","categoria":"hospedaje","idioma":"es"}'
-          onclick="chatHere(this)">Chatear en Hospedaje</button>
-      </div>
-      <div class="mini-grid">
-        <div class="mini-card"><span class="mini-title">Hoteles</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"hospedaje","subcategoria":"hoteles","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-        <div class="mini-card"><span class="mini-title">Deptos temporarios</span><div class="mini-actions"><button class="btn" data-scope='{"ambito":"turismo","categoria":"hospedaje","subcategoria":"deptos_temporarios","idioma":"es"}' onclick="chatHere(this)">Chatear</button></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-</details>
+    <!-- 3) Turismo -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"turismo","idioma":"es","alias":"@DrOla","tel":"+599838385478"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🧳 Turismo</span>
+        <span class="amb-badge">verificado</span>
+      </summary>
+    </details>
 
   </div>
 </div>
 
-</div>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatAmbitos.css') }}">

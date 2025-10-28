@@ -1,20 +1,110 @@
-/* Chat header con flecha fija */
-.chat{ display:flex; flex-direction:column; }
+/* HEADER en grid */
 .chat-head{
-  display:flex; align-items:center; gap:8px;
-  padding:8px 10px; border-bottom:1px solid var(--border);
-}
-.toggle-ambitos{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:32px; height:32px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:#0b1426;
-  color:#cbd5e1;
-  cursor:pointer;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  min-height: 42px;
+  z-index: 10;              /* por encima de fondos/paneles */
 }
 
-/* (opcional) en mobile solo cambiás el icono vía JS, no el estilo */
-@media (max-width:768px){
-  /* sin cambios de layout necesarios */
+/* botón */
+.toggle-ambitos{
+  grid-column: 1;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border:1px solid var(--border);border-radius:8px;
 }
+
+/* ⚠️ RESET del absolute heredado */
+.chat-head .ctx-badge{
+  position: static !important;   /* quita absolute */
+  inset: auto !important;
+  transform: none !important;
+  grid-column: 2;
+  justify-self: center;          /* centro X */
+  align-self: center;            /* centro Y */
+  max-width: calc(100% - 80px);  /* margen por botón/gaps, evita desborde */
+  min-width: 0;
+  z-index: 11;                   /* por delante de líneas/sombras */
+}
+
+/* truncado en una línea */
+.ctx-badge .ctx-pill{
+  display:block; max-width:100%;
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+
+/* placeholder derecho para simetría (opcional) */
+.chat-head::after{
+  content:""; grid-column:3; width:32px; height:1px;
+}
+
+.toggle-ambitos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0b1426;
+  color: #ffffff !important;   /* ← fuerza el color blanco */
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s, color 0.2s;
+}
+
+.toggle-ambitos:hover {
+  background: #1e293b;         /* tono más claro al pasar el mouse */
+  color: #00e0ff;              /* efecto visual elegante en hover */
+}
+
+
+/* Badge básico (ajustá a tu estilo si ya lo tenés) */
+.ctx-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #0b1426;
+  color: #cbd5e1;
+  font-weight: 600;
+  line-height: 1;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+
+/* Mata cualquier barra/acentos heredados */
+.ctx-badge,
+.ctx-badge *{
+  background-image: none !important;  /* si venía de un gradient */
+  border-left: 0 !important;          /* si era un borde */
+  box-shadow: none !important;        /* si era un glow “aplastado” */
+}
+
+/* Apaga cualquier pseudo que siga dibujando algo */
+.ctx-badge::before,
+.ctx-badge::after,
+.ctx-badge *::before,
+.ctx-badge *::after{
+  content: none !important;
+  display: none !important;
+}
+
+.ctx-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 12px;
+  background:#0b1426 !important;   /* asegura solo color, sin imagen */
+  color:#cbd5e1; border:1px solid var(--border);
+  border-radius:999px;
+  max-width:100%; min-width:0; white-space:nowrap;
+}
+
+
