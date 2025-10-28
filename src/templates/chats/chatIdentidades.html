@@ -1,61 +1,23 @@
-<div class="id-card">
-  <h4>Identidades</h4>
-  <div class="panel-header">
-          <div class="search" style="flex:1">
-            <span>🔎</span>
-            <input id="q" placeholder="Buscar por teléfono +E.164, @alias o nombre…  Ej: +54938385478 o @DrPeralta">
-          </div>
-          <button id="btnSearch" class="btn">Buscar</button>
-        </div>
-  <!-- PANEL BUSQUEDA POR USUARIO O AMBITO: CHAT (limpio) -->
-  {% include 'chats/busquedas/busquedaAmbito.html' %}
-  <div class="id-accordion">
-    
- <!-- 1) Carlos Peralta -->
-<details class="id-item">
-  <summary class="id-summary"
-           data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrPeralta","tel":"+54938385478"}'>
-    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
-    <span class="id-name">👤 Dr. Carlos Peralta</span>
-    <span class="id-badge">verificado</span>
-  </summary>
+<div class="col-identidades">
+  <div class="id-card">
+    <h4>Identidades</h4>
 
-  <div class="id-body">
-    <span class="id-field">📞 +54938385478</span>
-    <span class="id-field">@DrPeralta</span>
-    <span class="id-field">🌐 drperalta.salud.dpia.site</span>
+   <div class="amb-panel-header">
+    <div class="amb-search" style="flex:1">
+      <span>🔎</span>
+      <input id="amb-q" placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta">
+    </div>
+    <button id="amb-btnSearch" class="btn">Buscar</button>
   </div>
 
-  <div class="id-actions">
-    <button class="btn btn-accent"
-            data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrPeralta","tel":"+54938385478"}'
-            onclick="chatHere(this)">Chatear aquí</button>
-    <button class="btn btn-ghost"
-            onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-  </div>
-</details>
-<!-- 2) Valeria Ceballos -->
-<details class="id-item">
-  <summary class="id-summary"
-           data-scope='{"micrositio":"salud","idioma":"es","alias":"@ValeriaCeballos","tel":"+54935157885478"}'>
-    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
-    <span class="id-name">👤 Valeria Ceballos</span>
-    <span class="id-badge">verificado</span>
-  </summary>
+    <!-- Panel búsqueda (si corresponde va acá, arriba de la lista) -->
+    {% include 'chats/busquedas/busquedaAmbito.html' %}
 
-  <div class="id-body">
-    <span class="id-field">📞 +54935157885478</span>
-    <span class="id-field">@ValeriaCeballos</span>
-    <span class="id-field">🌐 valeria.tramites.dpia.site</span>
-  </div>
+    <!-- LISTA SCROLLEABLE -->
+    <div class="id-accordion">
+     
+      
 
-  <div class="id-actions">
-    <button class="btn btn-accent"
-            data-scope='{"micrositio":"salud","idioma":"es","alias":"@ValeriaCeballos","tel":"+54935157885478"}'
-            onclick="chatHere(this)">Chatear aquí</button>
-    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-  </div>
-</details>
 
 <!-- 3) Dr. Ola -->
 <details class="id-item">
@@ -80,10 +42,279 @@
   </div>
 </details>
 
+<!-- 4) Dra. Marta López -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"salud","idioma":"es","alias":"@DraMartaLopez","tel":"+34911223344"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Dra. Marta López</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +34 911 223 344</span>
+    <span class="id-field">@DraMartaLopez</span>
+    <span class="id-field">🌐 martalopez.clinica.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"salud","idioma":"es","alias":"@DraMartaLopez","tel":"+34911223344"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
 
+<!-- 5) Ing. Paolo Bianchi -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"tecnologia","idioma":"it","alias":"@IngBianchi","tel":"+390648556677"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Ing. Paolo Bianchi</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +39 06 4855 6677</span>
+    <span class="id-field">@IngBianchi</span>
+    <span class="id-field">🌐 bianchi.tech.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"tecnologia","idioma":"it","alias":"@IngBianchi","tel":"+390648556677"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 6) Lic. Ana María Fernández (nombre largo para test de wrap) -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"servicios","idioma":"es","alias":"@AnaMariaFernandez","tel":"+541145678901"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Lic. Ana María Fernández — Consultoría & Gestión</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +54 11 4567 8901</span>
+    <span class="id-field">@AnaMariaFernandez</span>
+    <span class="id-field">🌐 anamaria.consultoria.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"servicios","idioma":"es","alias":"@AnaMariaFernandez","tel":"+541145678901"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 7) Fisio. Luca Rossi -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"salud","idioma":"it","alias":"@FisioRossi","tel":"+390298765432"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Fisio. Luca Rossi</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +39 02 9876 5432</span>
+    <span class="id-field">@FisioRossi</span>
+    <span class="id-field">🌐 rossi.fisio.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"salud","idioma":"it","alias":"@FisioRossi","tel":"+390298765432"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 8) AutoFix Spoleto -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"automotriz","idioma":"it","alias":"@AutoFixSpoleto","tel":"+390743123456"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 AutoFix Spoleto</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +39 0743 123 456</span>
+    <span class="id-field">@AutoFixSpoleto</span>
+    <span class="id-field">🌐 autofix.servicio.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"automotriz","idioma":"it","alias":"@AutoFixSpoleto","tel":"+390743123456"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 9) Dr n. med. Katarzyna Nowak -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"salud","idioma":"pl","alias":"@DrNowak","tel":"+48572900123"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Dr n. med. Katarzyna Nowak</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +48 572 900 123</span>
+    <span class="id-field">@DrNowak</span>
+    <span class="id-field">🌐 nowak.anestezjologia.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"salud","idioma":"pl","alias":"@DrNowak","tel":"+48572900123"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 10) Prof. Elena García (Educación) -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"educacion","idioma":"es","alias":"@ProfElena","tel":"+34914111222"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Prof. Elena García — Formación Online</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +34 914 111 222</span>
+    <span class="id-field">@ProfElena</span>
+    <span class="id-field">🌐 elena.educacion.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"educacion","idioma":"es","alias":"@ProfElena","tel":"+34914111222"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+<!-- 11) Arq. Sofía Domínguez -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"servicios","idioma":"es","alias":"@ArqSofia","tel":"+541145009876"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Arq. Sofía Domínguez</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +54 11 4500 9876</span>
+    <span class="id-field">@ArqSofia</span>
+    <span class="id-field">🌐 sofia.arquitectura.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"servicios","idioma":"es","alias":"@ArqSofia","tel":"+541145009876"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 12) Avv. Giulia Ferri -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"legal","idioma":"it","alias":"@AvvFerri","tel":"+390669771122"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Avv. Giulia Ferri</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +39 06 6977 1122</span>
+    <span class="id-field">@AvvFerri</span>
+    <span class="id-field">🌐 ferri.studiolegale.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"legal","idioma":"it","alias":"@AvvFerri","tel":"+390669771122"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 13) Dr. med. Johannes Müller -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"salud","idioma":"de","alias":"@DrMueller","tel":"+4915783301122"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Dr. med. Johannes Müller</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +49 1578 330 1122</span>
+    <span class="id-field">@DrMueller</span>
+    <span class="id-field">🌐 mueller.internist.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"salud","idioma":"de","alias":"@DrMueller","tel":"+4915783301122"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 14) Vet. Zuzanna Kowalczyk (nombre largo para wrap) -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"veterinaria","idioma":"pl","alias":"@VetZuzannaK","tel":"+48660677888"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Lek. wet. Zuzanna Kowalczyk — Opieka całodobowa</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +48 660 677 888</span>
+    <span class="id-field">@VetZuzannaK</span>
+    <span class="id-field">🌐 kowalczyk.vet.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"veterinaria","idioma":"pl","alias":"@VetZuzannaK","tel":"+48660677888"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+<!-- 15) Coach Miguel Herrera -->
+<details class="id-item">
+  <summary class="id-summary"
+           data-scope='{"micrositio":"bienestar","idioma":"es","alias":"@CoachMiguel","tel":"+34911222000"}'>
+    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+    <span class="id-name">👤 Coach Miguel Herrera</span>
+    <span class="id-badge">verificado</span>
+  </summary>
+  <div class="id-body">
+    <span class="id-field">📞 +34 911 222 000</span>
+    <span class="id-field">@CoachMiguel</span>
+    <span class="id-field">🌐 miguel.bienestar.dpia.site</span>
+  </div>
+  <div class="id-actions">
+    <button class="btn btn-accent"
+            data-scope='{"micrositio":"bienestar","idioma":"es","alias":"@CoachMiguel","tel":"+34911222000"}'
+            onclick="chatHere(this)">Chatear aquí</button>
+    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+  </div>
+</details>
+
+
+
+
+
+
+
+
+    </div>
+
+    <!-- FOOTER DENTRO DE .id-card -->
+    <div class="id-footer">
+      <div class="foot-left">
+        <span class="hint">Seleccioná una identidad para chatear</span>
+      </div>
+      <div class="foot-right">
+        
+        <button class="btn btn-accent" id="newId">Nueva identidad</button>
+      </div>
+    </div>
   </div>
 </div>
 
-
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/usuariosChat.css') }}">
-  <script src="{{ url_for('static', filename='js/chats/usuariosChat.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chats/usuariosChat.css') }}">
+<script src="{{ url_for('static', filename='js/chats/chatIdentidades.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chats/usuariosChat.js') }}"></script>

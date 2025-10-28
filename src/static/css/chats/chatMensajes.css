@@ -108,3 +108,128 @@
 }
 
 
+/* El contenedor padre (columna) debe permitir que el hijo scrollee */
+.col-chat, .chat-wrapper, .content-col {
+  height: 100%;
+  min-height: 0;          /* CLAVE */
+  overflow: hidden;
+}
+
+/* Chat: header / mensajes (1fr) / input */
+.chat{
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  max-height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;        /* o 0 si lo querés cuadrado */
+  background: #0b1222;
+  overflow: hidden;           /* el scroll vive en .msgs */
+}
+
+/* Header ya lo tenés; lo dejo por si falta min-altura */
+.chat-head{
+  min-height: 42px;
+  border-bottom: 1px solid var(--border);
+  background: inherit;
+}
+
+/* Lista scrolleable y sin solaparse con el input */
+.msgs{
+  min-height: 0;             /* CLAVE para que scrollee */
+  overflow: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Input fijo en el fondo */
+.chat-input{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 8px;
+  border-top: 1px solid var(--border);
+  background: inherit;
+}
+.chat-input input{
+  background:#0b1426; border:1px solid var(--border);
+  border-radius:10px; padding:10px; color:#cbd5e1;
+}
+
+
+/* 0) Config general: bloqueá el scroll global si querés scrollear solo el chat */
+html, body { height: 100%; overflow: hidden; }
+
+/* 1) Viewport útil con topbar fijo (ajustá la altura real) */
+:root { --topbar-h: 70px; } /* si tu topbar mide 64px, poné 64 */
+
+/* 2) Columnas/padres sin “trabar” el alto de sus hijos */
+.app, .layout, .content, .col-chat {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+/* Fallback si 100dvh no está soportado */
+@supports not (height: 100dvh) {
+  .app, .layout, .content, .col-chat { height: 100vh; }
+}
+
+/* 3) Que la columna del chat reste el topbar y no tenga overflow propio */
+.col-chat {
+  height: calc(100dvh - var(--topbar-h));
+  min-height: 0;
+  overflow: hidden;
+}
+@supports not (height: 100dvh) {
+  .col-chat { height: calc(100vh - var(--topbar-h)); }
+}
+
+/* 4) El chat se encastra en su columna: header / mensajes / input */
+.chat{
+  display: grid;
+  grid-template-rows: auto 1fr auto;  /* header, lista, input */
+  height: 100%;
+  max-height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;                 /* deja 0 si lo querés recto */
+  background: #0b1222;
+  overflow: hidden;                    /* el único scroll vive en .msgs */
+}
+
+/* 5) Header fijo y consistente */
+.chat-head{
+  min-height: 42px;
+  border-bottom: 1px solid var(--border);
+  background: inherit;
+}
+
+/* 6) La lista de mensajes scrollea dentro del hueco */
+.msgs{
+  min-height: 0;        /* CLAVE: permite que el grid “aplane” */
+  overflow: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 7) Input fijo abajo */
+.chat-input{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 8px;
+  border-top: 1px solid var(--border);
+  background: inherit;
+}
+.chat-input input{
+  background:#0b1426; border:1px solid var(--border);
+  border-radius:10px; padding:10px; color:#cbd5e1;
+}
+
+/* 8) iOS/Android barras de sistema: evita que tape el input */
+@supports (padding: max(0px)) {
+  .chat-input { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+}

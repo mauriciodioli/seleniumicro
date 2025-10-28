@@ -182,3 +182,85 @@ document.getElementById('btnSearch').addEventListener('click', ()=>{
   setActiveThread(ensureThread(null));
   // (sin tip en mensajes)
 })();
+
+
+(function(){
+  const cardSel = '.id-card';
+  const listSel = '.id-accordion';
+  const itemSel = '.id-item';
+
+  function computeMaxHeight(){
+    const card = document.querySelector(cardSel);
+    const list = document.querySelector(listSel);
+    if(!card || !list) return;
+
+    // Alturas a restar: título (h4) + header de búsqueda
+    const h4 = card.querySelector('h4');
+    const header = card.querySelector('.panel-header');
+
+    const h4H = h4 ? h4.offsetHeight : 0;
+    const headH = header ? header.offsetHeight : 0;
+
+    const cs = getComputedStyle(card);
+    const padTop = parseFloat(cs.paddingTop||0);
+    const padBot = parseFloat(cs.paddingBottom||0);
+
+    const max = card.clientHeight - h4H - headH - padTop - padBot;
+    list.style.maxHeight = Math.max(120, max) + 'px'; // seguridad mínimo
+  }
+
+  function updateAccordionScroll(){
+    const list = document.querySelector(listSel);
+    if(!list) return;
+
+    const count = list.querySelectorAll(itemSel).length;
+    const shouldScroll = count >= 9;
+
+    list.classList.toggle('scrolling', shouldScroll);
+    if(shouldScroll){
+      computeMaxHeight();
+    }else{
+      list.style.maxHeight = '';
+    }
+  }
+
+  // Inicializa al cargar
+  window.addEventListener('DOMContentLoaded', ()=>{
+    updateAccordionScroll();
+    // Recalcula al redimensionar
+    window.addEventListener('resize', ()=>{
+      const list = document.querySelector(listSel);
+      if(list && list.classList.contains('scrolling')) computeMaxHeight();
+    });
+
+    // Observa cambios (si agregás/quitas usuarios dinámicamente)
+    const list = document.querySelector(listSel);
+    if(list){
+      const mo = new MutationObserver(()=> updateAccordionScroll());
+      mo.observe(list, { childList:true, subtree:false });
+    }
+  });
+})();
+
+
+(function(){
+  const list = document.querySelector('.id-accordion');
+  if(!list) return;
+  const toggle = ()=> list.classList.toggle('force-scroll', list.querySelectorAll('.id-item').length >= 9);
+  new MutationObserver(toggle).observe(list, {childList:true});
+  window.addEventListener('DOMContentLoaded', toggle);
+})();
+
+
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const list = document.querySelector('.id-accordion');
+  const foot = document.querySelector('.id-footer');
+  if(!list || !foot) return;
+  const fit = ()=>{
+    const h = foot.getBoundingClientRect().height || 56;
+    list.style.paddingBottom = (h + 12) + 'px';
+  };
+  new ResizeObserver(fit).observe(foot);
+  fit();
+});
