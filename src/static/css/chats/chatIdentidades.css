@@ -61,3 +61,17 @@ html, body { height:100%; overflow:hidden; }
 .id-accordion::-webkit-scrollbar{ width:10px; }
 .id-accordion::-webkit-scrollbar-thumb{ background:#1f2a44; border-radius:8px; }
 .id-accordion{ scrollbar-width: thin; }
+
+
+
+/* Mobile: muestra UNA sola columna por vez */
+@media (max-width: 768px){
+  .col-identidades, .col-ambitos, .col-chat{ display:none; }
+
+  .view-identidades .col-identidades{ display:block; }
+  .view-ambitos      .col-ambitos{ display:block; }
+  .view-chat            .col-chat{ display:block; }
+
+  /* que el contenedor no scrollee: el scroll vive dentro de cada panel */
+  .layout, .content, .cols, body, html { height:100dvh; min-height:0; overflow:hidden; }
+}

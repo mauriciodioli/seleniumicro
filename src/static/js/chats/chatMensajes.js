@@ -159,3 +159,4 @@
     badge.innerHTML = '<span class="ctx-pill"><span class="ctx-dot"></span>default</span>';
   }
 })();
+

@@ -264,3 +264,67 @@ document.addEventListener('DOMContentLoaded', ()=>{
   new ResizeObserver(fit).observe(foot);
   fit();
 });
+
+
+(function(){
+  const isMobile = () => matchMedia('(max-width:768px)').matches;
+
+  function setMobileView(view){  // 'identidades' | 'ambitos' | 'chat'
+    if(!isMobile()) return;
+    const root = document.documentElement;
+    root.classList.remove('view-identidades','view-ambitos','view-chat');
+    root.classList.add('view-' + view);
+  }
+
+  // Vista inicial en móvil: Identidades
+  document.addEventListener('DOMContentLoaded', () => {
+    if(isMobile()){
+      // si ya estabas en otra, no toco; sino, muestro identidades
+      const r = document.documentElement;
+      if(!r.classList.contains('view-identidades') &&
+         !r.classList.contains('view-ambitos') &&
+         !r.classList.contains('view-chat')){
+        r.classList.add('view-identidades');
+      }
+    }
+  });
+
+  // 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
+  document.addEventListener('click', (e) => {
+    const summary = e.target.closest('.id-summary');  // tu <summary class="id-summary">
+    if(summary && isMobile()){
+      setMobileView('ambitos');
+    }
+  });
+
+  // 2.b Cuando se pulsa “Chatear …” en ámbitos/mini-cards -> ir a Chat (solo móvil)
+  const _origChatHere = window.chatHere || window.chatAmbitoHere;
+  window.chatHere = window.chatAmbitoHere = function(btn){
+    try{
+      if(typeof _origChatHere === 'function') _origChatHere(btn);
+    }finally{
+      setMobileView('chat');
+    }
+  };
+
+  // 2.c Botón “flecha” del header del chat como “volver a Ámbitos” en móvil
+  const backBtn = document.getElementById('toggleAmbitos');
+  if(backBtn){
+    backBtn.addEventListener('click', () => {
+      if(isMobile()) setMobileView('ambitos');
+    });
+  }
+
+  // 2.d Si rotás la pantalla, mantené la vista coherente
+  addEventListener('resize', () => {
+    const r = document.documentElement;
+    if(!isMobile()){
+      // limpiá las clases móviles para volver al layout de 3 columnas
+      r.classList.remove('view-identidades','view-ambitos','view-chat');
+    }else if(!r.classList.contains('view-identidades') &&
+             !r.classList.contains('view-ambitos') &&
+             !r.classList.contains('view-chat')){
+      r.classList.add('view-identidades');
+    }
+  });
+})();
