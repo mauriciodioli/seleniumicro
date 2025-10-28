@@ -233,3 +233,40 @@ html, body { height: 100%; overflow: hidden; }
 @supports (padding: max(0px)) {
   .chat-input { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
 }
+
+
+
+/* === Layout deslizante para móvil === */
+@media (max-width: 768px){
+
+  .layout-chat {                /* tu contenedor general */
+    display: flex;
+    width: 300%;                /* tres paneles lado a lado */
+    transition: transform .4s ease-in-out;
+  }
+
+  .col-identidades,
+  .col-ambitos,
+  .col-chat {
+    width: 100%;
+    flex-shrink: 0;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Estado inicial → muestra Identidades */
+  html:not(.slide-ambitos):not(.slide-chat) .layout-chat {
+    transform: translateX(0);
+  }
+
+  /* Al abrir Ámbitos */
+  html.slide-ambitos .layout-chat {
+    transform: translateX(-100%);
+  }
+
+  /* Al abrir Chat */
+  html.slide-chat .layout-chat {
+    transform: translateX(-200%);
+  }
+}
