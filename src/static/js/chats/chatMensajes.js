@@ -14,6 +14,8 @@
 
 
 
+
+
 // ===== Estado global simple =====
   const Chat = {
     scope: null,     // {ambito, categoria, subcategoria, idioma, cp, alias, tel}

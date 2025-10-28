@@ -328,3 +328,43 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }
   });
 })();
+
+
+(function(){
+  const root = document.documentElement;
+  const isMobile = () => matchMedia('(max-width:768px)').matches;
+
+  // 1️⃣ Al hacer clic en un nombre de usuario, desliza hacia Ámbitos
+  document.addEventListener('click', e => {
+    const name = e.target.closest('.id-summary');
+    if(name && isMobile()){
+      root.classList.remove('slide-chat');
+      root.classList.add('slide-ambitos');
+    }
+  });
+
+  // 2️⃣ Al hacer clic en cualquier "Chatear aquí" → desliza hacia Chat
+  const originalChatHere = window.chatHere || window.chatAmbitoHere;
+  window.chatHere = window.chatAmbitoHere = function(btn){
+    if(typeof originalChatHere === 'function') originalChatHere(btn);
+    if(isMobile()){
+      root.classList.remove('slide-ambitos');
+      root.classList.add('slide-chat');
+    }
+  };
+
+  // 3️⃣ Botón “⟵” del chat → volver a Ámbitos
+  document.addEventListener('click', e => {
+    if(e.target.closest('#toggleAmbitos') && isMobile()){
+      root.classList.remove('slide-chat');
+      root.classList.add('slide-ambitos');
+    }
+  });
+
+  // 4️⃣ Reinicia el slide si se pasa a escritorio
+  window.addEventListener('resize', () => {
+    if(!isMobile()){
+      root.classList.remove('slide-ambitos','slide-chat');
+    }
+  });
+})();
