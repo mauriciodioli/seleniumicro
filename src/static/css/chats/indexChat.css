@@ -311,3 +311,75 @@ details[open] .id-chev-btn{ transform:rotate(90deg); }
     max-width: 100%;
   }
 }
+
+
+
+
+
+
+
+/* === PARCHE: reservar espacio para la topbar y encastrar paneles === */
+:root { --topbar-h: 56px; }         /* poné la altura REAL de tu barra */
+
+/* 1) Asegurá la barra arriba del todo (si ya es sticky, igual reservo espacio) */
+.nav{
+  position: fixed;                   /* queda arriba siempre */
+  top: 0; left: 0; right: 0;
+  height: var(--topbar-h);
+  z-index: 1000;
+}
+
+/* 2) Empujar el contenido por debajo de la barra */
+.wrap{
+  padding-top: var(--topbar-h);      /* deja espacio bajo la nav */
+}
+
+/* 3) Contenedor y columnas: altura útil de viewport (sin topbar) */
+.app-grid{
+  min-height: calc(100dvh - var(--topbar-h));
+  height: auto;                      /* que crezca si hace falta */
+  overflow: hidden;
+}
+.col-identidades,
+.col-ambitos,
+.col-chat{
+  height: calc(100dvh - var(--topbar-h));
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 4) Chat: que llene su columna y el scroll viva en .msgs */
+.col-chat .chat{
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* header / mensajes / input */
+  height: 100%;
+  min-height: 0 !important;          /* pisa min-height rígidos previos */
+  overflow: hidden;
+}
+.msgs{
+  min-height: 0;
+  overflow: auto;
+}
+
+/* 5) Evitar desbordes horizontales en móvil */
+@media (max-width: 768px){
+  html, body { overflow-x: hidden; }
+
+  /* cada panel ocupa exactamente 100vw */
+  .col-identidades,
+  .col-ambitos,
+  .col-chat{
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  /* si usás carrusel/slide, el contenedor respeta topbar */
+  .app-grid{
+    height: calc(100dvh - var(--topbar-h));
+  }
+}
+
+/* 6) Safe area (iOS) para que el input no quede tapado */
+@supports (padding: max(0px)) {
+  .chat-input { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+}

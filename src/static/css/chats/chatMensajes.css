@@ -304,3 +304,71 @@ html, body { height: 100%; overflow: hidden; }
     .chat-input{ padding-bottom: max(8px, env(safe-area-inset-bottom)); }
   }
 }
+
+/* === Ancho perfecto en móvil (sin overflow) === */
+@media (max-width: 768px){
+
+  /* 1) Nada de scroll horizontal global */
+  html, body { overflow-x: hidden; }
+
+  /* 2) Cada panel ocupa exactamente 100vw */
+  .col-identidades,
+  .col-ambitos,
+  .col-chat{
+    width: 100vw;       /* no % */
+    max-width: 100vw;
+    min-width: 0;       /* evita desbordes por hijos */
+    box-sizing: border-box;
+  }
+
+  /* 3) Si usás contenedor deslizante: 3 columnas = 300vw */
+  .app-grid, .layout-chat{
+    width: 300vw;
+    max-width: 300vw;
+    overflow-x: hidden; /* por las dudas */
+  }
+
+  /* 4) El propio chat no debe desbordar */
+  .chat{
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  /* 5) El header no empuja el ancho */
+  .chat-head{ min-width: 0; }
+  .chat-head .ctx-badge{
+    max-width: calc(100% - 80px);
+    min-width: 0;
+  }
+
+  /* 6) Área de mensajes sin “crecer” de ancho */
+  .msgs{
+    min-width: 0;
+    overflow-wrap: anywhere;  /* rompe líneas largas (links/alias) */
+    word-break: break-word;
+  }
+
+  /* 7) Input + botón: que el input se lleve todo el ancho libre */
+  .chat-input{
+    grid-template-columns: minmax(0,1fr) auto; /* evita que se salga */
+  }
+  .chat-input input{
+    width: 100%;
+    min-width: 0;              /* CLAVE: permite encogerse */
+    box-sizing: border-box;
+    font-size: 16px;           /* evita zoom en iOS */
+  }
+  .chat-input .btn{
+    white-space: nowrap;       /* no se parte el botón */
+  }
+
+  /* 8) Burbujas: no más del ancho del panel */
+  .bubble{
+    max-width: 100%;
+    box-sizing: border-box;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+}
