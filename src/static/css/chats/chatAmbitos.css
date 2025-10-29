@@ -5,7 +5,14 @@
 }
 
 /* contenedores padres sin scroll propio */
-.amb-wrapper, .col-ambitos { height: 100dvh; min-height: 0; overflow: hidden; }
+/* contenedores padres: altura útil (viewport - topbar) */
+.amb-wrapper,
+.col-ambitos{
+  height: calc(100dvh - var(--topbar-h));
+  min-height: 0;
+  overflow: hidden;
+}
+
 
 /* ==== CARD en grid: título / header / (panel búsqueda opcional) / lista / footer ==== */
 .amb-card{

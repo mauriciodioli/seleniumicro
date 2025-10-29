@@ -98,3 +98,42 @@ html, body { height:100%; overflow:hidden; }
     transform: translateX(-200%);
   }
 }
+
+
+
+
+/* El card de Identidades es una columna: header arriba, lista ocupa el resto, footer abajo */
+.id-card{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;  /* clave para que el hijo pueda scrollear */
+}
+
+/* Las partes superiores NO deben “empujar” */
+.id-card .panel-header,
+.id-card .search,
+.id-card .search-tabs{
+  flex: 0 0 auto;
+}
+
+/* La lista es el área scrolleable que arranca ARRIBA */
+.id-accordion{
+  flex: 1 1 auto;          /* ocupa el espacio libre */
+  min-height: 0;           /* permite overflow en flex */
+  overflow: auto;          /* scroll vertical acá */
+  display: block !important;
+  margin-top: 0 !important;
+  justify-content: flex-start !important;
+  align-content: flex-start !important;
+  align-items: stretch !important;
+}
+
+/* Si tenés un footer dentro de la tarjeta, que no empuje */
+.id-footer{
+  flex: 0 0 auto;
+}
+
+/* Por si algún utilitario te lo estaba tirando al fondo */
+.id-accordion, .id-accordion *{
+  margin-block-end: 0 !important;   /* evita márgenes colapsados que “bajan” */
+}
