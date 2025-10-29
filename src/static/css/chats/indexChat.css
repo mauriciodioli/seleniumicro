@@ -23,6 +23,13 @@ body{
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
 
+
+:root { --gap-nav-wrap: 1px; }
+
+.wrap{
+  padding-top: var(--gap-nav-wrap); /* crea el mismo espacio bajo la nav */
+}
+
 /* =========================
    Navbar mínima
 ========================= */

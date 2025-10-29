@@ -23,39 +23,6 @@
 </div>
 
 
-    <!-- TUS HERRAMIENTAS EXISTENTES (quedan intactas) -->
-    <div class="tools">
-      <h3 style="margin:0 0 10px">Cargar lugar del Sheet</h3>
-
-      <select id="pais" name="pais">
-        <option value="">Seleccione un lugar</option>
-        <option value="argentina">Argentina</option>
-        <option value="canada">Canadá</option>
-        <option value="francia">Francia</option>
-        <option value="italia">Italia</option>
-        <option value="estados_unidos">Estados Unidos</option>
-        <option value="alemania">Alemania</option>
-        <option value="barcelona">barcelona</option>
-        <option value="perugia">perugia</option>
-        <option value="poznan">poznan</option>
-        <option value="spoleto">spoleto</option>
-        <option value="cerdenia">cerdenia</option>
-      </select>
-
-      <select id="ArchivosCargados" name="ArchivosCargados">
-        <option value="">Seleccione un Archivo</option>
-      </select>
-      <button id="btnEliminarArchivo" class="btn btn-danger ms-2" disabled>Eliminar Archivo</button>
-
-      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
-        <button id="btn-scrapear">🔍 Ejecutar scraping Apify</button>
-        <button id="btn-scrapear-imagenes">🧠 Ejecutar scraping Para imágenes</button>
-        <button id="btn-cargar-sheet">📥 Cargar de Scrapeado</button>
-      </div>
-
-      <div id="resultado"></div>
-    </div>
-  </div>
 
    <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
    <script src="{{ url_for('static', filename='js/chats/chatMensajes.js') }}"></script>
