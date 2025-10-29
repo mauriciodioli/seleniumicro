@@ -41,41 +41,52 @@
 
 
 
-// --- Helper: navegar entre paneles (solo mueve en mobile) ---
+// --- Helpers de navegación horizontal móvil ---
+const strip = document.querySelector('.app-grid');
+const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
 function gotoPanel(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  const isMobile = matchMedia('(max-width: 768px)').matches;
-  if (isMobile) el.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  if (isMobile()) el.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
 }
 
-// --- Delegación ÚNICA ---
+// Ir al centro y luego enfocar un ancla interna (ej: #amb-card)
+function gotoAmbitosAndFocus(anchorId) {
+  gotoPanel('col-ambitos');
+  const focusIt = () => {
+    const anchor = document.getElementById(anchorId);
+    if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  // pequeño delay para que termine el scroll horizontal antes del vertical
+  if (isMobile()) setTimeout(focusIt, 300); else focusIt();
+}
+
+// Delegación global: dispara por data-goto
 document.addEventListener('click', (e) => {
-  const el = e.target.closest(
-    '[data-goto], .ctx-badge, .user-name, .ambito-item, #backToAmbitos, #backToIdentidades'
-  );
-  if (!el) return;
+  const btn = e.target.closest('[data-goto]');
+  if (!btn) return;
 
-  // Si el click ocurre dentro de <summary>, evitá el toggle automático
-  if (el.closest('summary')) {
-    e.preventDefault();
-    e.stopPropagation();
+  const to = btn.getAttribute('data-goto');
+  if (to === 'amb-card') gotoAmbitosAndFocus('amb-card');  // ← CAMBIO CLAVE
+  else if (to === 'chat') gotoPanel('col-chat');
+  else if (to === 'identidades') gotoPanel('col-identidades');
+});
+
+// Atajos específicos que ya tenés en UI
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.ctx-badge') || e.target.closest('.user-name')) {
+    gotoPanel('col-ambitos');
   }
+});
 
-  // Normalizar destino
-  let to = el.getAttribute('data-goto');
-  if (!to) {
-    if (el.matches('.ctx-badge, .user-name, #backToAmbitos')) to = 'amb-card';
-    else if (el.matches('.ambito-item')) to = 'chat';
-    else if (el.matches('#backToIdentidades')) to = 'identidades';
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.ambito-item') || e.target.closest('[data-open-chat]')) {
+    gotoPanel('col-chat');
   }
-  if (!to) return;
+});
 
-  // Mapear destino → columna
-  const col =
-    to === 'amb-card' ? 'col-ambitos' :
-    to === 'chat' ? 'col-chat' :
-    to === 'identidades' ? 'col-identidades' : null;
-
-  if (col) gotoPanel(col);
+document.addEventListener('click', (e) => {
+  if (e.target.matches('#backToAmbitos')) gotoPanel('col-ambitos');
+  if (e.target.matches('#backToIdentidades')) gotoPanel('col-identidades');
 });
