@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Alternativa: usa clases slide-* si estás en ese modo
   function setSlideClass(target){
+    debugger;
     const root = document.documentElement;
     if (target === 'col-identidades'){
       root.classList.remove('slide-ambitos','slide-chat');

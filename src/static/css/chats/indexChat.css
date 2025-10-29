@@ -279,36 +279,37 @@ details[open] .id-chev-btn{ transform:rotate(90deg); }
 
 
 /* === Mobile: carrusel horizontal con snap === */
+/* --- FIX carrusel horizontal en móvil --- */
 @media (max-width: 768px) {
-  .wrap { overflow: hidden; }
+  /* 1) Permití overflow-x en el contenedor padre */
+  .wrap {
+    overflow: visible; /* antes lo tenías en hidden */
+  }
 
-  /* Cambiamos de grid a tira horizontal scrollable */
+  /* 2) Asegurá el row deslizable */
   .app-grid {
     display: flex;
     flex-direction: row;
-    overflow-x: auto;               /* deslizable */
+    overflow-x: auto;
     overflow-y: hidden;
-    scroll-snap-type: x mandatory;  /* snap por panel */
-    scroll-behavior: smooth;        /* animación suave */
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    height: calc(100dvh - 56px);    /* ajustá a tu navbar */
+    height: calc(100dvh - 56px); /* usa tu altura real de nav si querés var */
   }
 
-  /* Cada panel ocupa todo el viewport */
+  /* 3) Cada panel ocupa EXACTAMENTE una pantalla */
   .col-identidades,
   .col-ambitos,
   .col-chat {
+    flex: 0 0 100vw;      /* <-- clave: ancho fijo por panel */
     min-width: 100vw;
     max-width: 100vw;
-    scroll-snap-align: start;
-    /* Evitar scroll interno “competidor” vertical si no hace falta */
+    height: calc(100dvh - 56px);
+    min-height: 0;
     overflow-y: auto;
+    scroll-snap-align: start;
     overscroll-behavior: contain;
-  }
-
-  /* Limpieza de paddings/márgenes que empujen */
-  .col-identidades > *, .col-ambitos > *, .col-chat > * {
-    max-width: 100%;
   }
 }
 

@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
 document.addEventListener('click', (e) => {
   const summary = e.target.closest('.id-summary');  // <summary class="id-summary">
-    debugger; // ← ahora debería frenar acá
+    
   if (!summary) return;
 
   if (isMobile()) {
@@ -365,7 +365,7 @@ document.addEventListener('click', (e) => {
 
 // (2) Fallback mínimo: si tocan el nombre dentro del summary, también navega
 document.addEventListener('click', (e) => {
-    debugger; // ← ahora debería frenar acá
+   
   const name = e.target.closest('.id-name[data-goto="amb-card"]');
   if (!name || !isMobile()) return;
   setMobileView('ambitos');
