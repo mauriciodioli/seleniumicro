@@ -270,3 +270,37 @@ html, body { height: 100%; overflow: hidden; }
     transform: translateX(-200%);
   }
 }
+
+
+/* === Ajuste de alto en móvil para que el input no quede fuera === */
+:root { --topbar-h: 56px; } /* poné la altura real de tu barra fija */
+
+@media (max-width: 768px){
+
+  /* La columna que contiene el chat debe tener alto de viewport útil */
+  .col-chat{
+    height: calc(100dvh - var(--topbar-h));
+    min-height: 0;         /* CLAVE: permite que el hijo scrollee */
+    overflow: hidden;
+  }
+
+  /* El panel de chat ocupa toda la columna: header / msgs / input */
+  .chat{
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;      /* el único scroll vive en .msgs */
+  }
+
+  /* El área de mensajes scrollea y no empuja al input */
+  .msgs{
+    min-height: 0;         /* CLAVE: sin esto el input se va */
+    overflow: auto;
+  }
+
+  /* Evita que el notch tape el input */
+  @supports (padding: max(0px)){
+    .chat-input{ padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  }
+}
