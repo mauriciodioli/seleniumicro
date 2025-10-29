@@ -38,45 +38,44 @@
   })();
 
 
-  // --- Helpers de navegación horizontal móvil ---
-const strip = document.querySelector('.app-grid');
 
+
+
+// --- Helper: navegar entre paneles (solo mueve en mobile) ---
 function gotoPanel(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  // En mobile usamos scrollIntoView; en desktop no hacemos nada
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const isMobile = matchMedia('(max-width: 768px)').matches;
   if (isMobile) el.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
 }
 
-// Delegación global: dispara por data-goto
+// --- Delegación ÚNICA ---
 document.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-goto]');
-  if (!btn) return;
+  const el = e.target.closest(
+    '[data-goto], .ctx-badge, .user-name, .ambito-item, #backToAmbitos, #backToIdentidades'
+  );
+  if (!el) return;
 
-  const to = btn.getAttribute('data-goto');
-  if (to === 'ambitos') gotoPanel('col-ambitos');
-  else if (to === 'chat') gotoPanel('col-chat');
-  else if (to === 'identidades') gotoPanel('col-identidades');
-});
-
-// Atajos específicos que ya tenés en UI:
-// 1) Clic en "nombre de usuario" (badge o header) -> ir a Ámbitos
-document.addEventListener('click', (e) => {
-  if (e.target.closest('.ctx-badge') || e.target.closest('.user-name')) {
-    gotoPanel('col-ambitos');
+  // Si el click ocurre dentro de <summary>, evitá el toggle automático
+  if (el.closest('summary')) {
+    e.preventDefault();
+    e.stopPropagation();
   }
-});
 
-// 2) Clic en un item de ámbitos -> ir al Chat
-document.addEventListener('click', (e) => {
-  if (e.target.closest('.ambito-item') || e.target.closest('[data-open-chat]')) {
-    gotoPanel('col-chat');
+  // Normalizar destino
+  let to = el.getAttribute('data-goto');
+  if (!to) {
+    if (el.matches('.ctx-badge, .user-name, #backToAmbitos')) to = 'amb-card';
+    else if (el.matches('.ambito-item')) to = 'chat';
+    else if (el.matches('#backToIdentidades')) to = 'identidades';
   }
-});
+  if (!to) return;
 
-// 3) Botones “volver” (si querés)
-document.addEventListener('click', (e) => {
-  if (e.target.matches('#backToAmbitos')) gotoPanel('col-ambitos');
-  if (e.target.matches('#backToIdentidades')) gotoPanel('col-identidades');
+  // Mapear destino → columna
+  const col =
+    to === 'amb-card' ? 'col-ambitos' :
+    to === 'chat' ? 'col-chat' :
+    to === 'identidades' ? 'col-identidades' : null;
+
+  if (col) gotoPanel(col);
 });
