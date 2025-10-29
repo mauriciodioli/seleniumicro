@@ -272,9 +272,32 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
  const isMobile = () => matchMedia('(max-width:768px)').matches;
+
+
+
+
+
+
+
+
+
+
+
+
+
 (function(){
  
+window.setMobileView = function(view){  // 'identidades' | 'ambitos' | 'chat'
+  if(!isMobile()) return;
+  const root = document.documentElement;
+  root.classList.remove('view-identidades','view-ambitos','view-chat');
+  root.classList.add('view-' + view);
+};
 
+window.focusAmbAnchor = function(){
+  const a = document.getElementById('amb-card');
+  if (a) a.scrollIntoView({ behavior:'smooth', block:'start' });
+};
   function setMobileView(view){  // 'identidades' | 'ambitos' | 'chat'
     if(!isMobile()) return;
     const root = document.documentElement;
@@ -300,6 +323,33 @@ function focusAmbAnchor(){
 }
 
   
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Intercepta el click ANTES de que <summary> haga toggle
+  document.addEventListener('click', function onGoto(e){
+    const el = e.target.closest('.id-name[data-goto]');
+    if (!el) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const details = el.closest('details');
+    if (details && details.open) details.open = false;
+
+    if (isMobile()) {
+      window.setMobileView('ambitos');
+      setTimeout(() => { try { window.focusAmbAnchor(); } catch(_){} }, 250);
+    }
+  }, { capture: true });
+});
+
+
+
   // 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
 document.addEventListener('click', (e) => {
   const summary = e.target.closest('.id-summary');  // <summary class="id-summary">
@@ -311,7 +361,7 @@ document.addEventListener('click', (e) => {
     setMobileView('ambitos');
     setTimeout(focusAmbAnchor, 300);
   }
-}, { capture: true }); // ← CAMBIO MÍNIMO
+}, ); // ← CAMBIO MÍNIMO
 
 // (2) Fallback mínimo: si tocan el nombre dentro del summary, también navega
 document.addEventListener('click', (e) => {
@@ -320,7 +370,7 @@ document.addEventListener('click', (e) => {
   if (!name || !isMobile()) return;
   setMobileView('ambitos');
   setTimeout(focusAmbAnchor, 300);
-}, { capture: true }); // ← opcional, pero útil
+}); // ← opcional, pero útil
 
   // 2.b Cuando se pulsa “Chatear …” en ámbitos/mini-cards -> ir a Chat (solo móvil)
   const _origChatHere = window.chatHere || window.chatAmbitoHere;
