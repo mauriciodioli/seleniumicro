@@ -129,6 +129,7 @@
   ],
   "poznan": [
     {
+<<<<<<< HEAD
       "principal": "poznan_20250826_064156.json",
       "relacionados": [
         "publicaciones_poznan_20250826_064213.json"
@@ -260,6 +261,71 @@
       "principal": "cerdenia_20250909_120949.json",
       "relacionados": [
         "publicaciones_cerdenia_20250909_121229.json"
+=======
+      "principal": "poznan_20250812_111057.json",
+      "relacionados": [
+        "publicaciones_poznan_20250812_113708.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_071634.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_072419.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_071634.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_074001.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_071634.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_082408.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_082527.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_083940.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_085348.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_085410.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_085348.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_085535.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_085348.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_090716.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_085348.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_090734.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_085348.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_092114.json"
+      ]
+    },
+    {
+      "principal": "poznan_20250813_092142.json",
+      "relacionados": [
+        "publicaciones_poznan_20250813_093114.json"
+>>>>>>> 2c12251 (cambios)
       ]
     }
   ]

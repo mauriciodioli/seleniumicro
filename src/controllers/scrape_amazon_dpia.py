@@ -101,6 +101,8 @@ def load_many(json_path):
 
     # 6) Tu salida de depuración / resumen
     for sección in datos:
+        if not sección.get('items'):  # Si no existe o está vacío
+            continue
         #print(f"{sección['asin']} – {sección['productDescription'][:60]}...")
         print(f"{sección['producto']} → {len(sección['items'])} items")
 

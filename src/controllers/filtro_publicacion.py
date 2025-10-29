@@ -40,6 +40,33 @@ MARCAS_RESTRINGIDAS = ["adidas", "nike", "apple", "samsung", "sony", "puma", "le
 
 # Completar la publicación con datos del sheet y base de datos
 
+def parse_rating(val):
+    """Devuelve float o None a partir de: 4.6, '4,6 de 5', etc."""
+    if val is None:
+        return None
+    if isinstance(val, (int, float)):
+        return float(val)
+    m = re.search(r'(\d+(?:[.,]\d+)?)', str(val))
+    return float(m.group(1).replace(',', '.')) if m else None
+
+def _parse_reviews(v):
+    # '1.234', '1 234', '117 opiniones' -> 1234/117
+    s = re.sub(r'[^\d]', '', str(v))
+    return int(s) if s else 0
+
+def _parse_precio(v):
+    # '€159,99', '159.99', '159,99 zł' -> float
+    s = str(v).strip()
+    s = re.sub(r'[^\d,.\-]', '', s)      # saca símbolos de moneda
+    # si hay coma y punto, asumimos coma decimal europea
+    if s.count(',') == 1 and s.count('.') >= 1:
+        s = s.replace('.', '').replace(',', '.')
+    else:
+        s = s.replace(',', '.')
+    try:
+        return float(s)
+    except:
+        return 0.0
 
 def _to_float(val):
     if val is None or val == "":
@@ -123,8 +150,6 @@ def filtro_publicaciones(items: List[Dict[str, Any]], k: int = 3) -> List[Dict[s
 
 
 
-
-
 # ──────────────────────────────────────────────────────────────
 # ──────────────────────────────────────────────────────────────
 
@@ -141,7 +166,12 @@ def armar_publicaciones_validas_match_scrping_sheet(
       · items_filtrados (con campos imagen1 … imagen6 completos)
     """
       
-    por_kw = {r["producto"]: {"items": r["items"], "row_index": r.get("row_index")} for r in resultados_globales}
+    por_kw = {
+                r["producto"]: {"items": r["items"], "row_index": r.get("row_index")}
+                for r in resultados_globales
+                if r.get("producto") and r.get("items")  # ← filtra vacíos/inexistentes
+            }
+
 
     publicaciones: List[Dict] = []
 
@@ -151,6 +181,11 @@ def armar_publicaciones_validas_match_scrping_sheet(
         datos = por_kw.get(kw, {})
         raw_items = datos.get("items", [])
         row_index = fila.get("row_index")
+        
+        
+         # 🔹 Saltar si no hay items
+        if not raw_items:
+            continue
         print(f"[DEBUG] armar_publicaciones_validas_match_scrping_sheet Ruta al archivo JSON principal: {kw}", flush=True)
         top3 = filtro_publicaciones(raw_items, 3)
         for d in top3:
