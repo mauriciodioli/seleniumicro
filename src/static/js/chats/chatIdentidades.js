@@ -288,14 +288,22 @@ document.addEventListener('DOMContentLoaded', ()=>{
       }
     }
   });
+function focusAmbAnchor(){
+  const a = document.getElementById('amb-card');
+  if (a) a.scrollIntoView({ behavior:'smooth', block:'start' });
+}
 
+  
   // 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
-  document.addEventListener('click', (e) => {
-    const summary = e.target.closest('.id-summary');  // tu <summary class="id-summary">
-    if(summary && isMobile()){
-      setMobileView('ambitos');
-    }
-  });
+// 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
+document.addEventListener('click', (e) => {
+  const summary = e.target.closest('.id-summary');  // tu <summary class="id-summary">
+  if (summary && isMobile()){
+    setMobileView('ambitos');
+    setTimeout(focusAmbAnchor, 300);  // ← NUEVO: enfoca #amb-card tras el slide
+  }
+});
+
 
   // 2.b Cuando se pulsa “Chatear …” en ámbitos/mini-cards -> ir a Chat (solo móvil)
   const _origChatHere = window.chatHere || window.chatAmbitoHere;
