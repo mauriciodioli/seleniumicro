@@ -1,4 +1,5 @@
-<div class="amb-card">
+<section id="col-ambitos" class="col-ambitos"></section>
+<div id="amb-card" class="amb-card">
   <h4>Ámbitos</h4>
 
   <div class="amb-panel-header">
@@ -36,7 +37,7 @@
         <div class="amb-subcard">
           <div class="amb-subcard-head">
             <span>💬 Médicos</span>
-            <button class="btn"
+            <button class="btn" data-goto="chat"
                     data-scope='{"ambito":"salud","categoria":"medicos","cp":"28080","idioma":"es"}'
                     onclick="chatHere(this)">Chatear en Médicos</button>
           </div>
@@ -209,6 +210,6 @@
     </div>
   </div>
 </div>
-
+</section>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatAmbitos.css') }}">
 <script src="{{ url_for('static', filename='js/chats/chatAmbitos.js') }}"></script>
