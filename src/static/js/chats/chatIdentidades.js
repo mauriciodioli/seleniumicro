@@ -295,17 +295,24 @@ function focusAmbAnchor(){
 
   
   // 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
-// 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
 document.addEventListener('click', (e) => {
-  const summary = e.target.closest('.id-summary');  // tu <summary class="id-summary">
-    debugger;
-  if (summary && isMobile()){
-    debugger;
-    setMobileView('ambitos');
-    setTimeout(focusAmbAnchor, 300);  // ← NUEVO: enfoca #amb-card tras el slide
-  }
-});
+  const summary = e.target.closest('.id-summary');  // <summary class="id-summary">
+  if (!summary) return;
 
+  if (isMobile()) {
+    debugger; // ← ahora debería frenar acá
+    setMobileView('ambitos');
+    setTimeout(focusAmbAnchor, 300);
+  }
+}, { capture: true }); // ← CAMBIO MÍNIMO
+
+// (2) Fallback mínimo: si tocan el nombre dentro del summary, también navega
+document.addEventListener('click', (e) => {
+  const name = e.target.closest('.id-name[data-goto="amb-card"]');
+  if (!name || !isMobile()) return;
+  setMobileView('ambitos');
+  setTimeout(focusAmbAnchor, 300);
+}, { capture: true }); // ← opcional, pero útil
 
   // 2.b Cuando se pulsa “Chatear …” en ámbitos/mini-cards -> ir a Chat (solo móvil)
   const _origChatHere = window.chatHere || window.chatAmbitoHere;
