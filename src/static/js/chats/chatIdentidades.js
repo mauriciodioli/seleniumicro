@@ -265,9 +265,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
   fit();
 });
 
-
+ const isMobile = () => matchMedia('(max-width:768px)').matches;
 (function(){
-  const isMobile = () => matchMedia('(max-width:768px)').matches;
+ 
 
   function setMobileView(view){  // 'identidades' | 'ambitos' | 'chat'
     if(!isMobile()) return;
@@ -298,7 +298,9 @@ function focusAmbAnchor(){
 // 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
 document.addEventListener('click', (e) => {
   const summary = e.target.closest('.id-summary');  // tu <summary class="id-summary">
+    debugger;
   if (summary && isMobile()){
+    debugger;
     setMobileView('ambitos');
     setTimeout(focusAmbAnchor, 300);  // ← NUEVO: enfoca #amb-card tras el slide
   }
