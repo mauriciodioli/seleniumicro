@@ -322,3 +322,15 @@ details[open] .id-chev-btn{ transform:rotate(90deg); }
 
 
 
+/* oculta barras de scroll cuando el JS está scrolleando */
+.hide-scrollbar, 
+.hide-scrollbar * {
+  scrollbar-width: none !important;        /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar,
+.hide-scrollbar *::-webkit-scrollbar {
+  display: none !important;                /* Chrome / Edge / Safari */
+}
+
+

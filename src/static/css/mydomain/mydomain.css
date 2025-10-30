@@ -119,3 +119,150 @@
 .my-domain-left .panel-header > label{
   display: none !important;
 }
+
+
+/* ===== PULIDO MY DOMAIN ===== */
+
+/* que el panel izquierdo no tenga ese borde blanco del accordion */
+.my-domain-left .amb-accordion,
+.my-domain-left .amb-item {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* cada item separado con una línea muy sutil */
+.my-domain-left .amb-item {
+  border-bottom: 1px solid rgba(148,163,184,.03);
+  margin-bottom: 2px;
+}
+
+/* el summary con la misma altura que el de tu panel central */
+.my-domain-left .amb-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid rgba(148,163,184,.03);
+  border-radius: 10px;
+  background: rgba(15,23,42,.15);
+  cursor: pointer;
+}
+
+/* cuando está abierto */
+.my-domain-left details[open] > .amb-summary {
+  border-color: rgba(56,189,248,.4);
+  background: rgba(15,23,42,.25);
+}
+
+/* badge de estado más chico */
+.my-domain-left .amb-badge {
+  margin-left: auto;
+  font-size: .62rem;
+  padding: 2px 9px 3px;
+  border-radius: 999px;
+  background: rgba(15,118,110,.12);
+  border: 1px solid rgba(15,118,110,.25);
+}
+
+/* el bloque "Categorías donde yo publico" más pegado */
+.my-domain-left .md-head + .md-filters {
+  margin-top: 2px;
+}
+
+/* tabs de User / Domain bien chicos */
+.my-domain-left .search-tabs .tab {
+  background: rgba(15,23,42,.15);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: .67rem;
+  padding: 3px 12px 4px;
+}
+.my-domain-left .search-tabs .tab.active {
+  background: #0f172a;
+  border-color: rgba(56,189,248,.7);
+  color: #fff;
+}
+
+/* el buscador que está abajo quede enrasado con el acordeón */
+.my-domain-left .md-search {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* que la lista no tenga padding lateral tan grande */
+.my-domain-left .md-list {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+
+
+/* ===== HEADERS ALINEADOS MY DOMAIN ===== */
+
+/* contenedor de los 2 paneles */
+.my-domain-view {
+  /* ya lo tenés, pero lo recuerdo: */
+  /* display: grid; grid-template-columns: 320px 1fr; */
+}
+
+/* PANEL IZQUIERDO */
+.my-domain-left {
+  padding: 0;                 /* quitamos padding global */
+}
+
+/* título "Mis ámbitos" */
+.my-domain-left .md-head {
+  padding: 10px 14px 2px;     /* top, lados, bottom chico */
+  border-bottom: 1px solid rgba(255,255,255,.02);
+}
+
+/* "Categorías donde yo publico" */
+.my-domain-left .md-head + p,
+.my-domain-left .md-head + .md-filters {
+  margin-top: 0;
+}
+
+/* bloque tabs (User / Domain) */
+.my-domain-left .md-filters {
+  padding: 4px 14px 4px;
+  border-bottom: 1px solid rgba(255,255,255,.015);
+}
+
+/* lista de ámbitos: que arranque al mismo nivel que el derecho */
+.my-domain-left .md-list {
+  padding: 6px 10px 10px;
+}
+
+/* PANEL DERECHO */
+.my-domain-right {
+  padding: 0;
+}
+
+/* header derecho */
+.my-domain-right .md-head.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 2px;     /* mismo padding que el izq */
+  border-bottom: 1px solid rgba(255,255,255,.02);
+}
+
+/* botón volver más chico y alineado */
+.my-domain-right .md-head.right #btnBackToMain {
+  margin: 0;
+}
+
+/* contenido derecho pegado al header */
+.my-domain-right .md-content {
+  padding: 8px 14px 10px;
+}
+
+/* línea divisoria más sutil */
+.my-domain-view {
+  column-gap: 0;
+}
+.my-domain-left {
+  border-right: 1px solid rgba(255,255,255,.015);
+}
+

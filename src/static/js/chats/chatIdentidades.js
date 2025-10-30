@@ -1,5 +1,10 @@
+// ===================== RENDER BADGE CONTEXTO =====================
+//parche
 
 
+  
+  
+  
   function renderCtxBadge(){
   const el = document.getElementById('ctxBadge');
   if (!el) return;
@@ -130,7 +135,10 @@ window.chatHere = function(btn){
     const ambito = btn.closest('.ambito, .ambito-card');
     if (ambito) ambito.classList.add('is-active-ambito');
 
-    (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
+   if (!window.matchMedia('(max-width: 768px)').matches) {
+  (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
   }catch(e){
     console.error(e);
     Swal.fire('Error', 'Scope inválido', 'error');
@@ -352,26 +360,33 @@ function focusAmbAnchor(){
 
 
 
+document.addEventListener('click', function onGoto(e){
+  const el = e.target.closest('.id-name[data-goto="amb-card"]');
+  if (!el) return;
 
+  e.preventDefault();
+  e.stopPropagation();
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Intercepta el click ANTES de que <summary> haga toggle
-  document.addEventListener('click', function onGoto(e){
-    const el = e.target.closest('.id-name[data-goto]');
-    if (!el) return;
+  // cerrar el details si estaba abierto
+  const details = el.closest('details');
+  if (details && details.open) details.open = false;
 
-    e.preventDefault();
-    e.stopPropagation();
+  // solo móvil
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    document.documentElement.classList.add('hide-scrollbar');   // ← 1) oculto barra
+    window.setMobileView && window.setMobileView('ambitos');
 
-    const details = el.closest('details');
-    if (details && details.open) details.open = false;
+    setTimeout(() => {
+      const a = document.getElementById('amb-card');
+      if (a) a.scrollIntoView({ behavior:'smooth', block:'start' });
+      // 2) la vuelvo a mostrar
+      setTimeout(() => {
+        document.documentElement.classList.remove('hide-scrollbar');
+      }, 350);
+    }, 200);
+  }
+}, { capture: true });
 
-    if (isMobile()) {
-      window.setMobileView('ambitos');
-      setTimeout(() => { try { window.focusAmbAnchor(); } catch(_){} }, 250);
-    }
-  }, { capture: true });
-});
 
 
 
