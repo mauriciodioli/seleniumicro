@@ -102,6 +102,7 @@ function buildCtxLabel(scope){
 
 window.chatHere = function(btn){
   try{
+    
     const scope = JSON.parse(btn.getAttribute('data-scope') || '{}');
     const id = ensureThread(scope);
     setActiveThread(id);
@@ -135,6 +136,30 @@ window.chatHere = function(btn){
     Swal.fire('Error', 'Scope inválido', 'error');
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -350,6 +375,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
+
+
+
+
+
+// Captura CLIC en <span class="id-badge" data-goto="chat">...</span>
+document.addEventListener('click', function (e) {
+  const badge = e.target.closest('span.id-badge[data-goto="chat"]');
+  if (!badge) return;
+debugger;
+  // Evita que el <summary> padre haga toggle
+  e.preventDefault();
+  e.stopPropagation();
+
+  // 👉 acá hacés lo que quieras con el clic
+  // por ejemplo: abrir chat con el scope del <summary> padre
+  const summary = badge.closest('summary.id-summary');
+  const scopeStr = summary?.getAttribute('data-scope') || '{}';
+
+  // si ya tenés chatHere(btn) que lee data-scope:
+  const tmp = document.createElement('button');
+  tmp.setAttribute('data-scope', scopeStr);
+  (window.chatHere || window.chatAmbitoHere)?.(tmp);
+
+  // si usás slide/carrusel a la columna chat:
+  document.documentElement.classList.add('slide-chat');
+  document.documentElement.classList.remove('slide-ambitos');
+}, { capture: true }); // ← clave para ganarle al <summary>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // 2.a Al tocar un usuario -> ir a Ámbitos (solo móvil)
 document.addEventListener('click', (e) => {
   const summary = e.target.closest('.id-summary');  // <summary class="id-summary">
@@ -357,7 +427,7 @@ document.addEventListener('click', (e) => {
   if (!summary) return;
 
   if (isMobile()) {
-    debugger; // ← ahora debería frenar acá
+    
     setMobileView('ambitos');
     setTimeout(focusAmbAnchor, 300);
   }
@@ -403,5 +473,8 @@ document.addEventListener('click', (e) => {
     }
   });
 })();
+
+
+
 
 

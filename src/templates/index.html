@@ -13,7 +13,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatIdentidades.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatAmbitos.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
-
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mydomain/mydomain.css') }}">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/busquedas/busquedaAmbitos.css') }}">
 </head>
 <body>
 
@@ -24,7 +26,7 @@
       <span>DPIA · Chat Contextual</span>
     </div>
     <div style="display:flex; gap:8px; align-items:center">
-    
+    <button id="btnMyDomain" class="btn">My domain</button>
       <button id="toggleTheme" class="btn">☀️ Claro / 🌙 Oscuro</button>
     
     </div>
@@ -33,11 +35,13 @@
   <!-- GRID 3-3-6 -->
   <div class="wrap">
     <div class="app-grid">
+    
 
       <!-- IZQUIERDA (3): Identidades -->
       <aside id="col-identidades" class="col-identidades" >
         {% include 'chats/chatIdentidades.html' %}
       </aside>
+
 
       <!-- CENTRO (3): Ámbitos -->
       <section id="col-ambitos" class="col-ambitos">
@@ -53,11 +57,14 @@
     </div>
   </div>
 
+  <!-- OVERLAY oculto: acá va nuevo panel de 2 columnas -->
+  {% include 'chats/mydomain/chatDominios.html' %}
 
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/indexChat.css') }}">
   <!-- Scripts de módulos -->
   <script src="{{ url_for('static', filename='js/chats/indexChat.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/mydomain/mydomain.js') }}"></script>
  
 
   

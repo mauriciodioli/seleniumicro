@@ -1,0 +1,235 @@
+<div id="myDomainView" class="my-domain-view" data-view="left">
+  <!-- panel izq -->
+  <section class="my-domain-left" id="myDomainLeft">
+    <!-- 1. encabezado propio -->
+    <div class="md-head">
+      <h4>Mis ámbitos</h4>
+      <p>Categorías donde yo publico</p>
+    </div>
+  
+    <!-- 3. tabs reutilizados -->
+    <div class="md-filters">
+      {% include 'chats/busquedas/busquedaAmbito.html' %}
+    </div>
+
+  
+    <div class="md-list" id="mdList">
+      <details class="amb-item" data-ambito="salud">
+        <summary class="amb-summary">
+          <span class="amb-name">🩺 Salud</span>
+          <span class="amb-badge">3 categorías</span>
+        </summary>
+        <ul class="md-cat-list">
+          <li><button class="md-cat" data-ambito="salud" data-categoria="medicos">Médicos</button></li>
+          <li><button class="md-cat" data-ambito="salud" data-categoria="equipos">Equipos</button></li>
+        </ul>
+      </details>
+      
+    </div>
+
+
+<!-- LISTA SCROLLEABLE -->
+  <div class="amb-accordion">
+    <!-- 1) Tecnología -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"tecnologia","idioma":"es","alias":"@Tech","tel":"+54938385478"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name" >🧠 Tecnología</span>
+        <span class="amb-badge">activo</span>
+      </summary>
+
+      <div class="amb-list">
+        <span class="amb-list-item">🟢 Estado: activo</span>
+        <span class="amb-list-item">🌐 Idioma: es</span>
+        <span class="amb-list-item">📍 CP: 28080</span>
+      </div>
+
+      <summary class="amb-section-summary"><span class="amb-section-title">Categorías</span></summary>
+
+      <div class="amb-subcards">
+        <div class="amb-subcard">
+          <div class="amb-subcard-head">
+            <span>💬 Médicos</span>
+            <button class="btn" data-goto="chat"
+                    data-scope='{"ambito":"salud","categoria":"medicos","cp":"28080","idioma":"es"}'
+                    onclick="chatHere(this)">Chatear en Médicos</button>
+          </div>
+          <div class="amb-mini-grid">
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Consultas presenciales</span>
+              <div class="amb-mini-actions">
+                <button class="btn" data-goto="chat"
+                        data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"consultas_presenciales","cp":"28080","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Telemedicina</span>
+              <div class="amb-mini-actions">
+                <button class="btn" data-goto="chat"
+                        data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"telemedicina","cp":"28080","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Turnos online</span>
+              <div class="amb-mini-actions">
+                <button class="btn" data-goto="chat"
+                        data-scope='{"ambito":"salud","categoria":"medicos","subcategoria":"turnos_online","cp":"28080","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="amb-subcard">
+          <div class="amb-subcard-head">
+            <span>🩺 Equipos</span>
+            <button class="btn" data-goto="chat"
+                    data-scope='{"ambito":"salud","categoria":"equipos","idioma":"es"}'
+                    onclick="chatHere(this)">Chatear en Equipos</button>
+          </div>
+          <div class="amb-mini-grid">
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Oxímetros</span>
+              <div class="amb-mini-actions">
+                <button class="btn" data-goto="chat"
+                        data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"oximetros","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
+            <div class="amb-mini-card">
+              <span class="amb-mini-title">Tensiómetros</span>
+              <div class="amb-mini-actions">
+                <button class="btn" data-goto="chat"
+                        data-scope='{"ambito":"salud","categoria":"equipos","subcategoria":"tensiometros","idioma":"es"}'
+                        onclick="chatHere(this)">Chatear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+
+
+ <!-- 2) Salud -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"salud","idioma":"es","alias":"@ValeriaCeballos","tel":"+54935157885478"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🩺 Salud</span>
+        <span class="amb-badge">verificado</span>
+      </summary>
+    </details>
+
+    <!-- 3) Turismo -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"turismo","idioma":"es","alias":"@DrOla","tel":"+599838385478"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🧳 Turismo</span>
+        <span class="amb-badge">verificado</span>
+      </summary>
+    </details>
+
+    <!-- 4) Educación -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"educacion","idioma":"es","alias":"@Edu","tel":"+34914111222"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">📚 Educación</span>
+        <span class="amb-badge">activo</span>
+      </summary>
+    </details>
+
+    <!-- 5) Automotriz -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"automotriz","idioma":"it","alias":"@AutoFixSpoleto","tel":"+390743123456"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🚗 Automotriz</span>
+        <span class="amb-badge">verificado</span>
+      </summary>
+    </details>
+
+    <!-- 6) Finanzas -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"finanzas","idioma":"es","alias":"@Fin","tel":"+5715550101"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">💹 Finanzas</span>
+        <span class="amb-badge">activo</span>
+      </summary>
+    </details>
+
+    <!-- 7) Gastronomía -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"gastronomia","idioma":"es","alias":"@Foodies","tel":"+549115550000"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🍝 Gastronomía</span>
+        <span class="amb-badge">activo</span>
+      </summary>
+    </details>
+
+    <!-- 8) Construcción -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"construccion","idioma":"es","alias":"@Obras","tel":"+549113330000"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🏗️ Construcción</span>
+        <span class="amb-badge">verificado</span>
+      </summary>
+    </details>
+
+    <!-- 9) Deportes -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"deportes","idioma":"es","alias":"@Sport","tel":"+34911888000"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">⚽ Deportes</span>
+        <span class="amb-badge">activo</span>
+      </summary>
+    </details>
+
+    <!-- 10) Música -->
+    <details class="amb-item">
+      <summary class="amb-summary"
+               data-scope='{"ambito":"musica","idioma":"es","alias":"@Music","tel":"+34910001234"}'>
+        <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="amb-name">🎵 Música</span>
+        <span class="amb-badge">activo</span>
+      </summary>
+    </details>
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+
+
+
+  </section>
+
+
+
+
+   {% include 'chats/mydomain/panelDerechoMicrositio.html' %}
+  
+</div>
+
+<!-- FOOTER fijo -->
+<div class="amb-footer">
+  <div class="foot-left"><span class="hint">Elegí un micrositio </span></div>
+  <div class="foot-right"></div>
+</div>
