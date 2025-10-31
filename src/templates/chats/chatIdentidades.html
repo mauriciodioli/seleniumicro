@@ -5,7 +5,7 @@
    <div class="amb-panel-header">
     <div class="amb-search" style="flex:1">
       <span>🔎</span>
-      <input id="btnSearch" placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta">
+      <input id="idSearch" placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta">
     </div>
     <button id="sendBtn" type="button" class="btn">Enviar</button>
   </div>
@@ -110,3 +110,4 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/usuariosChat.css') }}">
 <script src="{{ url_for('static', filename='js/chats/chatIdentidades.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chats/usuariosChat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/backend/buscarUsuarioTelefono.js') }}"></script>

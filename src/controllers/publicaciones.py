@@ -32,6 +32,7 @@ from werkzeug.utils import secure_filename
 
 publicaciones = Blueprint('publicaciones', __name__)
 SHEET_ID_DETECTOR_TENDENCIA = os.environ.get('SHEET_ID_DETECTOR_TENDENCIA')
+
 # Completar la publicación con datos del sheet y base de datos
 def completar_publicaciones(data):  
     publicaciones_completas = []    

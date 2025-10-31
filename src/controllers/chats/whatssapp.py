@@ -1,11 +1,28 @@
-# routes/codigos_postales.py
-from flask import Blueprint, render_template, request, jsonify, current_app
-from utils.db_session import get_db_session
-from models.codigoPostal import CodigoPostal
-from models.publicaciones.ambitos import Ambitos
-from models.publicaciones.ambito_codigo_postal import AmbitoCodigoPostal
+from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, jsonify
+from extensions import db
+from sqlalchemy import func
+from models.usuario import Usuario
+from sqlalchemy.exc import SQLAlchemyError
+from models.publicaciones.publicaciones import Publicacion
+from models.publicaciones.estado_publi_usu import Estado_publi_usu
+from models.publicaciones.publicacion_imagen_video import Public_imagen_video
+from models.usuarioRegion import UsuarioRegion
+from models.usuarioUbicacion import UsuarioUbicacion
+from models.usuarioPublicacionUbicacion import UsuarioPublicacionUbicacion
 from models.publicaciones.ambitoCategoria import AmbitoCategoria
-from models.publicaciones.categoriaCodigoPostal import CategoriaCodigoPostal
+from models.publicaciones.categoriaPublicacion import CategoriaPublicacion
+from models.publicaciones.publicacionCodigoPostal import PublicacionCodigoPostal
+from models.publicaciones.ambitos import Ambitos
+from models.publicaciones.ambito_usuario import Ambito_usuario
+from models.publicaciones.ambitoCategoriaRelation import AmbitoCategoriaRelation
+from models.categoriaCodigoPostal import CategoriaCodigoPostal
+from models.publicaciones.categoria_general import CategoriaGeneral, CategoriaTraduccion, normalizar_slug
+from models.image import Image
+from models.video import Video
+from models.codigoPostal import CodigoPostal
+from controllers.conexionesSheet.datosSheet import  actualizar_estado_en_sheet
+from models.publicaciones.ambito_general import get_or_create_ambito
+from utils.db_session import get_db_session
 
 from models.chats.contacto import Contacto
 
