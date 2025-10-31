@@ -1,7 +1,7 @@
 // static/js/chats/buscarUsuarioTelefono.js
-
 (function () {
-  const input = document.getElementById('idSearch');
+  const input = document.getElementById('idSearch')    // ojo: en tu HTML pusiste id="btnSearch" en el input
+                 || document.getElementById('btnSearch'); // fallback
   const btn   = document.getElementById('sendBtn');
   const list  = document.querySelector('.id-accordion');
 
@@ -36,13 +36,31 @@
       });
 
       const data = await resp.json();
+      console.log('[identidad-buscar] data:', data);
 
       if (!resp.ok || !data.ok) {
         Swal.fire('Sin resultados', data.error || 'No se encontró identidad', 'info');
         return;
       }
 
+      // 1) identidad en panel izquierdo
       renderIdentityResult(data.user);
+
+      // 2) ámbitos en MyDomain (si está abierto)
+      if (Array.isArray(data.ambitos)) {
+        renderMyDomainAmbitos(data.ambitos);
+      }
+
+      // 3) publicaciones en panel derecho de MyDomain
+      if (Array.isArray(data.publicaciones)) {
+        renderMyDomainPublicaciones(data.publicaciones);
+      }
+
+      // 4) si querés mostrar CP / idiomas en algún badge:
+      if (Array.isArray(data.codigos_postales) || Array.isArray(data.idiomas)) {
+        renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
+      }
+
     } catch (err) {
       console.error('[buscarUsuarioTelefono] error', err);
       Swal.fire('Error', 'No se pudo buscar el usuario', 'error');
@@ -84,6 +102,113 @@
     const temp = document.createElement('div');
     temp.innerHTML = html.trim();
     list.prepend(temp.firstElementChild);
+  }
+
+  // ================== NUEVO: render de ÁMBITOS en MyDomain ==================
+  function renderMyDomainAmbitos(ambitos) {
+    // tu panel está en chats/mydomain/chatDominios.html
+    const mdList = document.getElementById('mdList');              // lista de ámbitos “mis”
+    const ambAcc = document.querySelector('#myDomainView .amb-accordion'); // tu clon con details
+
+    if (!mdList && !ambAcc) return;
+
+    // limpiamos solo lo que fue generado
+    if (mdList) mdList.innerHTML = '';
+    if (ambAcc) ambAcc.innerHTML = '';
+
+    ambitos.forEach(a => {
+      const nombre = a.nombre || '(sin nombre)';
+      const cats   = Array.isArray(a.categorias) ? a.categorias : [];
+
+      const det = document.createElement('details');
+      det.className = 'amb-item';
+      det.setAttribute('data-ambito', nombre);
+
+      let catsHtml = '';
+      if (cats.length) {
+        catsHtml = `<ul class="md-cat-list">
+          ${cats.map(c => `
+            <li>
+              <button class="md-cat"
+                      data-ambito="${nombre}"
+                      data-categoria="${c.id}">
+                ${c.nombre}
+              </button>
+            </li>`).join('')}
+        </ul>`;
+      }
+
+      det.innerHTML = `
+        <summary class="amb-summary">
+          <span class="amb-name">${nombre}</span>
+          <span class="amb-badge">${cats.length ? cats.length + ' categorías' : '—'}</span>
+        </summary>
+        ${catsHtml}
+      `;
+
+      if (mdList) mdList.appendChild(det.cloneNode(true));
+      if (ambAcc) ambAcc.appendChild(det);
+    });
+  }
+
+  // ================== NUEVO: render de PUBLICACIONES en panel derecho ==================
+  function renderMyDomainPublicaciones(publicaciones) {
+    const cont = document.getElementById('mdContent');
+    if (!cont) return;
+
+    if (!publicaciones.length) {
+      cont.innerHTML = `<p>No hay publicaciones recientes para este usuario.</p>`;
+      return;
+    }
+
+    cont.innerHTML = `
+      <div class="md-pubs">
+        ${publicaciones.map(p => `
+          <article class="md-pub">
+            <h5>${p.titulo}</h5>
+            <p class="md-pub-meta">
+              <span>🧭 ${p.ambito || '—'}</span>
+              <span>🌐 ${p.idioma || '—'}</span>
+              <span>📍 ${p.codigo_postal || '—'}</span>
+              <span>⚙️ ${p.estado || '—'}</span>
+            </p>
+            <button class="btn btn-sm"
+                    data-goto="chat"
+                    data-scope='${JSON.stringify({
+                      ambito: p.ambito,
+                      categoria_id: p.categoria_id,
+                      cp: p.codigo_postal,
+                      idioma: p.idioma,
+                      publicacion_id: p.id
+                    })}'
+                    onclick="chatHere(this)">
+              Chatear sobre esta publicación
+            </button>
+          </article>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  // ================== NUEVO: render de CP / idiomas (opcional) ==================
+  function renderMetaBadges(cps, idiomas) {
+    const foot = document.querySelector('#myDomainView .amb-footer .foot-right');
+    if (!foot) return;
+    foot.innerHTML = '';
+
+    if (Array.isArray(cps) && cps.length) {
+      const cpSpan = document.createElement('span');
+      cpSpan.className = 'badge meta-badge';
+      cpSpan.textContent = `CP: ${cps.join(', ')}`;
+      foot.appendChild(cpSpan);
+    }
+
+    if (Array.isArray(idiomas) && idiomas.length) {
+      const langSpan = document.createElement('span');
+      langSpan.className = 'badge meta-badge';
+      langSpan.textContent = `Idiomas: ${idiomas.join(', ')}`;
+      foot.appendChild(langSpan);
+    }
   }
 
   btn.addEventListener('click', buscar);
