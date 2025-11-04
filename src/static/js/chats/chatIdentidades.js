@@ -197,24 +197,54 @@ window.clearScope = function(){
 };
 
 /* ===================== HANDLERS UI ===================== */
-document.getElementById('sendBtn').addEventListener('click', ()=>{
-  const t = document.getElementById('msgText');
-  const msg = t.value.trim();
-  if (!msg) return;
-  pushMsg(msg, true);
-  t.value='';
-  // (sin eco automático)
-});
-document.getElementById('btnSearch').addEventListener('click', ()=>{
-  const q=(document.getElementById('q').value||'').trim();
-  if(!q) return Swal.fire('Buscar','Ingresá teléfono +E.164, @alias o nombre','info');
-  // (sin logs de sistema)
-  if(q.startsWith('+') || q.startsWith('@')){
-    const scope = { query:q };
-    const id = ensureThread(scope);
-    setActiveThread(id);
+(function(){
+  const $ = (id) => document.getElementById(id);
+
+  // ---- Enviar mensaje (solo si están ambos)
+  const sendBtn = $('sendBtn');
+  const msgInput = $('msgText');
+
+  if (sendBtn && msgInput) {
+    if (!sendBtn._wired) {
+      sendBtn.addEventListener('click', () => {
+        const msg = (msgInput.value || '').trim();
+        if (!msg) return;
+        if (typeof pushMsg === 'function') pushMsg(msg, true);
+        msgInput.value = '';
+      });
+      sendBtn._wired = true;
+    }
+  } else {
+    // Opcional: log para saber qué falta
+    console.warn('[chatIdentidades] faltan #sendBtn o #msgText en esta vista');
   }
-});
+
+  // ---- Botón de búsqueda simple (IDs: btnSearch / q)
+  const simpleSearchBtn = $('btnSearch');
+  const simpleSearchInput = $('q');
+
+  if (simpleSearchBtn && simpleSearchInput) {
+    if (!simpleSearchBtn._wired) {
+      simpleSearchBtn.addEventListener('click', () => {
+        const q = (simpleSearchInput.value || '').trim();
+        if (!q) {
+          if (window.Swal) Swal.fire('Buscar','Ingresá teléfono +E.164, @alias o nombre','info');
+          return;
+        }
+        if ((q.startsWith('+') || q.startsWith('@')) && typeof ensureThread === 'function' && typeof setActiveThread === 'function') {
+          const scope = { query: q };
+          const id = ensureThread(scope);
+          setActiveThread(id);
+        }
+      });
+      simpleSearchBtn._wired = true;
+    }
+  } else {
+    // En esta vista quizá usás #amb-btnSearch y #amb-q: se ignora sin romper
+    console.warn('[chatIdentidades] faltan #btnSearch o #q en esta vista');
+  }
+})();
+
 
 /* ===================== INIT ===================== */
 (function init(){

@@ -1,3 +1,33 @@
+(async function(){
+  const res = await fetch('/api/boot');           // lee cookie o inicializa
+  const boot = await res.json();
+  console.log('BOOT', boot);
+
+  // ejemplo de cambio rápido:
+  // await fetch('/api/mock/update', {
+  //   method:'POST', headers:{'Content-Type':'application/json'},
+  //   body: JSON.stringify({ user:{...boot.user, idioma:'es', cp:'4139'},
+  //                          scope:{ambito:'tecnologia', categoria:'informatica'} })
+  // });
+
+  // reset:
+  // await fetch('/api/mock/reset', {method:'POST'});
+})(); 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  (function(){
     const root = document.documentElement; // o document.body
     const btnCollapse = document.getElementById('btnCollapseAmbitos');
