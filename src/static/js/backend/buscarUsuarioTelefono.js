@@ -404,15 +404,49 @@ function renderIdentityResult(user = {}, { dedupe = true, maxItems = 50 } = {}) 
 }
 
 
+// --- util slug/cap/j ya las tenés arriba
 
+// Deriva categorias por ámbito a partir de publicaciones cuando vienen vacías
+function _enrichAmbitosWithCategorias(payload){
+  const pubs = Array.isArray(payload?.publicaciones) ? payload.publicaciones : [];
+  const ambs = Array.isArray(payload?.ambitos) ? payload.ambitos : [];
+  if (!pubs.length || !ambs.length) return ambs;
 
-// --- render en #vistaChatAmbitos (sin llamar aquí a renderIdentityResult)
+  // ambitoSlug -> Set<categoria_id>
+  const byAmb = new Map();
+  for (const p of pubs) {
+    const aName = p?.ambito || 'general';
+    const aKey  = slug(aName);
+    const set   = byAmb.get(aKey) || new Set();
+    if (p?.categoria_id != null) set.add(p.categoria_id);
+    byAmb.set(aKey, set);
+  }
+
+  // Si el ámbito no trae categorias, las derivamos de publicaciones
+  return ambs.map(a => {
+    const aName = a?.nombre || a?.valor || 'general';
+    const aKey  = slug(aName);
+    let cats = Array.isArray(a?.categorias) ? a.categorias : [];
+    if (!cats.length) {
+      const ids = Array.from(byAmb.get(aKey) || []);
+      cats = ids.map(id => ({
+        id,
+        slug: `cat_${id}`,
+        nombre: `Categoría ${id}`
+      }));
+    }
+    return { ...a, categorias: cats };
+  });
+}
+
+// --- render en #vistaChatAmbitos (con scroll forzado desde JS)
 function renderChatAmbitos(payload){
   const target = document.getElementById('vistaChatAmbitos');
   if (!target) return;
 
+  // 1) Enriquecemos ambitos con categorías si están vacías
   const user   = payload?.user || {};
-  const ambs   = Array.isArray(payload?.ambitos) ? payload.ambitos : [];
+  const ambs   = _enrichAmbitosWithCategorias(payload);
   const idioma = payload?.idiomas?.[0] || user.idioma || 'es';
   const cp     = payload?.codigos_postales?.[0] || user.cp || '—';
   const alias  = user.alias || '@User';
@@ -420,6 +454,8 @@ function renderChatAmbitos(payload){
 
   if (!ambs.length){
     target.innerHTML = `<div class="amb-accordion"><p style="padding:8px">Sin ámbitos para mostrar.</p></div>`;
+    // igual forzamos contenedor para que no “salte”
+    _ensureScrollable(target);
     return;
   }
 
@@ -467,6 +503,36 @@ function renderChatAmbitos(payload){
   }
   html += `</div>`;
   target.innerHTML = html;
+
+  // 2) Forzamos que el contenedor sea scrolleable sin tocar tus CSS
+  _ensureScrollable(target);
+}
+
+// Fuerza layout para scroll (sin depender de CSS externo)
+function _ensureScrollable(target){
+  // El contenedor donde se inyecta
+  target.style.display = 'flex';
+  target.style.flexDirection = 'column';
+  target.style.flex = '1 1 auto';
+  target.style.minHeight = '0';
+  target.style.overflow = 'hidden'; // contiene sombras internas
+
+  // Si está dentro de .amb-card, garantizamos la fila shrink
+  const card = target.closest('.amb-card');
+  if (card) {
+    // auto, auto, auto, minmax(0,1fr), auto
+    card.style.display = 'grid';
+    card.style.gridTemplateRows = 'auto auto auto minmax(0,1fr) auto';
+  }
+
+  // El área que realmente scrollea
+  const acc = target.querySelector('.amb-accordion');
+  if (acc){
+    acc.style.flex = '1 1 auto';
+    acc.style.minHeight = '0';
+    acc.style.overflowY = 'auto';
+    acc.style.webkitOverflowScrolling = 'touch';
+  }
 }
 
 // --- función principal
