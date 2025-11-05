@@ -317,6 +317,28 @@ window.BuscarUsuarioTelefono = {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // --- refs (compat)
 const input = document.getElementById('idSearch') || document.getElementById('amb-q');
 const btn   = document.getElementById('sendBtn')  || document.getElementById('amb-btnSearch');
@@ -335,6 +357,31 @@ const parseKind = q => {
   if (s.startsWith('@')) return { type:'alias', value:s.slice(1) };
   return { type:'name', value:s };
 };
+
+
+
+
+// === Cache por identidad (para re-render rápido al click)
+function userKey(u={}){
+  if (u.id)   return 'id:'+u.id;
+  if (u.tel)  return 'tel:'+String(u.tel).replace(/\D/g,'');
+  if (u.alias)return 'alias:'+String(u.alias).toLowerCase().replace(/^@/,'');
+  return null;
+}
+const identityCache = new Map(); // key -> payload completo
+
+// Marca visual de identidad activa
+function setActiveIdentity(key){
+  document.querySelectorAll('.id-item.is-active').forEach(el=>el.classList.remove('is-active'));
+  const el = document.querySelector(`.id-item[data-key="${key}"]`);
+  if (el) el.classList.add('is-active');
+}
+
+
+
+
+
+
 // === FIX 1: contenedor correcto (tu lista scrolleable)
 // Contenedor real de la lista
 const acc = document.querySelector('.id-accordion');
@@ -348,60 +395,45 @@ function identityKey(u={}){
 }
 
 // Agrega SIN pisar. Si dedupe=true y ya existe, NO agrega (o podés elegir actualizar).
-function renderIdentityResult(user = {}, { dedupe = true, maxItems = 50 } = {}) {
-  if (!acc) return;
+function renderIdentityResult(user = {}, { userKeyOverride = null } = {}){
+  const acc = document.querySelector('.id-accordion');
+  const tel = String(user?.tel || '').trim(); // debe venir en E.164 (+XXXXXXXX)
+  if (!acc || !tel) return;
 
-  const scope = {
-    micrositio: user.micrositio || '',
-    idioma: user.idioma || (Array.isArray(user.idiomas) ? user.idiomas[0] : ''),
-    alias: user.alias || '',
-    tel: user.tel || ''
-  };
-
-  const key = (user.alias ? 'a:' + String(user.alias).toLowerCase().replace(/^@/,'')
-             : user.tel   ? 't:' + String(user.tel).replace(/\D/g,'')
-             : null);
-
-  if (dedupe && key) {
-    const exists = acc.querySelector(`.id-item[data-key="${key}"]`);
-    if (exists) return; // ya está en la lista → no duplico
+  // ⛔ Ya existe → NO insertar, solo subir y salir
+  const existing = acc.querySelector(`.id-item[data-key="${tel}"]`);
+  if (existing){
+    acc.insertBefore(existing, acc.firstElementChild);
+    return;
   }
 
+  // Insertar UNA vez (clave = teléfono)
+  const scope = { tel };
   const html = `
-  <details class="id-item" ${key ? `data-key="${key}"` : ''}>
+  <details class="id-item" data-key="${tel}">
     <summary class="id-summary" data-scope='${j(scope)}'>
       <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
-      <span class="id-name" data-goto="amb-card">👤 ${cap(user.nombre || user.alias || 'Usuario')}</span>
+      <span class="id-name" data-goto="amb-card">👤 ${user.nombre || user.alias || 'Usuario'}</span>
       <span class="id-badge" data-goto="chat">${user.last_msg || '—'}</span>
     </summary>
     <div class="id-body">
-      ${user.tel   ? `<span class="id-field">📞 ${user.tel}</span>` : ''}
+      <span class="id-field">📞 ${tel}</span>
       ${user.alias ? `<span class="id-field">@${String(user.alias).replace(/^@/,'')}</span>` : ''}
       ${user.url   ? `<span class="id-field">🌐 ${user.url}</span>` : ''}
     </div>
     <div class="id-actions">
-      <button class="btn btn-accent" data-goto="chat"
-              data-scope='${j(scope)}'
+      <button class="btn btn-accent" data-goto="chat" data-scope='${j(scope)}'
               onclick="window.chatHere?.(this)">Chatear aquí</button>
-      <button class="btn btn-ghost"
-              onclick="window.Swal?.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
+      <button class="btn btn-ghost" onclick="Swal?.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
     </div>
   </details>`.trim();
 
-  const tmp = document.createElement('div');
+  const tmp = document.createElement('div'); 
   tmp.innerHTML = html;
-  const node = tmp.firstElementChild;
-
-  // 👉 Insertar al INICIO (lo nuevo arriba, lo viejo baja)
-  const firstItem = acc.querySelector('.id-item');
-  acc.insertBefore(node, firstItem || acc.firstChild);
-
-  // (Opcional) limitar cantidad: borra los más viejos al final
-  const items = acc.querySelectorAll('.id-item');
-  if (items.length > maxItems) {
-    for (let i = maxItems; i < items.length; i++) items[i].remove();
-  }
+  acc.insertBefore(tmp.firstElementChild, acc.firstElementChild);
 }
+
+
 
 
 // --- util slug/cap/j ya las tenés arriba
@@ -536,19 +568,19 @@ function _ensureScrollable(target){
 }
 
 // --- función principal
+// --- función principal (CORREGIDA)
 async function procesarChatIdentidades(){
   const raw = (input?.value || '').trim();
 
   const v = validarEntrada(raw);
   if (!v.ok){
     Swal?.fire('Entrada inválida', v.reason || 'Revisá el formato.', 'warning');
-    input?.focus();
+    input?.focus?.();
     return;
   }
+  if (v.type === 'phone' && input) input.value = v.value; // reflejar E.164
 
-  // si es teléfono, reflejamos el normalizado en el input (opcional)
-  if (v.type === 'phone' && input) input.value = v.value;
-
+  // pedir al backend
   const resp = await fetch('/api/chat/identidad-buscar', {
     method:'POST',
     headers:{ 'Content-Type':'application/json','Accept':'application/json' },
@@ -565,20 +597,42 @@ async function procesarChatIdentidades(){
     return;
   }
 
+  // ---- DEDUPE POR TEL ANTES DE PINTAR
+  const tel = String(data?.user?.tel || '').trim();
+  if (tel){
+    const acc = document.querySelector('.id-accordion');
+    const existing = acc?.querySelector(`.id-item[data-key="${tel}"]`);
+    if (existing){
+      // ya estaba → lo subo y salgo (NO re-insertar)
+      acc.insertBefore(existing, acc.firstElementChild);
+      return;
+    }
+  }
+
+  // ---- cache opcional (no afecta al dedupe visual)
+  const k = userKey(data.user || {});
+  if (k) identityCache.set(k, data);
+  if (k) setActiveIdentity(k);
+
+  // ---- render (inserta SOLO si no existía)
   renderChatAmbitos(data);
-  if (data.user) renderIdentityResult(data.user);
-  if (typeof renderMyDomainAmbitos === 'function' && Array.isArray(data.ambitos)) renderMyDomainAmbitos(data.ambitos);
-  if (typeof renderMyDomainPublicaciones === 'function' && Array.isArray(data.publicaciones)) renderMyDomainPublicaciones(data.publicaciones);
-  if (typeof renderMetaBadges === 'function' && (data.codigos_postales || data.idiomas))
-    renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
+  if (data.user) renderIdentityResult(data.user, { userKeyOverride: tel });
 }
 
 
 // --- cableado
-btn?.addEventListener('click', (e)=>{ e.preventDefault(); procesarChatIdentidades(); });
-input?.addEventListener('keydown', (e)=>{
-  if (e.key === 'Enter'){ e.preventDefault(); procesarChatIdentidades(); }
+btn?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  const v = validarEntrada(input?.value || '');
+  if (!v.ok){ input?.setCustomValidity?.(v.reason||''); input?.reportValidity?.(); return; }
+  if (v.type !== 'phone'){ input?.setCustomValidity?.('Sólo E.164 (ej: +393445977100)'); input?.reportValidity?.(); return; }
+
+  if (dedupeAndPromoteByTel(v.value)) { input?.setCustomValidity?.(''); return; } // ya estaba
+
+  input?.setCustomValidity?.('');
+  procesarChatIdentidades(); // solo si no estaba
 });
+
 
 
 
@@ -625,19 +679,82 @@ function validarEntrada(raw){
 }
 
 
-btn?.addEventListener('click', (e)=>{
-  const v = validarEntrada(input.value);
-  if (!v.ok){ e.preventDefault(); input.setCustomValidity(v.reason||''); input.reportValidity(); return; }
-  input.setCustomValidity('');
-  procesarChatIdentidades();
-});
+
 
 input?.addEventListener('keydown', (e)=>{
   if (e.key === 'Enter'){
     const v = validarEntrada(input.value);
     if (!v.ok){ e.preventDefault(); input.setCustomValidity(v.reason||''); input.reportValidity(); return; }
+    if (v.type !== 'phone'){ e.preventDefault(); input.setCustomValidity('Sólo E.164 (ej: +393445977100)'); input.reportValidity(); return; }
+
+    // >>> NUEVO: si ya existe ese teléfono, deduplica y sube; no buscamos de nuevo
+    if (dedupeAndPromoteByTel(v.value)) { e.preventDefault(); input.setCustomValidity(''); return; }
+
     input.setCustomValidity('');
     e.preventDefault();
-    procesarChatIdentidades();
+    procesarChatIdentidades(); // sólo si no estaba
   }
 });
+
+
+
+
+// Encuentra, elimina duplicados del mismo teléfono y sube el primero
+function findItemsByTel(tel){
+  const wrap = document.querySelector('.id-accordion');
+  if (!wrap) return [];
+  const items = Array.from(wrap.querySelectorAll('.id-item'));
+  const norm = String(tel||'').replace(/\s+/g,'');
+  return items.filter(item=>{
+    // 1) data-key
+    const key = (item.getAttribute('data-key') || '').trim();
+    if (key === tel) return true;
+
+    // 2) data-scope en el summary
+    const sum = item.querySelector('.id-summary');
+    if (sum){
+      try{
+        const sc = JSON.parse(sum.getAttribute('data-scope') || '{}');
+        if (sc?.tel === tel || sc?.phone === tel) return true;
+      }catch{}
+    }
+
+    // 3) texto del campo teléfono
+    const phoneEl = item.querySelector('.id-field');
+    if (phoneEl){
+      const txt = phoneEl.textContent.replace(/\s+/g,'');
+      if (txt.includes(norm)) return true;
+    }
+    return false;
+  });
+}
+
+function dedupeAndPromoteByTel(tel){
+  const items = findItemsByTel(tel);
+  if (!items.length) return false;
+
+  const wrap = document.querySelector('.id-accordion');
+  const first = items[0];
+
+  // eliminar duplicados
+  for (let i=1;i<items.length;i++) items[i].remove();
+
+  // asegurar data-key y subir al tope
+  first.setAttribute('data-key', tel);
+  if (wrap) wrap.insertBefore(first, wrap.firstElementChild);
+
+  return true; // ya existía, no hay que volver a buscar ni reinsertar
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
