@@ -77,3 +77,40 @@
 .grid-cards {display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px}
 
 
+
+.grid-cards{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 360px)); /* columnas “bloque” */
+  gap:16px;
+  justify-content:start;   /* evita que reparta el espacio entre columnas */
+  align-content:start;
+}
+.tarjeta{
+  width:auto;              /* sin width fijo */
+  max-width:360px;         /* opcional */
+}
+
+
+@media (max-width: 600px){
+  .grid-cards{ display:flex; overflow-x:auto; gap:12px; scroll-snap-type:x mandatory; }
+  .grid-cards .tarjeta{ flex:0 0 85%; max-width:420px; scroll-snap-align:start; }
+}
+@media (min-width: 601px){
+  .grid-cards{ display:grid; }    /* asegura grid en desktop */
+}
+
+
+/* --- MOBILE: 2 paneles a pantalla completa y deslizables --- */
+@media (max-width: 900px){
+  .my-domain-wrapper{
+    display: grid;
+    grid-template-columns: 100vw 100vw; /* izq=sidebar, der=contenido */
+    overflow-x: auto;                   /* habilita desplazamiento horizontal */
+    scroll-snap-type: x mandatory;
+  }
+  .my-domain-wrapper > aside,
+  .my-domain-right{
+    min-width: 100vw;
+    scroll-snap-align: start;
+  }
+}

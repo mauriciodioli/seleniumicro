@@ -118,53 +118,52 @@ def api_cascade_categorias():
         db.session.close()
 
 
-
 @busquedaSelectiva.route('/api/cascade/publicaciones', methods=['POST'])
 def api_cascade_publicaciones():
     data = request.get_json(silent=True) or {}
     cp  = (data.get('cp')  or '').strip()
     dom = (data.get('dom') or '').strip()
     cat = str(data.get('cat') or '').strip()
+    user_id = data.get('user_id')  # opcional
+
     if not cp or not dom or not cat.isdigit():
         return jsonify({'ok': False, 'error': 'cp, dom y cat válidos requeridos'}), 400
     cat_id = int(cat)
 
-    try:
-        # Orden: primero las que tienen fecha (NULL al final), luego fecha desc, luego id desc
-        nulls_last = case((Publicacion.fecha_creacion == None, 1), else_=0).asc()
-
-        rows = (
-            db.session.query(Publicacion)
-            .join(CategoriaPublicacion, CategoriaPublicacion.publicacion_id == Publicacion.id)
-            .filter(
-                Publicacion.codigoPostal == cp,
-                Publicacion.ambito == dom,
-                CategoriaPublicacion.categoria_id == cat_id
-            )
-            .order_by(nulls_last, Publicacion.fecha_creacion.desc(), Publicacion.id.desc())
-            .limit(200)
-            .all()
+    q = (
+        db.session.query(Publicacion)
+        .join(CategoriaPublicacion, CategoriaPublicacion.publicacion_id == Publicacion.id)
+        .filter(
+            Publicacion.codigoPostal == cp,
+            Publicacion.ambito == dom,
+            CategoriaPublicacion.categoria_id == cat_id
         )
+    )
+    if str(user_id).isdigit():
+        q = q.filter(Publicacion.user_id == int(user_id))
 
-        items = [{
-            'id': p.id,
-            'titulo': p.titulo,
-            'ambito': p.ambito,
-            'categoria_id': cat_id,
-            'idioma': p.idioma,
-            'codigo_postal': p.codigoPostal,
-            'estado': p.estado,
-            'fecha_creacion': (p.fecha_creacion.isoformat() if hasattr(p.fecha_creacion, 'isoformat') else str(p.fecha_creacion)),
-            'user_id': p.user_id,
-            'imagen': getattr(p, 'imagen', None),
-        } for p in rows]
+    rows = (
+        q.order_by(Publicacion.fecha_creacion.desc(), Publicacion.id.desc())
+         .limit(200)
+         .all()
+    )
 
-        return jsonify({'ok': True, 'items': items})
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'ok': False, 'error': str(e)}), 500
-    finally:
-        db.session.close()
+    items = [{
+        'id': p.id,
+        'titulo': p.titulo,
+        'ambito': p.ambito,
+        'categoria_id': cat_id,
+        'idioma': p.idioma,
+        'codigo_postal': p.codigoPostal,
+        'estado': p.estado,
+        'fecha_creacion': (p.fecha_creacion.isoformat() if hasattr(p.fecha_creacion, 'isoformat') else str(p.fecha_creacion)),
+        'user_id': p.user_id,
+        'imagen': getattr(p, 'imagen', None),
+        'descripcion': getattr(p, 'descripcion', None),
+    } for p in rows]
+
+    return jsonify({'ok': True, 'items': items})
+
 
 
 @busquedaSelectiva.route('/api/cascade/publicacion', methods=['POST'])
@@ -198,3 +197,89 @@ def api_cascade_publicacion():
 
 
 
+@busquedaSelectiva.route('/api/cascade/usuarios', methods=['POST'])
+def api_cascade_usuarios():
+    data = request.get_json(silent=True) or {}
+    cp  = (data.get('cp')  or '').strip()
+    dom = (data.get('dom') or '').strip()
+    cat = str(data.get('cat') or '').strip()
+    if not cp or not dom or not cat.isdigit():
+        return jsonify({'ok': False, 'error': 'cp, dom y cat válidos requeridos'}), 400
+    cat_id = int(cat)
+
+    try:
+        # usuarios que publicaron en ese cp/dom/cat
+        q = (
+            db.session.query(
+                Publicacion.user_id.label('user_id'),
+                func.count(Publicacion.id).label('n')
+            )
+            .join(CategoriaPublicacion, CategoriaPublicacion.publicacion_id == Publicacion.id)
+            .filter(
+                Publicacion.codigoPostal == cp,
+                Publicacion.ambito == dom,
+                CategoriaPublicacion.categoria_id == cat_id
+            )
+            .group_by(Publicacion.user_id)
+            .order_by(func.count(Publicacion.id).desc())
+            .all()
+        )
+
+        # armar etiqueta legible
+        items = []
+        for r in q:
+            u = db.session.get(Usuario, r.user_id)
+            nombre = getattr(u, 'nombre', None) or getattr(u, 'correo_electronico', None) or f'Usuario {r.user_id}'
+            items.append({'id': r.user_id, 'nombre': nombre, 'n': int(r.n)})
+
+        return jsonify({'ok': True, 'items': items})
+    except Exception as e:
+        db.session.rollback(); return jsonify({'ok': False, 'error': str(e)}), 500
+    finally:
+        db.session.close()
+
+
+
+
+@busquedaSelectiva.route('/api/cascade/usuario/publicaciones', methods=['POST'])
+def api_cascade_usuario_publicaciones():
+    data = request.get_json(silent=True) or {}
+    user_id = data.get('user_id')
+    if not user_id:
+        return jsonify({'ok': False, 'error': 'user_id requerido'}), 400
+
+    try:
+        rows = (
+            db.session.query(Publicacion)
+            .filter(
+                Publicacion.user_id == int(user_id),
+                Publicacion.estado.isnot(None),
+                ~func.lower(Publicacion.estado).in_(['pendiente', 'pendientes'])
+            )
+            .order_by(Publicacion.fecha_creacion.desc(), Publicacion.id.desc())
+            .limit(500)
+            .all()
+        )
+
+        items = [{
+            'id': p.id,
+            'titulo': p.titulo,
+            'ambito': p.ambito,
+            'categoria_id': getattr(p, 'categoria_id', None),
+            'idioma': p.idioma,
+            'codigo_postal': p.codigoPostal,
+            'estado': p.estado,
+            'fecha_creacion': (p.fecha_creacion.isoformat() if hasattr(p.fecha_creacion, 'isoformat') else str(p.fecha_creacion)),
+            'user_id': p.user_id,
+            'imagen': getattr(p, 'imagen', None),
+            'descripcion': getattr(p, 'descripcion', None),
+            'precio': getattr(p, 'precio', None),
+            'moneda': getattr(p, 'moneda', None),
+        } for p in rows]
+
+        return jsonify({'ok': True, 'items': items})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'ok': False, 'error': str(e)}), 500
+    finally:
+        db.session.close()
