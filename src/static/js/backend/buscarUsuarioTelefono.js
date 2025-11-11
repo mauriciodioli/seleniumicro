@@ -610,9 +610,10 @@ async function procesarChatIdentidades(){
   }
 
   // ---- cache opcional (no afecta al dedupe visual)
-  const k = userKey(data.user || {});
-  if (k) identityCache.set(k, data);
-  if (k) setActiveIdentity(k);
+  
+  // ✅ Cargar en caché + dedupe/promote + render + logs
+  const r = cargarIdentidadEnCache(data, { promote:true, render:true });
+  if (!r.ok) console.warn('[IDENTITY] no se pudo cachear:', r.reason, data);
 
   // ---- render (inserta SOLO si no existía)
   renderChatAmbitos(data);
@@ -748,13 +749,97 @@ function dedupeAndPromoteByTel(tel){
 
 
 
+// ==== Infra mínima (si ya la tenés, no dupliques) ====
+window.identityCache = window.identityCache || new Map();
+userKey = (u={}) => (u.tel || u.alias || u.nombre || '').trim();
 
+function promoteIfExistsByTel(telE164){
+  if (!telE164) return false;
+  const acc = document.querySelector('.id-accordion');
+  const node = acc?.querySelector(`.id-item[data-key="${telE164}"]`);
+  if (!node) return false;
+  acc.insertBefore(node, acc.firstElementChild);
+  return true;
+}
 
+// ==== FUNCIÓN CON LOGS ====
+/**
+ * Carga identidad en caché, dedupe por tel y renderiza. Loggea todo.
+ */
+function cargarIdentidadEnCache(data, opts = {}){
+  const { promote = true, render = true } = opts;
 
+  if (!data || !data.user){
+    console.warn('[IDENTITY] ❌ respuesta sin user', data);
+    return { ok:false, reason:'respuesta sin user' };
+  }
 
+  const tel = String(data.user.tel || '').trim();
+  const k = userKey(data.user);
+  if (!k){
+    console.warn('[IDENTITY] ❌ no hay key (tel/alias/nombre)', data.user);
+    return { ok:false, reason:'no hay key (tel/alias/nombre)' };
+  }
 
+  console.groupCollapsed('%c[IDENTITY] cache/upsert', 'color:#0366d6;font-weight:600;');
+  console.log('key:', k);
+  console.log('tel:', tel || '—');
+  console.log('nombre:', data.user.nombre || '—');
+  console.log('alias:', data.user.alias || '—');
 
+  if (promote){
+    const promoted = promoteIfExistsByTel(tel);
+    console.log('promote in DOM:', promoted);
+  }
 
+  // cache + activa
+  identityCache.set(k, data);
+  console.log('✅ cacheado:', true);
 
+  try { setActiveIdentity?.(k); console.log('setActiveIdentity:', true); }
+  catch(e){ console.warn('setActiveIdentity error:', e); }
 
+  // resumen de payload
+  const pubs = Array.isArray(data.publicaciones) ? data.publicaciones.length : 0;
+  const ambs = Array.isArray(data.ambitos) ? data.ambitos.length : 0;
+  const cps  = Array.isArray(data.codigos_postales) ? data.codigos_postales.length : 0;
+  const idi  = Array.isArray(data.idiomas) ? data.idiomas.length : 0;
+  console.log('resumen:', { publicaciones: pubs, ambitos: ambs, codigos_postales: cps, idiomas: idi });
 
+  // dump corto (no saturar consola)
+  console.log('user:', data.user);
+  if (pubs) console.table(data.publicaciones.map(p => ({
+    id: p.id, titulo: p.titulo, ambito: p.ambito, idioma: p.idioma, cp: p.codigo_postal, estado: p.estado
+  })));
+  if (ambs) console.table(data.ambitos.map(a => ({
+    nombre: a?.nombre, valor: a?.valor || '', estado: a?.estado || ''
+  })));
+
+  if (render){
+    console.log('render:', true);
+    renderChatAmbitos(data);
+    renderIdentityResult?.(data.user, { userKeyOverride: tel || k });
+  } else {
+    console.log('render:', false);
+  }
+
+  console.groupEnd();
+  return { ok:true, key:k };
+}
+
+// ==== Helper opcional para ver el caché rápido ====
+window.debugIdentityCache = function(labelOrScope = ''){
+  const k = typeof labelOrScope === 'string' ? labelOrScope : userKey(labelOrScope || {});
+  const data = k ? identityCache.get(k) : undefined;
+  console.groupCollapsed('[CACHE peek]', k || '(sin key)');
+  if (!data){ console.log('NO DATA'); console.groupEnd(); return; }
+  console.log('user:', data.user);
+  console.log('keys:', Object.keys(data));
+  console.log('counts:', {
+    publicaciones: data.publicaciones?.length || 0,
+    ambitos: data.ambitos?.length || 0,
+    codigos_postales: data.codigos_postales?.length || 0,
+    idiomas: data.idiomas?.length || 0
+  });
+  console.groupEnd();
+};

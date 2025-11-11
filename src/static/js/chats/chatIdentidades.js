@@ -424,32 +424,46 @@ document.addEventListener('click', function onGoto(e){
 
 
 
-
-
-
 // Captura CLIC en <span class="id-badge" data-goto="chat">...</span>
 document.addEventListener('click', function (e) {
   const badge = e.target.closest('span.id-badge[data-goto="chat"]');
   if (!badge) return;
-debugger;
-  // Evita que el <summary> padre haga toggle
+
   e.preventDefault();
   e.stopPropagation();
+  if (e.stopImmediatePropagation) e.stopImmediatePropagation();
 
-  // 👉 acá hacés lo que quieras con el clic
-  // por ejemplo: abrir chat con el scope del <summary> padre
-  const summary = badge.closest('summary.id-summary');
-  const scopeStr = summary?.getAttribute('data-scope') || '{}';
+  const summary  = badge.closest('summary.id-summary') || badge.closest('summary');
+  let   scopeStr = summary?.getAttribute('data-scope') || '{}';
 
-  // si ya tenés chatHere(btn) que lee data-scope:
+  // --- desescapar y parsear scope ---
+  scopeStr = String(scopeStr).replace(/&quot;|&#34;/g, '"').replace(/&amp;/g, '&');
+  let scope = {};
+  try { scope = JSON.parse(scopeStr); } catch { scope = {}; }
+
+  // --- tomar del cache y pintar Ámbitos ---
+  const cached =
+    (window.IdentityCache?.get && (window.IdentityCache.get(JSON.stringify(scope)) || window.IdentityCache.get(scope)))
+    || (typeof window.getCachedIdentity === 'function' ? window.getCachedIdentity(scope) : null);
+
+  if (cached && typeof window.renderChatAmbitos === 'function') {
+    window.renderChatAmbitos(cached);
+    // (opcional) abrir panel de ámbitos
+    document.getElementById('ambQueryPanel')?.classList.add('is-open');
+  } else {
+    console.warn('[badge→ambitos] Sin datos en cache para scope:', scope);
+  }
+
+  // --- abrir chat (como ya hacías) ---
   const tmp = document.createElement('button');
   tmp.setAttribute('data-scope', scopeStr);
   (window.chatHere || window.chatAmbitoHere)?.(tmp);
 
-  // si usás slide/carrusel a la columna chat:
+  // --- UI slide ---
   document.documentElement.classList.add('slide-chat');
   document.documentElement.classList.remove('slide-ambitos');
-}, { capture: true }); // ← clave para ganarle al <summary>
+  pintarDesdeCacheAmbitosYChat(badge);
+}, { capture: true });
 
 
 
@@ -523,3 +537,79 @@ document.addEventListener('click', (e) => {
 
 
 
+
+
+
+
+
+
+
+
+// === helpers ===
+window.identityCache = window.identityCache || new Map();
+
+function getKeyFromDom(el){
+  return el?.closest('.id-item')?.dataset?.key?.trim() || '';
+}
+
+function getKeyFromScope(scope={}){
+  return (scope.tel || scope.alias || scope.nombre || '').trim();
+}
+
+function getCachedByKeyOrScope(key, scope){
+  if (key && identityCache.has(key)) return identityCache.get(key);
+  const alt = getKeyFromScope(scope);
+  if (alt && identityCache.has(alt)) return identityCache.get(alt);
+  return null;
+}
+
+function pintarDesdeCacheAmbitosYChat(badgeEl){
+  // 1) summary + scope (viene escapado en tu HTML)
+  const summary = badgeEl.closest('summary.id-summary') || badgeEl.closest('summary');
+  let scopeStr = (summary?.getAttribute('data-scope') || '{}')
+      .replace(/&quot;|&#34;/g, '"').replace(/&amp;/g, '&');
+  let scope = {}; try { scope = JSON.parse(scopeStr); } catch { scope = {}; }
+
+  // 2) key desde DOM o desde scope
+  const keyDom = getKeyFromDom(badgeEl);
+  const cached = getCachedByKeyOrScope(keyDom, scope);
+
+  // 3) pintar si hay caché
+  if (cached){
+    const k = (keyDom || getKeyFromScope(scope));
+    console.groupCollapsed('%c[CACHE HIT → badge/chat]', 'color:green;font-weight:700;', k);
+    console.log('key:', k);
+    console.log('user:', cached.user);
+    console.log('resumen:', {
+      publicaciones: cached.publicaciones?.length || 0,
+      ambitos: cached.ambitos?.length || 0,
+      cp: cached.codigos_postales?.length || 0,
+      idiomas: cached.idiomas?.length || 0
+    });
+    console.groupEnd();
+
+    // Pinta Ámbitos + tarjeta identidad y marca activo
+    window.renderChatAmbitos?.(cached);
+    window.renderIdentityResult?.(cached.user, { userKeyOverride: k });
+    window.setActiveIdentity?.(k);
+
+    // abre panel de ámbitos (si lo usás)
+    document.getElementById('ambQueryPanel')?.classList.add('is-open');
+  } else {
+    console.warn('[CACHE MISS → badge/chat] keyDom:', keyDom, 'scope:', scope);
+  }
+
+  // 4) invocar tu chatHere/chatAmbitoHere conservando conducta actual
+  const tmp = document.createElement('button');
+  tmp.setAttribute('data-scope', scopeStr);
+  (window.chatHere || window.chatAmbitoHere)?.(tmp);
+
+  // 5) UI slide
+  document.documentElement.classList.add('slide-chat');
+  document.documentElement.classList.remove('slide-ambitos');
+
+  // 6) móvil: pasar a vista chat
+  if (typeof isMobile === 'function' && isMobile()){
+    window.setMobileView?.('chat');
+  }
+}
