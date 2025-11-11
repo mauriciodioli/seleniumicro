@@ -211,10 +211,49 @@ selUsr.addEventListener('change', async () => {
   });
 });
 
+
 function focusRightOnMobile(){
   if (window.matchMedia('(max-width: 900px)').matches){
     myDomainRight?.scrollIntoView({ behavior:'smooth', block:'start', inline:'nearest' });
   }
 }
+
+// Re-render de la grilla con los últimos filtros
+async function showListFromLastQuery(){
+  if (!window.lastQuery) { 
+    mdContent.innerHTML = `<p class="muted">Elegí una categoría…</p>`;
+    return;
+  }
+  mdContent.innerHTML = `<p class="muted">Cargando…</p>`;
+  try{
+    const data = await postJSON(API.publicaciones, window.lastQuery);
+    renderGrid(data?.items || []);
+  }catch(e){
+    console.error(e);
+    mdContent.innerHTML = `<p class="muted">No se pudo cargar.</p>`;
+  }
+  focusRightOnMobile();
+}
+
+// 1A) Delegado: “Lista” del header derecho o back dentro del micrositio
+document.addEventListener('click', (e) => {
+  const backBtn = e.target.closest('#btnMdBack, [data-ms-back]');
+  if (!backBtn) return;
+  e.preventDefault();
+  // si hay historial SPA, usalo, si no, recarga lista
+  if (history.state?.view === 'detail') {
+    history.back(); // disparará el popstate abajo
+  } else {
+    showListFromLastQuery();
+  }
+});
+
+
+window.addEventListener('popstate', (e) => {
+  // Si no hay estado o no es 'detail', volvemos a la lista
+  if (!e.state || e.state.view !== 'detail') {
+    showListFromLastQuery();
+  }
+});
 
 
