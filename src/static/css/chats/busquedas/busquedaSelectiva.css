@@ -8,3 +8,70 @@
   .mock-card{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.7rem;margin:.5rem 0;background:#0f172a}
   .mock-card h4{margin:.25rem 0}
   .mock-meta{font-size:.85rem;color:#9fb1cc}
+
+  .mock-card{border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:.75rem .9rem;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:.4rem}
+.mock-card .card-img{width:100%;height:auto;border-radius:10px}
+.mock-meta,.meta{font-size:.85rem;opacity:.75}
+.desc{margin:.25rem 0 0}
+.hint{opacity:.7}
+
+
+
+
+
+
+
+/* layout de 2 columnas: izq fija + der flexible */
+.my-domain-wrapper{
+  display:grid;
+  grid-template-columns: 320px 1fr;     /* ajustá el ancho de la barra izq */
+  gap: 16px;
+  height: calc(100vh - 72px);           /* resta la altura de tu navbar/header */
+}
+
+/* panel derecho: header fijo + contenido con scroll */
+.my-domain-right{
+  display:flex;
+  flex-direction:column;
+  min-width:0;                          /* evita overflow horizontal */
+}
+
+.md-head{
+  flex:0 0 auto;
+}
+
+#mdContent{
+  flex:1 1 auto;
+  overflow-y:auto;                      /* <-- el scroll vive acá */
+  padding:12px;
+}
+
+/* grilla responsive dentro del contenedor con scroll */
+.grid-cards{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap:16px;
+  align-content:start;                  /* evita estirar filas raramente */
+}
+.tarjeta {
+  background:#111; color:#eee; border-radius:20px; padding:16px; width:340px;
+  box-shadow:0 8px 24px rgba(0,0,0,.35); position:relative; overflow:hidden
+}
+.tarjeta .badge {position:absolute; top:10px; left:14px; background:#c5162e; color:#fff;
+  padding:6px 10px; border-radius:12px; font-size:.78rem; font-weight:600}
+.tarjeta .btn-close {position:absolute; top:10px; right:12px; background:#2b2b2b; color:#fff;
+  border:0; width:28px; height:28px; border-radius:50%; cursor:pointer}
+.tarjeta .imgbox {background:#666768; border-radius:14px; padding:18px; margin-top:30px}
+.tarjeta img {display:block; width:100%; height:auto; border-radius:12px}
+.tarjeta h4 {margin:.9rem 0 .4rem; color:#6ec8ff; text-decoration:underline; text-underline-offset:2px}
+.tarjeta .stars {color:#f6c300; font-size:.95rem}
+.tarjeta .muted {opacity:.8; font-size:.9rem}
+.tarjeta .excerpt {margin:.35rem 0 .75rem; line-height:1.35; max-height:3.2em; overflow:hidden}
+.tarjeta .cta {display:inline-block; background:#ffd400; color:#111; font-weight:700;
+  padding:.55rem 1rem; border-radius:10px}
+.tarjeta .wpp {
+  position:absolute; right:14px; bottom:14px; width:52px; height:52px; border-radius:50%;
+  background:#22c35e; display:grid; place-items:center; box-shadow:0 4px 16px rgba(0,0,0,.4)
+}
+.tarjeta .wpp svg {width:26px; height:26px; fill:#fff}
+.grid-cards {display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px}

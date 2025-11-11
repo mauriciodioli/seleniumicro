@@ -50,7 +50,8 @@ from controllers.scrape_amazon_dpia import scrape_amazon_dpia
 from controllers.filtro_publicacion import filtro_publicacion
 from controllers.chats import chat_bp
 from controllers.chats.busquedas.buscar_usuario_telefono import buscar_usuario_telefono
-from controllers.chats.boot_mock import boot_bp  # ⬅️ nuevo
+from controllers.chats.boot_mock import boot_bp  
+from controllers.chats.busquedas.busquedaSelectiva import busquedaSelectiva
               # ⬅️ nuevo
 
 app.register_blueprint(chat_bp)
@@ -64,6 +65,7 @@ app.register_blueprint(publicaciones)
 app.register_blueprint(scrape_amazon_dpia)
 app.register_blueprint(filtro_publicacion)
 app.register_blueprint(buscar_usuario_telefono)
+app.register_blueprint(busquedaSelectiva)
 app.register_blueprint(boot_bp)    # ⬅️ nuevo
 
 

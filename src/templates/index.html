@@ -56,41 +56,6 @@
   <!-- 🔎 NUEVO buscador selectivo -->
   <script src="{{ url_for('static', filename='js/chats/busquedas/busquedaSelectiva.js') }}" defer></script>
 
-  <!-- Init del buscador selectivo -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Asegurate de haber incluido en chatDominios.html:
-      // {% include 'chats/busquedas/busquedaSelectiva.html' %} dentro de .md-filters
-      window.busquedaSelectivaInit?.({
-        sel: {
-          inputLoc:   '#hub-loc',
-          suggestLoc: '#hub-loc-suggest',
-          inputQ:     '#hub-q',
-          btnGo:      '#hub-go',
-          boxDomains: '#hub-domains',
-          boxCats:    '#hub-cats'
-        },
-        render: {
-          loading: (msg) => mdRightLoading(msg || 'Buscando…'),
-          results: (items) => renderResultadosEnPanelDerecho(items || [])
-        },
-        api: {
-          sugerir:  (q)=> `/api/ubicacion/sugerir?q=${encodeURIComponent(q)}`,
-          resolver: (q)=> `/api/ubicacion/resolver?q=${encodeURIComponent(q)}`,
-          dominios: (loc)=> `/api/domains?${loc.type==='cp' ? 'cp='+loc.id : 'city_id='+loc.id}`,
-          categorias: (dom,loc)=> `/api/categories?domain_id=${dom.id}&${loc.type==='cp' ? 'cp='+loc.id : 'city_id='+loc.id}`,
-          publicaciones: (dom,cat,loc,q)=>{
-            const qs = new URLSearchParams({
-              domain_id: dom?.id || '',
-              category_id: cat?.id || '',
-              q: q || '',
-              [loc.type==='cp' ? 'cp' : 'city_id']: loc.id
-            });
-            return `/api/publicaciones?${qs.toString()}`;
-          }
-        }
-      });
-    });
-  </script>
+ 
 </body>
 </html>

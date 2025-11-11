@@ -2,12 +2,12 @@
 <section class="hub">
 
 <div class="cascada">
-  <button id="btnAbrirCascada" class="btn">Buscar por CP/Ciudad → Dominio → Categoría → Publicación → Usuario</button>
+  <button id="btnAbrirCascada" class="btn" type="button">Buscar por CP/Ciudad → Dominio → Categoría → Publicación → Usuario</button>
 
   <div id="boxCascada" class="cascada-box" hidden>
     <div class="fila">
       <label>Ubicación</label>
-      <select id="selLoc" class="dd" hidden>
+      <select id="selLoc" class="dd" disabled hidden>…</select>
         <option value="">— Elegí CP/Ciudad —</option>
       </select>
     </div>
@@ -39,7 +39,8 @@
 </div>
 
 <!-- fallback si no existe #mdContent -->
-<div id="mockResults" style="display:none"></div>
+<div id="mockResults" style="display:none" aria-live="polite"></div>
+
 
 
 </section>
