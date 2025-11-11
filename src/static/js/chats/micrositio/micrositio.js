@@ -1,42 +1,64 @@
-// micrositio.js — versión robusta con IIFE (evita "Illegal return statement")
+// micrositio.js — portada grande + grilla (compatible cover+gallery o media[])
 (function () {
-  // Evita doble montaje si el script se incluye dos veces
   if (window.__micrositioMounted) return;
   window.__micrositioMounted = true;
-
-  // Flag global para bloquear renders legacy cuando estás dentro del micrositio
   window.__MICROSITIO_MODE__ = false;
 
-  // Endpoint
   const micrositioAPI = '/api/micrositio/detalle';
-
-  // Helpers DOM seguros
   const getRight   = () => document.getElementById('myDomainRight');
   const getContent = () => document.getElementById('mdContent');
 
-  // Limpieza fuerte + set de contenido (sin innerHTML +=)
+  // Combina respuestas {media[]} o {cover, gallery[]}
+  function extractMedia(data){
+    if (Array.isArray(data?.media)) return data.media;
+    const cover = data?.cover ? [data.cover] : [];
+    const gallery = Array.isArray(data?.gallery) ? data.gallery : [];
+    return [...cover, ...gallery];
+  }
+
   function setMdContent(html){
     const c = getContent();
     if (!c) return;
-    c.replaceChildren();               // limpia nodos existentes
+    c.replaceChildren();
     const tmp = document.createElement('div');
     tmp.innerHTML = html;
     while (tmp.firstChild) c.appendChild(tmp.firstChild);
   }
 
-  // Scroll al panel derecho (mobile-friendly)
   function scrollRightFocus(){
     getRight()?.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'nearest' });
   }
 
-  // HTML del micrositio
-  function micrositioHTML(pub, media=[]){
-    const fecha   = (typeof fmtFecha === 'function') ? fmtFecha(pub.fecha_creacion) : (pub.fecha_creacion || '');
-    const portada = (media.find(m=>m.type==='image') || {})?.src || pub.imagen || '';
-    const gal = (media||[]).map(m => m.type === 'image'
-      ? `<figure class="ms-item"><img src="${m.src}" alt="${m.title||''}"></figure>`
-      : `<figure class="ms-item"><video controls src="${m.src}"></video></figure>`
-    ).join('');
+  // visor principal (img o video)
+  function renderViewer(item){
+    if (!item) return `<div class="ms-viewer ms-empty"><div class="muted">Sin media</div></div>`;
+    if (item.type === 'video'){
+      return `<div class="ms-viewer" data-type="video">
+                <video controls playsinline src="${item.src}" class="ms-view"></video>
+              </div>`;
+    }
+    return `<div class="ms-viewer" data-type="image">
+              <img src="${item.src}" alt="${item.title||''}" class="ms-view" />
+            </div>`;
+  }
+
+  // HTML del micrositio (portada = media[0], thumbs = todo el array para que se vea completo)
+  function micrositioHTML(pub, mediaInput){
+    const media = Array.isArray(mediaInput) ? mediaInput.slice() : [];
+    const fecha = (typeof fmtFecha === 'function') ? fmtFecha(pub.fecha_creacion) : (pub.fecha_creacion || '');
+
+    const cover = media[0] || (pub.imagen ? { type:'image', src: pub.imagen, title: pub.titulo } : null);
+
+    const thumbsHTML = media.map((m, idx) => {
+      const isVideo = m.type === 'video';
+      const active = (idx === 0) ? ' is-active' : '';
+      return `<button class="ms-thumb${active}${isVideo?' is-video':''}" data-ms-thumb="${idx}" aria-label="media ${idx}">
+                ${isVideo
+                  ? `<div class="ms-thumb-video"><span class="ms-play">▶</span></div>`
+                  : `<img loading="lazy" src="${m.src}" alt="${m.title||''}">`
+                }
+              </button>`;
+    }).join('');
 
     return `
     <article class="ms-wrap">
@@ -45,7 +67,7 @@
       </div>
 
       <section class="ms-hero">
-        ${portada ? `<img class="ms-hero-img" src="${portada}" alt="${pub.titulo || ''}">` : ''}
+        <div class="ms-hero-left">${renderViewer(cover)}</div>
         <div class="ms-hero-body">
           <span class="badge">${pub.ambito || '—'}</span>
           <h1 class="ms-title">${pub.titulo || '—'}</h1>
@@ -55,16 +77,17 @@
         </div>
       </section>
 
-      ${gal ? `
       <section class="ms-gallery">
-        <h3>Galería</h3>
-        <div class="ms-grid">${gal}</div>
-      </section>` : ''}
+        <h3>Galería <small class="muted">(items: ${media.length})</small></h3>
+        <div class="ms-grid" id="msGrid">
+          ${thumbsHTML || `<div class="muted">No hay miniaturas para mostrar.</div>`}
+        </div>
+      </section>
     </article>`;
   }
 
   function init(){
-    // --- Sanea duplicados de mdContent si algún include rompió IDs ---
+    // Sanea duplicados de mdContent si algún include rompió IDs
     (function ensureUniqueMdContent(){
       const all = document.querySelectorAll('#mdContent');
       if (all.length > 1){
@@ -76,31 +99,36 @@
     const right = getRight();
     if (!right) { console.warn('myDomainRight no existe'); return; }
 
-    // Delegación: click en “Ver más”
+    // “Ver más” → carga micrositio
     right.addEventListener('click', async (e) => {
       const btn = e.target.closest('.ver-mas');
       if (!btn) return;
       e.preventDefault();
 
       if (!getContent()) return;
-
       const id = Number(btn.dataset.id);
       if (!id) return;
 
-      // Entramos a modo micrositio: bloquea renders legacy
       window.__MICROSITIO_MODE__ = true;
-
       setMdContent(`<p class="muted">Cargando publicación…</p>`);
       try{
         const r = await fetch(micrositioAPI, {
           method:'POST',
           headers:{'Content-Type':'application/json','Accept':'application/json'},
-          body: JSON.stringify({ id })
+          body: JSON.stringify({ id, media_limit: 32 }) // opcional: subí el límite
         });
         const data = await r.json();
         if (!data?.ok) throw new Error(data?.error || 'Error de API');
 
-        setMdContent(micrositioHTML(data.pub, data.media || []));
+        const mediaArr = extractMedia(data);
+        // Debug opcional:
+        // console.log('[micrositio] pub:', data?.pub?.id, 'mediaLen:', mediaArr.length, data);
+
+        setMdContent(micrositioHTML(data.pub, mediaArr));
+        // guardar para thumbs
+        const c = getContent();
+        c.__msMedia = mediaArr;
+
         scrollRightFocus();
       }catch(err){
         console.error(err);
@@ -108,21 +136,18 @@
       }
     });
 
-    // Delegación: botón “← Volver”
+    // “← Volver”
     right.addEventListener('click', async (e) => {
       const back = e.target.closest('[data-ms-back]');
       if (!back) return;
       e.preventDefault();
 
       if (!getContent()) return;
-
-      // Salimos de modo micrositio: habilita renders de grilla legacy
       window.__MICROSITIO_MODE__ = false;
 
       if (window.lastQuery){
         setMdContent(`<p class="muted">Cargando…</p>`);
         try{
-          // API.publicaciones y renderGrid deben existir en tu app
           const data = await postJSON(API.publicaciones, window.lastQuery);
           renderGrid(data?.items || []);
         }catch(err){
@@ -134,15 +159,33 @@
       }
       scrollRightFocus();
     });
+
+    // Click en miniatura → reemplaza visor principal
+    right.addEventListener('click', (e) => {
+      const thumb = e.target.closest('[data-ms-thumb]');
+      if (!thumb) return;
+
+      const c = getContent();
+      const media = c?.__msMedia || [];
+      const idx = parseInt(thumb.getAttribute('data-ms-thumb'), 10);
+      const item = media[idx];
+      if (!item) return;
+
+      const heroLeft = c.querySelector('.ms-hero-left');
+      if (!heroLeft) return;
+
+      heroLeft.innerHTML = renderViewer(item);
+
+      c.querySelectorAll('.ms-thumb.is-active').forEach(t => t.classList.remove('is-active'));
+      thumb.classList.add('is-active');
+    });
   }
 
-  // Montaje cuando el DOM esté listo (soporta defer o no)
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init, { once: true });
   } else {
     init();
   }
 
-  // Helper global para que tus renderers legacy puedan chequear el modo
   window.MICROSITIO_isActive = () => !!window.__MICROSITIO_MODE__;
 })();
