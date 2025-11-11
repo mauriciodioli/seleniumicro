@@ -22,6 +22,8 @@ def serialize_pub(p):
 def api_micrositio_detalle():
     data = request.get_json(silent=True) or {}
     pub_id = data.get('id')
+    media_limit = int(data.get('media_limit', 8))  # ← límite opcional
+
     if not pub_id:
         return jsonify({'ok': False, 'error': 'id requerido'}), 400
 
@@ -37,14 +39,34 @@ def api_micrositio_detalle():
         .order_by(Public_imagen_video.id.asc())
         .all()
     )
-    media = []
+
+    def abs_url(path):
+        if not path: return path
+        if path.startswith('http'): return path
+        # arma absoluta según tu storage/CDN
+        return f"https://storage.googleapis.com/bucket_202404/{path}"
+
+    items = []
     for rel, img, vid in rows:
         if img and img.filepath:
-            media.append({'type': 'image', 'src': img.filepath, 'title': img.title or p.titulo})
+            items.append({'type':'image','src':abs_url(img.filepath),'title':img.title or p.titulo})
         elif vid and getattr(vid, 'filepath', None):
-            media.append({'type': 'video', 'src': vid.filepath, 'title': getattr(vid, 'title', '') or p.titulo})
+            items.append({'type':'video','src':abs_url(vid.filepath),'title':getattr(vid,'title','') or p.titulo})
 
-    if not media and getattr(p, 'imagen', None):
-        media.append({'type': 'image', 'src': p.imagen, 'title': p.titulo})
+    cover = None
+    if items:
+        cover = items[0]
+        gallery = items[1:1+media_limit]
+    else:
+        # fallback: usa p.imagen como portada
+        if getattr(p, 'imagen', None):
+            cover = {'type': 'image', 'src': abs_url(p.imagen), 'title': p.titulo}
+        gallery = []
 
-    return jsonify({'ok': True, 'pub': serialize_pub(p), 'media': media})
+    return jsonify({
+        'ok': True,
+        'pub': serialize_pub(p),
+        'cover': cover,
+        'gallery': gallery,
+        'gallery_count': len(items) - (1 if items else 0),
+    })
