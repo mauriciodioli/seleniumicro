@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DPIA · Chat Contextual (MVP UI)</title>
 
@@ -9,66 +9,88 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- Tus estilos por módulo -->
+  <!-- CSS base -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatIdentidades.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatAmbitos.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mydomain/mydomain.css') }}">
-  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/indexChat.css') }}">
+
+  <!-- (si seguís usando el buscador viejo) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/busquedas/busquedaAmbitos.css') }}">
+  <!-- 🔎 NUEVO -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/busquedas/busquedaSelectiva.css') }}">
 </head>
 <body>
-
   <!-- NAVBAR -->
   <div class="nav">
-    <div class="brand">
-      <span class="dot"></span>
-      <span>DPIA · Chat Contextual</span>
-    </div>
+    <div class="brand"><span class="dot"></span><span>DPIA · Chat Contextual</span></div>
     <div style="display:flex; gap:8px; align-items:center">
-    <button id="btnMyDomain" class="btn">My domain</button>
+      <button id="btnMyDomain" class="btn">My domain</button>
       <button id="toggleTheme" class="btn">☀️ Claro / 🌙 Oscuro</button>
-    
     </div>
   </div>
 
   <!-- GRID 3-3-6 -->
   <div class="wrap">
     <div class="app-grid">
-    
-
-      <!-- IZQUIERDA (3): Identidades -->
-      <aside id="col-identidades" class="col-identidades" >
+      <aside id="col-identidades" class="col-identidades">
         {% include 'chats/chatIdentidades.html' %}
       </aside>
-
-
-      <!-- CENTRO (3): Ámbitos -->
       <section id="col-ambitos" class="col-ambitos">
         {% include 'chats/chatAmbitos.html' %}
       </section>
-
-      <!-- DERECHA (6): Chat/Mensajes -->
       <section id="col-chat" class="col-chat">
         {% include 'chats/chatMensajes.html' %}
-        
       </section>
-
     </div>
   </div>
 
-  <!-- OVERLAY oculto: acá va nuevo panel de 2 columnas -->
+  <!-- Overlay MyDomain (donde adentro vas a incluir busquedaSelectiva.html) -->
   {% include 'chats/mydomain/chatDominios.html' %}
 
+  <!-- JS módulos -->
+  <script src="{{ url_for('static', filename='js/chats/indexChat.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/mydomain/mydomain.js') }}" defer></script>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/indexChat.css') }}">
-  <!-- Scripts de módulos -->
-  <script src="{{ url_for('static', filename='js/chats/indexChat.js') }}"></script>
-   <script src="{{ url_for('static', filename='js/mydomain/mydomain.js') }}"></script>
+  <!-- 🔎 NUEVO buscador selectivo -->
+  <script src="{{ url_for('static', filename='js/chats/busquedas/busquedaSelectiva.js') }}" defer></script>
 
-
-  
-
-
+  <!-- Init del buscador selectivo -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Asegurate de haber incluido en chatDominios.html:
+      // {% include 'chats/busquedas/busquedaSelectiva.html' %} dentro de .md-filters
+      window.busquedaSelectivaInit?.({
+        sel: {
+          inputLoc:   '#hub-loc',
+          suggestLoc: '#hub-loc-suggest',
+          inputQ:     '#hub-q',
+          btnGo:      '#hub-go',
+          boxDomains: '#hub-domains',
+          boxCats:    '#hub-cats'
+        },
+        render: {
+          loading: (msg) => mdRightLoading(msg || 'Buscando…'),
+          results: (items) => renderResultadosEnPanelDerecho(items || [])
+        },
+        api: {
+          sugerir:  (q)=> `/api/ubicacion/sugerir?q=${encodeURIComponent(q)}`,
+          resolver: (q)=> `/api/ubicacion/resolver?q=${encodeURIComponent(q)}`,
+          dominios: (loc)=> `/api/domains?${loc.type==='cp' ? 'cp='+loc.id : 'city_id='+loc.id}`,
+          categorias: (dom,loc)=> `/api/categories?domain_id=${dom.id}&${loc.type==='cp' ? 'cp='+loc.id : 'city_id='+loc.id}`,
+          publicaciones: (dom,cat,loc,q)=>{
+            const qs = new URLSearchParams({
+              domain_id: dom?.id || '',
+              category_id: cat?.id || '',
+              q: q || '',
+              [loc.type==='cp' ? 'cp' : 'city_id']: loc.id
+            });
+            return `/api/publicaciones?${qs.toString()}`;
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>

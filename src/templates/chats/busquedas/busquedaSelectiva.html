@@ -1,0 +1,45 @@
+<!-- Search Hub -->
+<section class="hub">
+
+<div class="cascada">
+  <button id="btnAbrirCascada" class="btn">Buscar por CP/Ciudad → Dominio → Categoría → Publicación → Usuario</button>
+
+  <div id="boxCascada" class="cascada-box" hidden>
+    <div class="fila">
+      <label>Ubicación</label>
+      <select id="selLoc" class="dd" hidden>
+        <option value="">— Elegí CP/Ciudad —</option>
+      </select>
+    </div>
+    <div class="fila">
+      <label>Dominio</label>
+      <select id="selDom" class="dd" hidden>
+        <option value="">— Elegí dominio —</option>
+      </select>
+    </div>
+    <div class="fila">
+      <label>Categoría</label>
+      <select id="selCat" class="dd" hidden>
+        <option value="">— Elegí categoría —</option>
+      </select>
+    </div>
+    <div class="fila">
+      <label>Publicación</label>
+      <select id="selPub" class="dd" hidden>
+        <option value="">— Opcional: una publicación —</option>
+      </select>
+    </div>
+    <div class="fila">
+      <label>Usuario</label>
+      <select id="selUsr" class="dd" hidden>
+        <option value="">— Opcional: un usuario —</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- fallback si no existe #mdContent -->
+<div id="mockResults" style="display:none"></div>
+
+
+</section>

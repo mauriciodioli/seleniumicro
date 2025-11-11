@@ -266,3 +266,46 @@
   border-right: 1px solid rgba(255,255,255,.015);
 }
 
+
+
+
+
+
+/* Evitá que el contenedor tape el footer en desktop */
+.my-domain-view{
+  height: calc(100vh - 60px - 48px); /* 60 header + 48 footer */
+}
+
+/* Footer por arriba de todo */
+.amb-footer{
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: #0b1225; /* visible sobre #0f172a */
+  border-top: 1px solid rgba(255,255,255,.06);
+  min-height: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 12px;
+}
+
+/* Dale aire abajo al contenido para que no lo tape el footer */
+.my-domain-left,
+.my-domain-right{
+  padding-bottom: 56px; /* > alto footer */
+}
+
+/* OJO: este selector escondía contenido del include */
+.my-domain-left .panel-header > h4,
+.my-domain-left .panel-header > label{
+  /* Si tu include trae .panel-header y necesitás ver algo, no lo tapes */
+  /* quitalo o comenta esta regla si oculta el buscador */
+  /* display: none !important; */
+}
+
+/* Mobile: ya tenías altura; ajustá al alto real del footer */
+@media (max-width: 767px){
+  .my-domain-left,
+  .my-domain-right{
+    height: calc(100vh - 110px); /* navbar + footer */
+  }
+}

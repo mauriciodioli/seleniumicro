@@ -1,50 +1,26 @@
 <!-- chatDominio.html -->
-
 <div id="myDomainView" class="my-domain-view" data-view="left">
-  <!-- panel izq -->
   <section class="my-domain-left" id="myDomainLeft">
-    <!-- 1. encabezado propio -->
     <div class="md-head">
       <h4>Mis ámbitos</h4>
       <p>Categorías donde yo publico</p>
     </div>
-  
-    <!-- 3. tabs reutilizados -->
+
+    <!-- 🔎 Buscador selectivo NUEVO -->
     <div class="md-filters">
-      {% include 'chats/busquedas/busquedaAmbito.html' %}
+      {% include 'chats/busquedas/busquedaSelectiva.html' %}
     </div>
 
-  
-    <div class="md-list" id="mdList">
-      
-      
-    </div>
+    <!-- (opcional) Dejá el viejo si querés tabs legacy debajo -->
+    {# {% include 'chats/busquedas/busquedaAmbito.html' %} #}
 
-
-
-
-
-
-
-
-
-
-  </div>
-
-
-
-
+    <div class="md-list" id="mdList"></div>
   </section>
 
-
-
-
-   {% include 'chats/mydomain/panelDerechoMicrositio.html' %}
-  
+  {% include 'chats/mydomain/panelDerechoMicrositio.html' %}
 </div>
 
-<!-- FOOTER fijo -->
 <div class="amb-footer">
-  <div class="foot-left"><span class="hint">Elegí un micrositio </span></div>
+  <div class="foot-left"><span class="hint">Elegí un micrositio</span></div>
   <div class="foot-right"></div>
 </div>

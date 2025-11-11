@@ -1,0 +1,10 @@
+  .cascada { margin:.6rem 0 1rem }
+  .cascada .btn{ background:#1e40af;color:#fff;border:0;border-radius:10px;padding:8px 12px;cursor:pointer }
+  .cascada-box{ margin-top:.6rem;padding:.6rem;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:#0b1225 }
+  .cascada .fila{ display:flex;gap:.6rem;align-items:center;margin:.45rem 0 }
+  .cascada label{ width:110px;color:#a8b3c9 }
+  .cascada select.dd{ flex:1;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f172a;color:#e6eefc;padding:0 .6rem }
+  /* tarjetas derecha (mínimo estilo por si no tenés CSS ahí) */
+  .mock-card{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.7rem;margin:.5rem 0;background:#0f172a}
+  .mock-card h4{margin:.25rem 0}
+  .mock-meta{font-size:.85rem;color:#9fb1cc}
