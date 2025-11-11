@@ -1,0 +1,16 @@
+.ms-wrap { display:flex; flex-direction:column; gap:16px; }
+.ms-head { display:flex; justify-content:flex-end; }
+.ms-hero { background:#121626; border-radius:16px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,.3); }
+.ms-hero-img { width:100%; height:auto; display:block; max-height:56vh; object-fit:cover; }
+.ms-hero-body { padding:16px; }
+.ms-title { margin:.2rem 0 .4rem; font-size:1.5rem; }
+.ms-desc { background:#0f1322; padding:12px; border-radius:12px; line-height:1.45; }
+.ms-gallery h3 { margin:0 0 .5rem; }
+.ms-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+.ms-grid .ms-item, .ms-grid figure { margin:0; background:#121626; border-radius:12px; overflow:hidden; }
+.ms-grid img, .ms-grid video { width:100%; height:100%; object-fit:cover; display:block; }
+
+@media (max-width:640px){
+  .ms-title{ font-size:1.25rem; }
+  .ms-hero-img{ max-height:40vh; }
+}

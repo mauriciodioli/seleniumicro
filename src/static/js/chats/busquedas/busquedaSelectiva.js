@@ -74,32 +74,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const full = Math.floor(score), half = (score-full)>=.5;
     return `<span class="stars">${'★'.repeat(full)}${half?'☆':''}</span> <span class="muted">(${count})</span>`;
   };
+function cardHTML(p){
+  const titulo = p.titulo || '—';
+  const img = p.imagen || '';
+  const badge = p.ambito || '—';
+  const fecha = fmtFecha(p.fecha_creacion);
+  const autor = p.user_id ? `Usuario ${p.user_id}` : '—';
+  const wppHref = `https://wa.me/?text=${encodeURIComponent(`Hola, vi tu publicación "${titulo}" en DPIA.`)}`;
 
-  function cardHTML(p){
-    const titulo = p.titulo || '—';
-    const img = p.imagen || '';
-    const badge = p.ambito || '—';
-    const fecha = fmtFecha(p.fecha_creacion);
-    const autor = p.user_id ? `Usuario ${p.user_id}` : '—';
-    const linkMas = `/publicacion/${p.id}`;
-    const wppHref = `https://wa.me/?text=${encodeURIComponent(`Hola, vi tu publicación "${titulo}" en DPIA.`)}`;
+  return `
+  <article class="tarjeta" data-id="${p.id}">
+    <span class="badge">${badge}</span>
+    <button class="btn-close" aria-label="Cerrar">x</button>
+    <div class="imgbox">${img ? `<img src="${img}" alt="${titulo}" loading="lazy">` : ''}</div>
+    <h4>${titulo}</h4>
+    <div>${starHTML(p.score || 4.3, p.reviews || 42)}</div>
+    <p class="excerpt">${p.descripcion || ''}</p>
+    <div class="muted">${fecha}</div>
+    <div class="muted">Publicado por: ${autor}</div>
 
-    return `
-    <article class="tarjeta" data-id="${p.id}">
-      <span class="badge">${badge}</span>
-      <button class="btn-close" aria-label="Cerrar">x</button>
-      <div class="imgbox">${img ? `<img src="${img}" alt="${titulo}" loading="lazy">` : ''}</div>
-      <h4>${titulo}</h4>
-      <div>${starHTML(p.score || 4.3, p.reviews || 42)}</div>
-      <p class="excerpt">${p.descripcion || ''}</p>
-      <div class="muted">${fecha}</div>
-      <div class="muted">Publicado por: ${autor}</div>
-      <a class="cta" href="${linkMas}">Ver más</a>
-      <a class="wpp" href="${wppHref}" target="_blank" rel="noopener" aria-label="WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.77 11.77 0 0 0 12.06 0 12 12 0 0 0 0 12a11.87 11.87 0 0 0 1.65 6L0 24l6.22-1.63A12 12 0 0 0 12 24 12 12 0 0 0 24 12a11.77 11.77 0 0 0-3.48-8.52ZM12 21.8a9.7 9.7 0 0 1-4.95-1.35l-.36-.21-3.69 1 1-3.6-.24-.37A9.8 9.8 0 1 1 12 21.8Zm5.42-7.33c-.3-.15-1.77-.87-2.04-.97s-.47-.15-.67.15-.77.97-.94 1.17-.35.22-.65.07a7.94 7.94 0 0 1-2.33-1.44 8.74 8.74 0 0 1-1.61-2c-.17-.3 0-.46.13-.61s.3-.35.45-.52.22-.3.34-.5a.55.55 0 0 0 0-.52c-.08-.15-.67-1.62-.92-2.22s-.49-.5-.67-.5h-.56a1.08 1.08 0 0 0-.77.37 3.23 3.23 0 0 0-1 2.4 5.61 5.61 0 0 0 1.17 2.94 12.86 12.86 0 0 0 4.94 4.77 16.9 16.9 0 0 0 1.69.62 4 4 0 0 0 1.83.11 3 3 0 0 0 2-1.42 2.5 2.5 0 0 0 .17-1.42c-.07-.12-.27-.19-.57-.35Z"/></svg>
-      </a>
-    </article>`;
-  }
+    <!-- 👇 en vez de link, botón SPA -->
+    <a class="cta ver-mas" href="#" data-id="${p.id}">Ver más</a>
+
+    <a class="wpp" href="${wppHref}" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.77 11.77 0 0 0 12.06 0 12 12 0 0 0 0 12a11.87 11.87 0 0 0 1.65 6L0 24l6.22-1.63A12 12 0 0 0 12 24 12 12 0 0 0 24 12a11.77 11.77 0 0 0-3.48-8.52Z"/></svg>
+    </a>
+  </article>`;
+}
 
   function renderGrid(pubs){
     const items = Array.isArray(pubs) ? pubs : (pubs?.items || []);
@@ -158,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGrid(pubs);
     fillSelect(selPub, pubs, p=>p.id, p=>p.titulo, '— Opcional: una publicación —');
     focusRightPanel(); // 👉 muestra grilla a la vista
+    focusRightOnMobile();
 
     // usuarios
     const dataU = await postJSON(API.usuarios, lastQuery);
@@ -200,10 +202,19 @@ selUsr.addEventListener('change', async () => {
       resetCascadaUI();
       mdContent.innerHTML = cardHTML(p);
      focusRightPanel(); // 👉 enfoca la tarjeta
+     focusRightOnMobile();
+     
     } catch (e) {
       console.error(e);
       mdContent.innerHTML = `<p class="muted">Error cargando publicación.</p>`;
     }
   });
 });
+
+function focusRightOnMobile(){
+  if (window.matchMedia('(max-width: 900px)').matches){
+    myDomainRight?.scrollIntoView({ behavior:'smooth', block:'start', inline:'nearest' });
+  }
+}
+
 
