@@ -86,22 +86,35 @@
     </article>`;
   }
 // justo arriba de init()
+// Bloquea que el router global “secuestré” anclas dentro del micrositio,
+// pero NO corta la propagación de nuestros propios handlers.
 function shieldMicrositioClicks(){
   const right = getRight();
   if (!right) return;
 
-  // Captura: intercepta ANTES de que otros listeners globales actúen
+  // Captura: corre antes que listeners en bubbling
   right.addEventListener('click', (e) => {
-    // Todo click dentro del micrositio queda en el micrositio
-    if (e.target.closest('.ms-wrap')) {
-      // mata navegación de anchors vacíos
-      const a = e.target.closest('a[href="#"]');
-      if (a) e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
+    const wrap = e.target.closest('.ms-wrap');
+    if (!wrap) return; // fuera del micrositio, no tocamos nada
+
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+
+    const href = a.getAttribute('href') || '';
+    const isControl = a.classList.contains('ver-mas') || a.matches('[data-ms-back]');
+    const isExternal = /^https?:\/\//i.test(href) || a.hasAttribute('target');
+
+    // Si es un enlace “interno” (hash, vacío, o relativo) y NO es un control nuestro,
+    // prevenimos la navegación para que no se vaya a otra vista.
+    if (!isExternal && !isControl) {
+      e.preventDefault();
+      // IMPORTANTE: no cortamos propagación aquí, para no romper nuestros handlers.
+      // Si tu router global sigue capturando, recién ahí podríamos considerar e.stopPropagation(),
+      // pero habría que duplicar la lógica de nuestros clicks.
     }
   }, true);
 }
+
 
   function init(){
     // Sanea duplicados de mdContent si algún include rompió IDs
@@ -142,7 +155,7 @@ function shieldMicrositioClicks(){
         // console.log('[micrositio] pub:', data?.pub?.id, 'mediaLen:', mediaArr.length, data);
 
         setMdContent(micrositioHTML(data.pub, mediaArr));
-        history.pushState({ view: 'detail' }, '', '#micrositio');
+     
         // guardar para thumbs
         const c = getContent();
         c.__msMedia = mediaArr;
@@ -155,34 +168,36 @@ function shieldMicrositioClicks(){
     });
 
     // “← Volver”
-    // “← Volver”
-    right.addEventListener('click', async (e) => {
-      const back = e.target.closest('[data-ms-back]');
-      if (!back) return;
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
+  right.addEventListener('click', async (e) => {
+  const back = e.target.closest('#btnMdBack, [data-ms-back]');
+  if (!back) return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
 
-      // si venimos de detail, usamos history
-      if (history.state?.view === 'detail') {
-        history.back();                 // dispara popstate
-        return;
-      }
-      // fallback: recargar lista
-      if (window.lastQuery){
-        setMdContent(`<p class="muted">Cargando…</p>`);
-        try{
-          const data = await postJSON(API.publicaciones, window.lastQuery);
-          renderGrid(data?.items || []);
-        }catch(err){
-          console.error(err);
-          setMdContent(`<p class="muted">No se pudo cargar.</p>`);
-        }
-      }else{
-        setMdContent(`<p class="muted">Elegí un ámbito/categoría de la izquierda.</p>`);
-      }
-      scrollRightFocus();
-    });
+  window.__MICROSITIO_MODE__ = false;
+
+  // Limpia cualquier hash que haya quedado (defensivo)
+  if (location.hash) {
+    history.replaceState(history.state, '', location.pathname + location.search);
+  }
+
+  // Re-render local sin tocar el history del browser
+  if (window.lastQuery){
+    setMdContent(`<p class="muted">Cargando…</p>`);
+    try{
+      const data = await postJSON(API.publicaciones, window.lastQuery);
+      renderGrid(data?.items || []);
+    }catch(err){
+      console.error(err);
+      setMdContent(`<p class="muted">No se pudo cargar.</p>`);
+    }
+  }else{
+    setMdContent(`<p class="muted">Elegí un ámbito/categoría de la izquierda.</p>`);
+  }
+  scrollRightFocus();
+});
+
 
 
     // Click en miniatura → reemplaza visor principal

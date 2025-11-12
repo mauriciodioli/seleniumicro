@@ -250,16 +250,19 @@ document.addEventListener('click', (e) => {
 
 
 window.addEventListener('popstate', () => {
-  // Siempre volvemos a la LISTA del panel derecho, no a otra vista
-  if (window.lastQuery){
-    setMdContent(`<p class="muted">Cargando…</p>`);
-    postJSON(API.publicaciones, window.lastQuery)
-      .then(d => renderGrid(d?.items || []))
-      .catch(() => setMdContent(`<p class="muted">No se pudo cargar.</p>`))
-      .finally(scrollRightFocus);
-  }else{
-    setMdContent(`<p class="muted">Elegí un ámbito/categoría de la izquierda.</p>`);
-    scrollRightFocus();
+  const st = history.state || {};
+  if (st.scope === 'micrositio') {
+    // volvemos a lista sin navegar a otra vista
+    if (window.lastQuery){
+      setMdContent(`<p class="muted">Cargando…</p>`);
+      postJSON(API.publicaciones, window.lastQuery)
+        .then(d => renderGrid(d?.items || []))
+        .catch(() => setMdContent(`<p class="muted">No se pudo cargar.</p>`))
+        .finally(scrollRightFocus);
+    } else {
+      setMdContent(`<p class="muted">Elegí un ámbito/categoría de la izquierda.</p>`);
+      scrollRightFocus();
+    }
   }
 });
 
