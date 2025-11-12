@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderGrid(pubs){
-    debugger;
+    
     const items = Array.isArray(pubs) ? pubs : (pubs?.items || []);
     mdContent.innerHTML = items.length
       ? `<div class="grid-cards">${ items.map(cardHTML).join('') }</div>`

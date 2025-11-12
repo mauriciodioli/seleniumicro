@@ -309,3 +309,42 @@
     height: calc(100vh - 110px); /* navbar + footer */
   }
 }
+
+
+/* ===== MyDomain (columna izquierda) ===== */
+:root{
+  --md-tabs-h: 36px;      /* alto de las tabs */
+  --md-filters-h: 32px;   /* alto de la fila de filtros (aprox) */
+  --md-sticky-gap: 8px;   /* respiración extra */
+}
+/* ===== Columna izquierda fija arriba, scroll sólo en la lista ===== */
+.my-domain-left{
+  display: flex;
+  flex-direction: column;
+  height: 100%;        /* o la altura disponible del panel */
+  overflow: hidden;    /* clave: el scroll no es aquí */
+}
+
+/* todo lo de arriba NO scrollea */
+.md-head,
+.panel-header,
+.md-filters,
+.search-tabs{
+  position: static;
+  z-index: auto;
+  flex: 0 0 auto;
+  margin: 0 0 .6rem;
+}
+
+/* si querés un poquito de aire: */
+.search-tabs{ margin-top: .25rem; }
+.md-filters{ margin-bottom: .6rem; }
+
+/* la lista es la ÚNICA que scrollea */
+#mdList{
+  flex: 1 1 auto;
+  min-height: 0;       /* evita que empuje al contenedor */
+  overflow: auto;      /* scroll acá */
+  padding-top: .2rem;
+}
+#mdList .amb-item{ margin-bottom: .5rem; }
