@@ -73,3 +73,26 @@
   }
   #myDomainLeft, #myDomainRight{ min-width:100vw; scroll-snap-align:start; }
 }
+
+
+
+@media (max-width: 767px){
+  /* el panel derecho arranca “fuera” a la derecha */
+  #myDomainRight{
+    position: fixed;
+    inset: 0 0 0 0;         /* ocupa pantalla completa */
+    transform: translateX(100%);
+    transition: transform .25s ease;
+    background: #1d1d1d;       /* o tu color de fondo */
+    z-index: 50;            /* encima del panel izquierdo */
+    overflow: auto;
+  }
+  /* cuando le ponés data-view="right", entra a escena */
+  #myDomainRight[data-view="right"]{
+    transform: translateX(0);
+  }
+  /* el botón back solo en mobile */
+  .mobile-back{ display: inline-block; }
+}
+
+/* en desktop no tocamos nada: el panel se queda donde está */

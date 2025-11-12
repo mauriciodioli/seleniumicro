@@ -118,6 +118,55 @@ def api_cascade_categorias():
         db.session.close()
 
 
+@busquedaSelectiva.route('/api/cascade/publicaciones/sinCP/', methods=['POST'])
+def api_cascade_publicaciones_sinCp():
+    data = request.get_json(silent=True) or {}
+    cp  = (data.get('cp')  or '').strip()
+    dom = (data.get('dom') or '').strip()
+    cat = str(data.get('cat') or '').strip()
+    user_id = data.get('user_id')  # opcional
+
+    if not dom or not cat.isdigit():
+        return jsonify({'ok': False, 'error': 'cp, dom y cat válidos requeridos'}), 400
+    cat_id = int(cat)
+
+    q = (
+        db.session.query(Publicacion)
+        .join(CategoriaPublicacion, CategoriaPublicacion.publicacion_id == Publicacion.id)
+        .filter(
+            Publicacion.ambito == dom,
+            CategoriaPublicacion.categoria_id == cat_id
+        )
+    )
+    if str(user_id).isdigit():
+        q = q.filter(Publicacion.user_id == int(user_id))
+
+    rows = (
+        q.order_by(Publicacion.fecha_creacion.desc(), Publicacion.id.desc())
+         .limit(200)
+         .all()
+    )
+
+    items = [{
+        'id': p.id,
+        'titulo': p.titulo,
+        'ambito': p.ambito,
+        'categoria_id': cat_id,
+        'idioma': p.idioma,
+        'codigo_postal': p.codigoPostal,
+        'estado': p.estado,
+        'fecha_creacion': (p.fecha_creacion.isoformat() if hasattr(p.fecha_creacion, 'isoformat') else str(p.fecha_creacion)),
+        'user_id': p.user_id,
+        'imagen': getattr(p, 'imagen', None),
+        'descripcion': getattr(p, 'descripcion', None),
+    } for p in rows]
+
+    return jsonify({'ok': True, 'items': items})
+
+
+
+
+
 @busquedaSelectiva.route('/api/cascade/publicaciones', methods=['POST'])
 def api_cascade_publicaciones():
     data = request.get_json(silent=True) or {}
