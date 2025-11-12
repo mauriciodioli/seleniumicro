@@ -107,7 +107,7 @@
   // ================== NUEVO: render de ÁMBITOS en MyDomain ==================
   function renderMyDomainAmbitos(ambitos) {
     // tu panel está en chats/mydomain/chatDominios.html
-    debugger;
+    
     const mdList = document.getElementById('mdList');              // lista de ámbitos “mis”
     const ambAcc = document.querySelector('#myDomainView .amb-accordion'); // tu clon con details
 

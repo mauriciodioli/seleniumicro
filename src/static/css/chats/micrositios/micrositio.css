@@ -65,3 +65,11 @@
 
 /* Contenedor con scroll (evita cortes) */
 #mdContent{ min-height:0; }
+
+@media (max-width:900px){
+  .my-domain-view, .my-domain-wrapper{
+    display:grid; grid-template-columns:100vw 100vw;
+    overflow-x:auto; scroll-snap-type:x mandatory;
+  }
+  #myDomainLeft, #myDomainRight{ min-width:100vw; scroll-snap-align:start; }
+}

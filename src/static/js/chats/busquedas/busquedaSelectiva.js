@@ -1,16 +1,48 @@
-// ----- Helpers de foco en móvil -----
+// ==========================================================
+// busqueda.js — versión con "Volver" correcto a la IZQUIERDA
+// ==========================================================
+
+// --- Helper global de foco (idempotente) ---
+(function ensureUIFocus(){
+  if (window.UIFocus) return;
+  window.UIFocus = {
+    wrap:  () => document.querySelector('.my-domain-wrapper'),
+    right: () => document.getElementById('myDomainRight'),
+    left:  () => document.getElementById('myDomainLeft'),
+    toRight(){
+      const wrap = this.wrap(); const right = this.right();
+      if (!wrap || !right) return;
+      if (window.matchMedia('(max-width: 900px)').matches){
+        right.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' });
+        requestAnimationFrame(() => {
+          wrap.scrollTo({ left: right.offsetLeft, behavior: 'smooth' });
+        });
+      }
+    },
+    toLeft(){
+      const wrap = this.wrap();
+      if (!wrap) return;
+      if (window.matchMedia('(max-width: 900px)').matches){
+        wrap.scrollTo({ left: 0, behavior: 'smooth' });
+      }
+    }
+  };
+})();
+
+// ----- Helpers de foco en móvil (compat) -----
 function focusRightPanel(){
+  // conserva tu lógica + compat con helper centralizado
   const wrap = document.querySelector('.my-domain-wrapper');
   const right = document.getElementById('myDomainRight');
   if (!wrap || !right) return;
-
   if (window.matchMedia('(max-width: 900px)').matches){
-    // intenta con scrollIntoView y, por las dudas, con scrollLeft preciso
     right.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' });
     requestAnimationFrame(() => {
       wrap.scrollTo({ left: right.offsetLeft, behavior: 'smooth' });
     });
   }
+  // sincroniza helper
+  window.UIFocus?.toRight?.();
 }
 
 function focusLeftPanel(){
@@ -19,10 +51,15 @@ function focusLeftPanel(){
   if (window.matchMedia('(max-width: 900px)').matches){
     wrap.scrollTo({ left: 0, behavior: 'smooth' });
   }
+  // sincroniza helper
+  window.UIFocus?.toLeft?.();
 }
 
-// Botón “← Volver” (si existe)
-document.getElementById('btnBackToMain')?.addEventListener('click', focusLeftPanel);
+// Botón “← Volver” (si existe, estático)
+document.getElementById('btnBackToMain')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  focusLeftPanel();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const $ = s => document.querySelector(s);
@@ -74,35 +111,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const full = Math.floor(score), half = (score-full)>=.5;
     return `<span class="stars">${'★'.repeat(full)}${half?'☆':''}</span> <span class="muted">(${count})</span>`;
   };
-function cardHTML(p){
-  const titulo = p.titulo || '—';
-  const img = p.imagen || '';
-  const badge = p.ambito || '—';
-  const fecha = fmtFecha(p.fecha_creacion);
-  const autor = p.user_id ? `Usuario ${p.user_id}` : '—';
-  const wppHref = `https://wa.me/?text=${encodeURIComponent(`Hola, vi tu publicación "${titulo}" en DPIA.`)}`;
+  function cardHTML(p){
+    const titulo = p.titulo || '—';
+    const img = p.imagen || '';
+    const badge = p.ambito || '—';
+    const fecha = fmtFecha(p.fecha_creacion);
+    const autor = p.user_id ? `Usuario ${p.user_id}` : '—';
+    const wppHref = `https://wa.me/?text=${encodeURIComponent(`Hola, vi tu publicación "${titulo}" en DPIA.`)}`;
 
-  return `
-  <article class="tarjeta" data-id="${p.id}">
-    <span class="badge">${badge}</span>
-    <button class="btn-close" type="button" aria-label="Cerrar">x</button>
-    <div class="imgbox">${img ? `<img src="${img}" alt="${titulo}" loading="lazy">` : ''}</div>
-    <h4>${titulo}</h4>
-    <div>${starHTML(p.score || 4.3, p.reviews || 42)}</div>
-    <p class="excerpt">${p.descripcion || ''}</p>
-    <div class="muted">${fecha}</div>
-    <div class="muted">Publicado por: ${autor}</div>
+    return `
+    <article class="tarjeta" data-id="${p.id}">
+      <span class="badge">${badge}</span>
+      <button class="btn-close" type="button" aria-label="Cerrar">x</button>
+      <div class="imgbox">${img ? `<img src="${img}" alt="${titulo}" loading="lazy">` : ''}</div>
+      <h4>${titulo}</h4>
+      <div>${starHTML(p.score || 4.3, p.reviews || 42)}</div>
+      <p class="excerpt">${p.descripcion || ''}</p>
+      <div class="muted">${fecha}</div>
+      <div class="muted">Publicado por: ${autor}</div>
 
-    <!-- 👇 en vez de link, botón SPA -->
-    <a class="cta ver-mas" href="#" data-id="${p.id}">Ver más</a>
+      <!-- 👇 en vez de link, botón SPA -->
+      <a class="cta ver-mas" href="#" data-id="${p.id}">Ver más</a>
 
-    <a class="wpp" href="${wppHref}" target="_blank" rel="noopener" aria-label="WhatsApp">
-      <svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.77 11.77 0 0 0 12.06 0 12 12 0 0 0 0 12a11.87 11.87 0 0 0 1.65 6L0 24l6.22-1.63A12 12 0 0 0 12 24 12 12 0 0 0 24 12a11.77 11.77 0 0 0-3.48-8.52Z"/></svg>
-    </a>
-  </article>`;
-}
+      <a class="wpp" href="${wppHref}" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.77 11.77 0 0 0 12.06 0 12 12 0 0 0 0 12a11.87 11.87 0 0 0 1.65 6L0 24l6.22-1.63A12 12 0 0 0 12 24 12 12 0 0 0 24 12a11.77 11.77 0 0 0-3.48-8.52Z"/></svg>
+      </a>
+    </article>`;
+  }
 
   function renderGrid(pubs){
+    debugger;
     const items = Array.isArray(pubs) ? pubs : (pubs?.items || []);
     mdContent.innerHTML = items.length
       ? `<div class="grid-cards">${ items.map(cardHTML).join('') }</div>`
@@ -152,6 +190,7 @@ function cardHTML(p){
     [selPub, selUsr].forEach(s => { s.hidden=true; s.disabled=true; s.value=''; });
     const cp = selLoc.value, dom = selDom.value, cat = selCat.value; if (!cat) return;
     lastQuery = { cp, dom, cat };
+    window.lastQuery = lastQuery; // conserva tu convención global
 
     // publicaciones
     const dataP = await postJSON(API.publicaciones, lastQuery);
@@ -171,25 +210,26 @@ function cardHTML(p){
       selUsr.hidden = false; selUsr.disabled = true;
     }
   });
-
-  // Usuario -> filtra publicaciones
+// Usuario -> filtra publicaciones
 selUsr.addEventListener('change', async () => {
-  const user_id = selUsr.value;
+  const user_id = Number(selUsr.value);
   if (!user_id){
-    // Si deselecciona, volvemos a lo filtrado por CP/Dominio/Categoría
     const data = await postJSON(API.publicaciones, lastQuery);
-    return renderGrid(data?.items || []);
+    return renderGrid(data); // <<<<<< cambia esto (antes pasabas data?.items)
   }
+
   mdContent.innerHTML = `<p class="muted">Cargando publicaciones del usuario…</p>`;
   try {
-    const data = await postJSON(API.usuarioPublicaciones, { user_id });
-    renderGrid(data?.items || []);
-    focusRightPanel(); // 👉 muestra la grilla filtrada
+    const payload = { ...(lastQuery || {}), user_id }; // por si el backend lo pide
+    const data = await postJSON(API.usuarioPublicaciones, payload);
+    renderGrid(data);                  // <<<<<< cambia esto (antes pasabas data?.items || [])
+    window.UIFocus?.toRight?.();       // o focusRightPanel();
   } catch (e) {
     console.error(e);
     mdContent.innerHTML = `<p class="muted">Error cargando publicaciones del usuario.</p>`;
   }
 });
+
 
   // Publicación -> SOLO esa publicación (limpia la cascada)
   selPub.addEventListener('change', async () => {
@@ -201,9 +241,8 @@ selUsr.addEventListener('change', async () => {
       if (!p){ mdContent.innerHTML = `<p class="muted">No encontrada.</p>`; return; }
       resetCascadaUI();
       mdContent.innerHTML = cardHTML(p);
-     focusRightPanel(); // 👉 enfoca la tarjeta
-     focusRightOnMobile();
-     
+      focusRightPanel(); // 👉 enfoca la tarjeta
+      focusRightOnMobile();
     } catch (e) {
       console.error(e);
       mdContent.innerHTML = `<p class="muted">Error cargando publicación.</p>`;
@@ -211,63 +250,125 @@ selUsr.addEventListener('change', async () => {
   });
 });
 
-
 function focusRightOnMobile(){
   if (window.matchMedia('(max-width: 900px)').matches){
-    myDomainRight?.scrollIntoView({ behavior:'smooth', block:'start', inline:'nearest' });
+    const el = document.getElementById('myDomainRight');
+    el?.scrollIntoView({ behavior:'smooth', block:'start', inline:'nearest' });
   }
 }
 
 // Re-render de la grilla con los últimos filtros
 async function showListFromLastQuery(){
+  const mdContent = document.getElementById('mdContent');
   if (!window.lastQuery) { 
-    mdContent.innerHTML = `<p class="muted">Elegí una categoría…</p>`;
+    if (mdContent) mdContent.innerHTML = `<p class="muted">Elegí una categoría…</p>`;
     return;
   }
-  mdContent.innerHTML = `<p class="muted">Cargando…</p>`;
+  if (mdContent) mdContent.innerHTML = `<p class="muted">Cargando…</p>`;
   try{
-    const data = await postJSON(API.publicaciones, window.lastQuery);
-    renderGrid(data?.items || []);
+    // postJSON y renderGrid están definidos arriba en este mismo archivo
+    const data = await (await fetch('/api/cascade/publicaciones', {
+      method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(window.lastQuery)
+    })).json();
+    // Reutilizamos la lógica de renderGrid local:
+    const items = Array.isArray(data?.items) ? data.items : [];
+    mdContent.innerHTML = items.length
+      ? `<div class="grid-cards">${ items.map(p => {
+          const fecha = (()=>{ try { return new Date(p.fecha_creacion).toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});} catch { return p.fecha_creacion||''; }})();
+          const star = (score=4.3, count=42)=>{ const full = Math.floor(score), half=(score-full)>=.5; return `<span class="stars">${'★'.repeat(full)}${half?'☆':''}</span> <span class="muted">(${count})</span>`; };
+          const wppHref = `https://wa.me/?text=${encodeURIComponent(`Hola, vi tu publicación "${p.titulo||'—'}" en DPIA.`)}`;
+          return `
+            <article class="tarjeta" data-id="${p.id}">
+              <span class="badge">${p.ambito || '—'}</span>
+              <button class="btn-close" type="button" aria-label="Cerrar">x</button>
+              <div class="imgbox">${p.imagen ? `<img src="${p.imagen}" alt="${p.titulo||'—'}" loading="lazy">` : ''}</div>
+              <h4>${p.titulo || '—'}</h4>
+              <div>${star(p.score || 4.3, p.reviews || 42)}</div>
+              <p class="excerpt">${p.descripcion || ''}</p>
+              <div class="muted">${fecha}</div>
+              <div class="muted">Publicado por: ${p.user_id ? `Usuario ${p.user_id}` : '—'}</div>
+              <a class="cta ver-mas" href="#" data-id="${p.id}">Ver más</a>
+              <a class="wpp" href="${wppHref}" target="_blank" rel="noopener" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.77 11.77 0 0 0 12.06 0 12 12 0 0 0 0 12a11.87 11.87 0 0 0 1.65 6L0 24l6.22-1.63A12 12 0 0 0 12 24 12 12 0 0 0 24 12a11.77 11.77 0 0 0-3.48-8.52Z"/></svg>
+              </a>
+            </article>`;
+        }).join('') }`
+      : `<p class="muted">Sin resultados.</p>`;
   }catch(e){
     console.error(e);
-    mdContent.innerHTML = `<p class="muted">No se pudo cargar.</p>`;
+    if (mdContent) mdContent.innerHTML = `<p class="muted">No se pudo cargar.</p>`;
   }
   focusRightOnMobile();
 }
 
 // 1A) Delegado: “Lista” del header derecho o back dentro del micrositio
-document.addEventListener('click', (e) => {
-  const backBtn = e.target.closest('#btnMdBack, [data-ms-back]');
-  if (!backBtn) return;
-  e.preventDefault();
-  // si hay historial SPA, usalo, si no, recarga lista
-  if (history.state?.view === 'detail') {
-    history.back(); // disparará el popstate abajo
-  } else {
-    showListFromLastQuery();
+// 1A) Delegado: “Lista” del header derecho o back dentro del micrositio -> ir SIEMPRE a panel IZQUIERDO
+(function attachBackToLeftFromHeader(){
+  function goPanelLeft(){
+    // Ajustá el contenedor principal de la vista si existe
+    const view = document.getElementById('myDomainView');
+    if (view){
+      // normalizamos el estado visual a "left"
+      view.dataset.view = 'left';               // <div id="myDomainView" data-view="left">
+      view.classList.add('show');               // por si tu CSS usa .show
+    }
+    // opcional: darle foco al panel izquierdo
+    const left = document.getElementById('myDomainLeft');
+    if (left) try { left.focus(); } catch {}
+
+    // y desplazamos en mobile
+    window.UIFocus?.toLeft?.();
   }
-});
+
+  document.addEventListener('click', (e) => {
+    const backBtn = e.target.closest('#btnMdBack, [data-ms-back]');
+    if (!backBtn) return;
+    e.preventDefault();
+
+    // No usamos history.back() ni showListFromLastQuery() aquí.
+    // La consigna es volver al panel IZQUIERDO sin tocar la lógica de datos.
+    // Si estabas en detalle, solo marcamos que ya no estás en modo micrositio.
+    if (window.__MICROSITIO_MODE__) window.__MICROSITIO_MODE__ = false;
+
+    goPanelLeft();
+  });
+})();
 
 
 window.addEventListener('popstate', () => {
   const st = history.state || {};
   if (st.scope === 'micrositio') {
-    // volvemos a lista sin navegar a otra vista
+    const mdContent = document.getElementById('mdContent');
     if (window.lastQuery){
-      setMdContent(`<p class="muted">Cargando…</p>`);
-      postJSON(API.publicaciones, window.lastQuery)
-        .then(d => renderGrid(d?.items || []))
-        .catch(() => setMdContent(`<p class="muted">No se pudo cargar.</p>`))
-        .finally(scrollRightFocus);
+      if (mdContent) mdContent.innerHTML = `<p class="muted">Cargando…</p>`;
+      fetch('/api/cascade/publicaciones', {
+        method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify(window.lastQuery)
+      })
+      .then(r => r.json())
+      .then(d => {
+        const items = d?.items || [];
+        if (mdContent) {
+          mdContent.innerHTML = items.length
+            ? `<div class="grid-cards">${ items.map(it => `<article class="tarjeta" data-id="${it.id}">
+                <span class="badge">${it.ambito || '—'}</span>
+                <button class="btn-close" type="button" aria-label="Cerrar">x</button>
+                <div class="imgbox">${it.imagen ? `<img src="${it.imagen}" alt="${it.titulo||'—'}" loading="lazy">` : ''}</div>
+                <h4>${it.titulo || '—'}</h4>
+                <a class="cta ver-mas" href="#" data-id="${it.id}">Ver más</a>
+              </article>`).join('') }</div>`
+            : `<p class="muted">Sin resultados.</p>`;
+        }
+      })
+      .catch(() => { if (mdContent) mdContent.innerHTML = `<p class="muted">No se pudo cargar.</p>`; })
+      .finally(() => window.UIFocus?.toLeft?.());
     } else {
-      setMdContent(`<p class="muted">Elegí un ámbito/categoría de la izquierda.</p>`);
-      scrollRightFocus();
+      if (mdContent) mdContent.innerHTML = `<p class="muted">Elegí un ámbito/categoría de la izquierda.</p>`;
+      window.UIFocus?.toLeft?.();
     }
   }
 });
-
-
-
 
 // Cerrar tarjeta (delegado global)
 document.addEventListener('click', (e) => {
@@ -289,9 +390,13 @@ document.addEventListener('click', (e) => {
       mdContent.innerHTML = `<p class="muted">Elegí una categoría…</p>`;
     }
   } else if (grid && grid.children.length === 0) {
-    // limpieza defensiva: si la grilla quedó vacía
+    // limpieza defensiva
     typeof showListFromLastQuery === 'function'
       ? showListFromLastQuery()
       : (mdContent.innerHTML = `<p class="muted">Sin resultados.</p>`);
   }
 });
+
+
+
+
