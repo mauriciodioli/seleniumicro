@@ -249,12 +249,20 @@ document.addEventListener('click', (e) => {
 });
 
 
-window.addEventListener('popstate', (e) => {
-  // Si no hay estado o no es 'detail', volvemos a la lista
-  if (!e.state || e.state.view !== 'detail') {
-    showListFromLastQuery();
+window.addEventListener('popstate', () => {
+  // Siempre volvemos a la LISTA del panel derecho, no a otra vista
+  if (window.lastQuery){
+    setMdContent(`<p class="muted">Cargando…</p>`);
+    postJSON(API.publicaciones, window.lastQuery)
+      .then(d => renderGrid(d?.items || []))
+      .catch(() => setMdContent(`<p class="muted">No se pudo cargar.</p>`))
+      .finally(scrollRightFocus);
+  }else{
+    setMdContent(`<p class="muted">Elegí un ámbito/categoría de la izquierda.</p>`);
+    scrollRightFocus();
   }
 });
+
 
 
 

@@ -85,6 +85,23 @@
       </section>
     </article>`;
   }
+// justo arriba de init()
+function shieldMicrositioClicks(){
+  const right = getRight();
+  if (!right) return;
+
+  // Captura: intercepta ANTES de que otros listeners globales actúen
+  right.addEventListener('click', (e) => {
+    // Todo click dentro del micrositio queda en el micrositio
+    if (e.target.closest('.ms-wrap')) {
+      // mata navegación de anchors vacíos
+      const a = e.target.closest('a[href="#"]');
+      if (a) e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    }
+  }, true);
+}
 
   function init(){
     // Sanea duplicados de mdContent si algún include rompió IDs
@@ -125,6 +142,7 @@
         // console.log('[micrositio] pub:', data?.pub?.id, 'mediaLen:', mediaArr.length, data);
 
         setMdContent(micrositioHTML(data.pub, mediaArr));
+        history.pushState({ view: 'detail' }, '', '#micrositio');
         // guardar para thumbs
         const c = getContent();
         c.__msMedia = mediaArr;
@@ -137,14 +155,20 @@
     });
 
     // “← Volver”
+    // “← Volver”
     right.addEventListener('click', async (e) => {
       const back = e.target.closest('[data-ms-back]');
       if (!back) return;
       e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
 
-      if (!getContent()) return;
-      window.__MICROSITIO_MODE__ = false;
-
+      // si venimos de detail, usamos history
+      if (history.state?.view === 'detail') {
+        history.back();                 // dispara popstate
+        return;
+      }
+      // fallback: recargar lista
       if (window.lastQuery){
         setMdContent(`<p class="muted">Cargando…</p>`);
         try{
@@ -159,6 +183,7 @@
       }
       scrollRightFocus();
     });
+
 
     // Click en miniatura → reemplaza visor principal
     right.addEventListener('click', (e) => {
@@ -179,6 +204,7 @@
       c.querySelectorAll('.ms-thumb.is-active').forEach(t => t.classList.remove('is-active'));
       thumb.classList.add('is-active');
     });
+     shieldMicrositioClicks();
   }
 
   if (document.readyState === 'loading') {
