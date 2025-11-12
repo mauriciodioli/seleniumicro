@@ -65,3 +65,6 @@
   // Stubs para no romper nada si todavía no tenés las funciones
   function buscarUsuario(q){ /* TODO: integrar con tu backend */ }
   function buscarAmbitos(filters){ /* TODO: integrar con tu backend */ }
+
+
+  

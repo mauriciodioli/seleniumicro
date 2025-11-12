@@ -106,3 +106,4 @@ details[open] > .amb-summary .amb-chev-btn{ transform: rotate(90deg) translateY(
 
 
 /* Si dejaste radios en otros componentes, ponelos acá */
+.search-tabs .tab[data-goto] { pointer-events: auto !important; }

@@ -613,3 +613,7 @@ function pintarDesdeCacheAmbitosYChat(badgeEl){
     window.setMobileView?.('chat');
   }
 }
+
+
+
+

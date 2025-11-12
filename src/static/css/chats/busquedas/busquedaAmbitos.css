@@ -14,3 +14,15 @@
 }
 
 
+/* centrar el tab y sacar subrayado */
+.search-tabs{ display:flex; justify-content:center; }
+.search-tabs .tab{ text-decoration:none; }
+.search-tabs .tab:hover{ text-decoration:none; } /* por si el hover subraya */
+.search-tabs .tab{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:6px 14px; border:1px solid var(--accent); border-radius:999px;
+  text-decoration:none; line-height:1; gap:6px;
+}
+.search-tabs .tab.active{ background:#0f172a; color:#fff; }
+.search-tabs .tab:visited{ color:inherit; }    /* evita color violeta */
+.search-tabs .tab:focus{ outline:0; box-shadow:0 0 0 2px var(--accent-weak); }

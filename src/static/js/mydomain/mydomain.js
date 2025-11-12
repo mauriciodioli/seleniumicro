@@ -1,20 +1,44 @@
 // Limpia a E.164 básico (solo dígitos, opcional +)
-function normalizePhone(raw=''){
-  const s = String(raw).replace(/[^\d+]/g,'');
+// Normaliza a E.164 para WA: solo dígitos (sin '+')
+function normalizePhone(raw = '', defaultCC = '39'){
+  if (!raw) return '';
+  let s = String(raw).trim();
+
+  // 1) quedarse solo con dígitos y '+' para detectar prefijos
+  const hasPlus = s.startsWith('+');
+  s = s.replace(/[^\d+]/g, '');
+
   if (!s) return '';
-  // si empieza con 0 o no tiene +, podés prefijar país por defecto (ej: Italia 39)
-  if (s.startsWith('+')) return s;
-  // Ajustá tu default si querés: 39 = Italia, 48 = Polonia, 54 = Argentina, etc.
-  const DEFAULT_CC = '39';
-  return s.replace(/^0+/, '').match(/^\d+$/) ? `${DEFAULT_CC}${s}` : s;
+
+  // 2) si viene con '+', quitarlo para WA (wa.me no admite '+')
+  if (hasPlus) {
+    return s.replace(/^\+/, ''); // => solo dígitos
+  }
+
+  // 3) si viene con '00' internacional (ej. 0039...), convertir a E.164 sin '+'
+  if (s.startsWith('00')) {
+    return s.slice(2);
+  }
+
+  // 4) si empieza con '0' (nacional), quitar ceros a la izquierda y prefijar CC por defecto
+  s = s.replace(/^0+/, '');
+  if (!/^\d+$/.test(s)) return '';
+
+  // si no tiene CC, anteponerlo (ej. Italia 39)
+  return defaultCC + s;
 }
 
-// Arma link WA con o sin número
-function waLink({ phone='', text='' } = {}){
+// Arma link WhatsApp correcto
+function waLink({ phone = '', text = '' } = {}){
   const msg = encodeURIComponent(text || '');
-  const num = normalizePhone(phone);
-  return num ? `https://wa.me/${num}?text=${msg}` : `https://wa.me/?text=${msg}`;
+  const num = normalizePhone(phone); // <-- ya sin '+'
+
+  // si hay número, usar /<num>; si no, usar solo ?text
+  return num
+    ? `https://wa.me/${num}${msg ? `?text=${msg}` : ''}`
+    : `https://wa.me/?text=${msg}`;
 }
+
 
 
 
@@ -159,19 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
-  function cardHTML(p){
+function cardHTML(p){
   const fecha = safeDateIso(p?.fecha_creacion);
   const img   = p?.imagen ? `<img class="md-card-img" src="${escapeAttr(p.imagen)}" alt="">` : '';
   const desc  = p?.descripcion ? `${p.descripcion}` : '';
   const title = p?.titulo || '—';
-
-  // intenta deducir teléfono (ajustá el nombre del campo si tu API usa otro)
   const phone = p?.whatsapp || p?.telefono || '';
 
-  // Texto que se envía por WA
   const shareText = `${title}\n${p?.ambito||''} · Cat:${p?.categoria_id||''}${p?.codigo_postal?` · CP:${p.codigo_postal}`:''}`;
-
-  // Link final de WhatsApp
   const waHref = waLink({ phone, text: shareText });
 
   return `
@@ -190,22 +209,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       <footer class="md-card-actions" style="display:flex;gap:8px;align-items:center;">
         <button class="btn btn-sm ver-mas" data-open="pub" data-id="${p.id}">Ver más</button>
-
-        <!-- Botón WhatsApp (link) -->
-       ${ phone ? `
-          <a class="wpp" href="${waHref}" target="_blank" rel="noopener" title="Chatear por WhatsApp" aria-label="WhatsApp"> ...svg... </a>
+        ${ phone ? `
+          <a class="wpp" href="${waHref}" target="_blank" rel="noopener" title="Chatear por WhatsApp" aria-label="WhatsApp">
+            <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+              <path d="M19.11 17.27a.86.86 0 0 0-1.23-.19l-.42.31a1 1 0 0 1-1.14.06 6.47 6.47 0 0 1-2.03-1.46 6.1 6.1 0 0 1-1.23-1.85 1 1 0 0 1 .2-1.13l.36-.4a.86.86 0 0 0 .05-1.23l-1.09-1.24a.87.87 0 0 0-1.21-.08c-.55.48-1.07 1.05-1.2 1.74-.29 1.54.51 3.38 2.5 5.37s3.83 2.79 5.37 2.5c.69-.13 1.26-.65 1.74-1.2a.87.87 0 0 0-.08-1.21l-1.22-.99z" fill="#fff"/>
+              <path d="M26.5 14.5A10.5 10.5 0 1 0 5.87 22.1L5 27l4.98-1a10.48 10.48 0 0 0 16.52-8.5zm-10.5 9a8.5 8.5 0 1 1 0-17 8.5 8.5 0 0 1 0 17z" fill="#fff"/>
+            </svg>
+          </a>
         ` : '' }
-
-          <!-- Ícono SVG WhatsApp -->
-          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
-            <path d="M19.11 17.27a.86.86 0 0 0-1.23-.19l-.42.31a1 1 0 0 1-1.14.06 6.47 6.47 0 0 1-2.03-1.46 6.1 6.1 0 0 1-1.23-1.85 1 1 0 0 1 .2-1.13l.36-.4a.86.86 0 0 0 .05-1.23l-1.09-1.24a.87.87 0 0 0-1.21-.08c-.55.48-1.07 1.05-1.2 1.74-.29 1.54.51 3.38 2.5 5.37s3.83 2.79 5.37 2.5c.69-.13 1.26-.65 1.74-1.2a.87.87 0 0 0-.08-1.21l-1.22-.99z" fill="#fff"/>
-            <path d="M26.5 14.5A10.5 10.5 0 1 0 5.87 22.1L5 27l4.98-1a10.48 10.48 0 0 0 16.52-8.5zm-10.5 9a8.5 8.5 0 1 1 0-17 8.5 8.5 0 0 1 0 17z" fill="#fff"/>
-          </svg>
-        </a>
       </footer>
     </article>
   `;
 }
+
 
   // utils
   function escapeHtml(s=''){
@@ -227,3 +243,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }catch{ return ''; }
   }
 });
+
