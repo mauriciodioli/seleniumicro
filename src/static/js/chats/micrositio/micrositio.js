@@ -24,6 +24,25 @@
     tmp.innerHTML = html;
     while (tmp.firstChild) c.appendChild(tmp.firstChild);
   }
+function scrollHeroIntoView(smooth = true){
+  // scrollea el contenedor con las cards (mdContent) hasta el bloque del visor (.ms-hero)
+  const c = getContent();
+  if (!c) return;
+  const hero = c.querySelector('.ms-hero');
+  if (!hero) return;
+
+  // desplazamiento con un padding pequeño
+  const top = Math.max(0, hero.offsetTop - 8);
+
+  // si mdContent es el que scrollea (nuestro caso)
+  if (typeof c.scrollTo === 'function') {
+    c.scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' });
+    return;
+  }
+
+  // fallback por si el scroll lo lleva otro contenedor
+  hero.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+}
 
   function scrollRightFocus(){
     getRight()?.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'nearest' });
@@ -128,7 +147,7 @@
         // guardar para thumbs
         const c = getContent();
         c.__msMedia = mediaArr;
-
+        scrollHeroIntoView(true);
         scrollRightFocus();
       }catch(err){
         console.error(err);
@@ -178,6 +197,7 @@
 
       c.querySelectorAll('.ms-thumb.is-active').forEach(t => t.classList.remove('is-active'));
       thumb.classList.add('is-active');
+      scrollHeroIntoView(true);
     });
   }
 

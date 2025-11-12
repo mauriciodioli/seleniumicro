@@ -612,3 +612,134 @@
   #myDomainRight[data-view="right"]{ transform: translateX(0); }
   .mobile-back{ display:inline-block; }
 }
+
+
+/* ================== THEME TOKENS (colores) ================== */
+:root{
+  --bg-app:        #0b1225;            /* fondo general */
+  --bg-panel:      #0f172a;            /* paneles izq/der */
+  --bg-surface:    #0e162b;            /* tarjetas/surfaces */
+  --bg-surface-2:  #0a1224;            /* overlays / img bg */
+  --text:          #e6eefc;
+  --text-muted:    #a8b3c9;
+  --border:        rgba(148,163,184,.12);
+  --border-soft:   rgba(148,163,184,.06);
+  --chip-bg:       #12243a;
+  --chip-text:     #cfe8ff;
+  --accent:        #38bdf8;            /* cian */
+  --accent-weak:   rgba(56,189,248,.25);
+  --cta:           #ffd400;
+  --cta-text:      #111;
+}
+
+/* ================== FONDOS / PANELES ================== */
+.my-domain-view{ background: var(--bg-app); }
+.my-domain-left,
+.my-domain-right{ color: var(--text); background: var(--bg-panel); }
+
+/* headers, separadores */
+.my-domain-right .md-head.right,
+.my-domain-left  .md-head{
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* botón mobile “volver” */
+@media (max-width:767px){
+  .mobile-back{
+    background: rgba(15,23,42,.35);
+    border: 1px solid var(--border-soft);
+    color: var(--text);
+  }
+  #myDomainRight{
+    background: var(--bg-panel);
+  }
+}
+
+/* ================== TARJETAS (md-card / tarjeta) ================== */
+.tarjeta,
+.md-card{
+  background: var(--bg-surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.30);
+}
+
+/* título */
+.tarjeta h4,
+.md-card .md-card-title{
+  color: var(--accent);
+}
+
+/* meta / chips */
+.md-card .md-chip{
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  border: 1px solid var(--border-soft);
+}
+.md-card .md-meta,
+.tarjeta .muted,
+.md-card .md-card-desc{ color: var(--text-muted); }
+
+/* imagen / media box */
+.tarjeta .imgbox,
+.md-card .md-card-img{
+  background: var(--bg-surface-2);
+}
+
+/* CTA / botones en card */
+.tarjeta .cta,
+.md-card .btn{
+  background: var(--cta);
+  color: var(--cta-text);
+}
+.tarjeta .cta:hover,
+.md-card .btn:hover{
+  filter: brightness(0.95);
+}
+
+/* hover sutil de tarjeta */
+.tarjeta:hover,
+.md-card:hover{
+  border-color: var(--accent-weak);
+  box-shadow: 0 10px 28px rgba(0,0,0,.36), 0 0 0 1px var(--accent-weak) inset;
+}
+
+/* ================== LISTAS / ACORDEÓN (izquierda) ================== */
+.my-domain-left .amb-item{ border-bottom: 1px solid var(--border-soft); }
+.my-domain-left .amb-summary{
+  background: rgba(15,23,42,.15);
+  border: 1px solid var(--border-soft);
+}
+.my-domain-left details[open] > .amb-summary{
+  border-color: var(--accent-weak);
+  background: rgba(15,23,42,.25);
+}
+.my-domain-left .amb-badge{
+  background: rgba(34,197,94,.10);
+  border: 1px solid rgba(34,197,94,.25);
+  color: #c7f9cf;
+}
+
+/* ================== GRID DE CARDS ================== */
+.grid-cards{
+  /* sin cambios de layout; solo color si hiciera falta */
+}
+
+/* ================== BUSCADOR / CONTROLES ================== */
+.cascada select.dd{
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.cascada-box{
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+}
+.cascada label{ color: var(--text-muted); }
+
+/* ================== FOOTER ================== */
+.amb-footer{
+  background: var(--bg-app);
+  border-top: 1px solid var(--border);
+  color: var(--text);
+}

@@ -96,3 +96,52 @@
 }
 
 /* en desktop no tocamos nada: el panel se queda donde está */
+
+
+
+/* ===== Micrositio: viewer a ancho completo ===== */
+
+/* Base: que el visor use el ancho del contenedor */
+.ms-hero-left,
+.ms-viewer{ width:100%; }
+.ms-viewer .ms-view{
+  width:100%;
+  height:auto;           /* mantiene proporción en imágenes y videos */
+  display:block;
+}
+
+/* Vídeos: limitar altura para evitar scrolls absurdos */
+.ms-viewer[data-type="video"] .ms-view{
+  max-height: 80vh;
+}
+
+/* Desktop: hero en dos columnas como siempre (si lo usás) */
+@media (min-width: 768px){
+  .ms-hero{
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;  /* ajustá la relación si querés */
+    gap: 16px;
+  }
+}
+
+/* Mobile: full-bleed real (anula padding lateral de #mdContent) */
+:root{ --md-pad-x: 14px; }  /* debe coincidir con tu padding de .md-content */
+
+@media (max-width: 767px){
+  /* El viewer "muerde" el padding para llegar al borde de pantalla */
+  #mdContent .ms-hero-left{
+    margin-left: calc(var(--md-pad-x) * -1);
+    margin-right: calc(var(--md-pad-x) * -1);
+  }
+  /* Opcional: bordes redondeados suaves al full-bleed */
+  #mdContent .ms-viewer{
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0a1224; /* coherente con tu tema */
+  }
+
+  /* El cuerpo (título/desc) queda con padding normal */
+  #mdContent .ms-hero-body{
+    padding-top: 8px;
+  }
+}
