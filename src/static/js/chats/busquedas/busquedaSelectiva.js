@@ -85,7 +85,7 @@ function cardHTML(p){
   return `
   <article class="tarjeta" data-id="${p.id}">
     <span class="badge">${badge}</span>
-    <button class="btn-close" aria-label="Cerrar">x</button>
+    <button class="btn-close" type="button" aria-label="Cerrar">x</button>
     <div class="imgbox">${img ? `<img src="${img}" alt="${titulo}" loading="lazy">` : ''}</div>
     <h4>${titulo}</h4>
     <div>${starHTML(p.score || 4.3, p.reviews || 42)}</div>
@@ -257,3 +257,30 @@ window.addEventListener('popstate', (e) => {
 });
 
 
+
+// Cerrar tarjeta (delegado global)
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-close');
+  if (!btn) return;
+  e.preventDefault();
+  e.stopPropagation(); // evita que dispare otros clicks (p.ej. "Ver más")
+
+  const card = btn.closest('.tarjeta');
+  if (card) card.remove();
+
+  // Si no quedó ninguna tarjeta, volvemos a la lista anterior o mostramos hint
+  const grid = document.querySelector('.grid-cards');
+  const mdContent = document.getElementById('mdContent');
+  if (!document.querySelector('.tarjeta')) {
+    if (typeof showListFromLastQuery === 'function') {
+      showListFromLastQuery();
+    } else if (mdContent) {
+      mdContent.innerHTML = `<p class="muted">Elegí una categoría…</p>`;
+    }
+  } else if (grid && grid.children.length === 0) {
+    // limpieza defensiva: si la grilla quedó vacía
+    typeof showListFromLastQuery === 'function'
+      ? showListFromLastQuery()
+      : (mdContent.innerHTML = `<p class="muted">Sin resultados.</p>`);
+  }
+});

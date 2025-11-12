@@ -114,3 +114,80 @@
     scroll-snap-align: start;
   }
 }
+
+
+/* === PARCHE: cards que se adaptan al contenido === */
+
+/* La grilla no fuerza alturas */
+.grid-cards{
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+}
+
+/* La tarjeta no tiene ancho fijo ni height 100% */
+.tarjeta{
+  width: auto !important;        /* quita el width:340px */
+  max-width: 360px;              /* opcional */
+  height: auto !important;       /* por si algo la estira */
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* La imagen no estira la card */
+.tarjeta .imgbox{
+  width: 100%;
+  aspect-ratio: 16 / 9;          /* o 4/3 */
+  overflow: hidden;
+  padding: 0;                    /* quita padding que “empuja” */
+  background: #222;
+  border-radius: 12px;
+}
+.tarjeta .imgbox img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Título/descripcion sin clamp ni recortes */
+.tarjeta h4,
+.tarjeta .excerpt,
+.tarjeta p{
+  overflow: visible !important;
+  max-height: none !important;       /* mata el max-height:3.2em */
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: unset !important;
+  white-space: normal !important;
+}
+
+/* Botones pegados al fondo si hay mucho texto */
+.tarjeta .cta,
+.tarjeta .wpp{
+  margin-top: auto;
+}
+
+/* Contenedor con scroll vertical (no recorta) */
+#mdContent{
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 12px;
+  min-height: 0;
+}
+
+
+/* No full-width para el CTA */
+.tarjeta .cta{
+  display: inline-flex !important;   /* no block */
+  width: auto !important;            /* no 100% */
+  align-self: flex-start !important; /* no stretch en el flex */
+  margin-top: 12px !important;       /* separa del texto */
+}
+
+/* Si antes pusimos margin-top:auto en .cta, anularlo */
+.tarjeta .cta,
+.tarjeta .wpp{
+  /* elimina cualquier margin-top:auto heredado */
+  margin-top: 12px !important;
+}
