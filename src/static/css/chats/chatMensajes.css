@@ -272,3 +272,76 @@ html, body { height: 100%; overflow: hidden; }
 }
 
 
+
+
+
+
+
+
+
+:root{
+  /* cuánto sube el borde inferior en DESKTOP */
+  --panel-gap-bottom: 60px;   /* probá 50 / 60 según gusto */
+}
+
+/* ========= DESKTOP (≥ 769px) ========= */
+@media (min-width: 769px){
+
+  .col-identidades,
+  .col-ambitos,
+  .col-chat{
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* tarjetas más bajas, pegadas arriba y recortadas abajo */
+  .col-identidades .id-card,
+  .col-ambitos   .amb-card,
+  .col-chat      .chat{
+    flex: 1 1 auto;
+    height: calc(100% - var(--panel-gap-bottom));
+    margin-top: 0;
+    margin-bottom: var(--panel-gap-bottom);
+  }
+
+  /* scroll interno en listas / mensajes */
+  .id-card .id-accordion,
+  .amb-card .amb-accordion,
+  .chat .msgs{
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
+/* ========= MOBILE (≤ 768px) ========= */
+/* aquí NO recortamos nada, full-height como antes */
+/* === Ajuste SOLO para pantallas pequeñas (chat más arriba) === */
+@media (max-width: 768px){
+
+  :root{
+    --chat-gap-bottom-mobile: 140px;   /* probá 40 / 50 / 60 según lo que veas */
+  }
+
+  /* La columna del chat se vuelve flex para poder “recortar” abajo */
+  .col-chat{
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* El chat queda pegado arriba y se recorta por abajo */
+  .col-chat .chat{
+    flex: 1 1 auto;
+    height: calc(100% - var(--chat-gap-bottom-mobile));
+    margin-top: 0;
+    margin-bottom: var(--chat-gap-bottom-mobile);
+  }
+
+  /* El scroll sigue viviendo dentro de los mensajes */
+  .col-chat .chat .msgs{
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
