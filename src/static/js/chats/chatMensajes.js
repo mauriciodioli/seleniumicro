@@ -1,209 +1,408 @@
+// ==================== TOGGLE ÁMBITOS (columna del medio) ====================
 (() => {
   const root = document.documentElement;
   const btn  = document.getElementById('toggleAmbitos');
+  if (!btn) return;
+
   const isMobile = () => matchMedia('(max-width:768px)').matches;
   const setIcon = () => {
     const col = root.classList.contains('ambitos-collapsed');
-    btn.textContent = isMobile() ? (col ? '▲' : '▼') : (col ? '⟶' : '⟵');
+    btn.textContent = isMobile()
+      ? (col ? '▲' : '▼')
+      : (col ? '⟶' : '⟵');
   };
-  btn.addEventListener('click', () => { root.classList.toggle('ambitos-collapsed'); setIcon(); });
+
+  btn.addEventListener('click', () => {
+    root.classList.toggle('ambitos-collapsed');
+    setIcon();
+  });
+
   addEventListener('resize', setIcon);
   setIcon();
 })();
 
 
+// ==================== ESTADO GLOBAL DEL CHAT ====================
+const Chat = {
+  scope: null,            // contexto DPIA
+  conversationId: null,   // ID en "conversation"
+  polling: null           // setInterval
+};
 
 
-
-
-// ===== Estado global simple =====
-  const Chat = {
-    scope: null,     // {ambito, categoria, subcategoria, idioma, cp, alias, tel}
-    roomId: null,    // string estable derivado del scope
-    polling: null    // setInterval id
+// ==================== CONTEXTO / BADGE ====================
+function normalizeScope(raw){
+  const s = typeof raw === 'string' ? JSON.parse(raw) : (raw || {});
+  return {
+    ambito:        (s.ambito || s.micrositio || '').toString().trim().toLowerCase(),
+    categoria:     (s.categoria || '').toString().trim().toLowerCase(),
+    subcategoria:  (s.subcategoria || '').toString().trim().toLowerCase(),
+    idioma:        (s.idioma || '').toString().trim().toLowerCase(),
+    cp:            (s.cp || s.codigo_postal || '').toString().trim(),
+    alias:         (s.alias || '').toString().trim(),
+    tel:           (s.tel || s.telefono || '').toString().trim()
   };
+}
 
-  // Normaliza y ordena el scope
-  function normalizeScope(raw){
-    const s = typeof raw === 'string' ? JSON.parse(raw) : (raw||{});
-    return {
-      ambito:        (s.ambito || s.micrositio || '').toString().trim().toLowerCase(),
-      categoria:     (s.categoria || '').toString().trim().toLowerCase(),
-      subcategoria:  (s.subcategoria || '').toString().trim().toLowerCase(),
-      idioma:        (s.idioma || '').toString().trim().toLowerCase(),
-      cp:            (s.cp || s.codigo_postal || '').toString().trim(),
-      alias:         (s.alias || '').toString().trim(),
-      tel:           (s.tel || s.telefono || '').toString().trim()
-    };
+function setCtxBadge(s){
+  const pill = document.querySelector('#ctxBadge .ctx-pill');
+  if (!pill) return;
+
+  const label = [
+    s.ambito       && `ámbito: ${s.ambito}`,
+    s.categoria    && `cat: ${s.categoria}`,
+    s.subcategoria && `sub: ${s.subcategoria}`,
+    s.idioma       && `idioma: ${s.idioma}`,
+    s.cp           && `CP: ${s.cp}`
+  ].filter(Boolean).join(' · ');
+
+  pill.innerHTML = `<span class="ctx-dot"></span>${label || 'sin contexto'}`;
+}
+
+
+// ==================== RENDER DE MENSAJES ====================
+function renderMessages(list){
+  const box = document.getElementById('msgs');
+  if (!box) return;
+
+  const msgs = Array.isArray(list) ? list : [];
+
+  if (!msgs.length){
+    box.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
+        <div>
+          <div style="font-size:28px; line-height:1">💬</div>
+          <div style="margin-top:6px">
+            Elegí un ámbito/categoría en el panel del medio y tocá <b>“Chatear”</b>.
+          </div>
+        </div>
+      </div>`;
+    return;
   }
 
-  // Genera un roomId determinista por contexto (sin PII)
-  function scopeToRoomId(s){
-    const parts = [
-      s.ambito || '_',
-      s.categoria || '_',
-      s.subcategoria || '_',
-      s.idioma || '_',
-      s.cp || '_'
-    ];
-    return parts.join('|'); // ej: "salud|medicos|turnos_online|es|28080"
+  box.innerHTML = msgs.map(m => {
+    const cls = m.role === 'client' ? 'msg msg-client'
+              : m.role === 'owner'  ? 'msg msg-owner'
+              : 'msg msg-system';
+    const text = (m.content || '').replace(/\n/g, '<br>');
+    return `
+      <div class="${cls}">
+        <div class="msg-body">${text}</div>
+        <div class="msg-meta">${m.created_at || ''}</div>
+      </div>`;
+  }).join('');
+
+  // scroll al final
+  box.scrollTop = box.scrollHeight;
+}
+
+// la dejamos global como ya usás en otros lados
+window.renderMessages = renderMessages;
+
+
+
+// ==================== CARGAR MENSAJES (POST) ====================
+async function loadMessages(){
+  if (!Chat.conversationId) {
+    console.warn('[CHAT] loadMessages sin conversationId');
+    return;
   }
 
-  // Pintar encabezado contextual
-  function setCtxBadge(s){
-    const pill = document.querySelector('#ctxBadge .ctx-pill');
-    if(!pill) return; // guard
-    const label = [
-      s.ambito && `ámbito: ${s.ambito}`,
-      s.categoria && `cat: ${s.categoria}`,
-      s.subcategoria && `sub: ${s.subcategoria}`,
-      s.idioma && `idioma: ${s.idioma}`,
-      s.cp && `CP: ${s.cp}`
-    ].filter(Boolean).join(' · ');
-    pill.innerHTML = `<span class="ctx-dot"></span>${label || 'sin contexto'}`;
-  }
-
-  // Render de mensajes
-  function renderMessages(items){
-    const box = document.getElementById('messages');
-    if(!box) return;
-    box.innerHTML = '';
-    if(!items || !items.length){
-      // hint vacío
-      const hint = document.createElement('div');
-      hint.className = 'msg-hint';
-      hint.innerHTML = `<div>💬</div><div>No hay mensajes aún. Escribí el primero.</div>`;
-      box.appendChild(hint);
+  try{
+    const r = await fetch('/api/chat/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ conversation_id: Chat.conversationId })
+    });
+    debugger;
+    const data = await r.json();
+    if (!r.ok || !data.ok){
+      console.error('[CHAT] error en /messages', data);
       return;
     }
-    for(const m of items){
-      const div = document.createElement('div');
-      div.className = 'msg ' + (m.author==='me' ? 'me' : 'other');
-      div.textContent = m.text;
-      box.appendChild(div);
-    }
-    box.scrollTop = box.scrollHeight;
+
+    renderMessages(data.messages || []);
+  }catch(err){
+    console.error('[CHAT] excepción en loadMessages', err);
+  }
+}
+
+
+// ==================== ENVIAR MENSAJE (POST) ====================
+async function sendMessage(text){
+  if (!Chat.conversationId){
+    console.warn('[CHAT] sendMessage sin conversationId');
+    alert('Abrí primero un chat tocando “Chatear”.');
+    return;
   }
 
-  // Cargar mensajes (fetch simple)
-  async function loadMessages(){
-    if(!Chat.roomId) return;
-    try{
-      const qs = new URLSearchParams({ room_id: Chat.roomId });
-      const r = await fetch(`/api/chat/messages?${qs.toString()}`, { credentials:'same-origin' });
-      if(!r.ok) return;
-      const data = await r.json();
-      renderMessages(data.messages || []);
-    }catch(_){}
-  }
+  const box = document.getElementById('msgs');
+  if (!box) return;
 
-  // Enviar mensaje
-  async function sendMessage(text){
-    if(!Chat.roomId) return;
-    const box = document.getElementById('messages');
-    // pinta optimista
-    const div = document.createElement('div');
-    div.className = 'msg me';
-    div.textContent = text;
-    box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
+  // pinta optimista
+  const div = document.createElement('div');
+  div.className = 'msg me';
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
 
-    try{
-      await fetch(`/api/chat/send`, {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        credentials:'same-origin',
-        body:JSON.stringify({ room_id: Chat.roomId, text, scope: Chat.scope })
-      });
-    }catch(_){
-      // silencioso: el próximo load corrige si falló
-    }
-  }
-
-  // Handler principal: llamado por los botones "Chatear" externos
-  // ejemplo: <button onclick="chatAmbitoHere(this)" data-scope='{"micrositio":"salud","idioma":"es","cp":"06049"}'>Chatear</button>
-  function chatAmbitoHere(btn){
-    try{
-      const scope = normalizeScope(btn.dataset.scope || '{}');
-      Chat.scope = scope;
-      Chat.roomId = scopeToRoomId(scope);
-      setCtxBadge(scope);
-      loadMessages();
-      if(Chat.polling) clearInterval(Chat.polling);
-      Chat.polling = setInterval(loadMessages, 2500);
-      document.getElementById('msgInput')?.focus();
-    }catch(e){
-      console.error('Scope inválido', e);
-    }
-  }
-  window.chatAmbitoHere = chatAmbitoHere; // expone a global
-
-  // Composer
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('composer');
-    const input = document.getElementById('msgInput');
-    form?.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const text = (input.value||'').trim();
-      if(!text) return;
-      sendMessage(text);
-      input.value = '';
-      input.focus();
+  try{
+    const r = await fetch('/api/chat/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        conversation_id: Chat.conversationId,
+        text,
+        as: 'client'
+      })
     });
-    // cleanup
-    window.addEventListener('beforeunload', ()=> Chat.polling && clearInterval(Chat.polling));
+
+    const data = await r.json();
+    if (!r.ok || !data.ok){
+      console.error('[CHAT] error en /send', data);
+    }
+  }catch(err){
+    console.error('[CHAT] excepción en sendMessage', err);
+  }
+}
+
+async function chatAmbitoHere(source){
+  try{
+    let s;
+
+    if (source && source.dataset && source.dataset.scope){
+      const rawScope = source.dataset.scope || '{}';
+      s = typeof rawScope === 'string' ? JSON.parse(rawScope) : rawScope;
+    } else if (source && typeof source === 'object'){
+      s = source;
+    } else {
+      console.error('[CHAT] chatAmbitoHere sin scope válido', source);
+      return;
+    }
+
+    const tel = (s.tel || s.telefono || window.LAST_IDENTITY_TEL || '').toString().trim();
+    if (!tel){
+      console.error('[CHAT] No hay teléfono en scope ni en LAST_IDENTITY_TEL, no abro chat');
+      if (window.Swal){
+        Swal.fire('Chat', 'Falta teléfono del cliente (tel / telefono).', 'error');
+      }
+      return;
+    }
+   
+    const scope = {
+      dominio:        s.dominio || s.ambito || 'tecnologia',
+      locale:         s.locale  || s.idioma  || 'es',
+      ambito_slug:    s.ambito,
+      categoria_slug: s.categoria,
+      codigo_postal:  s.cp,
+    };
+
+    if (s.ambito_id        || s.ambitoId)        scope.ambito_id        = s.ambito_id        || s.ambitoId;
+    if (s.categoria_id     || s.categoriaId)     scope.categoria_id     = s.categoria_id     || s.categoriaId;
+    if (s.codigo_postal_id || s.codigo_postalId) scope.codigo_postal_id = s.codigo_postal_id || s.codigo_postalId;
+    if (s.publication_id   || s.pub_id || s.id_publicacion)
+      scope.publication_id = s.publication_id || s.pub_id || s.id_publicacion;
+    if (s.owner_user_id    || s.ownerId || s.user_id)
+      scope.owner_user_id  = s.owner_user_id  || s.ownerId || s.user_id;
+    
+    const payload = {
+      scope,
+      client: {
+        tel,
+        alias:  s.alias || null,
+        email:  s.email || null,
+        user_id: s.user_id || null
+      }
+    };
+
+    console.log('[CHAT] payload /open:', payload);
+
+    const r = await fetch('/api/chat/open', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload)
+    });
+
+    const data = await r.json();
+    if (!r.ok || !data.ok){
+      console.error('Error al abrir chat', data);
+      if (window.Swal){
+        Swal.fire('Chat', data?.error || 'No se pudo abrir el chat', 'error');
+      }
+      return;
+    }
+
+    Chat.scope          = payload.scope;
+    Chat.conversationId = data.conversation_id;
+
+    console.log('[CHAT] conversación abierta, id=', Chat.conversationId);
+
+    setCtxBadge({
+      ambito:       s.ambito || s.micrositio,
+      categoria:    s.categoria,
+      subcategoria: s.subcategoria,
+      idioma:       payload.scope.locale,
+      cp:           s.cp || s.codigo_postal
+    });
+
+    // armamos los mensajes a renderizar
+    let msgs = data.messages || [];
+    if (data.is_new && data.from_summary){
+      // prepend “mensaje sistema” solo si es chat nuevo
+      msgs = [{
+        role: 'system',
+        via: 'dpia',
+        content_type: 'text',
+        content: `Nuevo chat desde ${data.from_summary}`,
+        created_at: new Date().toISOString()
+      }, ...msgs];
+    }
+
+    // pintamos una sola vez
+    renderMessages(msgs);
+
+    // polling, persistencia y foco SIEMPRE después
+    if (Chat.polling) clearInterval(Chat.polling);
+    Chat.polling = setInterval(loadMessages, 2500);
+
+    localStorage.setItem('dpia.chat.last', JSON.stringify({
+      conversationId: Chat.conversationId,
+      scope: Chat.scope
+    }));
+
+    document.getElementById('msgInput')?.focus();
+
+
+  }catch(e){
+    console.error('Scope inválido / error en chatAmbitoHere', e);
+    if (window.Swal){
+      Swal.fire('Chat', 'Error inesperado en el cliente.', 'error');
+    }
+  }
+}
+
+window.chatAmbitoHere = chatAmbitoHere;
+window.chatHere       = chatAmbitoHere;
+
+
+
+
+// ==================== COMPOSER / BOTONES ====================
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('[CHAT] DOMContentLoaded');
+
+  const input   = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  console.log('[CHAT] refs:', { input, sendBtn });
+
+  // restaurar último chat si existe
+  try{
+    const raw = localStorage.getItem('dpia.chat.last');
+    if (raw){
+      const saved = JSON.parse(raw);
+      if (saved.conversationId){
+        Chat.conversationId = saved.conversationId;
+        Chat.scope          = saved.scope || null;
+        console.log('[CHAT] restaurando convId desde localStorage:', Chat.conversationId);
+        loadMessages();
+        Chat.polling = setInterval(loadMessages, 2500);
+      }
+    }
+  }catch(err){
+    console.warn('[CHAT] error leyendo localStorage', err);
+  }
+
+  // ✅ CLICK EN BOTÓN ENVIAR
+  sendBtn?.addEventListener('click', () => {
+    const text = (input.value || '').trim();
+    if (!text) return;
+    console.log('[CHAT] click sendBtn, text=', text, 'convId=', Chat.conversationId);
+    sendMessage(text);
+    input.value = '';
+    input.focus();
   });
 
-  // asegura estructura del badge
+  // Enter en el input
+  input?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      const text = (input.value || '').trim();
+      if (!text) return;
+      console.log('[CHAT] Enter en input, text=', text, 'convId=', Chat.conversationId);
+      sendMessage(text);
+      input.value = '';
+    }
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (Chat.polling) clearInterval(Chat.polling);
+  });
+});
+
+
+// ==================== ASEGURAR ESTRUCTURA DEL BADGE ====================
 (() => {
   const badge = document.getElementById('ctxBadge');
-  if (badge && !badge.querySelector('.ctx-pill')) {
+  if (badge && !badge.querySelector('.ctx-pill')){
     badge.innerHTML = '<span class="ctx-pill"><span class="ctx-dot"></span>default</span>';
   }
 })();
 
 
-
+// ==================== SLIDE MOBILE ====================
 (function(){
   const root = document.documentElement;
   const isMobile = () => matchMedia('(max-width:768px)').matches;
 
-  // 1️⃣ Al hacer clic en un nombre de usuario, desliza hacia Ámbitos
   document.addEventListener('click', e => {
     const name = e.target.closest('.id-summary');
-    if(name && isMobile()){
+    if (name && isMobile()){
       root.classList.remove('slide-chat');
       root.classList.add('slide-ambitos');
     }
   });
-
-  // 2️⃣ Al hacer clic en cualquier "Chatear aquí" → desliza hacia Chat
+  
   const originalChatHere = window.chatHere || window.chatAmbitoHere;
   window.chatHere = window.chatAmbitoHere = function(btn){
-    if(typeof originalChatHere === 'function') originalChatHere(btn);
-    if(isMobile()){
+    if (typeof originalChatHere === 'function') originalChatHere(btn);
+    if (isMobile()){
       root.classList.remove('slide-ambitos');
       root.classList.add('slide-chat');
     }
   };
 
-  // 3️⃣ Botón “⟵” del chat → volver a Ámbitos
   document.addEventListener('click', e => {
-    if(e.target.closest('#toggleAmbitos') && isMobile()){
+    if (e.target.closest('#toggleAmbitos') && isMobile()){
       root.classList.remove('slide-chat');
       root.classList.add('slide-ambitos');
     }
   });
 
-  // 4️⃣ Reinicia el slide si se pasa a escritorio
   window.addEventListener('resize', () => {
-    if(!isMobile()){
+    if (!isMobile()){
       root.classList.remove('slide-ambitos','slide-chat');
     }
   });
 })();
 
- function setVh(){
-    document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
-  }
-  setVh(); addEventListener('resize', setVh);
+
+// ==================== FIX VH ====================
+function setVh(){
+  document.documentElement.style
+    .setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+}
+setVh();
+addEventListener('resize', setVh);

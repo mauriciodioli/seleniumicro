@@ -2,7 +2,11 @@
   <!-- Header del chat: flecha + badge -->
   <div class="chat-head">
     <button id="toggleAmbitos" class="toggle-ambitos" aria-label="Colapsar ámbitos">⟵</button>
-    <div id="ctxBadge" class="ctx-badge">default</div>
+    <div id="ctxBadge" class="ctx-badge">
+      <span class="ctx-pill">
+      <span class="ctx-dot"></span>sin contexto
+    </span>
+    </div>
   </div>
 
   <!-- Mensajes -->
@@ -19,6 +23,7 @@
   <div class="chat-input">
     <input id="msgInput" placeholder="Escribí un mensaje…">
     <button class="btn btn-accent" id="sendBtn">Enviar</button>
+     <button class="btn  btn-accent" id="debugBtn" type="button">TEST</button>
   </div>
 </div>
 

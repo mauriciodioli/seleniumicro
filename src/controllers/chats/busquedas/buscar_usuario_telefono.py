@@ -97,7 +97,7 @@ def _get_ambitos_from_db_by_name(nombres: set[str]) -> dict:
         return {}
     rows = (
         db.session.query(Ambitos)
-        .filter(Ambitos.nombre.in_(list(nombres)))
+        .filter(Ambitos.valor.in_(list(nombres)))
         .all()
     )
     out = {}
@@ -233,17 +233,29 @@ def identidad_buscar():
     nombres_amb = {p["ambito"] for p in pubs if p.get("ambito")}
     amb_db = _get_ambitos_from_db_by_name(nombres_amb)
 
-    # armamos lista final de ámbitos
+    
+    # amb_db viene así:
+    # {
+    #   '🏥 Health': {..., 'valor': 'Health', ...},
+    #   '🗝️Osobisty': {..., 'valor': 'Osobisty', ...}
+    # }
+    # Armamos un índice por 'valor' (sin emoji), que es lo que traen las publicaciones
+    amb_por_valor = {
+        a["valor"]: a
+        for a in amb_db.values()
+        if a.get("valor")
+    }
+
     ambitos_final = []
-    for nombre in nombres_amb:
-        if nombre in amb_db:
-            # ámbito real de tabla
-            a = amb_db[nombre]
-            # y le pegamos las categorías de ese ámbito
-            a["categorias"] = _get_categorias_de_ambito(a["id"])
-            ambitos_final.append(a)
+    for nombre in nombres_amb:  # nombre = 'Health', 'Osobisty', etc.
+        a = amb_por_valor.get(nombre)
+        if a:
+            # copiamos para no mutar el original
+            a_out = dict(a)
+            a_out["categorias"] = _get_categorias_de_ambito(a_out["id"])
+            ambitos_final.append(a_out)
         else:
-            # ámbito que vino como string en publicación pero no está en tabla
+            # ámbito que existe en publicaciones pero no está en la tabla
             ambitos_final.append({
                 "id": None,
                 "nombre": nombre,
@@ -251,7 +263,7 @@ def identidad_buscar():
                 "idioma": None,
                 "valor": None,
                 "estado": None,
-                "categorias": [],  # no podemos resolver
+                "categorias": [],
             })
 
     # 4) códigos postales
@@ -288,8 +300,7 @@ def identidad_buscar():
         "idiomas": idiomas,
     }
 
-    print("\n=== /api/chat/identidad-buscar → RESPONSE MOCK ===")
-    print(resp)
-    print("=================================================\n")
-
+  
     return jsonify(resp), 200
+
+

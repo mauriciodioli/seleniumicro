@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from extensions import db
 from models.chats.message import Message
+import re
 
 chat_bp = Blueprint('chat_bp', __name__, url_prefix='/chats')
 

@@ -463,7 +463,7 @@ function _enrichAmbitosWithCategorias(payload){
       const ids = Array.from(byAmb.get(aKey) || []);
       cats = ids.map(id => ({
         id,
-        slug: `cat_${id}`,
+        slug: `${id}`,
         nombre: `Categoría ${id}`
       }));
     }
@@ -472,21 +472,22 @@ function _enrichAmbitosWithCategorias(payload){
 }
 
 // --- render en #vistaChatAmbitos (con scroll forzado desde JS)
-function renderChatAmbitos(payload){
+function renderChatAmbitos(payload){ 
   const target = document.getElementById('vistaChatAmbitos');
   if (!target) return;
-
+  debugger;
   // 1) Enriquecemos ambitos con categorías si están vacías
-  const user   = payload?.user || {};
-  const ambs   = _enrichAmbitosWithCategorias(payload);
-  const idioma = payload?.idiomas?.[0] || user.idioma || 'es';
-  const cp     = payload?.codigos_postales?.[0] || user.cp || '—';
-  const alias  = user.alias || '@User';
-  const tel    = user.tel   || '';
+  const user    = payload?.user || {};
+  const ambs    = _enrichAmbitosWithCategorias(payload);
+  const idioma  = payload?.idiomas?.[0] || user.idioma || 'es';
+  const cp      = payload?.codigos_postales?.[0] || user.cp || '—';
+  const userId  = user.id ?? user.user_id ?? null;
+  const email   = user.email || user.correo || (String(user.nombre || '').includes('@') ? user.nombre : '');
+  const alias   = buildAliasFromUser({ ...user, email });
+  const tel     = user.tel   || '';
 
   if (!ambs.length){
     target.innerHTML = `<div class="amb-accordion"><p style="padding:8px">Sin ámbitos para mostrar.</p></div>`;
-    // igual forzamos contenedor para que no “salte”
     _ensureScrollable(target);
     return;
   }
@@ -496,20 +497,46 @@ function renderChatAmbitos(payload){
     const nombre = a?.nombre || a?.valor || '—';
     const ambKey = slug(nombre);
     const badge  = (a?.estado || 'activo').toLowerCase();
-    const scopeSummary = { ambito: ambKey, idioma: a?.idioma || idioma, alias, tel };
+    debugger;
+    // scope del SUMMARY del ámbito
+    const scopeSummary = {
+      ambito: ambKey,
+      idioma: a?.idioma || idioma,
+      alias,
+      tel,
+      user_id: userId,
+      email
+    };
 
     const cats = Array.isArray(a?.categorias) ? a.categorias : [];
-    const catsHtml = cats.map(c=>{
+    const catsHtml = cats.map(c => {
       const cname = c?.nombre || c?.valor || '—';
       const ckey  = slug(c?.slug || c?.id || cname);
-      const scopeCat = { ambito: ambKey, categoria: ckey, cp, idioma: a?.idioma || idioma };
+      debugger;
+      // scope del botón de categoría
+      const scopeCat = {
+        ambito:   ambKey,
+        categoria: ckey,
+        cp,
+        idioma: a?.idioma || idioma,
+        alias,
+        tel,
+        user_id: userId,
+        email
+      };
+      
       return `
         <div class="amb-subcard">
           <div class="amb-subcard-head">
             <span>${cap(cname)}</span>
-            <button class="btn" data-goto="chat"
+            <button class="btn"
+                    data-goto="chat"
+                    data-user-id="${userId ?? ''}"
+                    data-email="${email ? escapeHtml(email) : ''}"
                     data-scope='${j(scopeCat)}'
-                    onclick="window.chatHere?.(this)">Chatear en ${cap(cname)}</button>
+                    onclick="window.chatHere?.(this)">
+              Chatear en ${cap(cname)}
+            </button>
           </div>
           <div class="amb-mini-grid"></div>
         </div>`;
@@ -529,7 +556,9 @@ function renderChatAmbitos(payload){
           <span class="amb-list-item">📍 CP: ${cp}</span>
         </div>
 
-        <summary class="amb-section-summary"><span class="amb-section-title">Categorías</span></summary>
+        <summary class="amb-section-summary">
+          <span class="amb-section-title">Categorías</span>
+        </summary>
         <div class="amb-subcards">${catsHtml}</div>
       </details>`;
   }
@@ -539,6 +568,31 @@ function renderChatAmbitos(payload){
   // 2) Forzamos que el contenedor sea scrolleable sin tocar tus CSS
   _ensureScrollable(target);
 }
+
+
+// Crea alias a partir del user (si no viene alias explícito)
+function buildAliasFromUser(user = {}) {
+  // si ya viene alias, lo respetamos
+  if (user.alias && String(user.alias).trim()) {
+    return String(user.alias).trim();
+  }
+
+  // intenta con email / nombre que contenga @
+  const rawEmail = user.email || user.correo || user.nombre || '';
+  const s = String(rawEmail).trim();
+  if (s.includes('@')) {
+    const local = s.split('@')[0].trim();
+    if (local) {
+      // saneamos el local para que sea un alias limpio
+      const safe = local.replace(/[^a-zA-Z0-9_.-]/g, '');
+      if (safe) return '@' + safe;
+    }
+  }
+
+  // fallback
+  return '@User';
+}
+
 
 // Fuerza layout para scroll (sin depender de CSS externo)
 function _ensureScrollable(target){
@@ -614,7 +668,7 @@ async function procesarChatIdentidades(){
   // ✅ Cargar en caché + dedupe/promote + render + logs
   const r = cargarIdentidadEnCache(data, { promote:true, render:true });
   if (!r.ok) console.warn('[IDENTITY] no se pudo cachear:', r.reason, data);
-
+debugger;
   // ---- render (inserta SOLO si no existía)
   renderChatAmbitos(data);
   if (data.user) renderIdentityResult(data.user, { userKeyOverride: tel });
@@ -768,7 +822,7 @@ function promoteIfExistsByTel(telE164){
  */
 function cargarIdentidadEnCache(data, opts = {}){
   const { promote = true, render = true } = opts;
-
+  debugger;
   if (!data || !data.user){
     console.warn('[IDENTITY] ❌ respuesta sin user', data);
     return { ok:false, reason:'respuesta sin user' };
@@ -817,6 +871,7 @@ function cargarIdentidadEnCache(data, opts = {}){
 
   if (render){
     console.log('render:', true);
+    
     renderChatAmbitos(data);
     renderIdentityResult?.(data.user, { userKeyOverride: tel || k });
   } else {

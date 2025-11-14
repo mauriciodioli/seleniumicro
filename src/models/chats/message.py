@@ -1,4 +1,4 @@
-from extensions import db
+from utils.db import db
 
 class Message(db.Model):
     __tablename__ = "message"

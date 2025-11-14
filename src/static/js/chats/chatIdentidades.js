@@ -172,11 +172,13 @@ window.chatHere = function(btn){
 
 
 window.elevateScope = function(){
+    
   Swal.fire({
     title:'Nuevo contexto',
     html:`<input id="sc1" class="swal2-input" placeholder="clave:valor">
           <input id="sc2" class="swal2-input" placeholder="otra:valor">`,
     focusConfirm:false,
+  
     preConfirm:()=>{
       const p=v=>v.includes(':') ? v.split(':',2) : null;
       const a=p((document.getElementById('sc1').value||'').trim());
@@ -614,6 +616,83 @@ function pintarDesdeCacheAmbitosYChat(badgeEl){
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+// ==== Helpers de scope desde CACHE de identidad ====
+
+function buildScopeFromIdentityCache(identityKey){
+  if (!window.getCachedIdentity){
+    console.warn('[CHAT] No existe getCachedIdentity, no puedo armar scope identidad');
+    return null;
+  }
+
+  const data = getCachedIdentity(identityKey);
+  if (!data){
+    console.warn('[CHAT] Sin datos en cache para identidad:', identityKey);
+    return null;
+  }
+
+  const u    = data.user || {};
+  const tels = (u.tel || u.telefono || identityKey || '').toString().trim();
+
+  // tomamos primer cp / idioma si hay
+  const cps     = Array.isArray(data.codigos_postales) ? data.codigos_postales : [];
+  const idiomas = Array.isArray(data.idiomas) ? data.idiomas : [];
+
+  const cpVal   = cps[0] || '';      // ej. "52-200"
+  const langVal = idiomas[0] || 'es';
+
+  // ámbito/categoría “personal” por defecto (puede venir en ambitos)
+  const ambs = Array.isArray(data.ambitos) ? data.ambitos : [];
+  const ambPersonal = ambs[0] || {};   // si tenés uno específico de personal, filtralo
+
+  // owner_user_id = el dueño del micrositio personal (probablemente vos)
+  const ownerId = window.CURRENT_USER_ID || window.currentUserId || null;
+
+  const scope = {
+    tel:       tels,
+    ambito:    ambPersonal.nombre || ambPersonal.valor || 'personal',
+    ambito_id: ambPersonal.id || null,
+    categoria: 'personal',
+    categoria_id: null,
+    cp:        cpVal,
+    idioma:    langVal,
+    dominio:   'personal',
+    owner_user_id: ownerId
+  };
+
+  console.log('[CHAT] scope desde cache identidad:', scope);
+  return scope;
+}
+
+
+// Click en "Chatear aquí" desde IDENTIDADES
+document.addEventListener('click', (e) => {
+  const btnId = e.target.closest('[data-chat-identity]');
+  if (!btnId) return;
+
+  const identityKey = btnId.dataset.chatIdentity; // ej. tel o clave cache
+  if (!identityKey){
+    console.warn('[CHAT] data-chat-identity vacío');
+    return;
+  }
+
+  const scope = buildScopeFromIdentityCache(identityKey);
+  if (!scope) return;
+
+  // abrimos chat pasando scope directo (no botón)
+  chatAmbitoHere(scope);
+});
 
 
 
