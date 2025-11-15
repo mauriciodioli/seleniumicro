@@ -475,7 +475,7 @@ function _enrichAmbitosWithCategorias(payload){
 function renderChatAmbitos(payload){ 
   const target = document.getElementById('vistaChatAmbitos');
   if (!target) return;
-  debugger;
+  
   // 1) Enriquecemos ambitos con categorías si están vacías
   const user    = payload?.user || {};
   const ambs    = _enrichAmbitosWithCategorias(payload);
@@ -496,11 +496,13 @@ function renderChatAmbitos(payload){
   for (const a of ambs){
     const nombre = a?.nombre || a?.valor || '—';
     const ambKey = slug(nombre);
+    const ambito_id = a?.id || a?.ambito_id || null;
     const badge  = (a?.estado || 'activo').toLowerCase();
-    debugger;
+    
     // scope del SUMMARY del ámbito
     const scopeSummary = {
       ambito: ambKey,
+      ambito_id,
       idioma: a?.idioma || idioma,
       alias,
       tel,
@@ -512,10 +514,11 @@ function renderChatAmbitos(payload){
     const catsHtml = cats.map(c => {
       const cname = c?.nombre || c?.valor || '—';
       const ckey  = slug(c?.slug || c?.id || cname);
-      debugger;
+    
       // scope del botón de categoría
       const scopeCat = {
         ambito:   ambKey,
+         ambito_id,
         categoria: ckey,
         cp,
         idioma: a?.idioma || idioma,
@@ -668,7 +671,7 @@ async function procesarChatIdentidades(){
   // ✅ Cargar en caché + dedupe/promote + render + logs
   const r = cargarIdentidadEnCache(data, { promote:true, render:true });
   if (!r.ok) console.warn('[IDENTITY] no se pudo cachear:', r.reason, data);
-debugger;
+
   // ---- render (inserta SOLO si no existía)
   renderChatAmbitos(data);
   if (data.user) renderIdentityResult(data.user, { userKeyOverride: tel });
@@ -822,7 +825,7 @@ function promoteIfExistsByTel(telE164){
  */
 function cargarIdentidadEnCache(data, opts = {}){
   const { promote = true, render = true } = opts;
-  debugger;
+ 
   if (!data || !data.user){
     console.warn('[IDENTITY] ❌ respuesta sin user', data);
     return { ok:false, reason:'respuesta sin user' };

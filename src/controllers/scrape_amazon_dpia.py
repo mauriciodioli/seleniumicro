@@ -621,7 +621,7 @@ def get_chrome():
     opts.add_argument("--disable-dev-shm-usage")
     return webdriver.Chrome(options=opts)
 
-driver = get_chrome()
+
 
 # ── 2)  Función que abre el DP y llama al helper ─────
 def extraer_imagenes_por_asin(asin: str, dominio: str, driver) -> list:

@@ -13,12 +13,14 @@ from utils.chat_conversation import get_or_create_conversation
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
+
 @api_chat_bp.route("/open", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
     scope  = data.get("scope")  or {}
     client = data.get("client") or {}
     publication_id = scope.get("publication_id") or 0
+
     try:
         # ========== 1) DATOS QUE YA VIENEN DEL FRONT ==========
 
@@ -41,19 +43,33 @@ def open_conversation():
         owner_user_id = scope.get("owner_user_id")
         if not owner_user_id:
             return jsonify(ok=False, error="Falta owner_user_id en scope"), 400
+        try:
+            owner_user_id = int(owner_user_id)
+        except (TypeError, ValueError):
+            return jsonify(ok=False, error="owner_user_id inválido"), 400
 
         # Contexto
         dominio = scope.get("dominio") or "tecnologia"
         locale  = scope.get("locale")  or "es"
 
-        ambito_id        = scope.get("ambito_id")
-        categoria_id     = scope.get("categoria_slug")
-        codigo_postal_id = scope.get("codigo_postal")
-       
+        ambito_id    = scope.get("ambito_id")
+        categoria_id = scope.get("categoria_id")  # 👈 id numérico, no slug
+
+        # CP textual e ID (si lo mandás)
+        codigo_postal     = scope.get("codigo_postal")     # ej: "52-200"
+        codigo_postal_id  = scope.get("codigo_postal_id")  # ej: 123 o None
+
+        # Normalizar ints si vienen como string numérica
+        if isinstance(ambito_id, str) and ambito_id.isdigit():
+            ambito_id = int(ambito_id)
+        if isinstance(categoria_id, str) and categoria_id.isdigit():
+            categoria_id = int(categoria_id)
+        if isinstance(codigo_postal_id, str) and codigo_postal_id.isdigit():
+            codigo_postal_id = int(codigo_postal_id)
+
         # Slugs / etiquetas solo para mostrar “desde dónde viene”
         ambito_slug    = scope.get("ambito_slug")
         categoria_slug = scope.get("categoria_slug")
-        codigo_postal  = scope.get("codigo_postal")
 
         alias = client.get("alias")
         email = client.get("email")
@@ -65,8 +81,9 @@ def open_conversation():
             client_user_id=client_user_id,
             dominio=dominio,
             ambito_id=ambito_id,
-            categoria_id=int(categoria_id),
-            codigo_postal_id=codigo_postal_id,
+            categoria_id=categoria_id,
+            codigo_postal=codigo_postal,         # "52-200"
+            codigo_postal_id=codigo_postal_id,   # 123 o None
             locale=locale,
             publication_id=publication_id,
         )
@@ -124,7 +141,8 @@ def open_conversation():
                 "dominio": dominio,
                 "locale": locale,
                 "ambito_id": ambito_id,
-                "categoria_id": int(categoria_id),
+                "categoria_id": categoria_id,
+                "codigo_postal": codigo_postal,
                 "codigo_postal_id": codigo_postal_id,
                 "publication_id": publication_id,
             },
@@ -142,6 +160,7 @@ def open_conversation():
         return jsonify(ok=False, error=str(e)), 500
     finally:
         db.session.close()
+
     
 
 
