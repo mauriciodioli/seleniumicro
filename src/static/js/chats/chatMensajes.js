@@ -118,7 +118,7 @@ async function loadMessages(){
       credentials: 'include',
       body: JSON.stringify({ conversation_id: Chat.conversationId })
     });
-    debugger;
+    
     const data = await r.json();
     if (!r.ok || !data.ok){
       console.error('[CHAT] error en /messages', data);
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT] DOMContentLoaded');
 
   const input   = document.getElementById('msgInput');
-  const sendBtn = document.getElementById('sendBtn');
+  const sendBtn = document.getElementById('sendBtnSenMessage');
 
   console.log('[CHAT] refs:', { input, sendBtn });
 
@@ -326,14 +326,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ✅ CLICK EN BOTÓN ENVIAR
-  sendBtn?.addEventListener('click', () => {
-    const text = (input.value || '').trim();
-    if (!text) return;
-    console.log('[CHAT] click sendBtn, text=', text, 'convId=', Chat.conversationId);
-    sendMessage(text);
-    input.value = '';
-    input.focus();
-  });
+ // ✅ CLICK EN BOTÓN ENVIAR (con preventDefault)
+sendBtn?.addEventListener('click', (e) => {
+  e.preventDefault();      // 👈 frena el submit del <form>
+
+  const text = (input.value || '').trim();
+  if (!text) return;
+  console.log('[CHAT] click sendBtnSenMessage, text=', text, 'convId=', Chat.conversationId);
+  sendMessage(text);
+  input.value = '';
+  input.focus();
+});
+
 
   // Enter en el input
   input?.addEventListener('keydown', (e) => {
