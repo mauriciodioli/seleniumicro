@@ -66,26 +66,31 @@ def _get_user_by_email_like(q: str):
 # ========== HELPERS DE DATOS DEL USUARIO ==========
 
 def _get_publicaciones_de_usuario(user_id: int) -> list[dict]:
-    """Todas las publicaciones del usuario, normalizadas."""
+    """Todas las publicaciones del usuario, normalizadas (excluye 'pendiente')."""
     pubs = (
         db.session.query(Publicacion)
-        .filter(Publicacion.user_id == user_id)
+        .filter(
+            Publicacion.user_id == user_id,
+            Publicacion.estado != 'pendiente'   
+        )
         .order_by(Publicacion.fecha_creacion.desc())
         .all()
     )
+
     out = []
     for p in pubs:
         out.append({
             "id": p.id,
             "titulo": p.titulo,
-            "ambito": p.ambito,                    # <- string, ej: "salud"
-            "categoria_id": p.categoria_id,        # <- FK opcional
+            "ambito": p.ambito,
+            "categoria_id": p.categoria_id,
             "idioma": p.idioma or "es",
             "codigo_postal": p.codigoPostal,
             "estado": p.estado,
             "fecha_creacion": p.fecha_creacion.isoformat() if p.fecha_creacion else None,
         })
     return out
+
 
 
 def _get_ambitos_from_db_by_name(nombres: set[str]) -> dict:
@@ -127,7 +132,7 @@ def _get_codigos_postales_from_pubs(pubs: list[dict]) -> list[str]:
     return cps
 
 
-def _get_categorias_from_pubs(pubs: list[dict]) -> set[int]:
+def _get_categorias_from_pubs(user_id,pubs: list[dict]) -> set[int]:
     """categoría que está DIRECTO en publicacion.categoria_id"""
     cats = set()
     for p in pubs:
@@ -229,17 +234,17 @@ def identidad_buscar():
     # 2) publicaciones del user
     pubs = _get_publicaciones_de_usuario(user.id)
 
-    # 3) ámbitos a partir de las pubs
+    # 3) categorías usadas POR el user (dos fuentes)
+    pub_ids = [p["id"] for p in pubs]
+    cats_direct = _get_categorias_from_pubs(user.id, pubs)
+    cats_bridge = _get_categorias_from_categoriaPublicacion(pub_ids)
+    categorias_usuario = set(cats_direct).union(cats_bridge)
+
+    # 4) ámbitos a partir de las pubs
     nombres_amb = {p["ambito"] for p in pubs if p.get("ambito")}
     amb_db = _get_ambitos_from_db_by_name(nombres_amb)
 
-    
-    # amb_db viene así:
-    # {
-    #   '🏥 Health': {..., 'valor': 'Health', ...},
-    #   '🗝️Osobisty': {..., 'valor': 'Osobisty', ...}
-    # }
-    # Armamos un índice por 'valor' (sin emoji), que es lo que traen las publicaciones
+    # índice por 'valor' (sin emoji), que es lo que traen las publicaciones
     amb_por_valor = {
         a["valor"]: a
         for a in amb_db.values()
@@ -252,7 +257,17 @@ def identidad_buscar():
         if a:
             # copiamos para no mutar el original
             a_out = dict(a)
-            a_out["categorias"] = _get_categorias_de_ambito(a_out["id"])
+
+            # TODAS las categorías del ámbito
+            cats_ambito = _get_categorias_de_ambito(a_out["id"])
+
+            # 🔥 FILTRO: solo categorías donde el usuario tiene publicaciones
+            cats_filtradas = [
+                c for c in cats_ambito
+                if c.get("id") in categorias_usuario
+            ]
+
+            a_out["categorias"] = cats_filtradas
             ambitos_final.append(a_out)
         else:
             # ámbito que existe en publicaciones pero no está en la tabla
@@ -266,10 +281,10 @@ def identidad_buscar():
                 "categorias": [],
             })
 
-    # 4) códigos postales
+    # 5) códigos postales
     cps = _get_codigos_postales_from_pubs(pubs)
 
-    # 5) idiomas
+    # 6) idiomas
     idiomas = []
     seen_lang = set()
     for p in pubs:
@@ -277,12 +292,6 @@ def identidad_buscar():
         if lang not in seen_lang:
             seen_lang.add(lang)
             idiomas.append(lang)
-
-    # 6) categorías usadas POR el user (dos fuentes)
-    pub_ids = [p["id"] for p in pubs]
-    cats_direct = _get_categorias_from_pubs(pubs)
-    cats_bridge = _get_categorias_from_categoriaPublicacion(pub_ids)
-    categorias_usuario = list(cats_direct.union(cats_bridge))
 
     # ------- respuesta final -------
     resp = {
@@ -295,12 +304,12 @@ def identidad_buscar():
         },
         "publicaciones": pubs,
         "ambitos": ambitos_final,
-        "categorias": categorias_usuario,
+        # solo ids de categorías donde el usuario tiene publicaciones
+        "categorias": list(categorias_usuario),
         "codigos_postales": cps,
         "idiomas": idiomas,
     }
 
-  
     return jsonify(resp), 200
 
 
