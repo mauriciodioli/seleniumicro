@@ -1,4 +1,20 @@
 // static/js/chats/buscarUsuarioTelefono.js
+
+// === API única para leer caché de identidad ===
+window.getCachedIdentity = function(arg){
+  const u = arg || {};
+  let key = '';
+  if (typeof arg === 'string') {
+    key = arg.trim();
+  } else {
+    key = (u.tel || u.alias || u.nombre || '').toString().trim();
+  }
+  if (!key) return null;
+  return window.IdentityCache?.get(key) || null;
+};
+
+
+// === Búsqueda de usuario por teléfono/alias/nombre ===
 (function () {
   const input = document.getElementById('idSearch')    // ojo: en tu HTML pusiste id="btnSearch" en el input
                  || document.getElementById('btnSearch'); // fallback
@@ -67,42 +83,6 @@
     }
   }
 
-  function renderIdentityResult(user) {
-    const scope = {
-      micrositio: user.micrositio,
-      idioma: user.idioma,
-      alias: user.alias,
-      tel: user.tel
-    };
-
-    const html = `
-    <details class="id-item id-from-search" open>
-      <summary class="id-summary" data-scope='${JSON.stringify(scope)}'>
-        <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
-        <span class="id-name" data-goto="amb-card">👤 ${user.nombre || user.alias || 'Usuario'}</span>
-        <span class="id-badge" data-goto="chat">${user.last_msg || '—'}</span>
-      </summary>
-      <div class="id-body">
-        ${user.tel   ? `<span class="id-field">📞 ${user.tel}</span>` : ''}
-        ${user.alias ? `<span class="id-field">@${user.alias}</span>` : ''}
-        ${user.url   ? `<span class="id-field">🌐 ${user.url}</span>` : ''}
-      </div>
-      <div class="id-actions">
-        <button class="btn btn-accent" data-goto="chat"
-            data-scope='${JSON.stringify(scope)}'
-            onclick="chatHere(this)">Chatear aquí</button>
-        <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-      </div>
-    </details>
-    `;
-
-    const old = list.querySelector('.id-from-search');
-    if (old) old.remove();
-
-    const temp = document.createElement('div');
-    temp.innerHTML = html.trim();
-    list.prepend(temp.firstElementChild);
-  }
 
   // ================== NUEVO: render de ÁMBITOS en MyDomain ==================
   function renderMyDomainAmbitos(ambitos) {
@@ -368,7 +348,70 @@ function userKey(u={}){
   if (u.alias)return 'alias:'+String(u.alias).toLowerCase().replace(/^@/,'');
   return null;
 }
-const identityCache = new Map(); // key -> payload completo
+
+
+
+
+
+// === CACHE GLOBAL DE IDENTIDADES ===
+(function(){
+  const LS_KEY = 'dpia.identityCache.v1';
+
+  // Siempre la misma instancia
+  window.IdentityCache = window.IdentityCache || new Map();
+  window.identityCache = window.IdentityCache; // alias para código viejo
+
+  // Persistir en localStorage
+  function persistIdentityCache(){
+    try {
+      const obj = {};
+      for (const [k, v] of window.IdentityCache.entries()){
+        obj[k] = v;
+      }
+      localStorage.setItem(LS_KEY, JSON.stringify(obj));
+    } catch(err){
+      console.warn('[IdentityCache] persist error', err);
+    }
+  }
+
+  // Rehidratar desde localStorage → Map + panel identidades
+  function hydrateIdentityCache(){
+    let raw;
+    try {
+      raw = localStorage.getItem(LS_KEY);
+      if (!raw) return;
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj !== 'object') return;
+
+      window.IdentityCache.clear();
+      for (const [k, v] of Object.entries(obj)){
+        window.IdentityCache.set(k, v);
+      }
+
+      // ⚠️ IMPORTANT: usamos tu renderIdentityResult “bueno” (el de abajo)
+      if (typeof window.renderIdentityResult === 'function'){
+        Object.entries(obj).forEach(([k, data]) => {
+          if (!data || !data.user) return;
+          window.renderIdentityResult(data.user, { userKeyOverride: k });
+        });
+      }
+    } catch(err){
+      console.warn('[IdentityCache] hydrate error', err, raw);
+    }
+  }
+
+  // Exponer helpers globales
+  window.IdentityCachePersist  = persistIdentityCache;
+  window.IdentityCacheHydrate  = hydrateIdentityCache;
+
+  // Rehidratar al cargar la página
+  document.addEventListener('DOMContentLoaded', hydrateIdentityCache);
+})();
+
+window.IdentityCache = window.IdentityCache || new Map();
+const identityCache = window.IdentityCache;   // todos usan el mismo
+window.identityCache = window.IdentityCache;
+
 
 // Marca visual de identidad activa
 function setActiveIdentity(key){
@@ -807,7 +850,7 @@ function dedupeAndPromoteByTel(tel){
 
 
 // ==== Infra mínima (si ya la tenés, no dupliques) ====
-window.identityCache = window.identityCache || new Map();
+
 userKey = (u={}) => (u.tel || u.alias || u.nombre || '').trim();
 
 function promoteIfExistsByTel(telE164){
@@ -851,6 +894,7 @@ function cargarIdentidadEnCache(data, opts = {}){
 
   // cache + activa
   identityCache.set(k, data);
+  window.IdentityCachePersist?.();
   console.log('✅ cacheado:', true);
 
   try { setActiveIdentity?.(k); console.log('setActiveIdentity:', true); }
