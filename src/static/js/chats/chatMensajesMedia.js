@@ -1,3 +1,6 @@
+alert('chatMensajesMedia.js CARGADO');
+console.log('[CHAT MEDIA] archivo cargado');
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT MEDIA] init');
 
@@ -91,8 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ---------- AUDIO (mantener botón ▶) ----------
-  
-   // ---------- AUDIO (mantener botón ▶) ----------
+    // === Helper para debug en cel (alertas) ===
+  function audioDebug(msg) {
+    // Si querés solo en mobile:
+    // if (!('ontouchstart' in window)) return;
+    alert('[AUDIO DEBUG] ' + msg);
+  }
+  // ---------- AUDIO (mantener botón ▶) ----------
   let pressTimer = null;       // solo para desktop
   let isRecording = false;
   let mediaRecorder = null;
@@ -112,12 +120,21 @@ document.addEventListener('DOMContentLoaded', () => {
     host: location.hostname,
     isTouchDevice
   });
+  audioDebug(
+    'soporte audio: devices=' + hasMediaDevices +
+    ', recorder=' + hasMediaRecorder +
+    ', proto=' + location.protocol +
+    ', host=' + location.hostname +
+    ', touch=' + isTouchDevice
+  );
 
   async function startRecording() {
     console.log('[CHAT MEDIA] startRecording llamado');
+    audioDebug('startRecording llamado');
 
     if (!hasMediaDevices || !hasMediaRecorder) {
       console.warn('[CHAT MEDIA] ⚠ Este navegador NO soporta getUserMedia o MediaRecorder');
+      audioDebug('SIN SOPORTE: mediaDevices=' + hasMediaDevices + ', mediaRecorder=' + hasMediaRecorder);
       return;
     }
 
@@ -125,15 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (location.protocol !== 'https:' &&
         location.hostname !== 'localhost' &&
         location.hostname !== '127.0.0.1') {
-      console.warn('[CHAT MEDIA] ⚠ Audio bloqueado: se requiere HTTPS o localhost para getUserMedia');
+      console.warn('[CHAT MEDIA] ⚠ Audio bloqueado por protocolo');
+      audioDebug('BLOQUEADO POR PROTOCOLO: proto=' + location.protocol + ', host=' + location.hostname);
       alert('No puedo acceder al micrófono porque la página no está en HTTPS.\nAbrí la web en https:// o en localhost.');
       return;
     }
 
     try {
       console.log('[CHAT MEDIA] solicitando permiso de micrófono…');
+      audioDebug('pidiendo permiso de micrófono (getUserMedia)');
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
       console.log('[CHAT MEDIA] 🎙 micrófono OK, empezando a grabar');
+      audioDebug('micrófono OK, grabando');
 
       audioChunks = [];
       mediaRecorder = new MediaRecorder(stream);
@@ -151,11 +173,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       mediaRecorder.onstop = () => {
         console.log('[CHAT MEDIA] MediaRecorder.onstop, chunks:', audioChunks.length);
+        audioDebug('onstop: chunks=' + audioChunks.length);
+
         const blob = new Blob(audioChunks, { type: 'audio/webm' });
 
         if (discardNextAudio) {
           console.log('[CHAT MEDIA] Audio descartado (tap corto / cancel).');
+          audioDebug('audio DESCARTADO (tap corto / cancel)');
         } else {
+          audioDebug('audio ENVIADO');
           enviarAudio(blob);
         }
 
@@ -164,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       mediaRecorder.onerror = (e) => {
         console.error('[CHAT MEDIA] MediaRecorder error', e.error || e);
+        audioDebug('MediaRecorder ERROR: ' + (e.error?.name || e.toString()));
       };
 
       mediaRecorder.start();
@@ -173,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (err) {
       console.error('[CHAT MEDIA] ❌ No se pudo acceder al micrófono', err);
+      audioDebug('ERROR getUserMedia: ' + (err.name || '') + ' - ' + (err.message || err.toString()));
       alert('No pude acceder al micrófono.\nRevisá los permisos del navegador para esta página.');
       isRecording = false;
     }
@@ -180,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function stopRecording() {
     console.log('[CHAT MEDIA] stopRecording llamado');
+    audioDebug('stopRecording llamado');
     if (mediaRecorder && isRecording) {
       console.log('[CHAT MEDIA] mediaRecorder.stop()');
       mediaRecorder.stop();
@@ -191,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function enviarTextoYMedia() {
     console.log('[CHAT MEDIA] enviarTextoYMedia');
+    audioDebug('enviarTextoYMedia (texto + imagen si hay)');
 
     if (typeof enviarTexto === 'function') {
       enviarTexto();
@@ -215,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // long-press: 400ms para iniciar grabación
       pressTimer = setTimeout(() => {
         console.log('[CHAT MEDIA] ✅ long-press detectado (desktop) → startRecording()');
+        audioDebug('desktop long-press → startRecording');
         discardNextAudio = false;
         startRecording();
       }, 400);
@@ -228,14 +259,11 @@ document.addEventListener('DOMContentLoaded', () => {
         pressTimer = null;
 
         if (isRecording) {
-          // estaba grabando → soltó después del long-press → detener audio
           stopRecording();
         } else {
-          // click corto → texto + media
           enviarTextoYMedia();
         }
       } else {
-        // fallback
         if (isRecording) {
           stopRecording();
         } else {
@@ -259,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSend.addEventListener('touchstart', (e) => {
       e.preventDefault();
       console.log('[CHAT MEDIA] touchstart btnSend (mobile)');
+      audioDebug('touchstart mobile → startRecording directo');
       lastTouchStart = Date.now();
       discardNextAudio = false;
       startRecording();              // 🔥 acá llamamos directo, dentro del gesto
@@ -269,15 +298,18 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('[CHAT MEDIA] touchend btnSend (mobile)');
       const dt = Date.now() - lastTouchStart;
       console.log('[CHAT MEDIA] duración touch:', dt, 'ms');
+      audioDebug('touchend mobile, duración=' + dt + 'ms');
 
       // si fue un toque corto (< 300ms) => usamos como enviar texto, NO audio
       if (dt < 300) {
         console.log('[CHAT MEDIA] tap corto → descartar audio y enviar texto');
+        audioDebug('tap corto → descartar audio, enviar texto');
         discardNextAudio = true;     // onstop NO llama enviarAudio
         stopRecording();             // detenemos MediaRecorder
         enviarTextoYMedia();         // usamos el botón como "enviar"
       } else {
         console.log('[CHAT MEDIA] long-press → enviar solo audio');
+        audioDebug('long-press → enviar solo audio');
         discardNextAudio = false;    // onstop SÍ llama enviarAudio
         stopRecording();
         // no mandamos texto acá
@@ -287,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSend.addEventListener('touchcancel', (e) => {
       e.preventDefault();
       console.log('[CHAT MEDIA] touchcancel btnSend (mobile)');
+      audioDebug('touchcancel mobile → descartar audio');
       discardNextAudio = true;
       stopRecording();
     }, { passive: false });
