@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS  # ⬅️ nuevo
 from config import DATABASE_CONNECTION_URI
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
@@ -110,6 +110,11 @@ def test_db_connection():
         print(f"Error en SQLAlchemy: {e}")
 
 test_db_connection()
+
+@app.route("/chat/contextual-embed")
+def chat_embed():
+    return render_template("templates/index.html")
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8000, debug=True, use_reloader=False)

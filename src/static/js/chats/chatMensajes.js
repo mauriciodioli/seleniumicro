@@ -265,6 +265,42 @@ if (btnSend) {
 
 
 
+
+
+
+
+
+
+
+// === Contexto cuando el chat viene embebido en un iframe ===
+const urlParams = new URLSearchParams(window.location.search);
+
+const EMBED_SCOPE = {
+  dominio:        urlParams.get('dominio') || null,
+  locale:         urlParams.get('lang')    || null,
+  codigo_postal:  urlParams.get('cp')      || null,
+  categoria_id:   urlParams.get('categoria_id')
+                    ? Number(urlParams.get('categoria_id'))
+                    : null,
+  publication_id: urlParams.get('publication_id')
+                    ? Number(urlParams.get('publication_id'))
+                    : 0,
+  owner_user_id:  urlParams.get('owner_user_id')
+                    ? Number(urlParams.get('owner_user_id'))
+                    : null,
+};
+
+// datos del usuario que mira el iframe (si los tenés)
+const EMBED_CLIENT = {
+  user_id: window.CURRENT_USER_ID    || null,
+  email:   window.CURRENT_USER_EMAIL || null,
+  tel:     window.CURRENT_USER_TEL   || null,
+};
+
+
+
+
+
 async function chatAmbitoHere(source){
   try{
     let s;
@@ -275,11 +311,21 @@ async function chatAmbitoHere(source){
     } else if (source && typeof source === 'object'){
       s = source;
     } else {
-      console.error('[CHAT] chatAmbitoHere sin scope válido', source);
-      return;
+      // ⚠️ Si no viene nada (iframe embebido sin panel), usamos sólo lo que vino por la URL
+      s = {
+        ...EMBED_SCOPE,
+        ...EMBED_CLIENT,
+      };
     }
 
-    const tel = (s.tel || s.telefono || window.LAST_IDENTITY_TEL || '').toString().trim();
+    const tel = (
+      s.tel ||
+      s.telefono ||
+      EMBED_CLIENT.tel ||
+      window.LAST_IDENTITY_TEL ||
+      ''
+    ).toString().trim();
+
     if (!tel){
       console.error('[CHAT] No hay teléfono en scope ni en LAST_IDENTITY_TEL, no abro chat');
       if (window.Swal){
@@ -287,30 +333,47 @@ async function chatAmbitoHere(source){
       }
       return;
     }
-   
+
+    // === Construimos scope mezclando lo que venga del click + lo del iframe ===
     const scope = {
-      dominio:        s.dominio || s.ambito || 'tecnologia',
-      locale:         s.locale  || s.idioma  || 'es',
+      dominio:        s.dominio || s.ambito || EMBED_SCOPE.dominio || 'tecnologia',
+      locale:         s.locale  || s.idioma || EMBED_SCOPE.locale  || 'es',
       ambito_slug:    s.ambito,
       categoria_slug: s.categoria,
-      codigo_postal:  s.cp,
+      codigo_postal:  s.cp || EMBED_SCOPE.codigo_postal,
     };
 
-    if (s.ambito_id        || s.ambitoId)        scope.ambito_id        = s.ambito_id        || s.ambitoId;
-    if (s.categoria_id     || s.categoriaId)     scope.categoria_id     = s.categoria_id     || s.categoriaId;
-    if (s.codigo_postal_id || s.codigo_postalId) scope.codigo_postal_id = s.codigo_postal_id || s.codigo_postalId;
+    // IDs: primero lo que venga de s, si no, lo del EMBED_SCOPE
+    if (s.ambito_id        || s.ambitoId)
+      scope.ambito_id = s.ambito_id || s.ambitoId;
+
+    if (s.categoria_id     || s.categoriaId)
+      scope.categoria_id = s.categoria_id || s.categoriaId;
+    if (!scope.categoria_id && EMBED_SCOPE.categoria_id)
+      scope.categoria_id = EMBED_SCOPE.categoria_id;
+
+    if (s.codigo_postal_id || s.codigo_postalId)
+      scope.codigo_postal_id = s.codigo_postal_id || s.codigo_postalId;
+    if (!scope.codigo_postal_id && EMBED_SCOPE.codigo_postal)
+      scope.codigo_postal_id = EMBED_SCOPE.codigo_postal;
+
     if (s.publication_id   || s.pub_id || s.id_publicacion)
       scope.publication_id = s.publication_id || s.pub_id || s.id_publicacion;
+    else if (EMBED_SCOPE.publication_id)
+      scope.publication_id = EMBED_SCOPE.publication_id;
+
     if (s.owner_user_id    || s.ownerId || s.user_id)
       scope.owner_user_id  = s.owner_user_id  || s.ownerId || s.user_id;
-    
+    else if (EMBED_SCOPE.owner_user_id)
+      scope.owner_user_id  = EMBED_SCOPE.owner_user_id;
+
     const payload = {
       scope,
       client: {
         tel,
-        alias:  s.alias || null,
-        email:  s.email || null,
-        user_id: s.user_id || null
+        alias:   s.alias || null,
+        email:   s.email   || EMBED_CLIENT.email   || null,
+        user_id: s.user_id || EMBED_CLIENT.user_id || null,
       }
     };
 
@@ -345,13 +408,11 @@ async function chatAmbitoHere(source){
       categoria:    s.categoria,
       subcategoria: s.subcategoria,
       idioma:       payload.scope.locale,
-      cp:           s.cp || s.codigo_postal
+      cp:           s.cp || s.codigo_postal || EMBED_SCOPE.codigo_postal
     });
 
-    // armamos los mensajes a renderizar
     let msgs = data.messages || [];
     if (data.is_new && data.from_summary){
-      // prepend “mensaje sistema” solo si es chat nuevo
       msgs = [{
         role: 'system',
         via: 'dpia',
@@ -361,13 +422,10 @@ async function chatAmbitoHere(source){
       }, ...msgs];
     }
 
-    // pintamos una sola vez
     renderMessages(msgs);
 
-    // polling, persistencia y foco SIEMPRE después
     if (Chat.polling) clearInterval(Chat.polling);
     Chat.polling = setInterval(loadMessages, 2500);
-    
 
     localStorage.setItem('dpia.chat.last', JSON.stringify({
       conversationId: Chat.conversationId,
@@ -375,7 +433,6 @@ async function chatAmbitoHere(source){
     }));
 
     document.getElementById('msgInput')?.focus();
-
 
   }catch(e){
     console.error('Scope inválido / error en chatAmbitoHere', e);
@@ -387,6 +444,7 @@ async function chatAmbitoHere(source){
 
 window.chatAmbitoHere = chatAmbitoHere;
 window.chatHere       = chatAmbitoHere;
+
 
 
 
