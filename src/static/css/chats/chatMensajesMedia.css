@@ -73,3 +73,19 @@
 .msg-audio {
   width: 220px;
 }
+
+
+.chat-media-preview {
+  padding: 4px 10px;
+  background: #050b15;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-media-thumb {
+  max-height: 60px;
+  max-width: 80px;
+  border-radius: 8px;
+  border: 1px solid #1f2933;
+}

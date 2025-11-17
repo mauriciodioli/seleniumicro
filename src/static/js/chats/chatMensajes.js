@@ -59,7 +59,6 @@ function setCtxBadge(s){
   pill.innerHTML = `<span class="ctx-dot"></span>${label || 'sin contexto'}`;
 }
 
-
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
   const box = document.getElementById('msgs');
@@ -67,6 +66,16 @@ function renderMessages(list){
 
   const msgs = Array.isArray(list) ? list : [];
 
+  // --- 1) Medimos el scroll ANTES de repintar ---
+  const prevScrollTop    = box.scrollTop;
+  const prevScrollHeight = box.scrollHeight;
+  const clientHeight     = box.clientHeight || 1;
+
+  // ¿El usuario estaba "abajo"?
+  // margen de 40px para contemplar pequeños offsets
+  const wasAtBottom = (prevScrollHeight - (prevScrollTop + clientHeight)) < 40;
+
+  // --- 2) Si no hay mensajes, mostramos el placeholder ---
   if (!msgs.length){
     box.innerHTML = `
       <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
@@ -77,13 +86,20 @@ function renderMessages(list){
           </div>
         </div>
       </div>`;
+    // primer estado: lo dejamos abajo igual
+    box.scrollTop = box.scrollHeight;
     return;
   }
 
+  // --- 3) Repintamos mensajes ---
   box.innerHTML = msgs.map(m => {
-    const cls = m.role === 'client' ? 'msg msg-client'
-              : m.role === 'owner'  ? 'msg msg-owner'
-              : 'msg msg-system';
+    const isMine = (m.role === 'client'); // “yo”
+
+    const cls =
+      isMine             ? 'msg me msg-client' :
+      m.role === 'owner' ? 'msg msg-owner'     :
+                           'msg msg-system';
+
     const text = (m.content || '').replace(/\n/g, '<br>');
     return `
       <div class="${cls}">
@@ -92,12 +108,22 @@ function renderMessages(list){
       </div>`;
   }).join('');
 
-  // scroll al final
-  box.scrollTop = box.scrollHeight;
+  // --- 4) Ajustamos scroll DESPUÉS del repintado ---
+  const newScrollHeight = box.scrollHeight;
+
+  if (wasAtBottom) {
+    // Usuario estaba abajo → lo dejamos ver el último mensaje
+    box.scrollTop = newScrollHeight;
+  } else {
+    // Usuario estaba leyendo arriba → preservamos posición relativa
+    const delta = newScrollHeight - prevScrollHeight;
+    box.scrollTop = Math.max(0, prevScrollTop + delta);
+  }
 }
 
 // la dejamos global como ya usás en otros lados
 window.renderMessages = renderMessages;
+
 
 
 
@@ -109,7 +135,7 @@ async function loadMessages(){
   }
 
   try{
-    const r = await fetch('/api/chat/messages', {
+    const r = await fetch('/api/chat/api_chat_bp/messages/', {
       method: 'POST',
       headers: {
         'Content-Type':'application/json',
@@ -203,6 +229,14 @@ if (msgInput) {
 }
 
 
+// si querés que el click simple del botón también envíe (ojo: en media.js ya manejamos mousedown/mouseup; si usas lo nuevo, podés omitir este listener)
+if (btnSend) {
+  btnSend.addEventListener('click', (e) => {
+    e.preventDefault();
+    enviarTexto();
+  });
+}
+
 
 
 
@@ -280,9 +314,9 @@ async function chatAmbitoHere(source){
       }
     };
 
-    console.log('[CHAT] payload /open:', payload);
+    console.log('[CHAT] payload /api_chat_bp/open:', payload);
 
-    const r = await fetch('/api/chat/open', {
+    const r = await fetch('/api/chat/api_chat_bp/open/', {
       method: 'POST',
       headers: {
         'Content-Type':'application/json',
@@ -333,6 +367,7 @@ async function chatAmbitoHere(source){
     // polling, persistencia y foco SIEMPRE después
     if (Chat.polling) clearInterval(Chat.polling);
     Chat.polling = setInterval(loadMessages, 2500);
+    
 
     localStorage.setItem('dpia.chat.last', JSON.stringify({
       conversationId: Chat.conversationId,

@@ -160,10 +160,11 @@
 }
 
 /* Mensajes ENVIADOS (tu clase .me) – alineados a la derecha, color cian */
+/* Mensajes ENVIADOS (tu clase .me) – alineados a la derecha, color cian */
 .msg.me {
   margin-left: auto;
-  background: #1ee5ff;          /* cian */
-  color: #001018;               /* texto oscuro para contraste */
+  background: #1ee5ff;          /* azul/cian */
+  color: #001018;
   border-bottom-right-radius: 4px;
 }
 
@@ -171,9 +172,10 @@
 .msg:not(.me) {
   margin-right: auto;
   background: #a7fc9c;          /* verde */
-  color: #02130a;               /* texto casi negro */
+  color: #02130a;
   border-bottom-left-radius: 4px;
 }
+
 
 /* Opcional: un poco más de respiro en pantallas chicas */
 @media (max-width: 768px) {

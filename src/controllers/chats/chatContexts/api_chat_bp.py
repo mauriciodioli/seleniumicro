@@ -14,7 +14,7 @@ from utils.chat_conversation import get_or_create_conversation
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
 
-@api_chat_bp.route("/open", methods=["POST"])
+@api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
     scope  = data.get("scope")  or {}
@@ -164,7 +164,7 @@ def open_conversation():
     
 
 
-@api_chat_bp.route("/messages", methods=["POST"])
+@api_chat_bp.route("/api_chat_bp/messages/", methods=["POST"])
 def get_messages():
     data    = request.get_json() or {}
     conv_id = data.get("conversation_id")
