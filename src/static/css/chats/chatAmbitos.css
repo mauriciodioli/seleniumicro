@@ -221,9 +221,9 @@ details[open] > .amb-summary .amb-chev-btn{ transform: rotate(90deg) translateY(
 }
 
 /* responsive: en móviles un poquito más compacto */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .ambito-card-personal {
-    padding: 0.85rem 0.8rem 0.8rem;
     max-height: none;
+    overflow: visible;
   }
 }

@@ -707,3 +707,138 @@ document.addEventListener('click', (e) => {
 
 
 
+
+
+
+
+// ===== Menú contextual de identidades =====
+
+(function setupIdentityContextMenu() {
+  // crear el menú una sola vez
+  let menu = document.getElementById('identityContextMenu');
+  if (!menu) {
+    menu = document.createElement('div');
+    menu.id = 'identityContextMenu';
+    menu.className = 'identity-context-menu';
+    menu.innerHTML = `
+      <button type="button" data-action="delete-all">
+        🗑 Eliminar usuario + historial + caché
+      </button>
+      <button type="button" data-action="delete-cache">
+        🧹 Eliminar sólo caché
+      </button>
+    `;
+    document.body.appendChild(menu);
+  }
+
+  let currentKey = null;
+
+  // mostrar menú cerca del botón
+  window.showIdentityContextMenu = function (btn) {
+    const key = btn.dataset.key;
+    if (!key) return;
+    currentKey = key;
+
+    const rect = btn.getBoundingClientRect();
+    menu.style.display = 'block';
+    menu.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    menu.style.left = `${rect.right + window.scrollX - menu.offsetWidth}px`;
+  };
+
+  // manejar clicks en el menú
+  menu.addEventListener('click', (e) => {
+    const action = e.target?.dataset?.action;
+    if (!action || !currentKey) return;
+    handleIdentityMenuAction(action, currentKey);
+    hideMenu();
+  });
+
+  function hideMenu() {
+    menu.style.display = 'none';
+    currentKey = null;
+  }
+
+  // cerrar al hacer click fuera
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !e.target.closest('.id-menu-btn')) {
+      hideMenu();
+    }
+  });
+
+  // cerrar con Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hideMenu();
+  });
+
+})();
+
+// ===== Acciones del menú =====
+
+function handleIdentityMenuAction(action, key) {
+  console.log('[IDENTITY menu] acción:', action, 'key:', key);
+
+  if (action === 'delete-cache') {
+    Swal.fire({
+      title: '¿Eliminar solo caché?',
+      text: 'Se borrarán datos cacheados (publicaciones, ámbitos, etc.) pero el contacto seguirá visible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, borrar caché',
+      cancelButtonText: 'Cancelar'
+    }).then((res) => {
+      if (!res.isConfirmed) return;
+      deleteIdentityCacheOnly(key);
+    });
+  }
+
+  if (action === 'delete-all') {
+    Swal.fire({
+      title: '¿Eliminar usuario, historial y caché?',
+      text: 'Se eliminará el contacto de la lista y se limpiará su caché. (Historial: si tenés lógica definida).',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar todo',
+      cancelButtonText: 'Cancelar'
+    }).then((res) => {
+      if (!res.isConfirmed) return;
+      deleteIdentityEverywhere(key);
+    });
+  }
+}
+
+function deleteIdentityCacheOnly(key) {
+  if (window.identityCache?.has(key)) {
+    window.identityCache.delete(key);
+    window.IdentityCachePersist?.();
+    console.log('[IDENTITY] caché eliminada para', key);
+  } else {
+    console.log('[IDENTITY] no había caché para', key);
+  }
+
+  // Si querés, al eliminar caché también podés limpiar el micrositio personal
+  const wrap = document.getElementById('vistaChatAmbitos');
+  if (wrap && wrap.dataset.activeKey === key) {
+    wrap.innerHTML = '<p class="muted">Micrositio limpio. Volvé a buscar para recargar datos.</p>';
+  }
+}
+
+function deleteIdentityEverywhere(key) {
+  // 1) borrar caché
+  deleteIdentityCacheOnly(key);
+
+  // 2) eliminar nodo del DOM
+  const acc = document.querySelector('.id-accordion');
+  const item = acc?.querySelector(`.id-item[data-key="${key}"]`);
+  if (item) item.remove();
+
+  // 3) limpiar historial de chat si tenés función para eso
+  try {
+    if (typeof clearChatHistoryForIdentity === 'function') {
+      clearChatHistoryForIdentity(key);
+    }
+  } catch (e) {
+    console.warn('clearChatHistoryForIdentity error:', e);
+  }
+
+  console.log('[IDENTITY] identidad eliminada por completo', key);
+}
