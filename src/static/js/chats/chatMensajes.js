@@ -130,8 +130,6 @@ async function loadMessages(){
     console.error('[CHAT] excepción en loadMessages', err);
   }
 }
-
-
 // ==================== ENVIAR MENSAJE (POST) ====================
 async function sendMessage(text){
   if (!Chat.conversationId){
@@ -151,7 +149,7 @@ async function sendMessage(text){
   box.scrollTop = box.scrollHeight;
 
   try{
-    const r = await fetch('/api/chat/send', {
+    const r = await fetch('/api/chat/api_chat_bp/send', {
       method: 'POST',
       headers: {
         'Content-Type':'application/json',
@@ -173,6 +171,65 @@ async function sendMessage(text){
     console.error('[CHAT] excepción en sendMessage', err);
   }
 }
+
+
+
+
+// input de texto
+const msgInput = document.getElementById('msgInput');
+const btnSend  = document.getElementById('sendBtnSenMessage');
+
+// === función que usa el botón y el módulo de media ===
+function enviarTexto(){
+  if (!msgInput) return;
+  const text = (msgInput.value || '').trim();
+  if (!text) return;
+
+  // usa tu función existente
+  sendMessage(text);
+
+  // limpia el input
+  msgInput.value = '';
+}
+
+// si querés que Enter también envíe
+if (msgInput) {
+  msgInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      enviarTexto();
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function chatAmbitoHere(source){
   try{

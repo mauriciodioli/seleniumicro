@@ -135,28 +135,107 @@
 }
 
 /* Lista scrolleable y sin solaparse con el input */
-.msgs{
-  min-height: 0;             /* CLAVE para que scrollee */
-  overflow: auto;
+/* Fondo del panel de mensajes */
+.msgs {
   padding: 12px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  background: #ebe8c7;          /* fondo oscuro */
 }
 
+/* Mensaje base (burbuja) */
+.msg {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Mensajes ENVIADOS (tu clase .me) – alineados a la derecha, color cian */
+.msg.me {
+  margin-left: auto;
+  background: #1ee5ff;          /* cian */
+  color: #001018;               /* texto oscuro para contraste */
+  border-bottom-right-radius: 4px;
+}
+
+/* Mensajes RECIBIDOS – cualquier .msg que NO tenga .me */
+.msg:not(.me) {
+  margin-right: auto;
+  background: #a7fc9c;          /* verde */
+  color: #02130a;               /* texto casi negro */
+  border-bottom-left-radius: 4px;
+}
+
+/* Opcional: un poco más de respiro en pantallas chicas */
+@media (max-width: 768px) {
+  .msgs {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .msg {
+    max-width: 90%;
+    font-size: 13px;
+  }
+}
+
+
 /* Input fijo en el fondo */
-.chat-input{
-  display: grid;
-  grid-template-columns: 1fr auto;
+.chat-input {
+  display: flex;
+  align-items: center;
   gap: 8px;
-  padding: 8px;
-  border-top: 1px solid var(--border);
-  background: inherit;
+  padding: 6px 10px;
+  background: #050b15;
+  border-top: 1px solid #111827;
 }
-.chat-input input{
-  background:#0b1426; border:1px solid var(--border);
-  border-radius:10px; padding:10px; color:#cbd5e1;
+
+.chat-input input[type="text"] {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid #1f2933;
+  background: #000814;
+  color: #e5f6ff;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
 }
+
+.chat-input input[type="text"]::placeholder {
+  color: #6b7280;
+}
+
+.chat-input input[type="text"]:focus {
+  border-color: #00bcd4;
+}
+
+.chat-btn-send {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00bcd4;
+  color: #001018;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.chat-btn-send:active {
+  transform: scale(0.96);
+}
+
 
 
 /* 0) Config general: bloqueá el scroll global si querés scrollear solo el chat */

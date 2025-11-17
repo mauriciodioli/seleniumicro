@@ -190,7 +190,7 @@ def get_messages():
     return jsonify(ok=True, messages=payload)
 
 
-@api_chat_bp.route("/send", methods=["POST"])
+@api_chat_bp.route("/api_chat_bp/send/", methods=["POST"])
 def send():
     """
     Body:

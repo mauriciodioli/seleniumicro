@@ -1,0 +1,75 @@
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-top: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.chat-input input[type="text"] {
+  flex: 1;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+}
+
+.chat-input input[type="text"]:focus {
+  border-color: #4a90e2;
+}
+
+.chat-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+}
+
+.chat-btn-send {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #4a90e2;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* cuando estás grabando audio, cambiamos color y icono ya lo cambiamos en JS */
+.chat-recording .chat-btn-send {
+  background: #e53935;
+}
+
+
+
+
+.msg {
+  display: flex;
+  margin: 4px 8px;
+}
+
+.msg--out {
+  justify-content: flex-end;
+}
+
+.msg-bubble {
+  max-width: 75%;
+  border-radius: 14px;
+  padding: 6px;
+  background: #dcf8c6; /* estilo WhatsApp salida */
+}
+
+.msg-image {
+  max-width: 220px;
+  max-height: 220px;
+  border-radius: 12px;
+  display: block;
+}
+
+.msg-audio {
+  width: 220px;
+}

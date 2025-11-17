@@ -4,8 +4,8 @@
     <button id="toggleAmbitos" class="toggle-ambitos" aria-label="Colapsar ámbitos">⟵</button>
     <div id="ctxBadge" class="ctx-badge">
       <span class="ctx-pill">
-      <span class="ctx-dot"></span>sin contexto
-    </span>
+        <span class="ctx-dot"></span>sin contexto
+      </span>
     </div>
   </div>
 
@@ -14,22 +14,44 @@
     <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
       <div>
         <div style="font-size:28px; line-height:1">💬</div>
-        <div style="margin-top:6px">Elegí un ámbito/categoría en el panel del medio y tocá <b>“Chatear”</b>.</div>
+        <div style="margin-top:6px">
+          Elegí un ámbito/categoría en el panel del medio y tocá <b>“Chatear”</b>.
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Input -->
   <div class="chat-input">
-    <input id="msgInput" placeholder="Escribí un mensaje…">
-    
-    <button id="sendBtnSenMessage" type="button">Enviar</button>
+    <!-- Botón para adjuntar imagen -->
+    <button type="button" id="btnAttach" class="chat-btn chat-btn-attach" aria-label="Adjuntar imagen">
+      📎
+    </button>
 
-    
+    <!-- Input de archivo oculto -->
+    <input
+      type="file"
+      id="fileInput"
+      accept="image/*"
+      hidden
+    >
+
+    <!-- Mensaje de texto (igual que antes) -->
+    <input
+      id="msgInput"
+      type="text"
+      placeholder="Escribí un mensaje…"
+      autocomplete="off"
+    >
+
+    <!-- Botón enviar / grabar audio -->
+    <button id="sendBtnSenMessage" type="button" class="chat-btn chat-btn-send" aria-label="Enviar / Grabar">
+      ▶
+    </button>
   </div>
 </div>
 
-
-
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
-   <script src="{{ url_for('static', filename='js/chats/chatMensajes.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajesMedia.css') }}">
+<script src="{{ url_for('static', filename='js/chats/chatMensajes.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chats/chatMensajesMedia.js') }}"></script>
