@@ -85,6 +85,8 @@ def _get_publicaciones_de_usuario(user_id: int) -> list[dict]:
             "ambito": p.ambito,
             "categoria_id": p.categoria_id,
             "idioma": p.idioma or "es",
+            "imagen": p.imagen,
+            "descripcion": p.descripcion,
             "codigo_postal": p.codigoPostal,
             "estado": p.estado,
             "fecha_creacion": p.fecha_creacion.isoformat() if p.fecha_creacion else None,
@@ -196,7 +198,7 @@ def _get_categorias_de_ambito(ambito_id: int) -> list[dict]:
 
 # ========== ENDPOINT PRINCIPAL ==========
 
-@buscar_usuario_telefono.route('/api/chat/identidad-buscar', methods=['POST'])
+@buscar_usuario_telefono.route('/buscar_usuario_telefono/api/chat/identidad-buscar/', methods=['POST'])
 def identidad_buscar():
     data = request.get_json(silent=True) or {}
     q   = (data.get('q') or '').strip()

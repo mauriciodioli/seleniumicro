@@ -39,7 +39,7 @@ window.getCachedIdentity = function(arg){
     const kind = classify(raw);
 
     try {
-      const resp = await fetch('/api/chat/identidad-buscar', {
+      const resp = await fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -240,7 +240,7 @@ window.BuscarUsuarioTelefono = {
 
     let resp, data = {};
     try {
-      resp = await fetch('/api/chat/identidad-buscar', {
+      resp = await fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         credentials: 'include',       // <-- usa cookies si las hay
@@ -257,7 +257,7 @@ window.BuscarUsuarioTelefono = {
     if (!resp.ok || !data?.ok) {
       throw new Error(data?.error || 'Sin resultados');
     }
-
+     debugger;
     // renders con guardas
     if (typeof renderIdentityResult === 'function') renderIdentityResult(data.user);
     if (Array.isArray(data.ambitos) && typeof renderMyDomainAmbitos === 'function')
@@ -438,43 +438,77 @@ function identityKey(u={}){
 }
 
 // Agrega SIN pisar. Si dedupe=true y ya existe, NO agrega (o podés elegir actualizar).
-function renderIdentityResult(user = {}, { userKeyOverride = null } = {}){
+// Agrega SIN pisar. Si dedupe=true y ya existe, NO agrega (o podés elegir actualizar).
+function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   const acc = document.querySelector('.id-accordion');
   const tel = String(user?.tel || '').trim(); // debe venir en E.164 (+XXXXXXXX)
   if (!acc || !tel) return;
 
-  // ⛔ Ya existe → NO insertar, solo subir y salir
-  const existing = acc.querySelector(`.id-item[data-key="${tel}"]`);
-  if (existing){
+  console.log('[IDENTITY] user recibido:', JSON.parse(JSON.stringify(user)));
+
+  const key = userKeyOverride || tel;
+
+  // Si ya existe, lo subimos al tope y salimos
+  const existing = acc.querySelector(`.id-item[data-key="${key}"]`);
+  if (existing) {
     acc.insertBefore(existing, acc.firstElementChild);
     return;
   }
 
-  // Insertar UNA vez (clave = teléfono)
-  const scope = { tel };
-  const html = `
-  <details class="id-item" data-key="${tel}">
-    <summary class="id-summary" data-scope='${j(scope)}'>
-      <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
-      <span class="id-name" data-goto="amb-card">👤 ${user.nombre || user.alias || 'Usuario'}</span>
-      <span class="id-badge" data-goto="chat">${user.last_msg || '—'}</span>
-    </summary>
-    <div class="id-body">
-      <span class="id-field">📞 ${tel}</span>
-      ${user.alias ? `<span class="id-field">@${String(user.alias).replace(/^@/,'')}</span>` : ''}
-      ${user.url   ? `<span class="id-field">🌐 ${user.url}</span>` : ''}
-    </div>
-    <div class="id-actions">
-      <button class="btn btn-accent" data-goto="chat" data-scope='${j(scope)}'
-              onclick="window.chatHere?.(this)">Chatear aquí</button>
-      <button class="btn btn-ghost" onclick="Swal?.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-    </div>
-  </details>`.trim();
+  const alias = buildAliasFromUser(user);
+  user.alias = alias;
 
-  const tmp = document.createElement('div'); 
+  // scope mínimo para chat (tel + user_id + alias)
+  const scope = { tel, alias, user_id: user.id };
+
+  const j = (obj) => JSON.stringify(obj || {});
+
+  const displayName =
+    user.nombre ||
+    alias ||
+    'Usuario';
+
+  const html = `
+    <details class="id-item" data-key="${key}">
+      <summary class="id-summary" data-scope='${j(scope)}'>
+        <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="id-name" data-goto="amb-card">👤 ${displayName}</span>
+        <span class="id-badge" data-goto="chat">${user.last_msg || '—'}</span>
+      </summary>
+      <div class="id-body">
+        <span class="id-field">📞 ${tel}</span>
+        ${
+          alias
+            ? `<button type="button"
+                       class="id-field id-alias"
+                       data-key="${key}"
+                       onclick="window.openPersonalMicrosite?.(this)">
+                 ${alias}
+               </button>`
+            : ''
+        }
+        ${user.url ? `<span class="id-field">🌐 ${user.url}</span>` : ''}
+      </div>
+      <div class="id-actions">
+        <button class="btn btn-accent"
+                data-goto="chat"
+                data-scope='${j(scope)}'
+                onclick="window.chatHere?.(this)">
+          Chatear aquí
+        </button>
+        <button class="btn btn-ghost"
+                onclick="Swal?.fire('Contacto','WhatsApp habilitado','success')">
+          Abrir WhatsApp
+        </button>
+      </div>
+    </details>
+  `.trim();
+
+  const tmp = document.createElement('div');
   tmp.innerHTML = html;
   acc.insertBefore(tmp.firstElementChild, acc.firstElementChild);
 }
+
 
 
 
@@ -681,7 +715,7 @@ async function procesarChatIdentidades(){
   if (v.type === 'phone' && input) input.value = v.value; // reflejar E.164
 
   // pedir al backend
-  const resp = await fetch('/api/chat/identidad-buscar', {
+  const resp = await fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
     method:'POST',
     headers:{ 'Content-Type':'application/json','Accept':'application/json' },
     credentials:'include',
@@ -709,7 +743,7 @@ async function procesarChatIdentidades(){
     }
   }
 
-  // ---- cache opcional (no afecta al dedupe visual)
+
   
   // ✅ Cargar en caché + dedupe/promote + render + logs
   const r = cargarIdentidadEnCache(data, { promote:true, render:true });

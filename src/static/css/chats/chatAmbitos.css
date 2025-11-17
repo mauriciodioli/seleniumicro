@@ -107,3 +107,123 @@ details[open] > .amb-summary .amb-chev-btn{ transform: rotate(90deg) translateY(
 
 /* Si dejaste radios en otros componentes, ponelos acá */
 .search-tabs .tab[data-goto] { pointer-events: auto !important; }
+
+
+
+
+
+
+
+
+
+
+
+/* ===== Micrositio personal (panel izquierdo) ===== */
+
+#vistaChatAmbitos {
+  padding: 0.75rem 0.5rem 1rem;
+}
+
+.ambito-card-personal {
+  background: #0f172a;               /* navy oscuro */
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 1rem 1.2rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.75);
+  color: #e5e7eb;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+/* header */
+.ambito-card-personal__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ambito-card-personal__tag {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  margin: 0;
+}
+
+.ambito-card-personal__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+  color: #f9fafb;
+}
+
+.ambito-card-personal__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.1rem 0 0;
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.ambito-card-personal__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+/* cuerpo */
+.ambito-card-personal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ambito-card-personal__desc {
+  margin: 0;
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: #e5e7eb;
+  white-space: pre-wrap;
+}
+
+/* imagen */
+.ambito-card-personal__media {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #020617;            /* fondo oscuro detrás de la foto */
+}
+
+/* Mostrar la foto completa, sin cortar */
+.ambito-card-personal__media img {
+  display: block;
+  width: 100%;
+  height: auto;                    /* mantiene proporción original */
+  object-fit: contain;             /* NADA de recorte, ajusta dentro del ancho */
+}
+
+
+/* footer */
+.ambito-card-personal__foot {
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ambito-card-personal__date {
+  opacity: 0.9;
+}
+
+/* responsive: en móviles un poquito más compacto */
+@media (max-width: 768px) {
+  .ambito-card-personal {
+    padding: 0.85rem 0.8rem 0.8rem;
+    max-height: none;
+  }
+}
