@@ -19,13 +19,13 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = 280
 app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
 ALLOWED_ORIGINS = [
     # DEV
-    "http://127.0.0.1:5001",
-    "http://localhost:5001",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
     # PROD (ajusta a tus dominios reales)
     "https://dpia.site",
     "https://www.dpia.site",
     # si usas IP directa para pruebas
-    "http://54.234.169.22:5001",
+    "http://54.234.169.22:8000",
     "http://54.234.169.22",
 ]
 
