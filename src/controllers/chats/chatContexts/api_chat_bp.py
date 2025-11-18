@@ -1,7 +1,6 @@
 # routes/api_chat.py
-from flask import Blueprint, request, jsonify
-# flask_login ni lo usás acá, lo podés borrar
-# from flask_login import current_user
+from flask import Blueprint, request, jsonify, current_app, url_for
+from werkzeug.utils import secure_filename
 from extensions import db
 from models.chats.message import Message
 from models.usuario import Usuario  # ajustá al nombre real
@@ -10,9 +9,15 @@ from utils.chat_users import get_or_create_user_from_phone
 from utils.chat_contacts import get_or_create_contacto_personal
 from utils.chat_conversation import get_or_create_conversation
 
+import os
+from datetime import datetime
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
+
+# ==========================================================
+#  ENDPOINTS EXISTENTES (NO TOCAR)
+# ==========================================================
 
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
@@ -53,7 +58,7 @@ def open_conversation():
         locale  = scope.get("locale")  or "es"
 
         ambito_id    = scope.get("ambito_id")
-        categoria_id = scope.get("categoria_id")  # 👈 id numérico, no slug
+        categoria_id = scope.get("categoria_id")  # id numérico
 
         # CP textual e ID (si lo mandás)
         codigo_postal     = scope.get("codigo_postal")     # ej: "52-200"
@@ -161,8 +166,6 @@ def open_conversation():
     finally:
         db.session.close()
 
-    
-
 
 @api_chat_bp.route("/api_chat_bp/messages/", methods=["POST"])
 def get_messages():
@@ -193,14 +196,15 @@ def get_messages():
 @api_chat_bp.route("/api_chat_bp/send/", methods=["POST"])
 def send():
     """
-    Body:
+    TEXTO (YA FUNCIONA)
+    Body JSON:
     {
       "conversation_id": 123,
       "text": "hola",
       "as": "client" | "owner" | "ia"
     }
     """
-    data   = request.get_json() or {}
+    data    = request.get_json() or {}
     conv_id = data.get("conversation_id")
     text    = (data.get("text") or "").strip()
     role    = (data.get("as") or "client").lower()
@@ -222,6 +226,198 @@ def send():
         db.session.add(msg)
         db.session.commit()
         return jsonify(ok=True, id=msg.id)
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(ok=False, error=str(e)), 500
+
+
+# ==========================================================
+#  NUEVOS ENDPOINTS: IMAGEN / AUDIO / VIDEO
+#  (NO MEZCLAN NADA CON EL DE TEXTO)
+# ==========================================================
+
+def _chat_upload_folder(kind: str) -> str:
+  """
+  Devuelve la carpeta absoluta donde guardar media del chat.
+  kind: "image" | "audio" | "video"
+  """
+  base = current_app.config.get("CHAT_UPLOAD_FOLDER",
+                                os.path.join(current_app.root_path, "static", "chat_uploads"))
+  folder = os.path.join(base, kind)
+  os.makedirs(folder, exist_ok=True)
+  return folder
+
+
+def _save_media_file(file_storage, kind: str) -> str:
+  """
+  Guarda el archivo en static/chat_uploads/<kind>/ y devuelve
+  la ruta relativa para guardar en Message.content.
+  Ej:  "chat_uploads/image/20251118_123456_foto.png"
+  """
+  if not file_storage:
+      raise ValueError("file requerido")
+
+  filename = secure_filename(file_storage.filename or f"{kind}.bin")
+  # prefijo con fecha/hora para evitar colisiones
+  ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S_%f")
+  name, ext = os.path.splitext(filename)
+  filename = f"{ts}_{name}{ext}"
+
+  folder = _chat_upload_folder(kind)
+  abs_path = os.path.join(folder, filename)
+  file_storage.save(abs_path)
+
+  # ruta relativa desde /static
+  # base static/chat_uploads/... → nos quedamos con "chat_uploads/..."
+  rel_root = os.path.relpath(abs_path,
+                             os.path.join(current_app.root_path, "static"))
+  rel_root = rel_root.replace("\\", "/")
+  return rel_root
+
+
+def _make_message_dict(m: Message) -> dict:
+  return {
+      "id": m.id,
+      "role": m.role,
+      "via": m.via,
+      "content_type": m.content_type,
+      "content": m.content,
+      "created_at": m.created_at.isoformat() if m.created_at else None,
+  }
+
+
+@api_chat_bp.route("/api_chat_bp/image-upload/", methods=["POST"])
+def upload_image():
+    """
+    SUBIDA DE IMÁGENES
+    Form-data:
+      - file            (imagen)
+      - conversation_id
+      - as              (client|owner|ia) opcional
+      - caption         opcional
+    """
+    conv_id = request.form.get("conversation_id")
+    role    = (request.form.get("as") or "client").lower()
+    caption = (request.form.get("caption") or "").strip()
+    file    = request.files.get("file")
+
+    if not conv_id or not file:
+        return jsonify(ok=False, error="conversation_id y file son obligatorios"), 400
+
+    if role not in {"client", "owner", "ia"}:
+        role = "client"
+
+    try:
+        rel_path = _save_media_file(file, "image")
+
+        # content = ruta relativa. Si querés, podés guardar JSON con caption.
+        content = rel_path
+        if caption:
+            content = f"{rel_path}||{caption}"  # o usar JSON en el modelo
+
+        msg = Message(
+            conversation_id = conv_id,
+            role            = role,
+            via             = "dpia",
+            content_type    = "image",
+            content         = content,
+        )
+        db.session.add(msg)
+        db.session.commit()
+
+        return jsonify(ok=True, message=_make_message_dict(msg))
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(ok=False, error=str(e)), 500
+
+
+@api_chat_bp.route("/api_chat_bp/audio-upload/", methods=["POST"])
+def upload_audio():
+    """
+    SUBIDA DE AUDIO (nota de voz)
+    Form-data:
+      - file            (audio/webm, m4a, etc.)
+      - conversation_id
+      - as              (client|owner|ia) opcional
+      - duration_ms     opcional
+    """
+    conv_id    = request.form.get("conversation_id")
+    role       = (request.form.get("as") or "client").lower()
+    duration   = request.form.get("duration_ms")
+    file       = request.files.get("file")
+
+    if not conv_id or not file:
+        return jsonify(ok=False, error="conversation_id y file son obligatorios"), 400
+
+    if role not in {"client", "owner", "ia"}:
+        role = "client"
+
+    try:
+        rel_path = _save_media_file(file, "audio")
+
+        # podés guardar solo path o path + duración codificado
+        content = rel_path
+        if duration:
+            content = f"{rel_path}||dur={duration}"
+
+        msg = Message(
+            conversation_id = conv_id,
+            role            = role,
+            via             = "dpia",
+            content_type    = "audio",
+            content         = content,
+        )
+        db.session.add(msg)
+        db.session.commit()
+
+        return jsonify(ok=True, message=_make_message_dict(msg))
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(ok=False, error=str(e)), 500
+
+
+@api_chat_bp.route("/api_chat_bp/video-upload/", methods=["POST"])
+def upload_video():
+    """
+    SUBIDA DE VIDEO
+    Form-data:
+      - file            (video)
+      - conversation_id
+      - as              (client|owner|ia) opcional
+      - caption         opcional
+    """
+    conv_id = request.form.get("conversation_id")
+    role    = (request.form.get("as") or "client").lower()
+    caption = (request.form.get("caption") or "").strip()
+    file    = request.files.get("file")
+
+    if not conv_id or not file:
+        return jsonify(ok=False, error="conversation_id y file son obligatorios"), 400
+
+    if role not in {"client", "owner", "ia"}:
+        role = "client"
+
+    try:
+        rel_path = _save_media_file(file, "video")
+
+        content = rel_path
+        if caption:
+            content = f"{rel_path}||{caption}"
+
+        msg = Message(
+            conversation_id = conv_id,
+            role            = role,
+            via             = "dpia",
+            content_type    = "video",
+            content         = content,
+        )
+        db.session.add(msg)
+        db.session.commit()
+
+        return jsonify(ok=True, message=_make_message_dict(msg))
+
     except Exception as e:
         db.session.rollback()
         return jsonify(ok=False, error=str(e)), 500

@@ -1,27 +1,18 @@
-alert('chatMensajesMedia.js CARGADO');
+// chatMensajesMedia.js
+// =====================================================
+//  CONFIG / HELPERS COMUNES
+// =====================================================
 console.log('[CHAT MEDIA] archivo cargado');
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT MEDIA] init');
 
-    // --- DETECCIÓN DE DISPOSITIVOS DE AUDIO ---
-  if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-    navigator.mediaDevices.enumerateDevices()
-      .then(devices => {
-        const audios = devices.filter(d => d.kind === 'audioinput');
-        console.log('[CHAT MEDIA] dispositivos de audio:', audios);
-        if (!audios.length) {
-          console.warn('[CHAT MEDIA] No se detectó ningún micrófono (audioinput).');
-        }
-      })
-      .catch(err => {
-        console.warn('[CHAT MEDIA] Error al enumerar dispositivos de audio:', err);
-      });
-  } else {
-    console.warn('[CHAT MEDIA] navigator.mediaDevices.enumerateDevices NO disponible');
-  }
+  // ----- ENDPOINTS SÓLO MEDIA -----
+  const API_IMAGE = '/api/chat/api_chat_bp/image-upload/';    // IMAGEN
+  const API_AUDIO = '/api/chat/api_chat_bp/audio-upload/';    // AUDIO
+  const API_VIDEO = '/api/chat/api_chat_bp/video-upload/';    // VIDEO
 
-  // === Referencias básicas ===
+  // ----- REFS BÁSICAS -----
   const msgInput  = document.getElementById('msgInput');
   const btnSend   = document.getElementById('sendBtnSenMessage');
   const btnAttach = document.getElementById('btnAttach');
@@ -29,83 +20,138 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('[CHAT MEDIA] refs:', { msgInput, btnSend, btnAttach, fileInput });
 
-  // ====== estado de media pendiente ======
-  let pendingFile = null;
-  let mediaPreview = null;
+  // conversación activa (ya la usás en otros scripts)
+  const getConvId = () =>
+    window.ACTIVE_CONVERSATION_ID ||
+    window.currentConversationId ||
+    null;
 
+  // preview común de media
+  let mediaPreview = null;
   function ensureMediaPreview() {
     if (mediaPreview) return mediaPreview;
-
     const chatInputBar = document.querySelector('.chat-input');
     if (!chatInputBar || !chatInputBar.parentNode) return null;
-
     mediaPreview = document.createElement('div');
     mediaPreview.id = 'mediaPreview';
     mediaPreview.className = 'chat-media-preview';
-    // lo insertamos justo arriba de la barra de input
     chatInputBar.parentNode.insertBefore(mediaPreview, chatInputBar);
-
     return mediaPreview;
   }
+  function clearPreview() {
+    if (mediaPreview) mediaPreview.innerHTML = '';
+  }
 
-  function showPreview(file) {
+  // estado de media pendiente
+  let pendingImage = null;
+  let pendingVideo = null;
+
+  // helper para notificar nuevo mensaje al renderer que ya tengas
+  function pushMessageToUI(message) {
+    if (typeof window.appendMessageFromServer === 'function') {
+      window.appendMessageFromServer(message);
+    } else {
+      console.log('[CHAT MEDIA] message recibido (sin renderer):', message);
+    }
+  }
+
+  // =====================================================
+  //  1) TEXTO → LO SIGUE MANEJANDO enviarTexto()
+  // =====================================================
+  function enviarTextoSiHay() {
+    const text = (msgInput?.value || '').trim();
+    if (!text) return;
+    if (typeof window.enviarTexto === 'function') {
+      window.enviarTexto();   // usa tu lógica actual (endpoint /send/)
+    } else {
+      console.warn('[CHAT TEXT] enviarTexto() no está definido');
+    }
+  }
+
+  // =====================================================
+  //  2) IMAGEN: preview + envío (endpoint propio)
+  // =====================================================
+
+  function showImagePreview(file) {
     const cont = ensureMediaPreview();
     if (!cont) return;
-
     const url = URL.createObjectURL(file);
     cont.innerHTML = '';
-
     const img = document.createElement('img');
     img.src = url;
     img.alt = 'Imagen adjunta';
     img.className = 'chat-media-thumb';
-
     cont.appendChild(img);
   }
 
-  function clearPreview() {
-    if (mediaPreview) {
-      mediaPreview.innerHTML = '';
+  async function enviarImagen(file) {
+    if (!file) return;
+    const convId = getConvId();
+    if (!convId) return;
+
+    const fd = new FormData();
+    fd.append('file', file, file.name || 'image.png');
+    fd.append('conversation_id', convId);
+
+    try {
+      const resp = await fetch(API_IMAGE, {
+        method: 'POST',
+        body: fd,
+        credentials: 'include',
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data?.ok) {
+        console.error('[CHAT IMAGE] error al subir imagen', data);
+        return;
+      }
+      pushMessageToUI(data.message);
+    } catch (err) {
+      console.error('[CHAT IMAGE] excepción subiendo imagen', err);
     }
   }
 
-  // ---------- IMÁGENES (📎) ----------
+  // hook del botón 📎 y fileInput
   if (btnAttach && fileInput) {
     btnAttach.addEventListener('click', (e) => {
       e.preventDefault();
-      console.log('[CHAT MEDIA] click btnAttach');
       fileInput.click();
     });
 
     fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      console.log('[CHAT MEDIA] file change', file);
+      const file = fileInput.files && fileInput.files[0];
       if (!file) return;
 
-      // NO se envía todavía: solo la guardamos y mostramos preview
-      pendingFile = file;
-      showPreview(file);
+      const type = file.type || '';
+      if (type.startsWith('image/')) {
+        pendingImage = file;
+        pendingVideo = null;
+        showImagePreview(file);
+      } else if (type.startsWith('video/')) {
+        pendingVideo = file;
+        pendingImage = null;
+        showVideoPreview(file);
+      } else {
+        console.warn('[CHAT MEDIA] tipo no soportado en fileInput:', type);
+        pendingImage = null;
+        pendingVideo = null;
+        clearPreview();
+      }
 
-      // permitir volver a elegir la misma imagen después
+      // permitir elegir de nuevo la misma
       fileInput.value = '';
     });
   } else {
     console.warn('[CHAT MEDIA] btnAttach o fileInput NO encontrados');
   }
 
-  // ---------- AUDIO (mantener botón ▶) ----------
-    // === Helper para debug en cel (alertas) ===
-  function audioDebug(msg) {
-    // Si querés solo en mobile:
-    // if (!('ontouchstart' in window)) return;
-    alert('[AUDIO DEBUG] ' + msg);
-  }
-  // ---------- AUDIO (mantener botón ▶) ----------
-  let pressTimer = null;       // solo para desktop
+  // =====================================================
+  //  3) AUDIO: grabación + envío (endpoint propio)
+  // =====================================================
+
+  let pressTimer = null;
   let isRecording = false;
   let mediaRecorder = null;
   let audioChunks = [];
-
   let lastTouchStart = 0;
   let discardNextAudio = false;
 
@@ -120,97 +166,50 @@ document.addEventListener('DOMContentLoaded', () => {
     host: location.hostname,
     isTouchDevice
   });
-  audioDebug(
-    'soporte audio: devices=' + hasMediaDevices +
-    ', recorder=' + hasMediaRecorder +
-    ', proto=' + location.protocol +
-    ', host=' + location.hostname +
-    ', touch=' + isTouchDevice
-  );
 
   async function startRecording() {
-    console.log('[CHAT MEDIA] startRecording llamado');
-    audioDebug('startRecording llamado');
-
     if (!hasMediaDevices || !hasMediaRecorder) {
-      console.warn('[CHAT MEDIA] ⚠ Este navegador NO soporta getUserMedia o MediaRecorder');
-      audioDebug('SIN SOPORTE: mediaDevices=' + hasMediaDevices + ', mediaRecorder=' + hasMediaRecorder);
+      console.warn('[CHAT AUDIO] navegador sin soporte');
       return;
     }
 
-    // muchos navegadores exigen HTTPS o localhost
     if (location.protocol !== 'https:' &&
         location.hostname !== 'localhost' &&
         location.hostname !== '127.0.0.1') {
-      console.warn('[CHAT MEDIA] ⚠ Audio bloqueado por protocolo');
-      audioDebug('BLOQUEADO POR PROTOCOLO: proto=' + location.protocol + ', host=' + location.hostname);
-      alert('No puedo acceder al micrófono porque la página no está en HTTPS.\nAbrí la web en https:// o en localhost.');
+      console.warn('[CHAT AUDIO] bloqueado por protocolo no HTTPS');
       return;
     }
 
     try {
-      console.log('[CHAT MEDIA] solicitando permiso de micrófono…');
-      audioDebug('pidiendo permiso de micrófono (getUserMedia)');
-
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-      console.log('[CHAT MEDIA] 🎙 micrófono OK, empezando a grabar');
-      audioDebug('micrófono OK, grabando');
 
       audioChunks = [];
       mediaRecorder = new MediaRecorder(stream);
 
-      mediaRecorder.onstart = () => {
-        console.log('[CHAT MEDIA] MediaRecorder.onstart');
-      };
-
       mediaRecorder.ondataavailable = (e) => {
-        console.log('[CHAT MEDIA] ondataavailable size=', e.data && e.data.size);
-        if (e.data.size > 0) {
-          audioChunks.push(e.data);
-        }
+        if (e.data.size > 0) audioChunks.push(e.data);
       };
 
       mediaRecorder.onstop = () => {
-        console.log('[CHAT MEDIA] MediaRecorder.onstop, chunks:', audioChunks.length);
-        audioDebug('onstop: chunks=' + audioChunks.length);
-
         const blob = new Blob(audioChunks, { type: 'audio/webm' });
-
-        if (discardNextAudio) {
-          console.log('[CHAT MEDIA] Audio descartado (tap corto / cancel).');
-          audioDebug('audio DESCARTADO (tap corto / cancel)');
-        } else {
-          audioDebug('audio ENVIADO');
+        if (!discardNextAudio) {
           enviarAudio(blob);
         }
-
         stream.getTracks().forEach(t => t.stop());
-      };
-
-      mediaRecorder.onerror = (e) => {
-        console.error('[CHAT MEDIA] MediaRecorder error', e.error || e);
-        audioDebug('MediaRecorder ERROR: ' + (e.error?.name || e.toString()));
       };
 
       mediaRecorder.start();
       isRecording = true;
       document.body.classList.add('chat-recording');
       if (btnSend) btnSend.textContent = '🎙';
-
     } catch (err) {
-      console.error('[CHAT MEDIA] ❌ No se pudo acceder al micrófono', err);
-      audioDebug('ERROR getUserMedia: ' + (err.name || '') + ' - ' + (err.message || err.toString()));
-      alert('No pude acceder al micrófono.\nRevisá los permisos del navegador para esta página.');
+      console.error('[CHAT AUDIO] error getUserMedia', err);
       isRecording = false;
     }
   }
 
   function stopRecording() {
-    console.log('[CHAT MEDIA] stopRecording llamado');
-    audioDebug('stopRecording llamado');
     if (mediaRecorder && isRecording) {
-      console.log('[CHAT MEDIA] mediaRecorder.stop()');
       mediaRecorder.stop();
     }
     isRecording = false;
@@ -218,62 +217,133 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnSend) btnSend.textContent = '▶';
   }
 
-  function enviarTextoYMedia() {
-    console.log('[CHAT MEDIA] enviarTextoYMedia');
-    audioDebug('enviarTextoYMedia (texto + imagen si hay)');
+  async function enviarAudio(blob) {
+    const convId = getConvId();
+    if (!convId || !blob) return;
 
-    if (typeof enviarTexto === 'function') {
-      enviarTexto();
-    } else {
-      console.warn('[CHAT MEDIA] enviarTexto() no está definido');
-    }
+    const fd = new FormData();
+    fd.append('file', blob, 'audio.webm');
+    fd.append('conversation_id', convId);
 
-    if (pendingFile) {
-      enviarImagen(pendingFile);
-      pendingFile = null;
-      if (typeof clearPreview === 'function') {
-        clearPreview();
+    try {
+      const resp = await fetch(API_AUDIO, {
+        method: 'POST',
+        body: fd,
+        credentials: 'include',
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data?.ok) {
+        console.error('[CHAT AUDIO] error al subir audio', data);
+        return;
       }
+      pushMessageToUI(data.message);
+    } catch (err) {
+      console.error('[CHAT AUDIO] excepción subiendo audio', err);
     }
   }
 
-  // ---------- Desktop: mouse (long-press con timer) ----------
+  // =====================================================
+  //  4) VIDEO: preview + envío (endpoint propio)
+  // =====================================================
+
+  function showVideoPreview(file) {
+    const cont = ensureMediaPreview();
+    if (!cont) return;
+    const url = URL.createObjectURL(file);
+    cont.innerHTML = '';
+    const video = document.createElement('video');
+    video.src = url;
+    video.controls = true;
+    video.className = 'chat-media-thumb';
+    cont.appendChild(video);
+  }
+
+  async function enviarVideo(file) {
+    if (!file) return;
+    const convId = getConvId();
+    if (!convId) return;
+
+    const fd = new FormData();
+    fd.append('file', file, file.name || 'video.webm');
+    fd.append('conversation_id', convId);
+
+    try {
+      const resp = await fetch(API_VIDEO, {
+        method: 'POST',
+        body: fd,
+        credentials: 'include',
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data?.ok) {
+        console.error('[CHAT VIDEO] error al subir video', data);
+        return;
+      }
+      pushMessageToUI(data.message);
+    } catch (err) {
+      console.error('[CHAT VIDEO] excepción subiendo video', err);
+    }
+  }
+
+  // =====================================================
+  //  5) LÓGICA DEL BOTÓN ▶ (texto / imagen / video / audio)
+  // =====================================================
+
+  function enviarPendientes() {
+    const tieneTexto = (msgInput?.value || '').trim().length > 0;
+    const tieneImg   = !!pendingImage;
+    const tieneVid   = !!pendingVideo;
+
+    // 1) TEXTO (usa TU función vieja)
+    if (tieneTexto) {
+      enviarTextoSiHay();
+    }
+
+    // 2) IMAGEN
+    if (tieneImg) {
+      enviarImagen(pendingImage);
+      pendingImage = null;
+    }
+
+    // 3) VIDEO
+    if (tieneVid) {
+      enviarVideo(pendingVideo);
+      pendingVideo = null;
+    }
+
+    // limpiar preview
+    if (tieneImg || tieneVid) clearPreview();
+  }
+
+  // Desktop: click corto = enviar (texto + media), long-press = audio
   if (btnSend && !isTouchDevice) {
     btnSend.addEventListener('mousedown', (e) => {
       e.preventDefault();
-      console.log('[CHAT MEDIA] mousedown btnSend (desktop)');
-      // long-press: 400ms para iniciar grabación
       pressTimer = setTimeout(() => {
-        console.log('[CHAT MEDIA] ✅ long-press detectado (desktop) → startRecording()');
-        audioDebug('desktop long-press → startRecording');
         discardNextAudio = false;
         startRecording();
-      }, 400);
+      }, 400); // long-press
     });
 
     btnSend.addEventListener('mouseup', (e) => {
       e.preventDefault();
-      console.log('[CHAT MEDIA] mouseup btnSend (desktop)');
       if (pressTimer) {
         clearTimeout(pressTimer);
         pressTimer = null;
-
         if (isRecording) {
           stopRecording();
         } else {
-          enviarTextoYMedia();
+          enviarPendientes(); // click normal
         }
       } else {
         if (isRecording) {
           stopRecording();
         } else {
-          enviarTextoYMedia();
+          enviarPendientes();
         }
       }
     });
 
     btnSend.addEventListener('mouseleave', () => {
-      console.log('[CHAT MEDIA] mouseleave btnSend (desktop)');
       if (pressTimer) {
         clearTimeout(pressTimer);
         pressTimer = null;
@@ -282,160 +352,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---------- Mobile: touch (grabación directa en touchstart) ----------
+  // Mobile: touchstart → empieza audio, touchend decide corto/largo
   if (btnSend && isTouchDevice) {
     btnSend.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      console.log('[CHAT MEDIA] touchstart btnSend (mobile)');
-      audioDebug('touchstart mobile → startRecording directo');
       lastTouchStart = Date.now();
       discardNextAudio = false;
-      startRecording();              // 🔥 acá llamamos directo, dentro del gesto
+      startRecording();
     }, { passive: false });
 
     btnSend.addEventListener('touchend', (e) => {
       e.preventDefault();
-      console.log('[CHAT MEDIA] touchend btnSend (mobile)');
       const dt = Date.now() - lastTouchStart;
-      console.log('[CHAT MEDIA] duración touch:', dt, 'ms');
-      audioDebug('touchend mobile, duración=' + dt + 'ms');
 
-      // si fue un toque corto (< 300ms) => usamos como enviar texto, NO audio
       if (dt < 300) {
-        console.log('[CHAT MEDIA] tap corto → descartar audio y enviar texto');
-        audioDebug('tap corto → descartar audio, enviar texto');
-        discardNextAudio = true;     // onstop NO llama enviarAudio
-        stopRecording();             // detenemos MediaRecorder
-        enviarTextoYMedia();         // usamos el botón como "enviar"
-      } else {
-        console.log('[CHAT MEDIA] long-press → enviar solo audio');
-        audioDebug('long-press → enviar solo audio');
-        discardNextAudio = false;    // onstop SÍ llama enviarAudio
+        // tap corto: descartar audio y usar como "enviar"
+        discardNextAudio = true;
         stopRecording();
-        // no mandamos texto acá
+        enviarPendientes();
+      } else {
+        // long-press: solo audio
+        discardNextAudio = false;
+        stopRecording();
       }
     }, { passive: false });
 
     btnSend.addEventListener('touchcancel', (e) => {
       e.preventDefault();
-      console.log('[CHAT MEDIA] touchcancel btnSend (mobile)');
-      audioDebug('touchcancel mobile → descartar audio');
       discardNextAudio = true;
       stopRecording();
     }, { passive: false });
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ---------- Envío de IMAGEN ----------
-function enviarImagen(file) {
-  // 1) SIEMPRE pintamos en el panel, haya o no conversación
-  renderImagenLocal(file);
-
-  // 2) Luego intentamos mandarla al backend
-  const convId = window.CURRENT_CHAT?.conversationId;
-  if (!convId) {
-    console.warn('[CHAT MEDIA] No hay conversationId para enviar imagen (solo preview local)');
-    return; // no enviamos al servidor, pero la burbuja ya se ve
-  }
-
-  const form = new FormData();
-  form.append('conversation_id', convId);
-  form.append('role', 'user');
-  form.append('file', file);
-
-  fetch('/api/chat/send', {
-    method: 'POST',
-    body: form
-  }).catch(err => console.error('[CHAT MEDIA] Error enviando imagen', err));
-}
-
-
-  // ---------- Envío de AUDIO ----------
-  function enviarAudio(blob) {
-    const convId = window.CURRENT_CHAT?.conversationId;
-    if (!convId) {
-      console.error('[CHAT MEDIA] No hay conversationId para enviar audio');
-      return;
-    }
-
-    const form = new FormData();
-    form.append('conversation_id', convId);
-    form.append('role', 'user');
-    form.append('file', blob, 'audio.webm');
-
-    renderAudioLocal(blob);
-
-    fetch('/api/chat/send', {
-      method: 'POST',
-      body: form
-    }).catch(err => console.error('[CHAT MEDIA] Error enviando audio', err));
-  }
-
-  // ====== RENDER LOCAL DE IMAGEN Y AUDIO ======
-
-  function renderImagenLocal(file) {
-    const url = URL.createObjectURL(file);
-    const msgs = document.getElementById('msgs');
-    if (!msgs) return;
-
-    const wrap = document.createElement('div');
-    wrap.className = 'msg me msg--image';
-
-    const bubble = document.createElement('div');
-    bubble.className = 'msg-bubble';
-
-    const img = document.createElement('img');
-    img.src = url;
-    img.alt = 'Imagen adjunta';
-    img.className = 'msg-image';
-    img.loading = 'lazy';
-
-    bubble.appendChild(img);
-    wrap.appendChild(bubble);
-    msgs.appendChild(wrap);
-
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  function renderAudioLocal(blob) {
-    const url = URL.createObjectURL(blob);
-    const msgs = document.getElementById('msgs');
-    if (!msgs) return;
-
-    const wrap = document.createElement('div');
-    wrap.className = 'msg me msg--audio';
-
-    const bubble = document.createElement('div');
-    bubble.className = 'msg-bubble';
-
-    const audio = document.createElement('audio');
-    audio.controls = true;
-    audio.className = 'msg-audio';
-
-    const source = document.createElement('source');
-    source.src = url;
-    source.type = 'audio/webm';
-
-    audio.appendChild(source);
-    bubble.appendChild(audio);
-    wrap.appendChild(bubble);
-    msgs.appendChild(wrap);
-
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-});
+}); // DOMContentLoaded
