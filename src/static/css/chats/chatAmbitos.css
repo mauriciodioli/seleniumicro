@@ -10,8 +10,10 @@
 .col-ambitos{
   height: calc(100dvh - var(--topbar-h));
   min-height: 0;
-  overflow: hidden;
+  overflow-x: hidden;   /* seguimos bloqueando horizontal */
+  overflow-y: auto;     /* 👈 ahora sí puede scrollear hacia abajo */
 }
+
 
 
 /* ==== CARD en grid: título / header / (panel búsqueda opcional) / lista / footer ==== */
