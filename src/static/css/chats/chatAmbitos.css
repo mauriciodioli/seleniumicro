@@ -227,3 +227,10 @@ details[open] > .amb-summary .amb-chev-btn{ transform: rotate(90deg) translateY(
     overflow: visible;
   }
 }
+
+
+#vistaChatAmbitos {
+  max-height: calc(100vh - 140px); /* ajustá según tu header/footer */
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+}
