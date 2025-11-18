@@ -18,24 +18,27 @@ api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 # ==========================================================
 #  ENDPOINTS EXISTENTES (NO TOCAR)
 # ==========================================================
-
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
     scope  = data.get("scope")  or {}
     client = data.get("client") or {}
+
+    # Ojo: publication_id puede venir string
     publication_id = scope.get("publication_id") or 0
+    try:
+        publication_id = int(publication_id)
+    except (TypeError, ValueError):
+        publication_id = 0
 
     try:
         # ========== 1) DATOS QUE YA VIENEN DEL FRONT ==========
 
-        # Teléfono (obligatorio)
         raw_tel = (client.get("tel") or "").strip()
         tel = normalize_phone(raw_tel)
         if not tel:
             return jsonify(ok=False, error="Falta teléfono del cliente"), 400
 
-        # ID del usuario cliente (ya existe, lo trae el front)
         cu_id = client.get("user_id")
         if not cu_id:
             return jsonify(ok=False, error="Falta client.user_id en el payload"), 400
@@ -44,7 +47,6 @@ def open_conversation():
         except (TypeError, ValueError):
             return jsonify(ok=False, error="client.user_id inválido"), 400
 
-        # Owner del micrositio (lo manda el scope)
         owner_user_id = scope.get("owner_user_id")
         if not owner_user_id:
             return jsonify(ok=False, error="Falta owner_user_id en scope"), 400
@@ -53,18 +55,15 @@ def open_conversation():
         except (TypeError, ValueError):
             return jsonify(ok=False, error="owner_user_id inválido"), 400
 
-        # Contexto
         dominio = scope.get("dominio") or "tecnologia"
         locale  = scope.get("locale")  or "es"
 
         ambito_id    = scope.get("ambito_id")
-        categoria_id = scope.get("categoria_id")  # id numérico
+        categoria_id = scope.get("categoria_id")
 
-        # CP textual e ID (si lo mandás)
-        codigo_postal     = scope.get("codigo_postal")     # ej: "52-200"
-        codigo_postal_id  = scope.get("codigo_postal_id")  # ej: 123 o None
+        codigo_postal    = scope.get("codigo_postal")
+        codigo_postal_id = scope.get("codigo_postal_id")
 
-        # Normalizar ints si vienen como string numérica
         if isinstance(ambito_id, str) and ambito_id.isdigit():
             ambito_id = int(ambito_id)
         if isinstance(categoria_id, str) and categoria_id.isdigit():
@@ -72,7 +71,6 @@ def open_conversation():
         if isinstance(codigo_postal_id, str) and codigo_postal_id.isdigit():
             codigo_postal_id = int(codigo_postal_id)
 
-        # Slugs / etiquetas solo para mostrar “desde dónde viene”
         ambito_slug    = scope.get("ambito_slug")
         categoria_slug = scope.get("categoria_slug")
 
@@ -87,10 +85,11 @@ def open_conversation():
             dominio=dominio,
             ambito_id=ambito_id,
             categoria_id=categoria_id,
-            codigo_postal=codigo_postal,         # "52-200"
-            codigo_postal_id=codigo_postal_id,   # 123 o None
+            codigo_postal=codigo_postal,
+            codigo_postal_id=codigo_postal_id,
             locale=locale,
             publication_id=publication_id,
+            session=db.session,  # 👈 importante pasar la sesión
         )
 
         # ========== 3) HISTORIAL DE MENSAJES ==========
@@ -120,8 +119,6 @@ def open_conversation():
             }
 
         messages_json = [msg_to_dict(m) for m in msgs]
-
-        # ========== 4) RESUMEN PARA EL FRONT (from_summary) ==========
 
         from_summary = " · ".join(
             x for x in [
@@ -165,6 +162,7 @@ def open_conversation():
         return jsonify(ok=False, error=str(e)), 500
     finally:
         db.session.close()
+
 
 
 @api_chat_bp.route("/api_chat_bp/messages/", methods=["POST"])
@@ -332,20 +330,28 @@ def upload_image():
         return jsonify(ok=False, error=str(e)), 500
 
 
+def serialize_message(m: Message) -> dict:
+    return {
+        "id": m.id,
+        "role": m.role,
+        "via": m.via,
+        "content_type": m.content_type,
+        "content": m.content,
+        "created_at": m.created_at.isoformat() if m.created_at else None,
+    }
+
+
 @api_chat_bp.route("/api_chat_bp/audio-upload/", methods=["POST"])
 def upload_audio():
     """
-    SUBIDA DE AUDIO (nota de voz)
-    Form-data:
-      - file            (audio/webm, m4a, etc.)
-      - conversation_id
-      - as              (client|owner|ia) opcional
-      - duration_ms     opcional
+    FormData:
+      - file: Blob audio/webm
+      - conversation_id: int
+      - as: "client" | "owner" | "ia" (opcional, default client)
     """
-    conv_id    = request.form.get("conversation_id")
-    role       = (request.form.get("as") or "client").lower()
-    duration   = request.form.get("duration_ms")
-    file       = request.files.get("file")
+    conv_id = request.form.get("conversation_id")
+    role    = (request.form.get("as") or "client").lower()
+    file    = request.files.get("file")
 
     if not conv_id or not file:
         return jsonify(ok=False, error="conversation_id y file son obligatorios"), 400
@@ -354,28 +360,41 @@ def upload_audio():
         role = "client"
 
     try:
-        rel_path = _save_media_file(file, "audio")
+        conv_id = int(conv_id)
+    except ValueError:
+        return jsonify(ok=False, error="conversation_id inválido"), 400
 
-        # podés guardar solo path o path + duración codificado
-        content = rel_path
-        if duration:
-            content = f"{rel_path}||dur={duration}"
+    try:
+        # 1) Guardar archivo en static/uploads/audio
+        upload_root = current_app.config.get("UPLOAD_FOLDER", "static/uploads")
+        audio_dir   = os.path.join(upload_root, "audio")
+        os.makedirs(audio_dir, exist_ok=True)
 
+        filename = secure_filename(file.filename or "audio.webm")
+        filepath = os.path.join(audio_dir, filename)
+        file.save(filepath)
+
+        # ruta pública (Nginx ya expone /chat/static/ hacia static/)
+        public_path = f"/chat/static/uploads/audio/{filename}"
+
+        # 2) Crear mensaje
         msg = Message(
             conversation_id = conv_id,
             role            = role,
             via             = "dpia",
             content_type    = "audio",
-            content         = content,
+            content         = public_path,
         )
         db.session.add(msg)
         db.session.commit()
 
-        return jsonify(ok=True, message=_make_message_dict(msg))
+        return jsonify(ok=True, message=serialize_message(msg))
 
     except Exception as e:
         db.session.rollback()
         return jsonify(ok=False, error=str(e)), 500
+    finally:
+        db.session.close()
 
 
 @api_chat_bp.route("/api_chat_bp/video-upload/", methods=["POST"])

@@ -89,3 +89,14 @@
   border-radius: 8px;
   border: 1px solid #1f2933;
 }
+
+
+.msg-audio {
+  background: #0f766e; /* verde/teal */
+  border-radius: 16px;
+  padding: 4px 8px;
+}
+
+.msg-audio--read {
+  background: #1d4ed8; /* azul */
+}

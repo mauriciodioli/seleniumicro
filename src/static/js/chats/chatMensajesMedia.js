@@ -217,30 +217,39 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnSend) btnSend.textContent = '▶';
   }
 
-  async function enviarAudio(blob) {
-    const convId = getConvId();
-    if (!convId || !blob) return;
+  
 
-    const fd = new FormData();
-    fd.append('file', blob, 'audio.webm');
-    fd.append('conversation_id', convId);
+async function enviarAudio(blob) {
+  const convId = getConvId();
+  if (!convId || !blob) return;
 
-    try {
-      const resp = await fetch(API_AUDIO, {
-        method: 'POST',
-        body: fd,
-        credentials: 'include',
-      });
-      const data = await resp.json().catch(() => ({}));
-      if (!resp.ok || !data?.ok) {
-        console.error('[CHAT AUDIO] error al subir audio', data);
-        return;
-      }
-      pushMessageToUI(data.message);
-    } catch (err) {
-      console.error('[CHAT AUDIO] excepción subiendo audio', err);
+  const fd = new FormData();
+  fd.append('file', blob, 'audio.webm');
+  fd.append('kind', 'audio');
+  fd.append('conversation_id', convId);
+  fd.append('as', 'client'); // o owner si en el futuro lo diferenciás
+
+  try {
+    const resp = await fetch(API_AUDIO, {
+      method: 'POST',
+      body: fd,
+      credentials: 'include',
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok || !data?.ok) {
+      console.error('[CHAT AUDIO] error al subir audio', data);
+      return;
     }
+
+    // 🔥 AQUI SE DISPARA EL RENDER
+    if (data.message) {
+      pushMessageToUI(data.message);
+    }
+  } catch (err) {
+    console.error('[CHAT AUDIO] excepción subiendo audio', err);
   }
+}
+
 
   // =====================================================
   //  4) VIDEO: preview + envío (endpoint propio)
@@ -385,3 +394,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 }); // DOMContentLoaded
+
+
+
+function renderMessageBubble(m) {
+  const isClient = (m.role === 'client'); // o como lo estés usando
+  const side = isClient ? 'msg--out' : 'msg--in'; // ejemplo
+
+  let innerHTML = '';
+
+  if (m.content_type === 'text') {
+    innerHTML = `<p>${escapeHTML(m.content || '')}</p>`;
+  } else if (m.content_type === 'image') {
+    innerHTML = `<img src="${m.content}" class="msg-img" alt="imagen">`;
+  }
+  // 🔥 NUEVO: AUDIO
+  else if (m.content_type === 'audio') {
+    innerHTML = `
+      <div class="msg-audio msg-audio--unread">
+        <audio controls src="${m.content}"></audio>
+      </div>
+    `;
+  }
+  // en el futuro: video, etc.
+
+  const div = document.createElement('div');
+  div.className = `msg ${side}`;
+  div.dataset.id = m.id;
+  div.innerHTML = innerHTML;
+  return div;
+}

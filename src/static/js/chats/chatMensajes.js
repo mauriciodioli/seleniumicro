@@ -243,6 +243,45 @@ if (btnSend) {
 
 
 
+function renderMessageBubble(m) {
+  const isClient = (m.role === 'client');
+  const side = isClient ? 'msg--out' : 'msg--in';
+
+  let innerHTML = '';
+
+  if (m.content_type === 'text') {
+    innerHTML = `<p>${escapeHTML(m.content || '')}</p>`;
+  } else if (m.content_type === 'image') {
+    innerHTML = `<img src="${m.content}" class="msg-img" alt="imagen">`;
+  } else if (m.content_type === 'audio') {
+    innerHTML = `
+      <div class="msg-audio msg-audio--unread">
+        <audio controls src="${m.content}"></audio>
+      </div>
+    `;
+  }
+
+  const div = document.createElement('div');
+  div.className = `msg ${side}`;
+  div.dataset.id = m.id;
+  div.innerHTML = innerHTML;
+  return div;
+}
+
+
+window.appendMessageFromServer = function (m) {
+  const container = document.getElementById('chatMessages');
+  if (!container) return;
+  const node = renderMessageBubble(m);
+  container.appendChild(node);
+  container.scrollTop = container.scrollHeight;
+};
+
+
+
+
+
+
 
 
 

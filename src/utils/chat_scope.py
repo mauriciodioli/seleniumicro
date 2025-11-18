@@ -1,5 +1,7 @@
 # utils/chat_scope.py
 import hashlib
+from sqlalchemy.exc import IntegrityError
+
 from extensions import db
 from models.chats.chat_scope import ChatScope
 
@@ -31,12 +33,13 @@ def get_or_create_scope(
     """
     Usa siempre db.session (o la sesión pasada por parámetro)
     para buscar/crear el scope.
-    NO hace commit, solo add/flush.
+
+    No hace commit, solo add/flush. Maneja carrera por UNIQUE(hash_contextid).
     """
 
     sess = session or db.session
 
-    # Normalizar ID de CP si viene como string numérica
+    # --- Normalizar CP ---
     cp_id = None
     cp_txt = None
 
@@ -69,12 +72,12 @@ def get_or_create_scope(
         owner_user_id=owner_user_id,
     )
 
-    # 🔍 Buscar con db.session
+    # 1) Buscar primero
     scope = sess.query(ChatScope).filter_by(hash_contextid=h).first()
     if scope:
         return scope
 
-    # 🆕 Crear si no existe
+    # 2) Crear si no existe
     scope = ChatScope(
         dominio=dominio,
         ambito_id=ambito_id,
@@ -87,7 +90,17 @@ def get_or_create_scope(
         hash_contextid=h,
     )
     sess.add(scope)
-    sess.flush()  # para tener id sin hacer commit todavía
+
+    try:
+        # flush para obtener el id sin hacer commit todavía
+        sess.flush()
+    except IntegrityError:
+        # Otro request metió el mismo hash entre que buscamos y flusheamos
+        sess.rollback()
+        scope = sess.query(ChatScope).filter_by(hash_contextid=h).first()
+        if scope:
+            return scope
+        # Si aún así no existe, eso ya es un bug más serio
+        raise
 
     return scope
-
