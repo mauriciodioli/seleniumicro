@@ -1,7 +1,7 @@
 // chat-embed.js
 (function () {
   // ===== Meta & script actual =====
-  const VERSION = '2025-11-17';
+  const VERSION = '2025-11-18';
   console.debug('[dpia-chat-embed] loaded', VERSION);
 
   const SCRIPT = document.currentScript || (function () {
@@ -23,22 +23,39 @@
   // Ruta interna del chat embebido
   const chatPath = attr(SCRIPT, 'data-chat-path') || '/chat/contextual-embed';
 
-  // Parámetros opcionales de contexto
-  const defaultDomain = attr(SCRIPT, 'data-dominio') || attr(SCRIPT, 'data-domain') || '';
-  const defaultLang   = attr(SCRIPT, 'data-lang') || document.documentElement.lang || 'es';
-  const defaultCp     = attr(SCRIPT, 'data-cp') || '';
+  // Modo de apertura: "panel" (defecto) o "tab"
+  const openMode = (attr(SCRIPT, 'data-open') || 'panel').toLowerCase();
 
-  // NUEVO: contexto de micrositio / publicación
+  // Parámetros opcionales de contexto
+  const defaultDomain       = attr(SCRIPT, 'data-dominio') || attr(SCRIPT, 'data-domain') || '';
+  const defaultLang         = attr(SCRIPT, 'data-lang') || document.documentElement.lang || 'es';
+  const defaultCp           = attr(SCRIPT, 'data-cp') || '';
   const defaultOwnerId      = attr(SCRIPT, 'data-owner-id') || '';
   const defaultOwnerEmail   = attr(SCRIPT, 'data-owner-email') || '';
   const defaultPublicationId= attr(SCRIPT, 'data-publicacion-id') ||
                               attr(SCRIPT, 'data-publication-id') || '';
   const defaultCategoriaId  = attr(SCRIPT, 'data-categoria-id') || '';
 
+  console.debug('[dpia-chat-embed] origin=', origin, 'chatPath=', chatPath, 'openMode=', openMode);
 
-  console.debug('[dpia-chat-embed] origin=', origin, 'chatPath=', chatPath);
+  // ===== URL del chat con contexto =====
+  function buildChatUrl() {
+    const params = new URLSearchParams();
 
-  // ===== Crear UI flotante =====
+    if (defaultDomain)        params.set('dominio', defaultDomain);
+    if (defaultLang)          params.set('lang', defaultLang);
+    if (defaultCp)            params.set('cp', defaultCp);
+    if (defaultOwnerId)       params.set('owner_user_id', defaultOwnerId);
+    if (defaultOwnerEmail)    params.set('owner_email', defaultOwnerEmail);
+    if (defaultPublicationId) params.set('publication_id', defaultPublicationId);
+    if (defaultCategoriaId)   params.set('categoria_id', defaultCategoriaId);
+
+    const base = origin + chatPath;
+    const qs   = params.toString();
+    return qs ? `${base}?${qs}` : base;
+  }
+
+  // ===== Estilos SOLO si usamos panel flotante =====
   function createStyles() {
     if (document.getElementById('dpia-chat-embed-style')) return;
 
@@ -137,41 +154,7 @@
     document.head.appendChild(style);
   }
 
-   function buildChatUrl() {
-    const params = new URLSearchParams();
-
-    if (defaultDomain)      params.set('dominio', defaultDomain);
-    if (defaultLang)        params.set('lang', defaultLang);
-    if (defaultCp)          params.set('cp', defaultCp);
-
-    if (defaultOwnerId)     params.set('owner_user_id', defaultOwnerId);
-    if (defaultOwnerEmail)  params.set('owner_email', defaultOwnerEmail);
-    if (defaultPublicationId) params.set('publication_id', defaultPublicationId);
-    if (defaultCategoriaId) params.set('categoria_id', defaultCategoriaId);
-
-    const base = origin + chatPath;
-    const qs   = params.toString();
-    return qs ? `${base}?${qs}` : base;
-  }
-
-
-  function createLauncher() {
-    if (document.getElementById('dpia-chat-launcher')) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'dpia-chat-launcher';
-    btn.className = 'dpia-chat-launcher';
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Abrir chat DPIA');
-    btn.innerHTML = '💬';
-
-    btn.addEventListener('click', () => {
-      togglePanel();
-    });
-
-    document.body.appendChild(btn);
-  }
-
+  // ===== Panel flotante (solo si openMode = panel) =====
   function createPanel() {
     if (document.getElementById('dpia-chat-panel')) return;
 
@@ -205,7 +188,6 @@
     iframe.allow = 'microphone; camera; clipboard-read; clipboard-write';
 
     body.appendChild(iframe);
-
     panel.appendChild(header);
     panel.appendChild(body);
 
@@ -232,10 +214,42 @@
     else showPanel();
   }
 
+  // ===== Botón flotante (siempre) =====
+  function createLauncher() {
+    if (document.getElementById('dpia-chat-launcher')) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'dpia-chat-launcher';
+    btn.className = 'dpia-chat-launcher';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Abrir chat DPIA');
+    btn.innerHTML = '💬';
+
+    btn.addEventListener('click', () => {
+      const url = buildChatUrl();
+
+      if (openMode === 'tab') {
+        // En pestaña nueva (modo que querés ahora)
+        window.open(url, '_blank', 'noopener,noreferrer');
+      } else {
+        // Modo panel flotante (legacy / por defecto)
+        togglePanel();
+      }
+    });
+
+    document.body.appendChild(btn);
+  }
+
+  // ===== Init =====
   function init() {
-    createStyles();
+    if (openMode === 'panel') {
+      createStyles();
+      createPanel();
+    } else {
+      // En modo "tab" no creamos panel ni iframe, solo usamos el botón
+      createStyles(); // opcional: reutiliza estilos del botón
+    }
     createLauncher();
-    createPanel();
   }
 
   if (document.readyState === 'loading') {
