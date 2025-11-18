@@ -1041,3 +1041,9 @@ function bootstrapFromUrlContext(){
     console.warn('[CHAT/bootstrap] error leyendo contexto de URL', e);
   }
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('[CHAT] DOMContentLoaded buscarUsuarioTelefono.js');
+  bootstrapFromUrlContext();
+});
