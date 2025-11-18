@@ -19,7 +19,7 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = 280
 app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
 ALLOWED_ORIGINS = [
     # DEV
-    "http://127.0.0.1:8000",
+    "http://54.234.169.22:8000",
     "http://localhost:8000",
     # PROD (ajusta a tus dominios reales)
     "https://dpia.site",
@@ -113,7 +113,7 @@ test_db_connection()
 
 @app.route("/chat/contextual-embed")
 def chat_embed():
-    return render_template("templates/index.html")
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
