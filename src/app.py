@@ -6,7 +6,11 @@ from models.chats import *
 
 from extensions import db, ma
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='/chat/static',  # 👈 IMPORTANTE
+    static_folder='static'
+)
 
 # --- Config ---
 app.secret_key = '*0984632'
@@ -117,4 +121,4 @@ def chat_embed():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8000, debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", port=8000,  debug=True, use_reloader=False)
