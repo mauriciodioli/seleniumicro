@@ -26,34 +26,168 @@
   // Modo de apertura: "panel" (defecto) o "tab"
   const openMode = (attr(SCRIPT, 'data-open') || 'panel').toLowerCase();
 
-  // Parámetros opcionales de contexto
-  const defaultDomain       = attr(SCRIPT, 'data-dominio') || attr(SCRIPT, 'data-domain') || '';
-  const defaultLang         = attr(SCRIPT, 'data-lang') || document.documentElement.lang || 'es';
-  const defaultCp           = attr(SCRIPT, 'data-cp') || '';
-  const defaultOwnerId      = attr(SCRIPT, 'data-owner-id') || '';
-  const defaultOwnerEmail   = attr(SCRIPT, 'data-owner-email') || '';
-  const defaultPublicationId= attr(SCRIPT, 'data-publicacion-id') ||
-                              attr(SCRIPT, 'data-publication-id') || '';
-  const defaultCategoriaId  = attr(SCRIPT, 'data-categoria-id') || '';
+  // Parámetros opcionales de contexto (mock / overrides)
+  const defaultDomain        = attr(SCRIPT, 'data-dominio') || attr(SCRIPT, 'data-domain') || '';
+  const defaultLang          = attr(SCRIPT, 'data-lang') || document.documentElement.lang || 'es';
+  const defaultCp            = attr(SCRIPT, 'data-cp') || '';
+  const defaultOwnerId       = attr(SCRIPT, 'data-owner-id') || '';
+  const defaultOwnerEmail    = attr(SCRIPT, 'data-owner-email') || '';
+  const defaultPublicationId = attr(SCRIPT, 'data-publicacion-id') ||
+                               attr(SCRIPT, 'data-publication-id') || '';
+  const defaultCategoriaId   = attr(SCRIPT, 'data-categoria-id') || '';
 
   console.debug('[dpia-chat-embed] origin=', origin, 'chatPath=', chatPath, 'openMode=', openMode);
+// ¿Estoy en un micrositio (detalle de una publicación)?
+function isMicrositeContext() {
+  const path = (location.pathname || '').toLowerCase();
+
+  // Ejemplo actual: /1029/layout/22  → true
+  // Podés ajustar este regex si cambian tus URLs
+  if (/\d+\/layout(\/|$)/.test(path)) {
+    return true;
+  }
+
+  // Si en algún caso querés forzar desde el tag:
+  // <script data-force-publicacion="true" ...>
+  const force = attr(SCRIPT, 'data-force-publicacion');
+  if (force && force.toLowerCase() === 'true') {
+    return true;
+  }
+
+  return false;
+}
+
+  // =========================================================
+  //  LECTURA DEL CONTEXTO REAL DE DPIA (LOCALSTORAGE + COOKIES)
+  // =========================================================
+  function getDpiaContext() {
+    const ctx = {
+      // quién está logeado (viewer)
+      viewer_user_id: '',
+      viewer_email: '',
+      viewer_tel: '',
+      // ámbito actual
+      dominio: '',
+      dominio_id: '',
+      categoria_id: '',
+      cp: '',
+      lang: '',
+      // publicación actual
+      publication_id: ''
+    };
+
+    try {
+      const ls = window.localStorage;
+
+      if (ls) {
+        // Usuario logeado
+        ctx.viewer_user_id = ls.getItem('usuario_id') || '';
+        ctx.viewer_email   = ls.getItem('correo_electronico') || '';
+        ctx.viewer_tel     = ls.getItem('numTelefono:22') ||
+                             ls.getItem('numTelefono') || '';
+
+        // Ámbito
+        ctx.dominio        = ls.getItem('dominio') || '';
+        ctx.dominio_id     = ls.getItem('dominio_id') || '';
+        ctx.categoria_id   = ls.getItem('categoriaSeleccionadaId') ||
+                             ls.getItem('categoria') || '';
+        ctx.cp             = ls.getItem('codigoPostal') || '';
+        ctx.lang           = ls.getItem('language') || '';
+      }
+
+      // Cookies: dominio, CP, publicación, idioma
+      document.cookie.split(';').forEach(p => {
+        const [kRaw, vRaw] = p.split('=');
+        if (!kRaw) return;
+        const k = kRaw.trim();
+        const v = (vRaw || '').trim();
+        if (!k) return;
+
+        if (k === 'publicacion_id') {
+          ctx.publication_id = v;
+        }
+        if (k === 'dominio_id' && !ctx.dominio_id) {
+          ctx.dominio_id = v;
+        }
+        if (k === 'dominio' && !ctx.dominio) {
+          try { ctx.dominio = decodeURIComponent(v); }
+          catch { ctx.dominio = v; }
+        }
+        if (k === 'codigoPostal' && !ctx.cp) {
+          ctx.cp = v;
+        }
+        if (k === 'language' && !ctx.lang) {
+          ctx.lang = v;
+        }
+      });
+    } catch (e) {
+      console.warn('[dpia-chat-embed] error leyendo contexto DPIA', e);
+    }
+
+    return ctx;
+  }
 
   // ===== URL del chat con contexto =====
-  function buildChatUrl() {
-    const params = new URLSearchParams();
+ function buildChatUrl() {
+  const params = new URLSearchParams();
+  const ctx = getDpiaContext();
 
-    if (defaultDomain)        params.set('dominio', defaultDomain);
-    if (defaultLang)          params.set('lang', defaultLang);
-    if (defaultCp)            params.set('cp', defaultCp);
-    if (defaultOwnerId)       params.set('owner_user_id', defaultOwnerId);
-    if (defaultOwnerEmail)    params.set('owner_email', defaultOwnerEmail);
-    if (defaultPublicationId) params.set('publication_id', defaultPublicationId);
-    if (defaultCategoriaId)   params.set('categoria_id', defaultCategoriaId);
+  // --- ámbito / idioma / CP ---
+  const dominio = ctx.dominio || defaultDomain;
+  const lang    = ctx.lang    || defaultLang;
+  const cp      = ctx.cp      || defaultCp;
 
-    const base = origin + chatPath;
-    const qs   = params.toString();
-    return qs ? `${base}?${qs}` : base;
+  if (dominio) params.set('dominio', dominio);
+  if (lang)    params.set('lang', lang);
+  if (cp)      params.set('cp', cp);
+
+  if (ctx.dominio_id) {
+    params.set('dominio_id', ctx.dominio_id);
   }
+
+  // --- categoría / publicación ---
+  // Solo mandamos publication_id cuando:
+  //  - estamos en micrositio, o
+  //  - hay un data-publicacion-id explícito en el <script>
+  const inMicrosite = isMicrositeContext();
+  const publicationIdFromCtx   = ctx.publication_id || '';
+  const publicationIdFromData  = defaultPublicationId || '';
+
+  const shouldSendPublication =
+    inMicrosite || !!publicationIdFromData;
+
+  const publicationId = shouldSendPublication
+    ? (publicationIdFromCtx || publicationIdFromData)
+    : '';
+
+  if (publicationId) {
+    params.set('publication_id', publicationId);
+  }
+
+  // La categoría sí la podemos mandar siempre si existe,
+  // porque no es ambigua como la publicación concreta.
+  const categoriaId = ctx.categoria_id || defaultCategoriaId;
+  if (categoriaId) {
+    params.set('categoria_id', categoriaId);
+  }
+
+  // --- OWNER opcional (caso Ola, etc) ---
+  if (defaultOwnerId)    params.set('owner_user_id', defaultOwnerId);
+  if (defaultOwnerEmail) params.set('owner_email', defaultOwnerEmail);
+
+  // --- VIEWER = usuario logeado en DPIA (vos) ---
+  if (ctx.viewer_user_id) params.set('viewer_user_id', ctx.viewer_user_id);
+  if (ctx.viewer_email)   params.set('viewer_email', ctx.viewer_email);
+  if (ctx.viewer_tel)     params.set('viewer_tel', ctx.viewer_tel);
+
+  const base = origin + chatPath;
+  const qs   = params.toString();
+  const url  = qs ? `${base}?${qs}` : base;
+
+  console.debug('[dpia-chat-embed] chat URL:', url, 'ctx=', ctx, 'inMicrosite=', inMicrosite);
+  return url;
+}
+
 
   // ===== Estilos SOLO si usamos panel flotante =====
   function createStyles() {
@@ -64,7 +198,7 @@
     style.textContent = `
       .dpia-chat-launcher {
         position: fixed;
-        right: 16px;
+        right: 96px;
         bottom: 16px;
         width: 52px;
         height: 52px;
@@ -146,7 +280,7 @@
           bottom: 72px;
         }
         .dpia-chat-launcher {
-          right: 12px;
+          right: 88px;
           bottom: 12px;
         }
       }
@@ -188,8 +322,8 @@
     iframe.allow = 'microphone; camera; clipboard-read; clipboard-write';
 
     body.appendChild(iframe);
-    panel.appendChild(header);
     panel.appendChild(body);
+    panel.appendChild(header); // si querés, invertí el orden; da igual para el contexto
 
     document.body.appendChild(panel);
   }
@@ -229,10 +363,10 @@
       const url = buildChatUrl();
 
       if (openMode === 'tab') {
-        // En pestaña nueva (modo que querés ahora)
+        // En pestaña nueva (modo que estás usando ahora)
         window.open(url, '_blank', 'noopener,noreferrer');
       } else {
-        // Modo panel flotante (legacy / por defecto)
+        // Modo panel flotante
         togglePanel();
       }
     });
@@ -247,7 +381,7 @@
       createPanel();
     } else {
       // En modo "tab" no creamos panel ni iframe, solo usamos el botón
-      createStyles(); // opcional: reutiliza estilos del botón
+      createStyles();
     }
     createLauncher();
   }
