@@ -126,7 +126,7 @@ window.openPersonalMicrosite = function (el) {
   identityCache.set(key, data);
   window.IdentityCachePersist?.();
 
-   // 5) Pintar en el panel de ámbitos (vistaChatAmbitos)
+    // 5) Pintar en el panel de ámbitos (vistaChatAmbitos)
   const cont = document.getElementById('vistaChatAmbitos');
   if (!cont) {
     console.warn('[ALIAS] no existe #vistaChatAmbitos en el DOM');
@@ -167,26 +167,31 @@ window.openPersonalMicrosite = function (el) {
     </article>
   `;
 
-  // ===== 👇 ACOMODAR SCROLL EN CELULAR =====
-  // Esperamos a que el DOM pinte y luego movemos la vista al panel del medio
-  requestAnimationFrame(() => {
-    if (window.matchMedia('(max-width: 900px)').matches) {
-      // si el contenedor tiene scroll vertical propio
-      cont.scrollTop = 0;
-
-      // nos aseguramos de que el panel entre completo en la pantalla
-      cont.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
-      });
-    }
-  });
-
-  // Si igual querés llevar al panel derecho para chatear, dejalo.
-  // Si no, podés comentar esto.
-  if (typeof focusRightPanel === 'function') {
-    focusRightPanel();
+  // 🔹 En mobile: llevar foco al panel de ámbitos (medio)
+  if (typeof focusAmbitosPanel === 'function') {
+    focusAmbitosPanel();
   }
+
+  // ❌ NO LLAMAR MÁS A focusRightPanel acá
+  // if (typeof focusRightPanel === 'function') {
+  //   focusRightPanel();
+  // }
 };
 
+
+function focusAmbitosPanel() {
+  const wrap  = document.querySelector('.my-domain-wrapper');
+  const panel = document.getElementById('vistaChatAmbitos');
+  if (!wrap || !panel) return;
+
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    // scroll horizontal para que el panel del medio quede visible
+    wrap.scrollTo({
+      left: panel.offsetLeft,
+      behavior: 'smooth',
+    });
+
+    // reseteamos el scroll vertical del panel
+    panel.scrollTop = 0;
+  }
+}
