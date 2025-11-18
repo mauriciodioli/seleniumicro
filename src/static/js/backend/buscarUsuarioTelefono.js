@@ -703,8 +703,8 @@ function _ensureScrollable(target){
 
 // --- función principal
 // --- función principal (CORREGIDA)
-async function procesarChatIdentidades(){
-  const raw = (input?.value || '').trim();
+async function procesarChatIdentidades(seed){
+  const raw = (seed || input?.value || '').trim();
 
   const v = validarEntrada(raw);
   if (!v.ok){
@@ -765,7 +765,7 @@ btn?.addEventListener('click', (e)=>{
   if (dedupeAndPromoteByTel(v.value)) { input?.setCustomValidity?.(''); return; } // ya estaba
 
   input?.setCustomValidity?.('');
-  procesarChatIdentidades(); // solo si no estaba
+  procesarChatIdentidades(v.value); // solo si no estaba
 });
 
 
@@ -819,17 +819,34 @@ function validarEntrada(raw){
 input?.addEventListener('keydown', (e)=>{
   if (e.key === 'Enter'){
     const v = validarEntrada(input.value);
-    if (!v.ok){ e.preventDefault(); input.setCustomValidity(v.reason||''); input.reportValidity(); return; }
-    if (v.type !== 'phone'){ e.preventDefault(); input.setCustomValidity('Sólo E.164 (ej: +393445977100)'); input.reportValidity(); return; }
+    if (!v.ok){
+      e.preventDefault();
+      input.setCustomValidity(v.reason||'');
+      input.reportValidity();
+      return;
+    }
+    if (v.type !== 'phone'){
+      e.preventDefault();
+      input.setCustomValidity('Sólo E.164 (ej: +393445977100)');
+      input.reportValidity();
+      return;
+    }
 
-    // >>> NUEVO: si ya existe ese teléfono, deduplica y sube; no buscamos de nuevo
-    if (dedupeAndPromoteByTel(v.value)) { e.preventDefault(); input.setCustomValidity(''); return; }
+    // si ya existe ese teléfono, deduplica y sube; no buscamos de nuevo
+    if (dedupeAndPromoteByTel(v.value)) {
+      e.preventDefault();
+      input.setCustomValidity('');
+      return;
+    }
 
     input.setCustomValidity('');
     e.preventDefault();
-    procesarChatIdentidades(); // sólo si no estaba
+
+    // 🔹 acá la llamás con seed:
+    procesarChatIdentidades(v.value); // <-- PASAMOS EL TEL E.164
   }
 });
+
 
 
 
@@ -979,3 +996,48 @@ window.debugIdentityCache = function(labelOrScope = ''){
   });
   console.groupEnd();
 };
+
+
+
+
+// ==== Bootstrap desde el contexto del embed (viewer_*) ====
+function bootstrapFromUrlContext(){
+  try{
+    const params = new URLSearchParams(window.location.search || '');
+    const viewerTel = (params.get('viewer_tel') || '').trim();
+
+    if (!viewerTel){
+      console.debug('[CHAT/bootstrap] sin viewer_tel en URL, no auto-busco');
+      return;
+    }
+
+    console.debug('[CHAT/bootstrap] viewer_tel desde URL:', viewerTel);
+
+    // Si ya existe en el DOM, sólo lo subimos y listo
+    if (dedupeAndPromoteByTel(viewerTel)){
+      console.debug('[CHAT/bootstrap] identidad ya estaba en el DOM, sólo promote');
+      return;
+    }
+
+    // Caso normal: disparamos la búsqueda como si hubieras escrito el teléfono
+    if (input){
+      input.value = viewerTel; // refleja en la UI por si querés verlo
+    }
+
+    const v = validarEntrada(viewerTel);
+    if (!v.ok){
+      console.warn('[CHAT/bootstrap] viewer_tel inválido:', v.reason);
+      return;
+    }
+    if (v.type !== 'phone'){
+      console.warn('[CHAT/bootstrap] viewer_tel no detectado como phone, type=', v.type);
+      return;
+    }
+
+    // Llamamos a la función de siempre, pero pasándole el seed
+    procesarChatIdentidades(v.value);
+
+  } catch(e){
+    console.warn('[CHAT/bootstrap] error leyendo contexto de URL', e);
+  }
+}
