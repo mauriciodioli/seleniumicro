@@ -126,67 +126,47 @@ window.openPersonalMicrosite = function (el) {
   identityCache.set(key, data);
   window.IdentityCachePersist?.();
 
-   // 5) Pintar en el panel de ámbitos (vistaChatAmbitos)
+  // 5) Pintar en el panel de ámbitos (vistaChatAmbitos)
   const cont = document.getElementById('vistaChatAmbitos');
-  if (!cont) {
+    if (!cont) {
     console.warn('[ALIAS] no existe #vistaChatAmbitos en el DOM');
     return;
-  }
+    }
 
-  const fecha = pub.fecha_creacion
+    const fecha = pub.fecha_creacion
     ? new Date(pub.fecha_creacion).toLocaleString()
     : '';
 
-  cont.innerHTML = `
+    cont.innerHTML = `
     <article class="ambito-card-personal">
-      <header class="ambito-card-personal__head">
+        <header class="ambito-card-personal__head">
         <p class="ambito-card-personal__tag">Micrositio personal</p>
         <h3 class="ambito-card-personal__title">${pub.titulo || 'Micrositio personal'}</h3>
         <p class="ambito-card-personal__meta">
-          <span>Ámbito: <strong>${pub.ambito || 'personal'}</strong></span>
-          <span>Idioma: <strong>${pub.idioma || ''}</strong></span>
-          ${pub.codigo_postal ? `<span>CP: <strong>${pub.codigo_postal}</strong></span>` : ''}
+            <span>Ámbito: <strong>${pub.ambito || 'personal'}</strong></span>
+            <span>Idioma: <strong>${pub.idioma || ''}</strong></span>
+            ${pub.codigo_postal ? `<span>CP: <strong>${pub.codigo_postal}</strong></span>` : ''}
         </p>
-      </header>
+        </header>
 
-      <section class="ambito-card-personal__body">
+        <section class="ambito-card-personal__body">
         ${pub.descripcion ? `<p class="ambito-card-personal__desc">${pub.descripcion}</p>` : ''}
-        ${
-          pub.imagen
-            ? `
-              <div class="ambito-card-personal__media">
-                <img src="${pub.imagen}" alt="${pub.titulo || ''}" loading="lazy">
-              </div>`
-            : ''
+        ${pub.imagen ? `
+            <div class="ambito-card-personal__media">
+            <img src="${pub.imagen}" alt="${pub.titulo || ''}" loading="lazy">
+            </div>` : ''
         }
-      </section>
+        </section>
 
-      <footer class="ambito-card-personal__foot">
+        <footer class="ambito-card-personal__foot">
         ${fecha ? `<span class="ambito-card-personal__date">Creado: ${fecha}</span>` : ''}
-      </footer>
+        </footer>
     </article>
-  `;
+    `;
 
-  // ===== 👇 ACOMODAR SCROLL EN CELULAR =====
-  // Esperamos a que el DOM pinte y luego movemos la vista al panel del medio
-  requestAnimationFrame(() => {
-    if (window.matchMedia('(max-width: 900px)').matches) {
-      // si el contenedor tiene scroll vertical propio
-      cont.scrollTop = 0;
 
-      // nos aseguramos de que el panel entre completo en la pantalla
-      cont.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
-      });
-    }
-  });
-
-  // Si igual querés llevar al panel derecho para chatear, dejalo.
-  // Si no, podés comentar esto.
+  // si tenés focusRightPanel para mobile, lo podés llamar aquí
   if (typeof focusRightPanel === 'function') {
     focusRightPanel();
   }
 };
-

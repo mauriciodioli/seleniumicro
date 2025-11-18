@@ -220,10 +220,4 @@ details[open] > .amb-summary .amb-chev-btn{ transform: rotate(90deg) translateY(
   opacity: 0.9;
 }
 
-/* responsive: en móviles un poquito más compacto */
-@media (max-width: 900px) {
-  .ambito-card-personal {
-    max-height: none;
-    overflow: visible;
-  }
-}
+
