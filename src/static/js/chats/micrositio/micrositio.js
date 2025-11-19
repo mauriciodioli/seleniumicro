@@ -4,7 +4,7 @@
   window.__micrositioMounted = true;
   window.__MICROSITIO_MODE__ = false;
 
-  const micrositioAPI = '/api/micrositio/detalle';
+  const micrositioAPI = '/api/micrositio/detalle/';
   const getRight   = () => document.getElementById('myDomainRight');
   const getContent = () => document.getElementById('mdContent');
 

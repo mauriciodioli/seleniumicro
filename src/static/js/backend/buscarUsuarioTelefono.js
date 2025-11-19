@@ -104,7 +104,7 @@ window.getCachedIdentity = function(arg){
       const det = document.createElement('details');
       det.className = 'amb-item';
       det.setAttribute('data-ambito', nombre);
-
+      
       let catsHtml = '';
       if (cats.length) {
         catsHtml = `<ul class="md-cat-list">
@@ -112,6 +112,9 @@ window.getCachedIdentity = function(arg){
             <li>
               <button class="md-cat"
                       data-ambito="${nombre}"
+                      data-ambitoId="${a.id || ''}"
+                      data-valor="${a.valor ||  ''}"
+                      data-idioma="${a.idioma || ''}"
                       data-categoria="${c.id}">
                 ${c.nombre}
               </button>
@@ -257,7 +260,7 @@ window.BuscarUsuarioTelefono = {
     if (!resp.ok || !data?.ok) {
       throw new Error(data?.error || 'Sin resultados');
     }
-     debugger;
+     
     // renders con guardas
     if (typeof renderIdentityResult === 'function') renderIdentityResult(data.user);
     if (Array.isArray(data.ambitos) && typeof renderMyDomainAmbitos === 'function')

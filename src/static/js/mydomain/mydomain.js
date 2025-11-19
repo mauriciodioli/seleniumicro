@@ -73,32 +73,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 5) click en categoría (izquierda) → carga publicaciones y en mobile muestra panel derecho
-  mdLeft?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.md-cat, [data-categoria]');
-    if (!btn) return;
+ mdLeft?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.md-cat, [data-categoria]');
+  if (!btn) return;
 
-    const ambito    = btn.dataset.ambito || '';
-    const categoria = btn.dataset.categoria || '';
-    const userId    = btn.dataset.userId || '';
+  // 🔹 todos los valores desde data-*
+  const cp       = btn.dataset.cp       || '';  // ej: "52-200"
+  const dom      = btn.dataset.ambito   || '';  // ej: "🏥 Health" o id del dominio
+  const valor    = btn.dataset.valor    || dom; // ej: "Health" (slug / valor lógico)
+  const categoria= btn.dataset.categoria|| '';  // ej: "362"
+  const userId   = btn.dataset.userId   || '';  // opcional
 
-    loadPubsInMyDomain(ambito, categoria, userId);
+  // ahora le pasamos todo a la función
+  loadPubsInMyDomain(cp, dom, valor, categoria, userId);
 
-    const myDomainRight = document.getElementById('myDomainRight');
-    if (window.matchMedia('(max-width: 767px)').matches) {
-      myDomainRight?.setAttribute('data-view', 'right');
-    }
-  });
+  const myDomainRight = document.getElementById('myDomainRight');
+  if (window.matchMedia('(max-width: 767px)').matches) {
+    myDomainRight?.setAttribute('data-view', 'right');
+  }
+});
 
-  // 6) delegación legacy (NO rompe flujo): mantiene tu handler existente
-  myDomainView?.addEventListener('click', (e) => {
-    const btnOpen = e.target.closest('[data-open="pub"]');
-    if (btnOpen) {
-      const pubId = btnOpen.getAttribute('data-id');
-      // Hook legacy: acá podrías abrir otra UI si quisieras.
-      // micrositio.js se engancha por .ver-mas en #myDomainRight, así que no hacemos nada más.
-      return;
-    }
-  });
 
   // ===== helpers =====
   function openMyDomain(){
@@ -128,17 +122,27 @@ document.addEventListener('DOMContentLoaded', () => {
     return data;
   });
 
-  async function loadPubsInMyDomain(dom, cat, user_id){
-    if (!mdContent) return;
-    mdContent.innerHTML = '<p class="muted">Cargando…</p>';
+ async function loadPubsInMyDomain(cp, dom, valor, cat, user_id){
+  if (!mdContent) return;
+  mdContent.innerHTML = '<p class="muted">Cargando…</p>';
 
-    const payload = { dom, cat };
-    if (user_id && String(user_id).trim() !== '') payload.user_id = user_id;
+  // 🚚 acá viajan TODOS los valores al backend
+  const payload = {
+    cp:    cp || '',
+    dom:   dom || '',
+    valor: valor || '',
+    cat:   cat || ''
+  };
 
-    // Exponer para micrositio.js (volver a la grilla)
-    window.API = window.API || {};
-    window.API.publicaciones = '/api/cascade/publicaciones/sinCP/';
-    window.lastQuery = payload;
+  if (user_id && String(user_id).trim() !== '') {
+    payload.user_id = user_id;
+  }
+
+  // Exponer para micrositio.js (lo dejo igual que lo tenías)
+  window.API = window.API || {};
+  window.API.publicaciones = '/api/cascade/publicaciones/sinCP/';
+  window.lastQuery = payload;
+
 
     try{
       const r = await fetch(window.API.publicaciones, {
@@ -147,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         credentials: 'include',
         body: JSON.stringify(payload)
       });
-
+      
       const raw = await r.text();
       let data;
       try { data = JSON.parse(raw); } catch { data = { ok:false, error: raw || 'JSON inválido' }; }

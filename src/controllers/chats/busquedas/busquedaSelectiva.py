@@ -121,10 +121,13 @@ def api_cascade_categorias():
 @busquedaSelectiva.route('/api/cascade/publicaciones/sinCP/', methods=['POST'])
 def api_cascade_publicaciones_sinCp():
     data = request.get_json(silent=True) or {}
-    cp  = (data.get('cp')  or '').strip()
-    dom = (data.get('dom') or '').strip()
-    cat = str(data.get('cat') or '').strip()
+
+    cp      = (data.get('cp')    or '').strip()
+    dom     = (data.get('dom')   or '').strip()
+    valor   = (data.get('valor') or '').strip()
+    cat     = str(data.get('cat') or '').strip()
     user_id = data.get('user_id')  # opcional
+
 
     if not dom or not cat.isdigit():
         return jsonify({'ok': False, 'error': 'cp, dom y cat válidos requeridos'}), 400
@@ -134,7 +137,7 @@ def api_cascade_publicaciones_sinCp():
         db.session.query(Publicacion)
         .join(CategoriaPublicacion, CategoriaPublicacion.publicacion_id == Publicacion.id)
         .filter(
-            Publicacion.ambito == dom,
+            Publicacion.ambito == valor,
             CategoriaPublicacion.categoria_id == cat_id
         )
     )

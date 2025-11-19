@@ -18,7 +18,7 @@ def serialize_pub(p):
         'correo_electronico': getattr(p, 'correo_electronico', None),
     }
 
-@micrositio.route('/api/micrositio/detalle', methods=['POST'])
+@micrositio.route('/api/micrositio/detalle/', methods=['POST'])
 def api_micrositio_detalle():
     data = request.get_json(silent=True) or {}
     pub_id = data.get('id')
