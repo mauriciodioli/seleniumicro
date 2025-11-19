@@ -58,7 +58,7 @@ window.getCachedIdentity = function(arg){
         Swal.fire('Sin resultados', data.error || 'No se encontró identidad', 'info');
         return;
       }
-
+ 
       // 1) identidad en panel izquierdo
       renderIdentityResult(data.user);
 
@@ -230,6 +230,42 @@ function renderMyDomainPublicaciones(publicaciones) {
 
 
 
+// === Viewer actual (el que está usando el chat) ===
+const urlParams = new URLSearchParams(window.location.search);
+
+// intenta tomar de la URL ?viewer_user_id=... o de localStorage
+let VIEWER_USER_ID = urlParams.get('viewer_user_id') || localStorage.getItem('viewer_user_id') || null;
+
+// si vino en la URL, lo guardo para futuros loads
+if (urlParams.get('viewer_user_id')) {
+  localStorage.setItem('viewer_user_id', urlParams.get('viewer_user_id'));
+}
+
+// lo dejo accesible global si hace falta
+window.VIEWER_USER_ID = VIEWER_USER_ID;
+
+// helper: obtener id del viewer como string
+function getViewerUserId() {
+  return (window.VIEWER_USER_ID || localStorage.getItem('viewer_user_id') || '').toString();
+}
+
+// helper: poner el nombre del usuario en el header <h4>Identidades</h4>
+function setIdentidadesHeaderUser(user) {
+  const h4 = document.querySelector('.id-card h4'); // tu <h4>Identidades</h4>
+  if (!h4 || !user) return;
+
+  const nombre =
+    user.nombre ||
+    user.alias ||
+    user.email ||
+    user.correo_electronico ||
+    '';
+
+  if (!nombre) return;
+
+  // reemplazo el texto "Identidades" por el nombre del usuario
+  h4.textContent = nombre;
+}
 
 
 
@@ -262,9 +298,23 @@ window.BuscarUsuarioTelefono = {
     }
      
     // renders con guardas
-    if (typeof renderIdentityResult === 'function') renderIdentityResult(data.user);
-    if (Array.isArray(data.ambitos) && typeof renderMyDomainAmbitos === 'function')
-      renderMyDomainAmbitos(data.ambitos);
+    const viewerId = getViewerUserId();
+        const resultUserId = data.user && data.user.id ? data.user.id.toString() : '';
+
+        if (resultUserId && viewerId && resultUserId === viewerId) {
+          // es el mismo usuario que está mirando el chat:
+          // no lo agrego a la lista, solo pongo su nombre en el header
+          setIdentidadesHeaderUser(data.user);
+        } else {
+          // usuario distinto → sí se renderiza en la lista
+          if (typeof renderIdentityResult === 'function') {
+            renderIdentityResult(data.user);
+          }
+        }
+
+        if (Array.isArray(data.ambitos) && typeof renderMyDomainAmbitos === 'function') {
+          renderMyDomainAmbitos(data.ambitos);
+        }
     if (Array.isArray(data.publicaciones) && typeof renderMyDomainPublicaciones === 'function')
       renderMyDomainPublicaciones(data.publicaciones);
     if ((Array.isArray(data.codigos_postales) || Array.isArray(data.idiomas)) &&
@@ -273,7 +323,7 @@ window.BuscarUsuarioTelefono = {
     }
     return data;
   },
-
+  
   // exportás los renders por si querés usarlos desde otro init
   renderIdentityResult,
   renderMyDomainAmbitos,
@@ -754,6 +804,7 @@ async function procesarChatIdentidades(seed){
 
   // ---- render (inserta SOLO si no existía)
   renderChatAmbitos(data);
+
   if (data.user) renderIdentityResult(data.user, { userKeyOverride: tel });
 }
 
@@ -974,6 +1025,7 @@ function cargarIdentidadEnCache(data, opts = {}){
     console.log('render:', true);
     
     renderChatAmbitos(data);
+ 
     renderIdentityResult?.(data.user, { userKeyOverride: tel || k });
   } else {
     console.log('render:', false);
