@@ -264,7 +264,7 @@ function setIdentidadesHeaderUser(user) {
   if (!nombre) return;
 
   // reemplazo el texto "Identidades" por el nombre del usuario
-  h4.textContent = `Identidades de ${nombre}`;
+  h4.textContent = `${nombre}`;
 
 }
 
