@@ -231,22 +231,33 @@ function renderMyDomainPublicaciones(publicaciones) {
 
 
 // === Viewer actual (el que está usando el chat) ===
-const urlParams = new URLSearchParams(window.location.search);
 
-// intenta tomar de la URL ?viewer_user_id=... o de localStorage
-let VIEWER_USER_ID = urlParams.get('viewer_user_id') || localStorage.getItem('viewer_user_id') || null;
+// 1) fuente oficial: mock / contexto (lo que después vendrá del query de DPIA)
+const CTX = window.CHAT_CTX || window.EMBED_CLIENT || {};
 
-// si vino en la URL, lo guardo para futuros loads
-if (urlParams.get('viewer_user_id')) {
-  localStorage.setItem('viewer_user_id', urlParams.get('viewer_user_id'));
+// si lo tenés así en el mock:
+// window.CHAT_CTX = { viewer_user_id: 22, ... }
+let VIEWER_USER_ID = null;
+
+if (CTX.viewer_user_id != null) {
+  VIEWER_USER_ID = String(CTX.viewer_user_id);
+} else if (CTX.user_id != null) {
+  VIEWER_USER_ID = String(CTX.user_id);
+} else if (CTX.id != null) {
+  VIEWER_USER_ID = String(CTX.id);
+} else {
+  // 2) fallback SOLO a la URL (por si abrís a mano sin mock)
+  const urlParams = new URLSearchParams(window.location.search);
+  VIEWER_USER_ID = urlParams.get('viewer_user_id') || '';
 }
 
-// lo dejo accesible global si hace falta
+// lo dejo global
 window.VIEWER_USER_ID = VIEWER_USER_ID;
 
-// helper: obtener id del viewer como string
+// helper: obtener id del viewer como string (sin localStorage)
 function getViewerUserId() {
-  return (window.VIEWER_USER_ID || localStorage.getItem('viewer_user_id') || '').toString();
+  debugger;
+  return (window.VIEWER_USER_ID || '').toString();
 }
 
 // helper: poner el nombre del usuario en el header <h4>Identidades</h4>

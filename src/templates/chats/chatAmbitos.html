@@ -1,44 +1,35 @@
-<!--chatAmbitos-->
-<section id="col-ambitos" class="col-ambitos">
+<!-- chats/chatAmbitos.html -->
+
 <div id="amb-card" class="amb-card">
   <h4>Ámbitos</h4>
 
   <div class="amb-panel-header">
     <div class="amb-search" style="flex:1">
       <span>🔎</span>
-      <input id="amb-q" placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta">
+      <input
+        id="amb-q"
+        placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta"
+      >
     </div>
     <button id="amb-btnSearch" class="btn">Buscar</button>
   </div>
 
   <!-- Panel de búsqueda colapsable (cerrado por defecto) -->
- 
-    {% include 'chats/busquedas/busquedaAmbito.html' %}
+  {% include 'chats/busquedas/busquedaAmbito.html' %}
 
-<div id="vistaChatAmbitos" class="vistaChatAmbitos" data-view="left"></div>
+  <!-- Vista resumen / micrositio personal / info de ámbito -->
+  <div id="vistaChatAmbitos" class="vistaChatAmbitos" data-view="left"></div>
+
   <!-- LISTA SCROLLEABLE -->
   <div class="amb-accordion">
-
-
-
-
-
-
-
-
-
-
+    {# Items dinámicos se inyectan por JS #}
   </div>
 
   <!-- FOOTER fijo -->
   <div class="amb-footer">
-    <div class="foot-left"><span class="hint">Elegí un ámbito y chateá por categoría</span></div>
-    <div class="foot-right">
-    
-      
+    <div class="foot-left">
+      <span class="hint">Elegí un ámbito y chateá por categoría</span>
     </div>
+    <div class="foot-right"></div>
   </div>
 </div>
-</section>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatAmbitos.css') }}">
-<script src="{{ url_for('static', filename='js/chats/chatAmbitos.js') }}"></script>

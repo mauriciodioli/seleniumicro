@@ -1,79 +1,68 @@
-<div id="col-identidades" class="col-identidades">
-  <div class="id-card">
-    <h4>Identidades</h4>
+<!-- chats/chatIdentidades.html -->
 
-   <div class="amb-panel-header">
-  <div class="amb-search" style="flex:1">
-    <span>🔎</span>
-    <input id="idSearch" placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta">
-  </div>
-  <button id="sendBtn" type="button" class="btn">Enviar</button>
-</div>
+<div class="id-card">
+  <h4></h4>
 
-    <!-- Panel búsqueda (si corresponde va acá, arriba de la lista) -->
-    {% include 'chats/busquedas/busquedaAmbito.html' %}
-
-    <!-- LISTA SCROLLEABLE -->
-    <div class="id-accordion">
-     
-      
-
-
-<!-- 3) Dr. Carlos -->
-<details class="id-item">
-  <summary class="id-summary"  
-           data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrCarlos","tel":"+599838385478"}'>
-    <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
-    <span class="id-name"  data-goto="amb-card">👤 Dr. Carlos</span>
-    <span class="id-badge" data-goto="chat">18:07</span>   
-  </summary>
- 
-   
-  <div class="id-body">
-    <span class="id-field">📞 +599838385478</span>
-    <span class="id-field">@DrCarlos</span>
-    <span class="id-field">🌐 drcarlos.salud.dpia.site</span>
-  </div>
-
-  <div class="id-actions">
-    <button class="btn btn-accent" data-goto="chat"
-            data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrCarlos","tel":"+599838385478"}'
-            onclick="chatHere(this)" >Chatear aquí</button>
-    <button class="btn btn-ghost" onclick="Swal.fire('Contacto','WhatsApp habilitado','success')">Abrir WhatsApp</button>
-  </div>
-</details>
-
-
-
-
-
-
-
-
-
+  <div class="amb-panel-header">
+    <div class="amb-search" style="flex:1">
+      <span>🔎</span>
+      <input
+        id="idSearch"
+        placeholder="Buscar por ámbito, @alias o teléfono +E.164…  Ej: +54938385478 o @DrPeralta"
+      >
     </div>
+    <button id="sendBtn" type="button" class="btn">Enviar</button>
+  </div>
 
-    <!-- FOOTER DENTRO DE .id-card -->
-    <div class="id-footer">
-      <div class="foot-left">
-        <span class="hint">Seleccioná una identidad para chatear</span>
+  <!-- Panel búsqueda (si corresponde va acá, arriba de la lista) -->
+  {% include 'chats/busquedas/busquedaAmbito.html' %}
+
+  <!-- LISTA SCROLLEABLE -->
+  <div class="id-accordion">
+
+    <!-- 3) Dr. Carlos (ejemplo/mock) -->
+    <details class="id-item">
+      <summary
+        class="id-summary"
+        data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrCarlos","tel":"+599838385478"}'
+      >
+        <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
+        <span class="id-name" data-goto="amb-card">👤 Dr. Carlos</span>
+        <span class="id-badge" data-goto="chat">18:07</span>
+      </summary>
+
+      <div class="id-body">
+        <span class="id-field">📞 +599838385478</span>
+        <span class="id-field">@DrCarlos</span>
+        <span class="id-field">🌐 drcarlos.salud.dpia.site</span>
       </div>
-      <div class="foot-right">
-        
-    
+
+      <div class="id-actions">
+        <button
+          class="btn btn-accent"
+          data-goto="chat"
+          data-scope='{"micrositio":"salud","idioma":"es","alias":"@DrCarlos","tel":"+599838385478"}'
+          onclick="chatHere(this)"
+        >
+          Chatear aquí
+        </button>
+        <button
+          class="btn btn-ghost"
+          type="button"
+          onclick="Swal.fire('Contacto','WhatsApp habilitado','success')"
+        >
+          Abrir WhatsApp
+        </button>
       </div>
+    </details>
+
+  </div>
+
+  <!-- FOOTER DENTRO DE .id-card -->
+  <div class="id-footer">
+    <div class="foot-left">
+      <span class="hint">Seleccioná una identidad para chatear</span>
     </div>
+    <div class="foot-right"></div>
   </div>
 </div>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='css/chats/usuariosChat.css') }}">
-
-
-<script src="{{ url_for('static', filename='js/chats/usuariosChat.js') }}"></script>
-<script src="{{ url_for('static', filename='js/backend/buscarUsuarioTelefono.js') }}"></script>
-<script src="{{ url_for('static', filename='js/backend/buscarUsuarioTelefonoAlias.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chats/chatIdentidades.js') }}"></script>
-<script src="{{ url_for('static', filename='js/backend/initFromToken.js') }}"></script>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='css/chats/micrositios/micrositio.css') }}">
-<script src="{{ url_for('static', filename='js/chats/micrositio/micrositio.js') }}"></script>

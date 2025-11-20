@@ -7,25 +7,34 @@
 
   <!-- Libs -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Contexto compartido (query → CHAT_CTX) -->
+
+  <script src="{{ url_for('static', filename='chat-context.js') }}" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="icon" href="/favicon.ico/">
 
-  <!-- CSS base -->
+  <!-- CSS base de columnas -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatIdentidades.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatAmbitos.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajesMedia.css') }}">
+
+  <!-- CSS extras de funcionalidad -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/usuariosChat.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/micrositios/micrositio.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mydomain/mydomain.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/indexChat.css') }}">
 
-  <!-- (si seguís usando el buscador viejo) -->
+  <!-- Buscadores -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/busquedas/busquedaAmbitos.css') }}">
-  <!-- 🔎 NUEVO -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/busquedas/busquedaSelectiva.css') }}">
 </head>
 <body>
   <!-- NAVBAR -->
   <div class="nav">
-    <div class="brand"><span class="dot"></span><span>DPIA · Chat Contextual</span></div>
+    <div class="brand">
+      <span class="dot"></span><span>DPIA · Chat Contextual</span>
+    </div>
     <div style="display:flex; gap:8px; align-items:center">
       <button id="btnMyDomain" class="btn">My domain</button>
       <button id="toggleTheme" class="btn">☀️ Claro / 🌙 Oscuro</button>
@@ -38,25 +47,38 @@
       <aside id="col-identidades" class="col-identidades">
         {% include 'chats/chatIdentidades.html' %}
       </aside>
+
       <section id="col-ambitos" class="col-ambitos">
         {% include 'chats/chatAmbitos.html' %}
       </section>
+
       <section id="col-chat" class="col-chat">
         {% include 'chats/chatMensajes.html' %}
       </section>
     </div>
   </div>
 
-  <!-- Overlay MyDomain (donde adentro vas a incluir busquedaSelectiva.html) -->
+  <!-- Overlay MyDomain -->
   {% include 'chats/mydomain/chatDominios.html' %}
 
-  <!-- JS módulos -->
+  <!-- JS: capa de orquestación general -->
   <script src="{{ url_for('static', filename='js/chats/indexChat.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/mydomain/mydomain.js') }}" defer></script>
-
-  <!-- 🔎 NUEVO buscador selectivo -->
   <script src="{{ url_for('static', filename='js/chats/busquedas/busquedaSelectiva.js') }}" defer></script>
 
- 
+  <!-- JS: funcionalidad de identidades / usuarios -->
+  <script src="{{ url_for('static', filename='js/chats/usuariosChat.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/backend/buscarUsuarioTelefono.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/backend/buscarUsuarioTelefonoAlias.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/chats/chatIdentidades.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/backend/initFromToken.js') }}" defer></script>
+
+  <!-- JS: micrositios y ámbitos -->
+  <script src="{{ url_for('static', filename='js/chats/micrositio/micrositio.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/chats/chatAmbitos.js') }}" defer></script>
+
+  <!-- JS: chat mensajes + media -->
+  <script src="{{ url_for('static', filename='js/chats/chatMensajes.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/chats/chatMensajesMedia.js') }}" defer></script>
 </body>
 </html>

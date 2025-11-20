@@ -1,3 +1,57 @@
+// ===================== HEADER DEL CHAT (ctxBadge) =====================
+
+function setChatHeaderFromOpen(data) {
+  const badge = document.getElementById('ctxBadge');
+  if (!badge) return;
+
+  // usamos la estructura <div id="ctxBadge"><span class="ctx-pill"><span class="ctx-dot"></span>...</span></div>
+  const pill = badge.querySelector('.ctx-pill') || badge;
+
+  const client = data.client || {};
+  const scope  = data.scope  || {};
+
+  // QUIÉN: la persona con la que hablo (Ola, Carlos, etc.)
+  let who =
+    client.alias ||
+    client.email ||
+    client.tel ||
+    'Contacto';
+
+  if (client.alias && !client.alias.startsWith('@')) {
+    who = '@' + client.alias;
+  }
+
+  // CONTEXTO: dominio / categoría / idioma / CP
+  const partes = [];
+
+  if (who) partes.push(who);
+
+  if (scope.dominio) {
+    partes.push(scope.dominio);
+  }
+
+  if (scope.categoria_slug) {
+    partes.push(scope.categoria_slug);
+  } else if (scope.categoria_nombre) {
+    partes.push(scope.categoria_nombre);
+  } else if (scope.categoria_id) {
+    partes.push('cat ' + scope.categoria_id);
+  }
+
+  if (scope.locale) {
+    partes.push(scope.locale);
+  }
+
+  if (scope.codigo_postal) {
+    partes.push('CP ' + scope.codigo_postal);
+  }
+
+  const label = partes.join(' · ') || 'sin contexto';
+
+  pill.innerHTML = `<span class="ctx-dot"></span>${label}`;
+}
+
+
 // ==================== TOGGLE ÁMBITOS (columna del medio) ====================
 (() => {
   const root = document.documentElement;
@@ -442,13 +496,8 @@ async function chatAmbitoHere(source){
 
     console.log('[CHAT] conversación abierta, id=', Chat.conversationId);
 
-    setCtxBadge({
-      ambito:       s.ambito || s.micrositio,
-      categoria:    s.categoria,
-      subcategoria: s.subcategoria,
-      idioma:       payload.scope.locale,
-      cp:           s.cp || s.codigo_postal || EMBED_SCOPE.codigo_postal
-    });
+   // 🔴 NUEVO: actualizar header del chat con client + scope reales
+    setChatHeaderFromOpen(data);
 
     let msgs = data.messages || [];
     if (data.is_new && data.from_summary){
