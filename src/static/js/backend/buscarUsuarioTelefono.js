@@ -230,36 +230,6 @@ function renderMyDomainPublicaciones(publicaciones) {
 
 
 
-// === Viewer actual (el que está usando el chat) ===
-
-// 1) fuente oficial: mock / contexto (lo que después vendrá del query de DPIA)
-const CTX = window.CHAT_CTX || window.EMBED_CLIENT || {};
-
-// si lo tenés así en el mock:
-// window.CHAT_CTX = { viewer_user_id: 22, ... }
-let VIEWER_USER_ID = null;
-
-if (CTX.viewer_user_id != null) {
-  VIEWER_USER_ID = String(CTX.viewer_user_id);
-} else if (CTX.user_id != null) {
-  VIEWER_USER_ID = String(CTX.user_id);
-} else if (CTX.id != null) {
-  VIEWER_USER_ID = String(CTX.id);
-} else {
-  // 2) fallback SOLO a la URL (por si abrís a mano sin mock)
-  const urlParams = new URLSearchParams(window.location.search);
-  VIEWER_USER_ID = urlParams.get('viewer_user_id') || '';
-}
-
-// lo dejo global
-window.VIEWER_USER_ID = VIEWER_USER_ID;
-
-// helper: obtener id del viewer como string (sin localStorage)
-function getViewerUserId() {
-  debugger;
-  return (window.VIEWER_USER_ID || '').toString();
-}
-
 // helper: poner el nombre del usuario en el header <h4>Identidades</h4>
 function setIdentidadesHeaderUser(user) {
   const h4 = document.querySelector('.id-card h4'); // tu <h4>Identidades</h4>
@@ -310,23 +280,23 @@ window.BuscarUsuarioTelefono = {
     }
      
     // renders con guardas
-    const viewerId = getViewerUserId();
-        const resultUserId = data.user && data.user.id ? data.user.id.toString() : '';
+    const viewerId =  (window.getViewerUserId ? window.getViewerUserId() : '');
+    const resultUserId = data.user && data.user.id ? data.user.id.toString() : '';
 
-        if (resultUserId && viewerId && resultUserId === viewerId) {
-          // es el mismo usuario que está mirando el chat:
-          // no lo agrego a la lista, solo pongo su nombre en el header
-          setIdentidadesHeaderUser(data.user);
-        } else {
-          // usuario distinto → sí se renderiza en la lista
-          if (typeof renderIdentityResult === 'function') {
-            renderIdentityResult(data.user);
-          }
-        }
+    if (resultUserId && viewerId && resultUserId === viewerId) {
+      // es el mismo usuario que está mirando el chat:
+      // no lo agrego a la lista, solo pongo su nombre en el header
+      setIdentidadesHeaderUser(data.user);
+    } else {
+      // usuario distinto → sí se renderiza en la lista
+      if (typeof renderIdentityResult === 'function') {
+        renderIdentityResult(data.user);
+      }
+    }
 
-        if (Array.isArray(data.ambitos) && typeof renderMyDomainAmbitos === 'function') {
-          renderMyDomainAmbitos(data.ambitos);
-        }
+    if (Array.isArray(data.ambitos) && typeof renderMyDomainAmbitos === 'function') {
+      renderMyDomainAmbitos(data.ambitos);
+    }
     if (Array.isArray(data.publicaciones) && typeof renderMyDomainPublicaciones === 'function')
       renderMyDomainPublicaciones(data.publicaciones);
     if ((Array.isArray(data.codigos_postales) || Array.isArray(data.idiomas)) &&
