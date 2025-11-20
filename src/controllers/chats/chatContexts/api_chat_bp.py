@@ -330,7 +330,7 @@ def upload_image():
         return jsonify(ok=False, error=str(e)), 500
 
 
-def serialize_message(m: Message) -> dict:
+def _make_message_dict(m: Message) -> dict:
     return {
         "id": m.id,
         "role": m.role,
@@ -339,6 +339,7 @@ def serialize_message(m: Message) -> dict:
         "content": m.content,
         "created_at": m.created_at.isoformat() if m.created_at else None,
     }
+
 
 
 @api_chat_bp.route("/api_chat_bp/audio-upload/", methods=["POST"])

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT MEDIA] init');
 
   // ----- ENDPOINTS SÓLO MEDIA -----
+ // arriba de enviarImagen
   const API_IMAGE = '/api/chat/api_chat_bp/image-upload/';    // IMAGEN
   const API_AUDIO = '/api/chat/api_chat_bp/audio-upload/';    // AUDIO
   const API_VIDEO = '/api/chat/api_chat_bp/video-upload/';    // VIDEO
@@ -88,6 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!file) return;
     const convId = getConvId();
     if (!convId) return;
+    if (pendingImage) {
+          const file = pendingImage;
+          pendingImage = null;
+          clearPreview();
+          await enviarImagen(file);
+          return;
+        }
 
     const fd = new FormData();
     fd.append('file', file, file.name || 'image.png');

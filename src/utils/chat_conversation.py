@@ -35,7 +35,7 @@ def get_or_create_conversation(
     sess = session or db.session
 
     # --- normalizar publicación ---
-    if publicacion_id:
+    if publicacion_id != 0 and publicacion_id is not None:
         try:
             publicacion_id = int(publicacion_id)
             if publicacion_id <= 0:
