@@ -18,7 +18,7 @@ class ChatScope(db.Model):
     locale = db.Column(db.String(10), nullable=False)  # ej: "es", "pl", "it-IT"
 
     # Pueden existir scopes sin una publicación concreta
-    publicacion_id = db.Column(db.BigInteger, nullable=True)
+    publicacion_id = db.Column(db.Integer, nullable=True)
     owner_user_id  = db.Column(db.BigInteger, nullable=True)
 
     # Hash único del contexto
