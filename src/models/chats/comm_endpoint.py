@@ -5,7 +5,7 @@ class CommEndpoint(db.Model):
 
     id = db.Column(db.BigInteger, primary_key=True)
     owner_user_id = db.Column(db.BigInteger, nullable=False)
-    publication_id = db.Column(db.BigInteger)        # null = default del usuario
+    publicacion_id = db.Column(db.BigInteger)        # null = default del usuario
 
     tipo = db.Column(db.String(32), nullable=False)  # 'whatsapp'
     valor = db.Column(db.String(32), nullable=False) # E.164 sin '+'
