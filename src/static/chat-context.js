@@ -22,7 +22,7 @@
     categoria_id:   numOrNull(get('categoria_id')),
     codigo_postal:  get('cp'),
     locale:         get('lang')           || 'es',
-    publication_id: numOrNull(get('publication_id')),
+    publicacion_id: numOrNull(get('publicacion_id')),
     owner_user_id:  numOrNull(get('owner_user_id')),
     owner_email:    get('owner_email'),
   };
@@ -47,7 +47,7 @@
       categoria_id:   26,
       codigo_postal:  '4139',
       locale:         'es',
-      publication_id: 369,
+      publicacion_id: 369,
       owner_user_id:  21,
       owner_email:    'dr.carlos@example.com',
     });
@@ -79,7 +79,7 @@
     viewer_user_id: EMBED_CLIENT.viewer_user_id,
     viewer_email:   EMBED_CLIENT.viewer_email,
     viewer_tel:     EMBED_CLIENT.viewer_tel,
-    publication_id: EMBED_SCOPE.publication_id,
+    publicacion_id: EMBED_SCOPE.publicacion_id,
     owner_user_id:  EMBED_SCOPE.owner_user_id,
     owner_email:    EMBED_SCOPE.owner_email,
   };

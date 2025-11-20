@@ -13,7 +13,7 @@ def get_or_create_conversation(
     codigo_postal=None,
     codigo_postal_id=None,
     locale="es",
-    publication_id=None,
+    publicacion_id=None,
     session=None,
 ) -> Conversation:
     sess = session or db.session
@@ -26,7 +26,7 @@ def get_or_create_conversation(
         codigo_postal=codigo_postal,
         codigo_postal_id=codigo_postal_id,
         locale=locale,
-        publication_id=publication_id,
+        publicacion_id=publicacion_id,
         owner_user_id=owner_user_id,
         session=sess,
     )
@@ -45,7 +45,7 @@ def get_or_create_conversation(
         scope_id=scope.id,
         owner_user_id=owner_user_id,
         client_user_id=client_user_id,
-        publication_id=publication_id,
+        publicacion_id=publicacion_id,
     )
     sess.add(conv)
 

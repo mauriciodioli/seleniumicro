@@ -24,12 +24,12 @@ def open_conversation():
     scope  = data.get("scope")  or {}
     client = data.get("client") or {}
 
-    # Ojo: publication_id puede venir string
-    publication_id = scope.get("publication_id") or 0
+    # Ojo: publicacion_id puede venir string
+    publicacion_id = scope.get("publicacion_id") or 0
     try:
-        publication_id = int(publication_id)
+        publicacion_id = int(publicacion_id)
     except (TypeError, ValueError):
-        publication_id = 0
+        publicacion_id = 0
 
     try:
         # ========== 1) DATOS QUE YA VIENEN DEL FRONT ==========
@@ -88,7 +88,7 @@ def open_conversation():
             codigo_postal=codigo_postal,
             codigo_postal_id=codigo_postal_id,
             locale=locale,
-            publication_id=publication_id,
+            publicacion_id=publicacion_id,
             session=db.session,  # 👈 importante pasar la sesión
         )
 
@@ -146,7 +146,7 @@ def open_conversation():
                 "categoria_id": categoria_id,
                 "codigo_postal": codigo_postal,
                 "codigo_postal_id": codigo_postal_id,
-                "publication_id": publication_id,
+                "publicacion_id": publicacion_id,
             },
             client={
                 "id": client_user_id,

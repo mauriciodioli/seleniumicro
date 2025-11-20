@@ -18,7 +18,7 @@ class Conversation(db.Model):
     summary_json = db.Column(db.JSON)                          # resumen activo
     ai_confidence_avg = db.Column(db.Float)                    # métrica simple
     sentiment_last = db.Column(db.String(20))
-    publication_id = db.Column(db.Integer, nullable=True)
+    publicacion_id = db.Column(db.Integer, nullable=True)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(

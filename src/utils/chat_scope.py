@@ -12,10 +12,10 @@ def make_context_hash(
     categoria_id,
     cp_key,          # <- puede ser ID numérico, CP string, o None
     locale,
-    publication_id,
+    publicacion_id,
     owner_user_id,
 ) -> str:
-    raw = f"{dominio}|{ambito_id}|{categoria_id}|{cp_key}|{locale}|{publication_id}|{owner_user_id}"
+    raw = f"{dominio}|{ambito_id}|{categoria_id}|{cp_key}|{locale}|{publicacion_id}|{owner_user_id}"
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
@@ -26,7 +26,7 @@ def get_or_create_scope(
     codigo_postal=None,      # "52-200"
     codigo_postal_id=None,   # 123 (FK) o None
     locale="es",
-    publication_id=None,
+    publicacion_id=None,
     owner_user_id=None,
     session=None,
 ) -> ChatScope:
@@ -68,7 +68,7 @@ def get_or_create_scope(
         categoria_id=categoria_id,
         cp_key=cp_key,
         locale=locale,
-        publication_id=publication_id,
+        publicacion_id=publicacion_id,
         owner_user_id=owner_user_id,
     )
 
@@ -85,7 +85,7 @@ def get_or_create_scope(
         codigo_postal=cp_txt,
         codigo_postal_id=cp_id,
         locale=locale,
-        publication_id=publication_id,
+        publicacion_id=publicacion_id,
         owner_user_id=owner_user_id,
         hash_contextid=h,
     )

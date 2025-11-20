@@ -375,8 +375,8 @@ const EMBED_SCOPE = {
   categoria_id:   urlParams.get('categoria_id')
                     ? Number(urlParams.get('categoria_id'))
                     : null,
-  publication_id: urlParams.get('publication_id')
-                    ? Number(urlParams.get('publication_id'))
+  publicacion_id: urlParams.get('publicacion_id')
+                    ? Number(urlParams.get('publicacion_id'))
                     : 0,
   owner_user_id:  urlParams.get('owner_user_id')
                     ? Number(urlParams.get('owner_user_id'))
@@ -450,10 +450,10 @@ async function chatAmbitoHere(source){
     if (!scope.codigo_postal_id && EMBED_SCOPE.codigo_postal)
       scope.codigo_postal_id = EMBED_SCOPE.codigo_postal;
 
-    if (s.publication_id   || s.pub_id || s.id_publicacion)
-      scope.publication_id = s.publication_id || s.pub_id || s.id_publicacion;
-    else if (EMBED_SCOPE.publication_id)
-      scope.publication_id = EMBED_SCOPE.publication_id;
+    if (s.publicacion_id   || s.pub_id || s.id_publicacion)
+      scope.publicacion_id = s.publicacion_id || s.pub_id || s.id_publicacion;
+    else if (EMBED_SCOPE.publicacion_id)
+      scope.publicacion_id = EMBED_SCOPE.publicacion_id;
 
     if (s.owner_user_id    || s.ownerId || s.user_id)
       scope.owner_user_id  = s.owner_user_id  || s.ownerId || s.user_id;
