@@ -432,3 +432,94 @@ function renderMessageBubble(m) {
   div.innerHTML = innerHTML;
   return div;
 }
+
+
+// =========================
+//  BOTÓN ENVIAR: click vs audio
+// =========================
+
+const LONG_PRESS_MS = 600;  // tiempo para considerar "mantener apretado"
+let pressTimer = null;
+
+function handleSendClick() {
+  const convId = getConvId();
+  if (!convId) {
+    console.warn('[CHAT SEND] No hay conversación abierta');
+    return;
+  }
+
+  // 1) Si hay imagen pendiente → la mandamos
+  if (pendingImage) {
+    const file = pendingImage;
+    pendingImage = null;
+    clearPreview();
+    enviarImagen(file);
+    return;
+  }
+
+  // 2) Si hay video pendiente → lo mandamos
+  if (pendingVideo) {
+    const file = pendingVideo;
+    pendingVideo = null;
+    clearPreview();
+    enviarVideo(file);
+    return;
+  }
+
+  // 3) Si no hay media, mandamos texto
+  const textInput = document.getElementById('chatInput'); // usa el id real
+  const text = (textInput?.value || '').trim();
+  if (!text) return;
+
+  enviarTextoSolo(text);  // tu función actual de texto
+  textInput.value = '';
+}
+
+function onPressStart(ev) {
+  // Si hay imagen/video pendiente, NO queremos audio, solo click normal
+  if (pendingImage || pendingVideo) {
+    return;
+  }
+
+  // Si no hay soporte de audio, ni lo intentamos
+  if (!hasMediaDevices || !hasMediaRecorder) {
+    return;
+  }
+
+  // Programo el long-press
+  pressTimer = setTimeout(() => {
+    pressTimer = null;
+    startRecording();    // empieza a grabar
+  }, LONG_PRESS_MS);
+}
+
+function onPressEnd(ev) {
+  // Si todavía no venció el timer → fue un click corto
+  if (pressTimer) {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+    handleSendClick();
+    return;
+  }
+
+  // Si YA se había activado startRecording → detener grabación
+  if (isRecording) {
+    stopRecording();
+  }
+}
+
+if (btnSend) {
+  // Desktop: mouse
+  btnSend.addEventListener('mousedown', onPressStart);
+  btnSend.addEventListener('mouseup', onPressEnd);
+  btnSend.addEventListener('mouseleave', onPressEnd);
+
+  // Mobile: touch
+  btnSend.addEventListener('touchstart', (e) => {
+    onPressStart(e);
+  }, { passive: true });
+
+  btnSend.addEventListener('touchend', (e) => {
+    onPressEnd(e);
+  });
+}

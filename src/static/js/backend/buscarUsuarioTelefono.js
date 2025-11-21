@@ -182,7 +182,7 @@ function renderMyDomainPublicaciones(publicaciones) {
               <span>📍 ${cp}</span>
               <span>⚙️ ${estado}</span>
             </p>
-            <button class="btn btn-sm"
+            <button class="btn btn-sm" 
                     data-goto="chat"
                     data-scope='${scope}'
                     onclick="chatHere(this)">
@@ -363,7 +363,7 @@ if (!input || !btn) console.warn('[chat-identidades] No se encontró input o bot
 // --- helpers
 const j = o => String(JSON.stringify(o||{})).replace(/"/g,'&quot;');
 const slug = s => String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-  .toLowerCase().trim().replace(/\s+/g,'_').replace(/[^\w\-./]/g,'');
+  .toLowerCase().trim().replace(/[^\w\-./]/g,'');
 const cap = s => { s = String(s||'').trim(); return s ? s[0].toUpperCase()+s.slice(1) : s; };
 const parseKind = q => {
   const s = String(q||'').trim();
@@ -644,12 +644,13 @@ function renderChatAmbitos(payload){
         <div class="amb-subcard">
           <div class="amb-subcard-head">
             <span>${cap(cname)}</span>
-            <button class="btn"
-                    data-goto="chat"
-                    data-user-id="${userId ?? ''}"
-                    data-email="${email ? escapeHtml(email) : ''}"
-                    data-scope='${j(scopeCat)}'
-                    onclick="window.chatHere?.(this)">
+            <button
+              class="btn chat-ambito-btn"
+              type="button"
+              data-goto="chat"
+              data-user-id="${userId ?? ''}"
+              data-email="${email ? escapeHtml(email) : ''}"
+              data-scope='${j(scopeCat)}'>
               Chatear en ${cap(cname)}
             </button>
           </div>

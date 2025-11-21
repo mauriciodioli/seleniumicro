@@ -494,14 +494,6 @@ document.addEventListener('click', (e) => {
   }
 }, ); // ← CAMBIO MÍNIMO
 
-// (2) Fallback mínimo: si tocan el nombre dentro del summary, también navega
-document.addEventListener('click', (e) => {
-   
-  const name = e.target.closest('.id-name[data-goto="amb-card"]');
-  if (!name || !isMobile()) return;
-  setMobileView('ambitos');
-  setTimeout(focusAmbAnchor, 300);
-}); // ← opcional, pero útil
 
   // 2.b Cuando se pulsa “Chatear …” en ámbitos/mini-cards -> ir a Chat (solo móvil)
   const _origChatHere = window.chatHere || window.chatAmbitoHere;

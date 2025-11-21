@@ -89,3 +89,238 @@ document.addEventListener('DOMContentLoaded', () => {
     setSlideClass(goto);
   });
 })();
+
+
+// ==================== FALLOBACK BOTÓN DE ÁMBITO ====================
+document.addEventListener('click', (ev) => {
+  const btn = ev.target.closest('.chat-ambito-btn');
+  if (!btn) return;
+
+  const name = (btn.textContent || '').trim();
+  console.log('[FALLBACK] click en .chat-ambito-btn, name:', name);
+  console.log('[FALLBACK] dataset.scope:', btn.dataset.scope);
+
+  // ⬅️ LLAMAMOS DIRECTO AL CORE, NO A window.chatAmbitoHere
+  chatAmbitoHere(btn);
+
+  // (opcional) si querés mover a vista chat en mobile:
+  if (name && typeof isMobile === 'function' && isMobile()) {
+    if (typeof setMobileView === 'function') {
+      setMobileView('chat');
+    }
+  }
+});
+
+// ==================== SLIDE MOBILE ====================
+(function(){
+  const root = document.documentElement;
+  console.log('[SLIDE MOBILE] init');
+
+  // Al tocar una identidad -> slide a ámbitos
+  document.addEventListener('click', e => {
+    const summary = e.target.closest('.id-summary');
+    if (!summary) return;
+
+    if (typeof isMobile === 'function' && isMobile()){
+      root.classList.remove('slide-chat');
+      root.classList.add('slide-ambitos');
+    }
+  });
+
+  // Guardamos SOLO chatHere anterior
+  const originalChatHere = window.chatHere;
+  console.log('[SLIDE MOBILE] originalChatHere:', originalChatHere);
+
+  window.chatHere = function(btn){
+    console.log('[SLIDE MOBILE] wrapper chatHere, btn:', btn);
+
+    if (typeof originalChatHere === 'function') {
+      try {
+        originalChatHere(btn);
+      } catch (e) {
+        console.error('Error en originalChatHere:', e);
+      }
+    }
+
+    if (typeof isMobile === 'function' && isMobile()){
+      root.classList.remove('slide-ambitos');
+      root.classList.add('slide-chat');
+    }
+  };
+
+  // Botón para volver a ámbitos
+  document.addEventListener('click', e => {
+    if (e.target.closest('#toggleAmbitos') &&
+        typeof isMobile === 'function' && isMobile()){
+      root.classList.remove('slide-chat');
+      root.classList.add('slide-ambitos');
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (typeof isMobile === 'function' && !isMobile()){
+      root.classList.remove('slide-ambitos','slide-chat');
+    }
+  });
+})();
+
+
+
+// ==================== LÓGICA REAL DEL CHAT ====================
+async function chatAmbitoHere(source){
+  console.group('[chatAmbitoHere] START');
+  console.log('source recibido:', source);
+
+  try{
+    let s;
+
+    if (source && source.dataset && source.dataset.scope){
+      const rawScope = source.dataset.scope || '{}';
+      console.log('[chatAmbitoHere] rawScope:', rawScope);
+      s = typeof rawScope === 'string' ? JSON.parse(rawScope) : rawScope;
+      console.log('[chatAmbitoHere] s parseado desde dataset.scope:', s);
+    } else if (source && typeof source === 'object'){
+      console.log('[chatAmbitoHere] source es objeto directo:', source);
+      s = source;
+    } else {
+      console.log('[chatAmbitoHere] usando EMBED_SCOPE + EMBED_CLIENT');
+      s = {
+        ...EMBED_SCOPE,
+        ...EMBED_CLIENT,
+      };
+      console.log('[chatAmbitoHere] s combinado:', s);
+    }
+
+    const tel = (
+      s.tel ||
+      s.telefono ||
+      EMBED_CLIENT.tel ||
+      window.LAST_IDENTITY_TEL ||
+      ''
+    ).toString().trim();
+
+    console.log('[chatAmbitoHere] tel resuelto:', tel);
+
+    if (!tel){
+      console.error('[CHAT] No hay teléfono en scope ni en LAST_IDENTITY_TEL, no abro chat');
+      if (window.Swal){
+        Swal.fire('Chat', 'Falta teléfono del cliente (tel / telefono).', 'error');
+      }
+      console.groupEnd();
+      return;
+    }
+
+    const scope = {
+      dominio:        s.dominio || s.ambito || EMBED_SCOPE.dominio || 'tecnologia',
+      locale:         s.locale  || s.idioma || EMBED_SCOPE.locale  || 'es',
+      ambito_slug:    s.ambito,
+      categoria_slug: s.categoria,
+      codigo_postal:  s.cp || EMBED_SCOPE.codigo_postal,
+    };
+
+    console.log('[chatAmbitoHere] scope base:', scope);
+
+    if (s.ambito_id        || s.ambitoId)
+      scope.ambito_id = s.ambito_id || s.ambitoId;
+
+    // CATEGORÍA: categoria_id o, si no hay, "categoria" numérica
+    if (s.categoria_id     || s.categoriaId){
+      scope.categoria_id = s.categoria_id || s.categoriaId;
+    }
+    if (!scope.categoria_id && s.categoria && !isNaN(parseInt(s.categoria, 10))) {
+      scope.categoria_id = parseInt(s.categoria, 10);
+    }
+    if (!scope.categoria_id && EMBED_SCOPE.categoria_id){
+      scope.categoria_id = EMBED_SCOPE.categoria_id;
+    }
+
+    if (s.codigo_postal_id || s.codigo_postalId)
+      scope.codigo_postal_id = s.codigo_postal_id || s.codigo_postalId;
+    if (!scope.codigo_postal_id && EMBED_SCOPE.codigo_postal)
+      scope.codigo_postal_id = EMBED_SCOPE.codigo_postal;
+
+    if (s.publicacion_id   || s.pub_id || s.id_publicacion)
+      scope.publicacion_id = s.publicacion_id || s.pub_id || s.id_publicacion;
+    else if (EMBED_SCOPE.publicacion_id)
+      scope.publicacion_id = EMBED_SCOPE.publicacion_id;
+
+    if (s.owner_user_id    || s.ownerId || s.user_id)
+      scope.owner_user_id  = s.owner_user_id  || s.ownerId || s.user_id;
+    else if (EMBED_SCOPE.owner_user_id)
+      scope.owner_user_id  = EMBED_SCOPE.owner_user_id;
+
+    console.log('[chatAmbitoHere] scope FINAL:', scope);
+
+    const payload = {
+      scope,
+      client: {
+        tel,
+        alias:   s.alias || null,
+        email:   s.email   || EMBED_CLIENT.email   || null,
+        user_id: s.user_id || EMBED_CLIENT.user_id || null,
+      }
+    };
+
+    console.log('[CHAT] payload /api_chat_bp/open:', payload);
+
+    const r = await fetch('/api/chat/api_chat_bp/open/', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload)
+    });
+
+    const data = await r.json();
+    console.log('[chatAmbitoHere] respuesta /open:', data);
+
+    if (!r.ok || !data.ok){
+      console.error('Error al abrir chat', data);
+      if (window.Swal){
+        Swal.fire('Chat', data?.error || 'No se pudo abrir el chat', 'error');
+      }
+      console.groupEnd();
+      return;
+    }
+
+    Chat.scope          = payload.scope;
+    Chat.conversationId = data.conversation_id;
+
+    console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
+
+    setChatHeaderFromOpen(data);
+
+    let msgs = data.messages || [];
+    if (data.is_new && data.from_summary){
+      msgs = [{
+        role: 'system',
+        via: 'dpia',
+        content_type: 'text',
+        content: `Nuevo chat desde ${data.from_summary}`,
+        created_at: new Date().toISOString()
+      }, ...msgs];
+    }
+
+    renderMessages(msgs);
+
+    if (Chat.polling) clearInterval(Chat.polling);
+    Chat.polling = setInterval(loadMessages, 2500);
+
+    localStorage.setItem('dpia.chat.last', JSON.stringify({
+      conversationId: Chat.conversationId,
+      scope: Chat.scope
+    }));
+
+    document.getElementById('msgInput')?.focus();
+
+  }catch(e){
+    console.error('Scope inválido / error en chatAmbitoHere', e);
+    if (window.Swal){
+      Swal.fire('Chat', 'Error inesperado en el cliente.', 'error');
+    }
+  } finally {
+    console.groupEnd();
+  }
+}
