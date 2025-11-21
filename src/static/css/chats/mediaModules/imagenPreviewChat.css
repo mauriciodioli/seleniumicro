@@ -1,8 +1,8 @@
 /* Ensure the media preview container is visible */
 #mediaPreview {
   position: absolute; /* Align relative to the chat panel */
-  bottom: 120px; /* Position near the bottom of the chat panel */
-  left: 1300px; /* Align with the left side of the chat panel */
+  bottom: 130px; /* Position near the bottom of the chat panel */
+  left: 1310px; /* Align with the left side of the chat panel */
   width: 400px; /* Set a proportional width for PC */
   height: auto; /* Adjust height dynamically based on content */
   background-color: #d4f1f9; /* Cyan color matching the sent chat messages */
@@ -26,7 +26,7 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  background: #ff5e57; /* Red close button for visibility */
+  background: #383737; /* Red close button for visibility */
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -45,8 +45,8 @@
     position: fixed; /* Fix the preview to the viewport */
     bottom: auto;
     right: auto;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
+    top: 30%; /* Center vertically */
+    left: 70%; /* Center horizontally */
     transform: translate(-50%, -50%); /* Adjust to center */
     width: 90%; /* Use most of the screen width */
     max-width: 300px; /* Limit the maximum width */
@@ -54,3 +54,4 @@
     padding: 10px; /* Slightly larger padding for mobile */
   }
 }
+

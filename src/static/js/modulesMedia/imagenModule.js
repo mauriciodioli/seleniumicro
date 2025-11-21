@@ -3,55 +3,56 @@ console.log('[CHAT IMAGE] Módulo cargado');
 let pendingImage = null;
 
 function ensureMediaPreview() {
-  console.log('[ensureMediaPreview] Verificando si el contenedor de vista previa existe...');
+  console.log('[ensureMediaPreview] Verificando si existe #mediaPreview...');
   let previewContainer = document.getElementById('mediaPreview');
   if (!previewContainer) {
-    console.log('[ensureMediaPreview] Contenedor no encontrado. Creando uno nuevo...');
-    // Si el contenedor no existe, crearlo dinámicamente
+    console.log('[ensureMediaPreview] No existe, creando...');
     previewContainer = document.createElement('div');
     previewContainer.id = 'mediaPreview';
     previewContainer.className = 'chat-media-preview';
 
-    // Append to the chat panel instead of the body
-    const chatPanel = document.getElementById('chatPanel');
-    if (chatPanel) {
-      chatPanel.appendChild(previewContainer);
-    } else {
-      console.warn('[ensureMediaPreview] No se encontró el panel de chat. Agregando al body.');
-      document.body.appendChild(previewContainer);
-    }
-  } else {
-    console.log('[ensureMediaPreview] Contenedor encontrado.');
+    // botón cerrar
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-btn';
+    closeButton.innerText = '×';
+    closeButton.addEventListener('click', () => {
+      previewContainer.style.display = 'none';
+      pendingImage = null;
+    });
+    previewContainer.appendChild(closeButton);
+
+    document.body.appendChild(previewContainer);
   }
+
+  // aseguramos que se vea
+  previewContainer.style.display = 'block';
   return previewContainer;
 }
-function showImagePreview(file) {
-  console.log('[showImagePreview] Iniciando vista previa de la imagen...');
-  const previewContainer = ensureMediaPreview(); // Asegurarse de que el contenedor exista
-  if (!previewContainer) {
-    console.error('[showImagePreview] Contenedor de vista previa no encontrado.');
-    return;
-  }
 
-  console.log('[showImagePreview] Creando URL para la imagen seleccionada...');
+function showImagePreview(file) {
+  console.log('[showImagePreview] Iniciando vista previa...');
+  const previewContainer = ensureMediaPreview();
+  if (!previewContainer) return;
+
   const imageUrl = URL.createObjectURL(file);
 
-  console.log('[showImagePreview] Limpiando contenido previo del contenedor...');
-  previewContainer.innerHTML = '';
+  // ❗ NO usar innerHTML = '' → borraría el botón
+  // En su lugar, borramos solo la imagen anterior
+  const oldImg = previewContainer.querySelector('img.chat-media-thumb');
+  if (oldImg) oldImg.remove();
 
-  console.log('[showImagePreview] Creando elemento de imagen...');
   const imgElement = document.createElement('img');
   imgElement.src = imageUrl;
   imgElement.alt = 'Imagen adjunta';
   imgElement.className = 'chat-media-thumb';
 
-  console.log('[showImagePreview] Agregando la imagen al contenedor...');
+  // el botón ya está, solo agregamos la nueva imagen
   previewContainer.appendChild(imgElement);
 
-  // Guardar la imagen pendiente para su envío
   pendingImage = file;
-  console.log('[showImagePreview] Imagen pendiente guardada:', pendingImage);
+  console.log('[showImagePreview] Imagen pendiente:', pendingImage);
 }
+
 
 async function enviarImagen(file) {
   console.log('[enviarImagen] Iniciando envío de la imagen...');
