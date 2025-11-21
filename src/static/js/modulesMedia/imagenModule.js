@@ -2,32 +2,43 @@ console.log('[CHAT IMAGE] Módulo cargado');
 
 let pendingImage = null;
 
+let mediaPreview = null;
+
 function ensureMediaPreview() {
   console.log('[ensureMediaPreview] Verificando si existe #mediaPreview...');
-  let previewContainer = document.getElementById('mediaPreview');
-  if (!previewContainer) {
-    console.log('[ensureMediaPreview] No existe, creando...');
-    previewContainer = document.createElement('div');
-    previewContainer.id = 'mediaPreview';
-    previewContainer.className = 'chat-media-preview';
-
-    // botón cerrar
-    const closeButton = document.createElement('button');
-    closeButton.className = 'close-btn';
-    closeButton.innerText = '×';
-    closeButton.addEventListener('click', () => {
-      previewContainer.style.display = 'none';
-      pendingImage = null;
-    });
-    previewContainer.appendChild(closeButton);
-
-    document.body.appendChild(previewContainer);
+  if (mediaPreview) {
+    mediaPreview.style.display = 'block';
+    return mediaPreview;
   }
 
-  // aseguramos que se vea
-  previewContainer.style.display = 'block';
-  return previewContainer;
+  const chatInputBar = document.querySelector('.chat-input');
+  if (!chatInputBar || !chatInputBar.parentElement) {
+    console.warn('[ensureMediaPreview] No encontré .chat-input');
+    return null;
+  }
+
+  mediaPreview = document.createElement('div');
+  mediaPreview.id = 'mediaPreview';
+  mediaPreview.className = 'chat-media-preview';
+
+  // botón cerrar
+  const closeButton = document.createElement('button');
+  closeButton.className = 'close-btn';
+  closeButton.innerText = '×';
+  closeButton.addEventListener('click', () => {
+    mediaPreview.style.display = 'none';
+    mediaPreview.innerHTML = ''; // si querés limpiar imagen
+    mediaPreview.appendChild(closeButton); // re-inyectar el botón
+    pendingImage = null;
+  });
+  mediaPreview.appendChild(closeButton);
+
+  // 👇 lo insertamos justo ANTES de la barra de input
+  chatInputBar.parentElement.insertBefore(mediaPreview, chatInputBar);
+
+  return mediaPreview;
 }
+
 
 function showImagePreview(file) {
   console.log('[showImagePreview] Iniciando vista previa...');
