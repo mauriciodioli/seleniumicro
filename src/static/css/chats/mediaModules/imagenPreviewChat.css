@@ -1,0 +1,56 @@
+/* Ensure the media preview container is visible */
+#mediaPreview {
+  position: absolute; /* Align relative to the chat panel */
+  bottom: 120px; /* Position near the bottom of the chat panel */
+  left: 1300px; /* Align with the left side of the chat panel */
+  width: 400px; /* Set a proportional width for PC */
+  height: auto; /* Adjust height dynamically based on content */
+  background-color: #d4f1f9; /* Cyan color matching the sent chat messages */
+  border: 1px solid #00aaff; /* Slightly darker cyan border for contrast */
+  border-radius: 8px; /* Rounded corners for a modern look */
+  padding: 8px; /* Add some padding inside the container */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Style the image inside the preview container */
+#mediaPreview img {
+  max-width: 100%; /* Ensure the image fits within the container */
+  height: auto; /* Maintain the aspect ratio */
+  display: block; /* Remove extra space below the image */
+  border-radius: 4px; /* Slightly rounded corners for the image */
+}
+
+/* Add a close button for the preview */
+#mediaPreview .close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #ff5e57; /* Red close button for visibility */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 600px) {
+  #mediaPreview {
+    position: fixed; /* Fix the preview to the viewport */
+    bottom: auto;
+    right: auto;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust to center */
+    width: 90%; /* Use most of the screen width */
+    max-width: 300px; /* Limit the maximum width */
+    background-color: #d4f1f9; /* Same cyan background */
+    padding: 10px; /* Slightly larger padding for mobile */
+  }
+}

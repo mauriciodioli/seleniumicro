@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajes.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/chatMensajesMedia.css') }}">
 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/mediaModules/imagenPreviewChat.css') }}">
   <!-- CSS extras de funcionalidad -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/usuariosChat.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/chats/micrositios/micrositio.css') }}">
@@ -79,6 +80,6 @@
 
   <!-- JS: chat mensajes + media -->
   <script src="{{ url_for('static', filename='js/chats/chatMensajes.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='js/chats/chatMensajesMedia.js') }}" defer></script>
+  <script type="module" src="{{ url_for('static', filename='js/chats/chatMensajesMedia.js') }}"></script>
 </body>
 </html>
