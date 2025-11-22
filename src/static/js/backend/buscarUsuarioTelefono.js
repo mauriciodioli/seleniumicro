@@ -1106,3 +1106,52 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT] DOMContentLoaded buscarUsuarioTelefono.js');
   bootstrapFromUrlContext();
 });
+
+
+
+
+
+
+// === Inicializar ámbitos y publicaciones desde DPIA (usuario entrante) ===
+(function initMyDomainFromEmbed(){
+  if (!window.EMBED_CLIENT) return;
+
+  const userId = window.EMBED_CLIENT.viewer_user_id;
+  if (!userId) return;
+
+  // hacemos la misma llamada que en búsqueda, pero directa por ID
+  fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      q: userId,
+      type: 'user_id'
+    })
+  })
+  .then(resp => resp.json())
+  .then(data => {
+    if (!data.ok) return;
+
+    // Header (ya lo hicimos, pero no molesta repetir)
+    setIdentidadesHeaderUser(data.user);
+
+    // Ámbitos en MyDomain
+    if (typeof renderMyDomainAmbitos === 'function') {
+      renderMyDomainAmbitos(data.ambitos || []);
+    }
+
+    // Publicaciones en panel derecho
+    if (typeof renderMyDomainPublicaciones === 'function') {
+      renderMyDomainPublicaciones(data.publicaciones || []);
+    }
+
+    // Badges meta (si aplica)
+    if (typeof renderMetaBadges === 'function') {
+      renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
+    }
+
+  }).catch(e => console.warn('[initMyDomainFromEmbed] error:', e));
+})();
