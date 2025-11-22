@@ -337,33 +337,6 @@ debugger;
 
 
 
-// === INIT PRODUCCIÓN: usar SIEMPRE el usuario que viene de DPIA ===
-(function initFromDPIAViewer(){
-  // No hacer nada en localhost (ahí podes seguir jugando con el mock)
-  const isLocalDev = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
-  if (isLocalDev) return;
-
-  if (!window.EMBED_CLIENT || !window.BuscarUsuarioTelefono?.buscarBy) return;
-
-  const client   = window.EMBED_CLIENT;
-  const viewerId = client.viewer_user_id ? String(client.viewer_user_id) : '';
-  const viewerTel = client.viewer_tel ? String(client.viewer_tel).trim() : '';
-
-  // 1) Si DPIA envía teléfono, usamos ese
-  if (viewerTel) {
-    console.log('[INIT DPIA] buscarBy phone:', viewerTel);
-    window.BuscarUsuarioTelefono.buscarBy('phone', viewerTel)
-      .catch(err => console.warn('[INIT DPIA] error buscarBy(phone):', err));
-    return;
-  }
-
-  // 2) Si no hay teléfono pero sí ID de usuario, usamos user_id
-  if (viewerId) {
-    console.log('[INIT DPIA] buscarBy user_id:', viewerId);
-    window.BuscarUsuarioTelefono.buscarBy('user_id', viewerId)
-      .catch(err => console.warn('[INIT DPIA] error buscarBy(user_id):', err));
-  }
-})();
 
 })();
 
