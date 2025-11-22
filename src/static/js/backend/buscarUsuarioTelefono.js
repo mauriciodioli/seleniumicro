@@ -53,7 +53,7 @@ window.getCachedIdentity = function(arg){
 
       const data = await resp.json();
       console.log('[identidad-buscar] data:', data);
-
+debugger;
       if (!resp.ok || !data.ok) {
         Swal.fire('Sin resultados', data.error || 'No se encontró identidad', 'info');
         return;
@@ -258,7 +258,7 @@ window.BuscarUsuarioTelefono = {
     if (kind === 'alias' && typeof value === 'string') {
       value = value.replace(/^@/, '');
     }
-
+debugger;
     let resp, data = {};
     try {
       resp = await fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
@@ -333,6 +333,37 @@ window.BuscarUsuarioTelefono = {
   }
 })();
 
+
+
+
+
+// === INIT PRODUCCIÓN: usar SIEMPRE el usuario que viene de DPIA ===
+(function initFromDPIAViewer(){
+  // No hacer nada en localhost (ahí podes seguir jugando con el mock)
+  const isLocalDev = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+  if (isLocalDev) return;
+
+  if (!window.EMBED_CLIENT || !window.BuscarUsuarioTelefono?.buscarBy) return;
+
+  const client   = window.EMBED_CLIENT;
+  const viewerId = client.viewer_user_id ? String(client.viewer_user_id) : '';
+  const viewerTel = client.viewer_tel ? String(client.viewer_tel).trim() : '';
+
+  // 1) Si DPIA envía teléfono, usamos ese
+  if (viewerTel) {
+    console.log('[INIT DPIA] buscarBy phone:', viewerTel);
+    window.BuscarUsuarioTelefono.buscarBy('phone', viewerTel)
+      .catch(err => console.warn('[INIT DPIA] error buscarBy(phone):', err));
+    return;
+  }
+
+  // 2) Si no hay teléfono pero sí ID de usuario, usamos user_id
+  if (viewerId) {
+    console.log('[INIT DPIA] buscarBy user_id:', viewerId);
+    window.BuscarUsuarioTelefono.buscarBy('user_id', viewerId)
+      .catch(err => console.warn('[INIT DPIA] error buscarBy(user_id):', err));
+  }
+})();
 
 })();
 
@@ -770,7 +801,7 @@ async function procesarChatIdentidades(seed){
     return;
   }
   if (v.type === 'phone' && input) input.value = v.value; // reflejar E.164
-
+debugger;
   // pedir al backend
   const resp = await fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
     method:'POST',
@@ -1111,47 +1142,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-// === Inicializar ámbitos y publicaciones desde DPIA (usuario entrante) ===
-(function initMyDomainFromEmbed(){
-  if (!window.EMBED_CLIENT) return;
-
-  const userId = window.EMBED_CLIENT.viewer_user_id;
-  if (!userId) return;
-
-  // hacemos la misma llamada que en búsqueda, pero directa por ID
-  fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      q: userId,
-      type: 'user_id'
-    })
-  })
-  .then(resp => resp.json())
-  .then(data => {
-    if (!data.ok) return;
-
-    // Header (ya lo hicimos, pero no molesta repetir)
-    setIdentidadesHeaderUser(data.user);
-
-    // Ámbitos en MyDomain
-    if (typeof renderMyDomainAmbitos === 'function') {
-      renderMyDomainAmbitos(data.ambitos || []);
-    }
-
-    // Publicaciones en panel derecho
-    if (typeof renderMyDomainPublicaciones === 'function') {
-      renderMyDomainPublicaciones(data.publicaciones || []);
-    }
-
-    // Badges meta (si aplica)
-    if (typeof renderMetaBadges === 'function') {
-      renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
-    }
-
-  }).catch(e => console.warn('[initMyDomainFromEmbed] error:', e));
-})();
