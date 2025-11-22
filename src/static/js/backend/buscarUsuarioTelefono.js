@@ -313,6 +313,27 @@ window.BuscarUsuarioTelefono = {
   renderMetaBadges
 };
 
+// === Inicializar el header con el usuario que viene de DPIA ===
+(function initIdentidadesHeaderFromEmbed(){
+  if (!window.EMBED_CLIENT) return;
+
+  const client = window.EMBED_CLIENT;
+  const user = {
+    id:    client.viewer_user_id || null,
+    nombre: null,
+    alias:  null,
+    email:  client.viewer_email || null,
+    correo_electronico: client.viewer_email || null,
+    tel:    client.viewer_tel || null,
+  };
+
+  // si al menos hay email o tel, actualizamos el header
+  if (user.email || user.tel) {
+    setIdentidadesHeaderUser(user);
+  }
+})();
+
+
 })();
 
 
@@ -480,7 +501,7 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   if (!acc || !tel) return;
 
   console.log('[IDENTITY] user recibido:', JSON.parse(JSON.stringify(user)));
-
+debugger;
   const key = userKeyOverride || tel;
 
   // Si ya existe, lo subimos al tope y salimos
