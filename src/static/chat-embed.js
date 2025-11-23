@@ -61,39 +61,52 @@ function isMicrositeContext() {
   //  LECTURA DEL CONTEXTO REAL DE DPIA (LOCALSTORAGE + COOKIES)
   // =========================================================
   function getDpiaContext() {
-    const ctx = {
-      // quién está logeado (viewer)
-      viewer_user_id: '',
-      viewer_email: '',
-      viewer_tel: '',
-      // ámbito actual
-      dominio: '',
-      dominio_id: '',
-      categoria_id: '',
-      cp: '',
-      lang: '',
-      // publicación actual
-      publication_id: ''
-    };
+  const ctx = {
+    // quién está logeado (viewer)
+    viewer_user_id: '',
+    viewer_email: '',
+    viewer_tel: '',
+    // ámbito actual
+    dominio: '',
+    dominio_id: '',
+    categoria_id: '',
+    cp: '',
+    lang: '',
+    // publicación actual
+    publication_id: ''
+  };
 
-    try {
-      const ls = window.localStorage;
+  try {
+    const ls = window.localStorage;
 
-      if (ls) {
-        // Usuario logeado
-        ctx.viewer_user_id = ls.getItem('usuario_id') || '';
-        ctx.viewer_email   = ls.getItem('correo_electronico') || '';
-        ctx.viewer_tel     = ls.getItem('numTelefono:22') ||
-                             ls.getItem('numTelefono') || '';
+    if (ls) {
+      // Usuario logeado
+      const userId = ls.getItem('usuario_id') || '';
+      ctx.viewer_user_id = userId;
+      ctx.viewer_email   = ls.getItem('correo_electronico') || '';
 
-        // Ámbito
-        ctx.dominio        = ls.getItem('dominio') || '';
-        ctx.dominio_id     = ls.getItem('dominio_id') || '';
-        ctx.categoria_id   = ls.getItem('categoriaSeleccionadaId') ||
-                             ls.getItem('categoria') || '';
-        ctx.cp             = ls.getItem('codigoPostal') || '';
-        ctx.lang           = ls.getItem('language') || '';
+      // ⬇⬇ ESTE ES EL CAMBIO IMPORTANTE
+      let tel = '';
+      if (userId) {
+        tel = ls.getItem(`numTelefono:${userId}`) || '';
       }
+      if (!tel) {
+        tel = ls.getItem('numTelefono') || '';
+      }
+      ctx.viewer_tel = tel;
+      // ⬆⬆ FIN CAMBIO
+
+      // Ámbito
+      ctx.dominio      = ls.getItem('dominio') || '';
+      ctx.dominio_id   = ls.getItem('dominio_id') || '';
+      ctx.categoria_id = ls.getItem('categoriaSeleccionadaId') ||
+                         ls.getItem('categoria') || '';
+      ctx.cp           = ls.getItem('codigoPostal') || '';
+      ctx.lang         = ls.getItem('language') || '';
+    }
+
+    // ... resto de cookies igual ...
+
 
       // Cookies: dominio, CP, publicación, idioma
       document.cookie.split(';').forEach(p => {
