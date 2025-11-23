@@ -34,11 +34,41 @@
     viewer_tel:     get('viewer_tel'),
   };
 
-  // Log SIEMPRE del contexto real que viene por query (sin mock)
-  console.log('[CHAT-CONTEXT] Contexto desde query:', {
-    EMBED_SCOPE,
-    EMBED_CLIENT,
-  });
+  // ===== 2) MOCK para desarrollo local SIN datos de usuario =====
+  const isLocalDev   = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+  const noUserInQuery =
+    !EMBED_CLIENT.viewer_user_id &&
+    !EMBED_CLIENT.viewer_email &&
+    !EMBED_CLIENT.viewer_tel;
+
+  if (isLocalDev && noUserInQuery) {
+    Object.assign(EMBED_SCOPE, {
+      dominio:        'Salud',
+      dominio_id:     4,
+      categoria_id:   26,
+      codigo_postal:  '4139',
+      locale:         'es',
+      publicacion_id: 369,
+      owner_user_id:  21,
+      owner_email:    'dr.carlos@example.com',
+    });
+
+    Object.assign(EMBED_CLIENT, {
+      viewer_user_id: 22,
+      viewer_email:   'mauriciodioli@gmail.com',
+      viewer_tel:     '+393445977100',
+    });
+
+    console.warn('[CHAT-CONTEXT] Usando MOCK de desarrollo local:', {
+      EMBED_SCOPE,
+      EMBED_CLIENT,
+    });
+  } else {
+    console.log('[CHAT-CONTEXT] Contexto desde query:', {
+      EMBED_SCOPE,
+      EMBED_CLIENT,
+    });
+  }
 
   // ===== 3) CHAT_CTX de compatibilidad (lo que ya usabas antes) =====
   const CHAT_CTX = {

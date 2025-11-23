@@ -1064,50 +1064,82 @@ window.debugIdentityCache = function(labelOrScope = ''){
 
 
 // ==== Bootstrap desde el contexto del embed (viewer_*) ====
+// ==== Bootstrap desde el contexto del embed (viewer_*) ====
+// PRIORIDAD:
+// 1) EMBED_CLIENT.viewer_tel (tel que viene de DPIA)
+// 2) EMBED_CLIENT.viewer_email (si no hay tel)
+// 3) viewer_tel en la URL como fallback viejo
 function bootstrapFromUrlContext(){
-  try{
-    const params = new URLSearchParams(window.location.search || '');
+  try {
+    // 1) Si DPIA ya cargó EMBED_CLIENT, usamos eso primero
+    if (window.EMBED_CLIENT && window.BuscarUsuarioTelefono?.buscarBy) {
+      const c = window.EMBED_CLIENT;
+      const tel   = (c.viewer_tel   || '').trim();
+      const email = (c.viewer_email || '').trim();
+
+      if (tel) {
+        console.debug('[CHAT/bootstrap] EMBED_CLIENT.viewer_tel =', tel);
+        // simula una búsqueda normal por teléfono
+        window.BuscarUsuarioTelefono.buscarBy('phone', tel).catch(err => {
+          console.warn('[CHAT/bootstrap] error buscarBy(phone) EMBED_CLIENT:', err);
+        });
+        return;
+      }
+
+      if (email) {
+        console.debug('[CHAT/bootstrap] EMBED_CLIENT.viewer_email =', email);
+        // si no hay teléfono, buscamos por email
+        window.BuscarUsuarioTelefono.buscarBy('email', email).catch(err => {
+          console.warn('[CHAT/bootstrap] error buscarBy(email) EMBED_CLIENT:', err);
+        });
+        return;
+      }
+    }
+
+    // 2) Fallback: usar viewer_tel de la URL como antes
+    const params    = new URLSearchParams(window.location.search || '');
     const viewerTel = (params.get('viewer_tel') || '').trim();
 
-    if (!viewerTel){
-      console.debug('[CHAT/bootstrap] sin viewer_tel en URL, no auto-busco');
+    if (!viewerTel) {
+      console.debug('[CHAT/bootstrap] sin EMBED_CLIENT usable ni viewer_tel en URL, no auto-busco');
       return;
     }
 
     console.debug('[CHAT/bootstrap] viewer_tel desde URL:', viewerTel);
 
-    // Si ya existe en el DOM, sólo lo subimos y listo
-    if (dedupeAndPromoteByTel(viewerTel)){
+    // Si ya existe en la lista, sólo subimos la identidad y salimos
+    if (dedupeAndPromoteByTel(viewerTel)) {
       console.debug('[CHAT/bootstrap] identidad ya estaba en el DOM, sólo promote');
       return;
     }
 
-    // Caso normal: disparamos la búsqueda como si hubieras escrito el teléfono
-    if (input){
-      input.value = viewerTel; // refleja en la UI por si querés verlo
+    if (input) {
+      input.value = viewerTel; // reflejar en UI
     }
 
     const v = validarEntrada(viewerTel);
-    if (!v.ok){
+    if (!v.ok) {
       console.warn('[CHAT/bootstrap] viewer_tel inválido:', v.reason);
       return;
     }
-    if (v.type !== 'phone'){
-      console.warn('[CHAT/bootstrap] viewer_tel no detectado como phone, type=', v.type);
+    if (v.type !== 'phone') {
+      console.warn('[CHAT/bootstrap] viewer_tel no detectado como phone, type =', v.type);
       return;
     }
 
-    // Llamamos a la función de siempre, pero pasándole el seed
+    // llamada normal al flujo que ya tenés
     procesarChatIdentidades(v.value);
 
-  } catch(e){
-    console.warn('[CHAT/bootstrap] error leyendo contexto de URL', e);
+  } catch(e) {
+    console.warn('[CHAT/bootstrap] error leyendo contexto de URL/EMBED_CLIENT', e);
   }
 }
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT] DOMContentLoaded buscarUsuarioTelefono.js');
+  debugger;
   bootstrapFromUrlContext();
 });
 
