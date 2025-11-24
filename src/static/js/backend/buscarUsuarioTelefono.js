@@ -710,6 +710,14 @@ function renderChatAmbitos(payload){
   _ensureScrollable(target);
 }
 
+function escapeHtml(s) {
+  return String(s ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
 
 // Crea alias a partir del user (si no viene alias explícito)
 function buildAliasFromUser(user = {}) {
