@@ -37,14 +37,31 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   const j = (obj) => JSON.stringify(obj || {});
   const displayName = user.nombre || alias || 'Usuario';
 
+  // 🔹 Leer micrositio desde la cache dpia.identityCache.v1 en localStorage
+  let micrositeId = null;
+  try {
+    const raw = localStorage.getItem('dpia.identityCache.v1');
+    if (raw) {
+      const cache = JSON.parse(raw);              // { "+5493814068533": { ... }, ... }
+      const entry = cache[key] || cache[tel];     // usamos key o tel como fallback
+      if (entry && entry.micrositio_personal && entry.micrositio_personal.id) {
+        micrositeId = entry.micrositio_personal.id;  // ej: 369
+      }
+    }
+  } catch (e) {
+    console.warn('[Identity] No se pudo leer dpia.identityCache.v1:', e);
+  }
+
+  const micrositeUrl = micrositeId ? `https://dpia.site/${micrositeId}` : '';
+
   const html = `
     <details class="id-item" data-key="${key}">
       <summary class="id-summary" data-scope='${j({ tel, user_id: user.id })}'>
         <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
         <span class="id-name" data-goto="amb-card">👤 ${displayName}</span>
-        <span class="id-badge" data-goto="chat">${user.last_msg || '—'}</span>
+        <span class="id-badge" data-goto="chat">${user.last_msg || '▶'}</span>
       </summary>
-      <div class="id-body">
+      <div class="id-body"> 
         <span class="id-field">📞 ${tel}</span>
         ${
           alias
@@ -56,10 +73,25 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
                </button>`
             : ''
         }
+        ${
+          micrositeUrl
+            ? `<span class="id-field">
+                 🌐 <a href="${micrositeUrl}" target="_blank" rel="noopener">
+                      ${micrositeUrl}
+                    </a>
+               </span>`
+            : ''
+        }
       </div>
       <div class="id-actions">
         <button class="btn btn-accent" data-goto="chat"
                 onclick="window.chatHere?.(this)">Chatear aquí</button>
+        <button class="btn btn-ghost"
+                type="button"
+                data-tel="${tel}"
+                onclick="window.openWhatsAppFromIdentity?.(this)">
+          WhatsApp
+        </button>
       </div>
     </details>
   `.trim();
@@ -68,6 +100,18 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   tmp.innerHTML = html;
   acc.insertBefore(tmp.firstElementChild, acc.firstElementChild);
 }
+
+// helper para WhatsApp (si todavía no lo tenés)
+window.openWhatsAppFromIdentity = function (btn) {
+  const tel = (btn.dataset.tel || '').trim();
+  if (!tel) return;
+
+  const clean = tel.replace(/[^+\d]/g, '');
+  const number = clean.replace(/^\+/, '');
+  const url = `https://wa.me/${number}`;
+  window.open(url, '_blank');
+};
+
 
 
 
