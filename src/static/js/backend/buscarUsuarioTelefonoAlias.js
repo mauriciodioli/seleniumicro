@@ -1,23 +1,3 @@
-function findPersonalMicrositeFromData(data) {
-  if (!data) return null;
-  const pubs = Array.isArray(data.publicaciones) ? data.publicaciones : [];
-  if (!pubs.length) return null;
-
-  const PERSONAL_AMBITOS = ['personal', 'Personal', 'Osobisty']; // ajustá según tus datos reales
-
-  // 1) buscar por ámbito "personal"
-  const found = pubs.find(p =>
-    PERSONAL_AMBITOS.includes(String(p.ambito || '').trim())
-  );
-  if (found) return found;
-
-  // 2) fallback: la primera publicación (para no dejar vacío)
-  return pubs[0] || null;
-}
-
-
-
-
 function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   const acc = document.querySelector('.id-accordion');
   const tel = String(user?.tel || '').trim();
@@ -37,19 +17,15 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   const j = (obj) => JSON.stringify(obj || {});
   const displayName = user.nombre || alias || 'Usuario';
 
-  // 🔹 Leer micrositio desde la cache dpia.identityCache.v1 en localStorage
+  // 🔹 Leer micrositio desde IdentityCache en memoria (no desde localStorage)
   let micrositeId = null;
   try {
-    const raw = localStorage.getItem('dpia.identityCache.v1');
-    if (raw) {
-      const cache = JSON.parse(raw);              // { "+5493814068533": { ... }, ... }
-      const entry = cache[key] || cache[tel];     // usamos key o tel como fallback
-      if (entry && entry.micrositio_personal && entry.micrositio_personal.id) {
-        micrositeId = entry.micrositio_personal.id;  // ej: 369
-      }
+    const entry = window.IdentityCache?.get(key);
+    if (entry?.micrositio_personal?.id) {
+      micrositeId = entry.micrositio_personal.id;   // ej: 369
     }
   } catch (e) {
-    console.warn('[Identity] No se pudo leer dpia.identityCache.v1:', e);
+    console.warn('[Identity] No se pudo leer IdentityCache para', key, e);
   }
 
   const micrositeUrl = micrositeId ? `https://dpia.site/${micrositeId}` : '';
@@ -75,7 +51,7 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
         }
         ${
           micrositeUrl
-            ? `<span class="id-field">
+            ? `<span class="id-field id-microsite-link">
                  🌐 <a href="${micrositeUrl}" target="_blank" rel="noopener">
                       ${micrositeUrl}
                     </a>
@@ -100,6 +76,7 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   tmp.innerHTML = html;
   acc.insertBefore(tmp.firstElementChild, acc.firstElementChild);
 }
+
 
 // helper para WhatsApp (si todavía no lo tenés)
 window.openWhatsAppFromIdentity = function (btn) {
@@ -170,47 +147,70 @@ window.openPersonalMicrosite = function (el) {
   identityCache.set(key, data);
   window.IdentityCachePersist?.();
 
+  // 4.b) Refrescar la tarjeta de identidad para que muestre el link
+  try {
+    const item = document.querySelector(`.id-item[data-key="${key}"]`);
+    if (item && pub.id) {
+      const micrositeUrl = `https://dpia.site/${pub.id}`;
+      const body = item.querySelector('.id-body');
+      if (body) {
+        let span = body.querySelector('.id-microsite-link');
+        if (!span) {
+          span = document.createElement('span');
+          span.className = 'id-field id-microsite-link';
+          body.appendChild(span);
+        }
+        span.innerHTML = `
+          🌐 <a href="${micrositeUrl}" target="_blank" rel="noopener">
+                ${micrositeUrl}
+              </a>
+        `;
+      }
+    }
+  } catch (e) {
+    console.warn('[ALIAS] no se pudo refrescar micrositio en la identidad', e);
+  }
+
   // 5) Pintar en el panel de ámbitos (vistaChatAmbitos)
   const cont = document.getElementById('vistaChatAmbitos');
-    if (!cont) {
+  if (!cont) {
     console.warn('[ALIAS] no existe #vistaChatAmbitos en el DOM');
     return;
-    }
+  }
 
-    const fecha = pub.fecha_creacion
+  const fecha = pub.fecha_creacion
     ? new Date(pub.fecha_creacion).toLocaleString()
     : '';
 
-    cont.innerHTML = `
+  cont.innerHTML = `
     <article class="ambito-card-personal">
-        <header class="ambito-card-personal__head">
+      <header class="ambito-card-personal__head">
         <p class="ambito-card-personal__tag">Micrositio personal</p>
         <h3 class="ambito-card-personal__title">${pub.titulo || 'Micrositio personal'}</h3>
         <p class="ambito-card-personal__meta">
-            <span>Ámbito: <strong>${pub.ambito || 'personal'}</strong></span>
-            <span>Idioma: <strong>${pub.idioma || ''}</strong></span>
-            ${pub.codigo_postal ? `<span>CP: <strong>${pub.codigo_postal}</strong></span>` : ''}
+          <span>Ámbito: <strong>${pub.ambito || 'personal'}</strong></span>
+          <span>Idioma: <strong>${pub.idioma || ''}</strong></span>
+          ${pub.codigo_postal ? `<span>CP: <strong>${pub.codigo_postal}</strong></span>` : ''}
         </p>
-        </header>
+      </header>
 
-        <section class="ambito-card-personal__body">
+      <section class="ambito-card-personal__body">
         ${pub.descripcion ? `<p class="ambito-card-personal__desc">${pub.descripcion}</p>` : ''}
         ${pub.imagen ? `
-            <div class="ambito-card-personal__media">
+          <div class="ambito-card-personal__media">
             <img src="${pub.imagen}" alt="${pub.titulo || ''}" loading="lazy">
-            </div>` : ''
+          </div>` : ''
         }
-        </section>
+      </section>
 
-        <footer class="ambito-card-personal__foot">
+      <footer class="ambito-card-personal__foot">
         ${fecha ? `<span class="ambito-card-personal__date">Creado: ${fecha}</span>` : ''}
-        </footer>
+      </footer>
     </article>
-    `;
+  `;
 
-
-  // si tenés focusRightPanel para mobile, lo podés llamar aquí
   if (typeof focusRightPanel === 'function') {
     focusRightPanel();
   }
 };
+
