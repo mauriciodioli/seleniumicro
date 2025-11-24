@@ -16,9 +16,27 @@ function findPersonalMicrositeFromData(data) {
 }
 
 
+function cacheMicrositioPersonal(key, tel, pub) {
+  try {
+    const cacheKey = key || tel;
+    if (!cacheKey || !pub) return;
+
+    const data = identityCache.get(cacheKey) || {};
+    data.micrositio_personal = pub;     // <- como ya hacías
+    identityCache.set(cacheKey, data);
+    window.IdentityCachePersist?.();    // graba en localStorage
+  } catch (e) {
+    console.warn('[Identity] No se pudo cachear micrositio_personal:', e);
+  }
+}
 
 
-function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
+function renderIdentityResult(
+  user = {},
+  {
+    userKeyOverride = null,
+  } = {}
+) {
   const acc = document.querySelector('.id-accordion');
   const tel = String(user?.tel || '').trim();
   if (!acc || !tel) return;
@@ -37,19 +55,53 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   const j = (obj) => JSON.stringify(obj || {});
   const displayName = user.nombre || alias || 'Usuario';
 
-  // 🔹 Leer micrositio desde la cache dpia.identityCache.v1 en localStorage
+  // ============================================
+  // 🔹 1) Intentar resolver micrositio desde identityCache
+  //     y guardar en cache + localStorage ANTES de leer dpia.identityCache.v1
+  // ============================================
   let micrositeId = null;
+
   try {
-    const raw = localStorage.getItem('dpia.identityCache.v1');
-    if (raw) {
-      const cache = JSON.parse(raw);              // { "+5493814068533": { ... }, ... }
-      const entry = cache[key] || cache[tel];     // usamos key o tel como fallback
-      if (entry && entry.micrositio_personal && entry.micrositio_personal.id) {
-        micrositeId = entry.micrositio_personal.id;  // ej: 369
+    const cacheData = (typeof identityCache !== 'undefined')
+      ? (identityCache.get(key) || identityCache.get(tel))
+      : null;
+
+    if (cacheData) {
+      // Si todavía no tiene micrositio_personal, lo intentamos deducir
+      if (!cacheData.micrositio_personal && typeof findPersonalMicrositeFromData === 'function') {
+        const pub = findPersonalMicrositeFromData(cacheData);
+        if (pub && pub.id) {
+          cacheData.micrositio_personal = pub;
+          identityCache.set(key, cacheData);
+          window.IdentityCachePersist?.(); // ⬅️ aquí se escribe dpia.identityCache.v1
+        }
+      }
+
+      // Si ya hay micrositio_personal con id, lo usamos directamente
+      if (cacheData.micrositio_personal && cacheData.micrositio_personal.id) {
+        micrositeId = cacheData.micrositio_personal.id;
       }
     }
   } catch (e) {
-    console.warn('[Identity] No se pudo leer dpia.identityCache.v1:', e);
+    console.warn('[Identity] Error usando identityCache:', e);
+  }
+
+  // ============================================
+  // 🔹 2) Si todavía no tenemos micrositeId, leemos dpia.identityCache.v1
+  // ============================================
+  if (!micrositeId) {
+    try {
+      const raw = localStorage.getItem('dpia.identityCache.v1');
+      if (raw) {
+        const cache = JSON.parse(raw);              // { "+5493814068533": { ... }, ... }
+        const entry = cache[key] || cache[tel];     // usamos key o tel como fallback
+        if (entry && entry.micrositio_personal && entry.micrositio_personal.id) {
+          micrositeId = entry.micrositio_personal.id;  // ej: 369
+        }
+      }
+    } catch (e) {
+      console.warn('[Identity] No se pudo leer dpia.identityCache.v1:', e);
+    }
   }
 
   const micrositeUrl = micrositeId ? `https://dpia.site/${micrositeId}` : '';
