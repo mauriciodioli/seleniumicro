@@ -834,3 +834,10 @@ function deleteIdentityEverywhere(key) {
 
   console.log('[IDENTITY] identidad eliminada por completo', key);
 }
+
+
+
+
+
+
+

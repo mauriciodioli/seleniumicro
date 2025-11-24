@@ -35,10 +35,11 @@
   };
 
   // ===== 2) MOCK para desarrollo local SIN datos de usuario =====
-  const isLocalDev = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
-  const noUserInQuery = !EMBED_CLIENT.viewer_user_id &&
-                        !EMBED_CLIENT.viewer_email &&
-                        !EMBED_CLIENT.viewer_tel;
+  const isLocalDev   = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+  const noUserInQuery =
+    !EMBED_CLIENT.viewer_user_id &&
+    !EMBED_CLIENT.viewer_email &&
+    !EMBED_CLIENT.viewer_tel;
 
   if (isLocalDev && noUserInQuery) {
     Object.assign(EMBED_SCOPE, {

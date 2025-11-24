@@ -3,6 +3,7 @@ import { showImagePreview } from '../modulesMedia/imagenModule.js'; // Import th
 import { showVideoPreview } from '../modulesMedia/videoModule.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  debugger;
   console.log('[CHAT MEDIA] Archivo principal cargado');
 
   const btnAttach = document.getElementById('btnAttach'); // Botón para adjuntar

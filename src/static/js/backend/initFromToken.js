@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    // 1) Boot desde cookie (si no existe, el backend la crea con mock)
-    const res = await fetch('/api/boot', { credentials: 'include', cache: 'no-store' });
-    if (!res.ok) throw new Error('Boot no disponible');
-    const boot = await res.json();
-    window.chatBoot = boot; // debug opcional
+    // 1) Boot desde DPIA (inyectado en window.chatBoot)
+    const boot = window.chatBoot || window.DPIA_BOOT || null;
+    if (!boot) {
+      throw new Error('Boot no disponible: esperaba window.chatBoot o window.DPIA_BOOT');
+    }
+    window.chatBoot = boot; // por si vino con otro nombre
 
     // 2) Badge/contexto
     const badge = document.getElementById('ctxBadge');
@@ -24,25 +25,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (Array.isArray(boot.ambitos)) {
       renderMyDomainAmbitosCompat(boot.ambitos);
     } else {
-      // si no vino en boot, limpiamos la lista
       const mdList = document.getElementById('mdList');
-      if (mdList) mdList.innerHTML = '<p class="muted">Sin ámbitos por ahora.</p>';
+      if (mdList) {
+        mdList.innerHTML = '<p class="muted">Sin ámbitos por ahora.</p>';
+      }
     }
 
     // 4) Dispara la búsqueda inicial para poblar identidad/publicaciones
     // PRIORIDAD: teléfono → alias → email
-    const u = boot.user || {};
-    if (u.tel && window.BuscarUsuarioTelefono?.buscarBy) {
-      await window.BuscarUsuarioTelefono.buscarBy('phone', u.tel);
-    } else if (u.alias && window.BuscarUsuarioTelefono?.buscarBy) {
-      await window.BuscarUsuarioTelefono.buscarBy('alias', String(u.alias).replace(/^@/, ''));
-    } else if (u.email && window.BuscarUsuarioTelefono?.buscarBy) {
-      // solo si tu backend soporta 'email'
-      try { await window.BuscarUsuarioTelefono.buscarBy('email', u.email); } catch {}
+    const user = boot.user || {};
+    if (user.tel && window.BuscarUsuarioTelefono?.buscarBy) {
+      await window.BuscarUsuarioTelefono.buscarBy('phone', user.tel);
+    } else if (user.alias && window.BuscarUsuarioTelefono?.buscarBy) {
+      await window.BuscarUsuarioTelefono.buscarBy('alias', String(user.alias).replace(/^@/, ''));
+    } else if (user.email && window.BuscarUsuarioTelefono?.buscarBy) {
+      try {
+        await window.BuscarUsuarioTelefono.buscarBy('email', user.email);
+      } catch (e) {
+        console.warn('[initOnLoad] buscarBy(email) falló:', e);
+      }
     }
 
   } catch (e) {
-    console.error('[initOnLoad] fallo al iniciar', e);
+    console.error('[initOnLoad] fallo al iniciar con boot de DPIA', e);
+    // opcional:
     // Swal.fire('Error', 'No se pudo iniciar el chat', 'error');
   }
 });
