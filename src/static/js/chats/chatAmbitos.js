@@ -244,10 +244,17 @@ async function chatAmbitoHere(source){
     else if (EMBED_SCOPE.publicacion_id)
       scope.publicacion_id = EMBED_SCOPE.publicacion_id;
 
-    if (s.owner_user_id    || s.ownerId || s.user_id)
-      scope.owner_user_id  = s.owner_user_id  || s.ownerId || s.user_id;
-    else if (EMBED_SCOPE.owner_user_id)
-      scope.owner_user_id  = EMBED_SCOPE.owner_user_id;
+    // DESPUÉS (bien)
+    if (s.owner_user_id || s.ownerId) {
+      // dueño del ámbito / micrositio (por ejemplo Ola)
+      scope.owner_user_id = s.owner_user_id || s.ownerId;
+    } else if (EMBED_SCOPE.owner_user_id) {
+      // en modo embed, el dueño viene del scope embebido
+      scope.owner_user_id = EMBED_SCOPE.owner_user_id;
+    }
+
+    // ⚠️ NUNCA usar s.user_id como owner_user_id
+
 
     console.log('[chatAmbitoHere] scope FINAL:', scope);
 

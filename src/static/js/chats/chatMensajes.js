@@ -229,7 +229,7 @@ async function sendMessage(text){
   box.scrollTop = box.scrollHeight;
 
   try{
-    const r = await fetch('/api/chat/api_chat_bp/send', {
+    const r = await fetch('/api/chat/api_chat_bp/send/', {
       method: 'POST',
       headers: {
         'Content-Type':'application/json',
