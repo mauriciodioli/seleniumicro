@@ -164,25 +164,25 @@ document.addEventListener('click', (ev) => {
   });
 })();
 
+
+
 // ==================== LÓGICA REAL DEL CHAT ====================
-async function chatAmbitoHere(source){
+async function chatAmbitoHere(source) {
   console.group('[chatAmbitoHere] START');
   console.log('source recibido:', source);
 
-  try{
+  try {
     let s;
 
     // 1) Resolver "s" (scope/origen)
-    if (source && source.dataset && source.dataset.scope){
+    if (source && source.dataset && source.dataset.scope) {
       const rawScope = source.dataset.scope || '{}';
       console.log('[chatAmbitoHere] rawScope:', rawScope);
       s = typeof rawScope === 'string' ? JSON.parse(rawScope) : rawScope;
       console.log('[chatAmbitoHere] s parseado desde dataset.scope:', s);
-
-    } else if (source && typeof source === 'object'){
+    } else if (source && typeof source === 'object') {
       console.log('[chatAmbitoHere] source es objeto directo:', source);
       s = source;
-
     } else {
       console.log('[chatAmbitoHere] usando EMBED_SCOPE + EMBED_CLIENT');
       const esc  = window.EMBED_SCOPE  || {};
@@ -213,22 +213,22 @@ async function chatAmbitoHere(source){
 
     console.log('[chatAmbitoHere] tel resuelto:', tel);
 
-    if (!viewerId){
+    if (!viewerId) {
       console.error('[CHAT] No hay viewerId (usuario logueado)');
       console.groupEnd();
       return;
     }
 
-    if (!tel){
+    if (!tel) {
       console.error('[CHAT] No hay teléfono en scope, EMBED_CLIENT ni LAST_IDENTITY_TEL');
-      if (window.Swal){
+      if (window.Swal) {
         Swal.fire('Chat', 'Falta teléfono del cliente (tel / telefono).', 'error');
       }
       console.groupEnd();
       return;
     }
 
-    // 4) targetId = usuario del botón (CONTACTO con el que quiero hablar)
+    // 4) targetId = usuario del botón (dueño del ámbito) si viene en el dataset
     const targetId = Number(
       s.user_id ||
       (source && source.dataset && (source.dataset.userId || source.dataset.userid)) ||
@@ -241,7 +241,7 @@ async function chatAmbitoHere(source){
       const cacheStr = localStorage.getItem('dpia.identityCache.v1');
       if (cacheStr) {
         const cache = JSON.parse(cacheStr);
-        const entry = cache[tel];   // clave = teléfono del dueño del ámbito cuando aplica
+        const entry = cache[tel]; // clave = teléfono, como el ejemplo que pasaste
         if (entry) {
           console.log('[IDENTITYCACHE] entry para tel:', tel, entry);
           ownerFromIdentityCache = entry.usuario_id || entry.user_id || null;
@@ -256,22 +256,21 @@ async function chatAmbitoHere(source){
     }
 
     // 6) Resolver owner_user_id con prioridad:
-    //    1) EMBED_SCOPE.owner_user_id (dueño del ámbito embed)
-    //    2) s.owner_user_id / s.ownerId
-    //    3) identityCache[tel].usuario_id
-    //   ⚠️ NUNCA usar s.user_id para owner (ese es el contacto / target)
+    //  1) scope s (owner_user_id / ownerId / user_id del botón)
+    //  2) EMBED_SCOPE.owner_user_id
+    //  3) identityCache[tel].usuario_id
     let ownerUserId = null;
 
-    if (EMBED_SCOPE_SAFE.owner_user_id) {
+    if (s.owner_user_id || s.ownerId || s.user_id) {
+      ownerUserId = s.owner_user_id || s.ownerId || s.user_id;
+    } else if (EMBED_SCOPE_SAFE.owner_user_id) {
       ownerUserId = EMBED_SCOPE_SAFE.owner_user_id;
-    } else if (s.owner_user_id || s.ownerId) {
-      ownerUserId = s.owner_user_id || s.ownerId;
     } else if (ownerFromIdentityCache) {
       ownerUserId = ownerFromIdentityCache;
     }
 
-    if (!ownerUserId){
-      console.warn('[CHAT] owner_user_id no resuelto (ni EMBED_SCOPE, ni scope, ni identityCache)');
+    if (!ownerUserId) {
+      console.warn('[CHAT] owner_user_id no resuelto (ni scope, ni EMBED_SCOPE, ni identityCache)');
     }
 
     // 7) Armar scope final
@@ -283,17 +282,17 @@ async function chatAmbitoHere(source){
       codigo_postal:  s.cp || EMBED_SCOPE_SAFE.codigo_postal,
     };
 
-    if (s.ambito_id        || s.ambitoId)
+    if (s.ambito_id || s.ambitoId)
       scope.ambito_id = s.ambito_id || s.ambitoId;
 
-    if (s.categoria_id     || s.categoriaId)
+    if (s.categoria_id || s.categoriaId)
       scope.categoria_id = s.categoria_id || s.categoriaId;
 
     if (!scope.categoria_id && s.categoria && !isNaN(parseInt(s.categoria, 10))) {
       scope.categoria_id = parseInt(s.categoria, 10);
     }
 
-    if (!scope.categoria_id && EMBED_SCOPE_SAFE.categoria_id){
+    if (!scope.categoria_id && EMBED_SCOPE_SAFE.categoria_id) {
       scope.categoria_id = EMBED_SCOPE_SAFE.categoria_id;
     }
 
@@ -303,12 +302,12 @@ async function chatAmbitoHere(source){
     if (!scope.codigo_postal_id && EMBED_SCOPE_SAFE.codigo_postal)
       scope.codigo_postal_id = EMBED_SCOPE_SAFE.codigo_postal;
 
-    if (s.publicacion_id   || s.pub_id || s.id_publicacion)
+    if (s.publicacion_id || s.pub_id || s.id_publicacion)
       scope.publicacion_id = s.publicacion_id || s.pub_id || s.id_publicacion;
     else if (EMBED_SCOPE_SAFE.publicacion_id)
       scope.publicacion_id = EMBED_SCOPE_SAFE.publicacion_id;
 
-    if (ownerUserId){
+    if (ownerUserId) {
       scope.owner_user_id = Number(ownerUserId);
     }
 
@@ -317,8 +316,8 @@ async function chatAmbitoHere(source){
     // 8) PUNTO DE CONTROL ANTES DE OPEN: viewer vs botón / owner
     console.log('[CHECKPOINT-OPEN]', {
       viewer_user_id : viewerId,            // logueado
-      owner_user_id  : scope.owner_user_id, // dueño ámbito
-      targetId_raw   : targetId,            // contacto
+      owner_user_id  : scope.owner_user_id, // dueño ámbito / identity
+      targetId_raw   : targetId,            // lo que vino en s.user_id / data-user-id
       tel,
     });
 
@@ -327,12 +326,10 @@ async function chatAmbitoHere(source){
       scope,
       client: {
         tel,
-        alias:   s.alias || EMBED_CLIENT_SAFE.alias || null,
-        email:   s.email || EMBED_CLIENT_SAFE.viewer_email || null,
+        alias: s.alias || EMBED_CLIENT_SAFE.alias || null,
+        email: s.email || EMBED_CLIENT_SAFE.viewer_email || null,
         user_id: viewerId,
-      },
-      // 👇 esto es lo que usa el backend para fijar bien la pareja cuando el viewer es el owner
-      target_user_id: targetId || null,
+      }
     };
 
     console.log('[CHAT] payload /api_chat_bp/open:', payload);
@@ -350,9 +347,9 @@ async function chatAmbitoHere(source){
     const data = await r.json();
     console.log('[chatAmbitoHere] respuesta /open:', data);
 
-    if (!r.ok || !data.ok){
+    if (!r.ok || !data.ok) {
       console.error('Error al abrir chat', data);
-      if (window.Swal){
+      if (window.Swal) {
         Swal.fire('Chat', data?.error || 'No se pudo abrir el chat', 'error');
       }
       console.groupEnd();
@@ -367,7 +364,7 @@ async function chatAmbitoHere(source){
     setChatHeaderFromOpen(data);
 
     let msgs = data.messages || [];
-    if (data.is_new && data.from_summary){
+    if (data.is_new && data.from_summary) {
       msgs = [{
         role: 'system',
         via: 'dpia',
@@ -389,13 +386,12 @@ async function chatAmbitoHere(source){
 
     document.getElementById('msgInput')?.focus();
 
-  }catch(e){
+  } catch (e) {
     console.error('Scope inválido / error en chatAmbitoHere', e);
-    if (window.Swal){
+    if (window.Swal) {
       Swal.fire('Chat', 'Error inesperado en el cliente.', 'error');
     }
   } finally {
     console.groupEnd();
   }
 }
-

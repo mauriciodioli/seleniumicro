@@ -16,10 +16,6 @@ from utils.db_session import get_db_session
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
-
-# ==========================================================
-#  ENDPOINTS EXISTENTES (NO TOCAR)
-# ==========================================================
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
@@ -57,8 +53,8 @@ def open_conversation():
         except (TypeError, ValueError):
             return jsonify(ok=False, error="owner_user_id inválido"), 400
 
-        # 👇 NUEVO: viene del front, es el user del botón/identidad
-        target_user_id = data.get("target_user_id")
+        # 👇 NUEVO: viene del front como targetId_raw (id del contacto / botón)
+        target_user_id = data.get("targetId_raw")
 
         dominio = scope.get("dominio") or "tecnologia"
         locale  = scope.get("locale")  or "es"
@@ -84,15 +80,15 @@ def open_conversation():
 
         # ========== 1.5) NORMALIZAR PAREJA OWNER/CLIENTE ==========
 
-        # Si el que abre el chat ES el dueño del ámbito,
+        # Si el que abre el chat ES el dueño del ámbito (viewer == owner),
         # entonces el "cliente" de la conversación tiene que ser el target (el otro usuario).
         if client_user_id == owner_user_id:
             if not target_user_id:
-                return jsonify(ok=False, error="Falta target_user_id para owner del ámbito"), 400
+                return jsonify(ok=False, error="Falta targetId_raw para owner del ámbito"), 400
             try:
                 client_user_id = int(target_user_id)
             except (TypeError, ValueError):
-                return jsonify(ok=False, error="target_user_id inválido"), 400
+                return jsonify(ok=False, error="targetId_raw inválido"), 400
 
         # A partir de acá:
         #   owner_user_id  = dueño del ámbito (Ola)
@@ -118,26 +114,26 @@ def open_conversation():
 
             msgs = (
                 session
-                  .query(Message)
-                  .filter_by(conversation_id=conv.id)
-                  .order_by(Message.id.asc())
-                  .all()
+                .query(Message)
+                .filter_by(conversation_id=conv.id)
+                .order_by(Message.id.asc())
+                .all()
             )
 
             is_new = (len(msgs) == 0)
 
             def msg_to_dict(m: Message) -> dict:
                 return {
-                    "id": m.id,
-                    "role": m.role,
-                    "via": m.via,
+                    "id":           m.id,
+                    "role":         m.role,
+                    "via":          m.via,
                     "content_type": m.content_type,
-                    "content": m.content,
-                    "created_at": m.created_at.isoformat() if m.created_at else None,
-                    "intent": m.intent,
-                    "emotion": m.emotion,
-                    "confidence": m.confidence,
-                    "labels": m.labels_json,
+                    "content":      m.content,
+                    "created_at":   m.created_at.isoformat() if m.created_at else None,
+                    "intent":       m.intent,
+                    "emotion":      m.emotion,
+                    "confidence":   m.confidence,
+                    "labels":       m.labels_json,
                 }
 
             messages_json = [msg_to_dict(m) for m in msgs]
@@ -157,20 +153,20 @@ def open_conversation():
                 is_new=is_new,
                 from_summary=from_summary,
                 scope={
-                    "id": conv.scope_id,
-                    "owner_user_id": conv.owner_user_id,
-                    "client_user_id": conv.client_user_id,
-                    "dominio": dominio,
-                    "locale": locale,
-                    "ambito_id": ambito_id,
-                    "categoria_id": categoria_id,
-                    "codigo_postal": codigo_postal,
+                    "id":              conv.scope_id,
+                    "owner_user_id":   conv.owner_user_id,
+                    "client_user_id":  conv.client_user_id,
+                    "dominio":         dominio,
+                    "locale":          locale,
+                    "ambito_id":       ambito_id,
+                    "categoria_id":    categoria_id,
+                    "codigo_postal":   codigo_postal,
                     "codigo_postal_id": codigo_postal_id,
-                    "publicacion_id": publicacion_id,
+                    "publicacion_id":  publicacion_id,
                 },
                 client={
-                    "id": client_user_id,
-                    "tel": tel,
+                    "id":    client_user_id,
+                    "tel":   tel,
                     "alias": alias,
                     "email": email,
                 },
