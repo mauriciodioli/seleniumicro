@@ -15,7 +15,6 @@ from datetime import datetime
 from utils.db_session import get_db_session
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
-
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
@@ -91,24 +90,48 @@ def open_conversation():
                 return jsonify(ok=False, error="targetId_raw inválido"), 400
 
         # A partir de acá:
-        #   owner_user_id  = dueño del ámbito (Ola)
-        #   client_user_id = el otro (Mauricio), da igual quién abrió
+        #   owner_user_id  = dueño del ámbito
+        #   client_user_id = el otro usuario
+        # La clave lógica de la conversación es este PAR + el contexto:
+        # (owner_user_id, client_user_id, dominio, ambito_id, categoria_id, codigo_postal_id, publicacion_id)
 
-        # ========== 2) CONVERSACIÓN: GET OR CREATE ==========
+        # ========== 2) CONVERSACIÓN: BUSCAR POR PAR ANTES DE CREAR ==========
 
         with get_db_session() as session:
-            conv = get_or_create_conversation(
-                owner_user_id=owner_user_id,
-                client_user_id=client_user_id,
-                dominio=dominio,
-                ambito_id=ambito_id,
-                categoria_id=categoria_id,
-                codigo_postal=codigo_postal,
-                codigo_postal_id=codigo_postal_id,
-                locale=locale,
-                publicacion_id=publicacion_id,
-                session=session,
+            # 👇 AQUÍ SE COMPARA EL PAR EXACTO (owner_user_id, client_user_id)
+            existing_conv = (
+                session.query(Conversation)
+                .filter(
+                    Conversation.owner_user_id == owner_user_id,
+                    Conversation.client_user_id == client_user_id,
+                    Conversation.dominio == dominio,
+                    Conversation.ambito_id.is_(ambito_id),
+                    Conversation.categoria_id.is_(categoria_id),
+                    Conversation.codigo_postal == codigo_postal,
+                    Conversation.codigo_postal_id.is_(codigo_postal_id),
+                    Conversation.publicacion_id.is_(publicacion_id or None),
+                )
+                .order_by(Conversation.id.asc())
+                .first()
             )
+
+            if existing_conv:
+                conv = existing_conv
+            else:
+                # Si NO existe conversación para ese par y ese contexto,
+                # recién ahí delegamos en tu helper para crearla.
+                conv = get_or_create_conversation(
+                    owner_user_id=owner_user_id,
+                    client_user_id=client_user_id,
+                    dominio=dominio,
+                    ambito_id=ambito_id,
+                    categoria_id=categoria_id,
+                    codigo_postal=codigo_postal,
+                    codigo_postal_id=codigo_postal_id,
+                    locale=locale,
+                    publicacion_id=publicacion_id,
+                    session=session,
+                )
 
             # ========== 3) HISTORIAL DE MENSAJES ==========
 
@@ -153,16 +176,16 @@ def open_conversation():
                 is_new=is_new,
                 from_summary=from_summary,
                 scope={
-                    "id":              conv.scope_id,
-                    "owner_user_id":   conv.owner_user_id,
-                    "client_user_id":  conv.client_user_id,
-                    "dominio":         dominio,
-                    "locale":          locale,
-                    "ambito_id":       ambito_id,
-                    "categoria_id":    categoria_id,
-                    "codigo_postal":   codigo_postal,
+                    "id":               conv.scope_id,
+                    "owner_user_id":    conv.owner_user_id,
+                    "client_user_id":   conv.client_user_id,
+                    "dominio":          dominio,
+                    "locale":           locale,
+                    "ambito_id":        ambito_id,
+                    "categoria_id":     categoria_id,
+                    "codigo_postal":    codigo_postal,
                     "codigo_postal_id": codigo_postal_id,
-                    "publicacion_id":  publicacion_id,
+                    "publicacion_id":   publicacion_id,
                 },
                 client={
                     "id":    client_user_id,
@@ -176,8 +199,6 @@ def open_conversation():
     except Exception as e:
         current_app.logger.exception("Error en /api_chat_bp/open/")
         return jsonify(ok=False, error=str(e)), 500
-
-
 
 
 
