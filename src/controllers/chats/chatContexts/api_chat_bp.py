@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify, current_app, url_for
 from werkzeug.utils import secure_filename
 from extensions import db
 from models.chats.message import Message
+from models.chats.conversation import Conversation
 from models.usuario import Usuario  # ajustá al nombre real
 from utils.phone import normalize_phone
 from utils.chat_users import get_or_create_user_from_phone
@@ -10,7 +11,9 @@ from utils.chat_contacts import get_or_create_contacto_personal
 from utils.chat_conversation import get_or_create_conversation
 
 import os
+from sqlalchemy import func
 from datetime import datetime
+from src.utils.db_session import get_db_session
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
@@ -18,6 +21,7 @@ api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 # ==========================================================
 #  ENDPOINTS EXISTENTES (NO TOCAR)
 # ==========================================================
+
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
@@ -79,89 +83,89 @@ def open_conversation():
 
         # ========== 2) CONVERSACIÓN: GET OR CREATE ==========
 
-        conv = get_or_create_conversation(
-            owner_user_id=owner_user_id,
-            client_user_id=client_user_id,
-            dominio=dominio,
-            ambito_id=ambito_id,
-            categoria_id=categoria_id,
-            codigo_postal=codigo_postal,
-            codigo_postal_id=codigo_postal_id,
-            locale=locale,
-            publicacion_id=publicacion_id,
-            session=db.session,  # 👈 importante pasar la sesión
-        )
+        with get_db_session() as session:
+            conv = get_or_create_conversation(
+                owner_user_id=owner_user_id,
+                client_user_id=client_user_id,
+                dominio=dominio,
+                ambito_id=ambito_id,
+                categoria_id=categoria_id,
+                codigo_postal=codigo_postal,
+                codigo_postal_id=codigo_postal_id,
+                locale=locale,
+                publicacion_id=publicacion_id,
+                session=session,  # 👈 ahora sí, sesión correcta
+            )
 
-        # ========== 3) HISTORIAL DE MENSAJES ==========
+            # ========== 3) HISTORIAL DE MENSAJES ==========
 
-        msgs = (
-            db.session
-              .query(Message)
-              .filter_by(conversation_id=conv.id)
-              .order_by(Message.id.asc())
-              .all()
-        )
+            msgs = (
+                session
+                  .query(Message)
+                  .filter_by(conversation_id=conv.id)
+                  .order_by(Message.id.asc())
+                  .all()
+            )
 
-        is_new = (len(msgs) == 0)
+            is_new = (len(msgs) == 0)
 
-        def msg_to_dict(m: Message) -> dict:
-            return {
-                "id": m.id,
-                "role": m.role,
-                "via": m.via,
-                "content_type": m.content_type,
-                "content": m.content,
-                "created_at": m.created_at.isoformat() if m.created_at else None,
-                "intent": m.intent,
-                "emotion": m.emotion,
-                "confidence": m.confidence,
-                "labels": m.labels_json,
-            }
+            def msg_to_dict(m: Message) -> dict:
+                return {
+                    "id": m.id,
+                    "role": m.role,
+                    "via": m.via,
+                    "content_type": m.content_type,
+                    "content": m.content,
+                    "created_at": m.created_at.isoformat() if m.created_at else None,
+                    "intent": m.intent,
+                    "emotion": m.emotion,
+                    "confidence": m.confidence,
+                    "labels": m.labels_json,
+                }
 
-        messages_json = [msg_to_dict(m) for m in msgs]
+            messages_json = [msg_to_dict(m) for m in msgs]
 
-        from_summary = " · ".join(
-            x for x in [
-                dominio or "",
-                ambito_slug or "",
-                categoria_slug or "",
-                codigo_postal or "",
-            ] if x
-        )
+            from_summary = " · ".join(
+                x for x in [
+                    dominio or "",
+                    ambito_slug or "",
+                    categoria_slug or "",
+                    codigo_postal or "",
+                ] if x
+            )
 
-        db.session.commit()
+            # el commit/rollback/close lo maneja el context manager de get_db_session
 
-        return jsonify(
-            ok=True,
-            conversation_id=conv.id,
-            is_new=is_new,
-            from_summary=from_summary,
-            scope={
-                "id": conv.scope_id,
-                "owner_user_id": conv.owner_user_id,
-                "client_user_id": conv.client_user_id,
-                "dominio": dominio,
-                "locale": locale,
-                "ambito_id": ambito_id,
-                "categoria_id": categoria_id,
-                "codigo_postal": codigo_postal,
-                "codigo_postal_id": codigo_postal_id,
-                "publicacion_id": publicacion_id,
-            },
-            client={
-                "id": client_user_id,
-                "tel": tel,
-                "alias": alias,
-                "email": email,
-            },
-            messages=messages_json,
-        )
+            return jsonify(
+                ok=True,
+                conversation_id=conv.id,
+                is_new=is_new,
+                from_summary=from_summary,
+                scope={
+                    "id": conv.scope_id,
+                    "owner_user_id": conv.owner_user_id,
+                    "client_user_id": conv.client_user_id,
+                    "dominio": dominio,
+                    "locale": locale,
+                    "ambito_id": ambito_id,
+                    "categoria_id": categoria_id,
+                    "codigo_postal": codigo_postal,
+                    "codigo_postal_id": codigo_postal_id,
+                    "publicacion_id": publicacion_id,
+                },
+                client={
+                    "id": client_user_id,
+                    "tel": tel,
+                    "alias": alias,
+                    "email": email,
+                },
+                messages=messages_json,
+            )
 
     except Exception as e:
-        db.session.rollback()
+        current_app.logger.exception("Error en /api_chat_bp/open/")
         return jsonify(ok=False, error=str(e)), 500
-    finally:
-        db.session.close()
+
 
 
 
@@ -172,61 +176,104 @@ def get_messages():
     if not conv_id:
         return jsonify(ok=False, error="conversation_id requerido"), 400
 
-    msgs = (
-        Message.query
-        .filter_by(conversation_id=conv_id)
-        .order_by(Message.created_at.asc())
-        .all()
-    )
+    # conv_id puede venir como string
+    try:
+        conv_id = int(conv_id)
+    except (TypeError, ValueError):
+        return jsonify(ok=False, error="conversation_id inválido"), 400
 
-    payload = [{
-        "id":           m.id,
-        "role":         m.role,
-        "via":          m.via,
-        "content_type": m.content_type,
-        "content":      m.content,
-        "created_at":   m.created_at.isoformat()
-    } for m in msgs]
+    try:
+        with get_db_session() as session:
+            msgs = (
+                session.query(Message)
+                       .filter_by(conversation_id=conv_id)
+                       .order_by(Message.created_at.asc())
+                       .all()
+            )
 
-    return jsonify(ok=True, messages=payload)
+            payload = [{
+                "id":           m.id,
+                "role":         m.role,
+                "via":          m.via,
+                "content_type": m.content_type,
+                "content":      m.content,
+                "created_at":   m.created_at.isoformat() if m.created_at else None,
+            } for m in msgs]
+
+            return jsonify(ok=True, messages=payload)
+
+    except Exception as e:
+        current_app.logger.exception("Error en /api_chat_bp/messages/")
+        return jsonify(ok=False, error=str(e)), 500
 
 
 @api_chat_bp.route("/api_chat_bp/send/", methods=["POST"])
 def send():
-    """
-    TEXTO (YA FUNCIONA)
-    Body JSON:
-    {
-      "conversation_id": 123,
-      "text": "hola",
-      "as": "client" | "owner" | "ia"
-    }
-    """
     data    = request.get_json() or {}
     conv_id = data.get("conversation_id")
     text    = (data.get("text") or "").strip()
-    role    = (data.get("as") or "client").lower()
+    role    = (data.get("as") or "client").lower()  # viene del front
 
     if not conv_id or not text:
         return jsonify(ok=False, error="conversation_id y text son obligatorios"), 400
 
+    # conv_id puede venir como string
+    try:
+        conv_id = int(conv_id)
+    except (TypeError, ValueError):
+        return jsonify(ok=False, error="conversation_id inválido"), 400
+
+    # normalizamos role por las dudas
     if role not in {"client", "owner", "ia"}:
         role = "client"
 
     try:
-        msg = Message(
-            conversation_id = conv_id,
-            role            = role,
-            via             = "dpia",
-            content_type    = "text",
-            content         = text,
-        )
-        db.session.add(msg)
-        db.session.commit()
-        return jsonify(ok=True, id=msg.id)
+        # 👇 usamos SIEMPRE la sesión del context manager
+        with get_db_session() as session:
+
+            # 1) Buscar la conversación
+            conv = (
+                session.query(Conversation)
+                       .filter(Conversation.id == conv_id)
+                       .first()
+            )
+            if not conv:
+                return jsonify(ok=False, error="conversation no encontrada"), 404
+
+            # 2) Crear mensaje (sin current_user, usamos el role que mandó el front)
+            msg = Message(
+                conversation_id = conv.id,
+                role            = role,
+                via             = "dpia",
+                content_type    = "text",
+                content         = text,
+            )
+            session.add(msg)
+            session.flush()  # para obtener msg.id antes del commit
+
+            # 3) actualizar timestamp de la conversación
+            conv.updated_at = func.now()
+
+            # commit/rollback/close lo hace el context manager
+
+            return jsonify(
+                ok=True,
+                message={
+                    "id":           msg.id,
+                    "role":         msg.role,
+                    "via":          msg.via,
+                    "content_type": msg.content_type,
+                    "content":      msg.content,
+                    "created_at":   msg.created_at.isoformat() if msg.created_at else None,
+                }
+            )
+
     except Exception as e:
-        db.session.rollback()
+        current_app.logger.exception("Error en /api_chat_bp/send")
         return jsonify(ok=False, error=str(e)), 500
+
+
+    
 
 
 # ==========================================================

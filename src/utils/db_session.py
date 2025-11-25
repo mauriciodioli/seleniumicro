@@ -1,6 +1,6 @@
 # src/utils/db_session.py
 from contextlib import contextmanager
-from utils.db import db
+from extensions import db
 
 @contextmanager
 def get_db_session():
