@@ -13,7 +13,7 @@ from utils.chat_conversation import get_or_create_conversation
 import os
 from sqlalchemy import func
 from datetime import datetime
-from src.utils.db_session import get_db_session
+from utils.db_session import get_db_session
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
