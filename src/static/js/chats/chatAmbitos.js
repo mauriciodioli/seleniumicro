@@ -90,84 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-
-// ==================== FALLOBACK BOTÓN DE ÁMBITO ====================
-document.addEventListener('click', (ev) => {
-  const btn = ev.target.closest('.chat-ambito-btn');
-  if (!btn) return;
-
-  const name = (btn.textContent || '').trim();
-  console.log('[FALLBACK] click en .chat-ambito-btn, name:', name);
-  console.log('[FALLBACK] dataset.scope:', btn.dataset.scope);
-
-  // ⬅️ LLAMAMOS DIRECTO AL CORE, NO A window.chatAmbitoHere
-  chatAmbitoHere(btn);
-
-  // (opcional) si querés mover a vista chat en mobile:
-  if (name && typeof isMobile === 'function' && isMobile()) {
-    if (typeof setMobileView === 'function') {
-      setMobileView('chat');
-    }
-  }
-});
-
-// ==================== SLIDE MOBILE ====================
-(function(){
-  const root = document.documentElement;
-  console.log('[SLIDE MOBILE] init');
-
-  // Al tocar una identidad -> slide a ámbitos
-  document.addEventListener('click', e => {
-    const summary = e.target.closest('.id-summary');
-    if (!summary) return;
-
-    if (typeof isMobile === 'function' && isMobile()){
-      root.classList.remove('slide-chat');
-      root.classList.add('slide-ambitos');
-    }
-  });
-
-  // Guardamos SOLO chatHere anterior
-  const originalChatHere = window.chatHere;
-  console.log('[SLIDE MOBILE] originalChatHere:', originalChatHere);
-
-  window.chatHere = function(btn){
-    console.log('[SLIDE MOBILE] wrapper chatHere, btn:', btn);
-
-    if (typeof originalChatHere === 'function') {
-      try {
-        originalChatHere(btn);
-      } catch (e) {
-        console.error('Error en originalChatHere:', e);
-      }
-    }
-
-    if (typeof isMobile === 'function' && isMobile()){
-      root.classList.remove('slide-ambitos');
-      root.classList.add('slide-chat');
-    }
-  };
-
-  // Botón para volver a ámbitos
-  document.addEventListener('click', e => {
-    if (e.target.closest('#toggleAmbitos') &&
-        typeof isMobile === 'function' && isMobile()){
-      root.classList.remove('slide-chat');
-      root.classList.add('slide-ambitos');
-    }
-  });
-
-  window.addEventListener('resize', () => {
-    if (typeof isMobile === 'function' && !isMobile()){
-      root.classList.remove('slide-ambitos','slide-chat');
-    }
-  });
-})();
-
-
-
-// ==================== LÓGICA REAL DEL CHAT ====================
-// ==================== LÓGICA REAL DEL CHAT ====================
 async function chatAmbitoHere(source){
   console.group('[chatAmbitoHere] START');
   console.log('source recibido:', source);
@@ -185,27 +107,26 @@ async function chatAmbitoHere(source){
       s = source;
     } else {
       console.log('[chatAmbitoHere] usando EMBED_SCOPE + EMBED_CLIENT');
-      s = {
-        ...EMBED_SCOPE,
-        ...EMBED_CLIENT,
-      };
+      const esc   = window.EMBED_SCOPE  || {};
+      const ecli  = window.EMBED_CLIENT || {};
+      s = { ...esc, ...ecli };
       console.log('[chatAmbitoHere] s combinado:', s);
     }
 
     // ================== QUIÉN ES QUIÉN ==================
-    // viewer = el que está logueado (local: cookies / EMBED_CLIENT)
-    const viewerId  = Number(
+    const viewerId = Number(
       (window.usuario_id) ||
-      (EMBED_CLIENT && EMBED_CLIENT.user_id) ||
-      (EMBED_SCOPE && EMBED_SCOPE.viewer_user_id) ||
+      (window.EMBED_CLIENT && window.EMBED_CLIENT.viewer_user_id) ||
+      (window.VIEWER_USER_ID) ||
       0
     );
 
+    const EMBED_CLIENT_SAFE = window.EMBED_CLIENT || {};
+
     // teléfono del que está logueado
     const viewerTel = (
-      (window.numTelefono && window.numTelefono[viewerId]) ||  // si lo tuvieras mapeado
-      (EMBED_CLIENT && EMBED_CLIENT.tel) ||
-      (EMBED_CLIENT && EMBED_CLIENT.telefono) ||
+      (window.numTelefono && window.numTelefono[viewerId]) ||
+      EMBED_CLIENT_SAFE.viewer_tel ||
       ''
     ).toString().trim();
 
@@ -234,13 +155,15 @@ async function chatAmbitoHere(source){
 
     console.log('[chatAmbitoHere] viewerId:', viewerId, 'targetId:', targetId);
 
+    const EMBED_SCOPE_SAFE = window.EMBED_SCOPE || {};
+
     // ================== SCOPE (contexto) ==================
     const scope = {
-      dominio:        s.dominio || s.ambito || (EMBED_SCOPE && EMBED_SCOPE.dominio) || 'tecnologia',
-      locale:         s.locale  || s.idioma  || (EMBED_SCOPE && EMBED_SCOPE.locale)  || 'es',
+      dominio:        s.dominio || s.ambito || EMBED_SCOPE_SAFE.dominio || 'tecnologia',
+      locale:         s.locale  || s.idioma  || EMBED_SCOPE_SAFE.locale  || 'es',
       ambito_slug:    s.ambito,
       categoria_slug: s.categoria,
-      codigo_postal:  s.cp || (EMBED_SCOPE && EMBED_SCOPE.codigo_postal),
+      codigo_postal:  s.cp || EMBED_SCOPE_SAFE.codigo_postal,
     };
 
     if (s.ambito_id        || s.ambitoId)
@@ -252,38 +175,41 @@ async function chatAmbitoHere(source){
     if (!scope.categoria_id && s.categoria && !isNaN(parseInt(s.categoria, 10))) {
       scope.categoria_id = parseInt(s.categoria, 10);
     }
-    if (!scope.categoria_id && EMBED_SCOPE && EMBED_SCOPE.categoria_id){
-      scope.categoria_id = EMBED_SCOPE.categoria_id;
+    if (!scope.categoria_id && EMBED_SCOPE_SAFE.categoria_id){
+      scope.categoria_id = EMBED_SCOPE_SAFE.categoria_id;
     }
 
     if (s.codigo_postal_id || s.codigo_postalId)
       scope.codigo_postal_id = s.codigo_postal_id || s.codigo_postalId;
-    if (!scope.codigo_postal_id && EMBED_SCOPE && EMBED_SCOPE.codigo_postal)
-      scope.codigo_postal_id = EMBED_SCOPE.codigo_postal;
+    if (!scope.codigo_postal_id && EMBED_SCOPE_SAFE.codigo_postal)
+      scope.codigo_postal_id = EMBED_SCOPE_SAFE.codigo_postal;
 
     if (s.publicacion_id   || s.pub_id || s.id_publicacion)
       scope.publicacion_id = s.publicacion_id || s.pub_id || s.id_publicacion;
-    else if (EMBED_SCOPE && EMBED_SCOPE.publicacion_id)
-      scope.publicacion_id = EMBED_SCOPE.publicacion_id;
+    else if (EMBED_SCOPE_SAFE.publicacion_id)
+      scope.publicacion_id = EMBED_SCOPE_SAFE.publicacion_id;
 
-    // 🔴 AQUÍ CAMBIA LA LÓGICA:
-    // owner_user_id = usuario del botón (dueño del ámbito = target)
-    scope.owner_user_id = localStorage.getItem('usuario_id') ;
+    // dueño del ámbito = target
+    scope.owner_user_id = targetId;
 
     console.log('[chatAmbitoHere] scope FINAL:', scope);
-debugger;
+
     // ================== CLIENT (EL QUE HABLA = VIEWER) ==================
     const payload = {
       scope,
       client: {
         tel:     viewerTel,
-        alias:   EMBED_CLIENT && EMBED_CLIENT.alias || null,
-        email:   (EMBED_CLIENT && EMBED_CLIENT.email) || null,
+        // si algún día querés alias/email del viewer en el embed, agrégalo también en chat-context.js
+        alias:   EMBED_CLIENT_SAFE.alias || null,
+        email:   EMBED_CLIENT_SAFE.viewer_email || null,
         user_id: viewerId,
       }
     };
 
     console.log('[CHAT] payload /api_chat_bp/open:', payload);
+
+    // ... resto de tu lógica / fetch a /api_chat_bp/open ...
+
 
     const r = await fetch('/api/chat/api_chat_bp/open/', {
       method: 'POST',
