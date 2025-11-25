@@ -167,6 +167,7 @@ document.addEventListener('click', (ev) => {
 
 
 // ==================== LÓGICA REAL DEL CHAT ====================
+// ==================== LÓGICA REAL DEL CHAT ====================
 async function chatAmbitoHere(source){
   console.group('[chatAmbitoHere] START');
   console.log('source recibido:', source);
@@ -191,80 +192,94 @@ async function chatAmbitoHere(source){
       console.log('[chatAmbitoHere] s combinado:', s);
     }
 
-    const tel = (
-      s.tel ||
-      s.telefono ||
-      EMBED_CLIENT.tel ||
-      window.LAST_IDENTITY_TEL ||
+    // ================== QUIÉN ES QUIÉN ==================
+    // viewer = el que está logueado (local: cookies / EMBED_CLIENT)
+    const viewerId  = Number(
+      (window.usuario_id) ||
+      (EMBED_CLIENT && EMBED_CLIENT.user_id) ||
+      (EMBED_SCOPE && EMBED_SCOPE.viewer_user_id) ||
+      0
+    );
+
+    // teléfono del que está logueado
+    const viewerTel = (
+      (window.numTelefono && window.numTelefono[viewerId]) ||  // si lo tuvieras mapeado
+      (EMBED_CLIENT && EMBED_CLIENT.tel) ||
+      (EMBED_CLIENT && EMBED_CLIENT.telefono) ||
       ''
     ).toString().trim();
 
-    console.log('[chatAmbitoHere] tel resuelto:', tel);
-
-    if (!tel){
-      console.error('[CHAT] No hay teléfono en scope ni en LAST_IDENTITY_TEL, no abro chat');
-      if (window.Swal){
-        Swal.fire('Chat', 'Falta teléfono del cliente (tel / telefono).', 'error');
-      }
+    if (!viewerId) {
+      console.error('[CHAT] No hay viewerId (usuario logueado)');
       console.groupEnd();
       return;
     }
 
+    if (!viewerTel){
+      console.warn('[CHAT] viewerTel vacío, sigo pero /open pedirá tel');
+    }
+
+    // target = usuario del botón (dueño del ámbito)
+    const targetId = Number(
+      s.user_id ||
+      (source && source.dataset && source.dataset.userId) ||
+      0
+    );
+
+    if (!targetId) {
+      console.error('[CHAT] No hay targetId (user_id en dataset.scope / data-user-id)');
+      console.groupEnd();
+      return;
+    }
+
+    console.log('[chatAmbitoHere] viewerId:', viewerId, 'targetId:', targetId);
+
+    // ================== SCOPE (contexto) ==================
     const scope = {
-      dominio:        s.dominio || s.ambito || EMBED_SCOPE.dominio || 'tecnologia',
-      locale:         s.locale  || s.idioma || EMBED_SCOPE.locale  || 'es',
+      dominio:        s.dominio || s.ambito || (EMBED_SCOPE && EMBED_SCOPE.dominio) || 'tecnologia',
+      locale:         s.locale  || s.idioma  || (EMBED_SCOPE && EMBED_SCOPE.locale)  || 'es',
       ambito_slug:    s.ambito,
       categoria_slug: s.categoria,
-      codigo_postal:  s.cp || EMBED_SCOPE.codigo_postal,
+      codigo_postal:  s.cp || (EMBED_SCOPE && EMBED_SCOPE.codigo_postal),
     };
-
-    console.log('[chatAmbitoHere] scope base:', scope);
 
     if (s.ambito_id        || s.ambitoId)
       scope.ambito_id = s.ambito_id || s.ambitoId;
 
-    // CATEGORÍA: categoria_id o, si no hay, "categoria" numérica
     if (s.categoria_id     || s.categoriaId){
       scope.categoria_id = s.categoria_id || s.categoriaId;
     }
     if (!scope.categoria_id && s.categoria && !isNaN(parseInt(s.categoria, 10))) {
       scope.categoria_id = parseInt(s.categoria, 10);
     }
-    if (!scope.categoria_id && EMBED_SCOPE.categoria_id){
+    if (!scope.categoria_id && EMBED_SCOPE && EMBED_SCOPE.categoria_id){
       scope.categoria_id = EMBED_SCOPE.categoria_id;
     }
 
     if (s.codigo_postal_id || s.codigo_postalId)
       scope.codigo_postal_id = s.codigo_postal_id || s.codigo_postalId;
-    if (!scope.codigo_postal_id && EMBED_SCOPE.codigo_postal)
+    if (!scope.codigo_postal_id && EMBED_SCOPE && EMBED_SCOPE.codigo_postal)
       scope.codigo_postal_id = EMBED_SCOPE.codigo_postal;
 
     if (s.publicacion_id   || s.pub_id || s.id_publicacion)
       scope.publicacion_id = s.publicacion_id || s.pub_id || s.id_publicacion;
-    else if (EMBED_SCOPE.publicacion_id)
+    else if (EMBED_SCOPE && EMBED_SCOPE.publicacion_id)
       scope.publicacion_id = EMBED_SCOPE.publicacion_id;
 
-    // DESPUÉS (bien)
-    if (s.owner_user_id || s.ownerId) {
-      // dueño del ámbito / micrositio (por ejemplo Ola)
-      scope.owner_user_id = s.owner_user_id || s.ownerId;
-    } else if (EMBED_SCOPE.owner_user_id) {
-      // en modo embed, el dueño viene del scope embebido
-      scope.owner_user_id = EMBED_SCOPE.owner_user_id;
-    }
-
-    // ⚠️ NUNCA usar s.user_id como owner_user_id
-
+    // 🔴 AQUÍ CAMBIA LA LÓGICA:
+    // owner_user_id = usuario del botón (dueño del ámbito = target)
+    scope.owner_user_id = targetId;
 
     console.log('[chatAmbitoHere] scope FINAL:', scope);
-
+debugger;
+    // ================== CLIENT (EL QUE HABLA = VIEWER) ==================
     const payload = {
       scope,
       client: {
-        tel,
-        alias:   s.alias || null,
-        email:   s.email   || EMBED_CLIENT.email   || null,
-        user_id: s.user_id || EMBED_CLIENT.user_id || null,
+        tel:     viewerTel,
+        alias:   EMBED_CLIENT && EMBED_CLIENT.alias || null,
+        email:   (EMBED_CLIENT && EMBED_CLIENT.email) || null,
+        user_id: viewerId,
       }
     };
 
