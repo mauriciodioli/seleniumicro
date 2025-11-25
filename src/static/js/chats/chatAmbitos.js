@@ -268,7 +268,7 @@ async function chatAmbitoHere(source){
 
     // 🔴 AQUÍ CAMBIA LA LÓGICA:
     // owner_user_id = usuario del botón (dueño del ámbito = target)
-    scope.owner_user_id = targetId;
+    scope.owner_user_id = localStorage.getItem('usuario_id') ;
 
     console.log('[chatAmbitoHere] scope FINAL:', scope);
 debugger;
