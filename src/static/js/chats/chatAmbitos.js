@@ -90,6 +90,83 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
+
+// ==================== FALLOBACK BOTÓN DE ÁMBITO ====================
+document.addEventListener('click', (ev) => {
+  const btn = ev.target.closest('.chat-ambito-btn');
+  if (!btn) return;
+
+  const name = (btn.textContent || '').trim();
+  console.log('[FALLBACK] click en .chat-ambito-btn, name:', name);
+  console.log('[FALLBACK] dataset.scope:', btn.dataset.scope);
+
+  // ⬅️ LLAMAMOS DIRECTO AL CORE, NO A window.chatAmbitoHere
+  chatAmbitoHere(btn);
+
+  // (opcional) si querés mover a vista chat en mobile:
+  if (name && typeof isMobile === 'function' && isMobile()) {
+    if (typeof setMobileView === 'function') {
+      setMobileView('chat');
+    }
+  }
+});
+
+// ==================== SLIDE MOBILE ====================
+(function(){
+  const root = document.documentElement;
+  console.log('[SLIDE MOBILE] init');
+
+  // Al tocar una identidad -> slide a ámbitos
+  document.addEventListener('click', e => {
+    const summary = e.target.closest('.id-summary');
+    if (!summary) return;
+
+    if (typeof isMobile === 'function' && isMobile()){
+      root.classList.remove('slide-chat');
+      root.classList.add('slide-ambitos');
+    }
+  });
+
+  // Guardamos SOLO chatHere anterior
+  const originalChatHere = window.chatHere;
+  console.log('[SLIDE MOBILE] originalChatHere:', originalChatHere);
+
+  window.chatHere = function(btn){
+    console.log('[SLIDE MOBILE] wrapper chatHere, btn:', btn);
+
+    if (typeof originalChatHere === 'function') {
+      try {
+        originalChatHere(btn);
+      } catch (e) {
+        console.error('Error en originalChatHere:', e);
+      }
+    }
+
+    if (typeof isMobile === 'function' && isMobile()){
+      root.classList.remove('slide-ambitos');
+      root.classList.add('slide-chat');
+    }
+  };
+
+  // Botón para volver a ámbitos
+  document.addEventListener('click', e => {
+    if (e.target.closest('#toggleAmbitos') &&
+        typeof isMobile === 'function' && isMobile()){
+      root.classList.remove('slide-chat');
+      root.classList.add('slide-ambitos');
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (typeof isMobile === 'function' && !isMobile()){
+      root.classList.remove('slide-ambitos','slide-chat');
+    }
+  });
+})();
+
+
+
+// ==================== LÓGICA REAL DEL CHAT ====================
 async function chatAmbitoHere(source){
   console.group('[chatAmbitoHere] START');
   console.log('source recibido:', source);
@@ -97,70 +174,111 @@ async function chatAmbitoHere(source){
   try{
     let s;
 
+    // 1) Resolver "s" (scope/origen)
     if (source && source.dataset && source.dataset.scope){
       const rawScope = source.dataset.scope || '{}';
       console.log('[chatAmbitoHere] rawScope:', rawScope);
       s = typeof rawScope === 'string' ? JSON.parse(rawScope) : rawScope;
       console.log('[chatAmbitoHere] s parseado desde dataset.scope:', s);
+
     } else if (source && typeof source === 'object'){
       console.log('[chatAmbitoHere] source es objeto directo:', source);
       s = source;
+
     } else {
       console.log('[chatAmbitoHere] usando EMBED_SCOPE + EMBED_CLIENT');
-      const esc   = window.EMBED_SCOPE  || {};
-      const ecli  = window.EMBED_CLIENT || {};
+      const esc  = window.EMBED_SCOPE  || {};
+      const ecli = window.EMBED_CLIENT || {};
       s = { ...esc, ...ecli };
       console.log('[chatAmbitoHere] s combinado:', s);
     }
 
-    // ================== QUIÉN ES QUIÉN ==================
+    const EMBED_SCOPE_SAFE  = window.EMBED_SCOPE  || {};
+    const EMBED_CLIENT_SAFE = window.EMBED_CLIENT || {};
+
+    // 2) Viewer logueado (ID)
     const viewerId = Number(
       (window.usuario_id) ||
-      (window.EMBED_CLIENT && window.EMBED_CLIENT.viewer_user_id) ||
+      (EMBED_CLIENT_SAFE && EMBED_CLIENT_SAFE.viewer_user_id) ||
       (window.VIEWER_USER_ID) ||
       0
     );
 
-    const EMBED_CLIENT_SAFE = window.EMBED_CLIENT || {};
-
-    // teléfono del que está logueado
-    const viewerTel = (
-      (window.numTelefono && window.numTelefono[viewerId]) ||
+    // 3) Teléfono del viewer (cliente que escribe)
+    const tel = (
+      s.tel ||
+      s.telefono ||
       EMBED_CLIENT_SAFE.viewer_tel ||
+      window.LAST_IDENTITY_TEL ||
       ''
     ).toString().trim();
 
-    if (!viewerId) {
+    console.log('[chatAmbitoHere] tel resuelto:', tel);
+
+    if (!viewerId){
       console.error('[CHAT] No hay viewerId (usuario logueado)');
       console.groupEnd();
       return;
     }
 
-    if (!viewerTel){
-      console.warn('[CHAT] viewerTel vacío, sigo pero /open pedirá tel');
-    }
-
-    // target = usuario del botón (dueño del ámbito)
-    const targetId = Number(
-      s.user_id ||
-      (source && source.dataset && source.dataset.userId) ||
-      0
-    );
-
-    if (!targetId) {
-      console.error('[CHAT] No hay targetId (user_id en dataset.scope / data-user-id)');
+    if (!tel){
+      console.error('[CHAT] No hay teléfono en scope, EMBED_CLIENT ni LAST_IDENTITY_TEL');
+      if (window.Swal){
+        Swal.fire('Chat', 'Falta teléfono del cliente (tel / telefono).', 'error');
+      }
       console.groupEnd();
       return;
     }
 
-    console.log('[chatAmbitoHere] viewerId:', viewerId, 'targetId:', targetId);
+    // 4) targetId = usuario del botón (dueño del ámbito) si viene en el dataset
+    const targetId = Number(
+      s.user_id ||
+      (source && source.dataset && (source.dataset.userId || source.dataset.userid)) ||
+      0
+    );
 
-    const EMBED_SCOPE_SAFE = window.EMBED_SCOPE || {};
+    // 5) Intentar sacar owner desde localStorage: dpia.identityCache.v1
+    let ownerFromIdentityCache = null;
+    try {
+      const cacheStr = localStorage.getItem('dpia.identityCache.v1');
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        const entry = cache[tel];   // clave = teléfono, como el ejemplo que pasaste
+        if (entry) {
+          console.log('[IDENTITYCACHE] entry para tel:', tel, entry);
+          ownerFromIdentityCache = entry.usuario_id || entry.user_id || null;
+        } else {
+          console.log('[IDENTITYCACHE] sin entrada para tel:', tel);
+        }
+      } else {
+        console.log('[IDENTITYCACHE] no existe dpia.identityCache.v1 en localStorage');
+      }
+    } catch (e) {
+      console.warn('[IDENTITYCACHE] error al leer/parsing dpia.identityCache.v1', e);
+    }
 
-    // ================== SCOPE (contexto) ==================
+    // 6) Resolver owner_user_id con prioridad:
+    //    1) scope s (owner_user_id / ownerId / user_id del botón)
+    //    2) EMBED_SCOPE.owner_user_id
+    //    3) identityCache[tel].usuario_id
+    let ownerUserId = null;
+
+    if (s.owner_user_id || s.ownerId || s.user_id) {
+      ownerUserId = s.owner_user_id || s.ownerId || s.user_id;
+    } else if (EMBED_SCOPE_SAFE.owner_user_id) {
+      ownerUserId = EMBED_SCOPE_SAFE.owner_user_id;
+    } else if (ownerFromIdentityCache) {
+      ownerUserId = ownerFromIdentityCache;
+    }
+
+    if (!ownerUserId){
+      console.warn('[CHAT] owner_user_id no resuelto (ni scope, ni EMBED_SCOPE, ni identityCache)');
+    }
+
+    // 7) Armar scope final
     const scope = {
       dominio:        s.dominio || s.ambito || EMBED_SCOPE_SAFE.dominio || 'tecnologia',
-      locale:         s.locale  || s.idioma  || EMBED_SCOPE_SAFE.locale  || 'es',
+      locale:         s.locale  || s.idioma || EMBED_SCOPE_SAFE.locale  || 'es',
       ambito_slug:    s.ambito,
       categoria_slug: s.categoria,
       codigo_postal:  s.cp || EMBED_SCOPE_SAFE.codigo_postal,
@@ -169,18 +287,20 @@ async function chatAmbitoHere(source){
     if (s.ambito_id        || s.ambitoId)
       scope.ambito_id = s.ambito_id || s.ambitoId;
 
-    if (s.categoria_id     || s.categoriaId){
+    if (s.categoria_id     || s.categoriaId)
       scope.categoria_id = s.categoria_id || s.categoriaId;
-    }
+
     if (!scope.categoria_id && s.categoria && !isNaN(parseInt(s.categoria, 10))) {
       scope.categoria_id = parseInt(s.categoria, 10);
     }
+
     if (!scope.categoria_id && EMBED_SCOPE_SAFE.categoria_id){
       scope.categoria_id = EMBED_SCOPE_SAFE.categoria_id;
     }
 
     if (s.codigo_postal_id || s.codigo_postalId)
       scope.codigo_postal_id = s.codigo_postal_id || s.codigo_postalId;
+
     if (!scope.codigo_postal_id && EMBED_SCOPE_SAFE.codigo_postal)
       scope.codigo_postal_id = EMBED_SCOPE_SAFE.codigo_postal;
 
@@ -189,26 +309,32 @@ async function chatAmbitoHere(source){
     else if (EMBED_SCOPE_SAFE.publicacion_id)
       scope.publicacion_id = EMBED_SCOPE_SAFE.publicacion_id;
 
-    // dueño del ámbito = target
-    scope.owner_user_id = targetId;
+    if (ownerUserId){
+      scope.owner_user_id = Number(ownerUserId);
+    }
 
     console.log('[chatAmbitoHere] scope FINAL:', scope);
 
-    // ================== CLIENT (EL QUE HABLA = VIEWER) ==================
+    // 8) PUNTO DE CONTROL ANTES DE OPEN: viewer vs botón / owner
+    console.log('[CHECKPOINT-OPEN]', {
+      viewer_user_id : viewerId,            // logueado
+      owner_user_id  : scope.owner_user_id, // dueño ámbito / identity
+      targetId_raw   : targetId,            // lo que vino en s.user_id / data-user-id
+      tel,
+    });
+
+    // 9) Payload final para /open
     const payload = {
       scope,
       client: {
-        tel:     viewerTel,
-        // si algún día querés alias/email del viewer en el embed, agrégalo también en chat-context.js
-        alias:   EMBED_CLIENT_SAFE.alias || null,
-        email:   EMBED_CLIENT_SAFE.viewer_email || null,
+        tel,
+        alias:   s.alias || EMBED_CLIENT_SAFE.alias || null,
+        email:   s.email || EMBED_CLIENT_SAFE.viewer_email || null,
         user_id: viewerId,
       }
     };
 
     console.log('[CHAT] payload /api_chat_bp/open:', payload);
-
-    // ... resto de tu lógica / fetch a /api_chat_bp/open ...
 
 
     const r = await fetch('/api/chat/api_chat_bp/open/', {
