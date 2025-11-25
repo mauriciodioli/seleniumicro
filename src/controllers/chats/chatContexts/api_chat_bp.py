@@ -52,7 +52,7 @@ def open_conversation():
         except (TypeError, ValueError):
             return jsonify(ok=False, error="owner_user_id inválido"), 400
 
-        # 👇 NUEVO: viene del front como targetId_raw (id del contacto / botón)
+        # 👇 viene del front como targetId_raw (id del contacto / botón)
         target_user_id = data.get("targetId_raw")
 
         dominio = scope.get("dominio") or "tecnologia"
@@ -80,7 +80,7 @@ def open_conversation():
         # ========== 1.5) NORMALIZAR PAREJA OWNER/CLIENTE ==========
 
         # Si el que abre el chat ES el dueño del ámbito (viewer == owner),
-        # entonces el "cliente" de la conversación tiene que ser el target (el otro usuario).
+        # el "cliente" de la conversación tiene que ser el target (el otro usuario).
         if client_user_id == owner_user_id:
             if not target_user_id:
                 return jsonify(ok=False, error="Falta targetId_raw para owner del ámbito"), 400
@@ -90,36 +90,27 @@ def open_conversation():
                 return jsonify(ok=False, error="targetId_raw inválido"), 400
 
         # A partir de acá:
-        #   owner_user_id  = dueño del ámbito
+        #   owner_user_id  = dueño del micrositio
         #   client_user_id = el otro usuario
-        # La clave lógica de la conversación es este PAR + el contexto:
-        # (owner_user_id, client_user_id, dominio, ambito_id, categoria_id, codigo_postal_id, publicacion_id)
+        # Y queremos UNA sola conversación por este par (más opcionalmente publicacion_id)
 
         # ========== 2) CONVERSACIÓN: BUSCAR POR PAR ANTES DE CREAR ==========
 
         with get_db_session() as session:
-            # 👇 AQUÍ SE COMPARA EL PAR EXACTO (owner_user_id, client_user_id)
-            existing_conv = (
+            conv = (
                 session.query(Conversation)
                 .filter(
                     Conversation.owner_user_id == owner_user_id,
                     Conversation.client_user_id == client_user_id,
-                    Conversation.dominio == dominio,
-                    Conversation.ambito_id.is_(ambito_id),
-                    Conversation.categoria_id.is_(categoria_id),
-                    Conversation.codigo_postal == codigo_postal,
-                    Conversation.codigo_postal_id.is_(codigo_postal_id),
-                    Conversation.publicacion_id.is_(publicacion_id or None),
+                    Conversation.publicacion_id == (publicacion_id or None),
                 )
                 .order_by(Conversation.id.asc())
                 .first()
             )
 
-            if existing_conv:
-                conv = existing_conv
-            else:
-                # Si NO existe conversación para ese par y ese contexto,
-                # recién ahí delegamos en tu helper para crearla.
+            if not conv:
+                # Si NO existe conversación para ese par (y esa publicación),
+                # recién ahí usamos tu helper para crearla (y resolver scope_id).
                 conv = get_or_create_conversation(
                     owner_user_id=owner_user_id,
                     client_user_id=client_user_id,
@@ -177,8 +168,8 @@ def open_conversation():
                 from_summary=from_summary,
                 scope={
                     "id":               conv.scope_id,
-                    "owner_user_id":    conv.owner_user_id,
-                    "client_user_id":   conv.client_user_id,
+                    "owner_user_id":    owner_user_id,
+                    "client_user_id":   client_user_id,
                     "dominio":          dominio,
                     "locale":           locale,
                     "ambito_id":        ambito_id,
