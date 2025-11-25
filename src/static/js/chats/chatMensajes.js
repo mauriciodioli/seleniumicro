@@ -221,12 +221,23 @@ async function sendMessage(text){
   const box = document.getElementById('msgs');
   if (!box) return;
 
+  const cleanText = (text || '').trim();
+  if (!cleanText) return;
+
   // pinta optimista
   const div = document.createElement('div');
   div.className = 'msg me';
-  div.textContent = text;
+  div.textContent = cleanText;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
+
+  // 🔹 decidir si mando como "owner" o como "client"
+  const viewerId = Number(window.usuario_id || window.VIEWER_USER_ID || 0);
+  const ownerId  = Chat.scope && Chat.scope.owner_user_id
+    ? Number(Chat.scope.owner_user_id)
+    : null;
+
+  const role = (ownerId && viewerId === ownerId) ? 'owner' : 'client';
 
   try{
     const r = await fetch('/api/chat/api_chat_bp/send/', {
@@ -238,8 +249,8 @@ async function sendMessage(text){
       credentials: 'include',
       body: JSON.stringify({
         conversation_id: Chat.conversationId,
-        text,
-        as: 'client'
+        text: cleanText,
+        as: role
       })
     });
 

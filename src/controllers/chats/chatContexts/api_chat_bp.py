@@ -20,7 +20,6 @@ api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 # ==========================================================
 #  ENDPOINTS EXISTENTES (NO TOCAR)
 # ==========================================================
-
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
@@ -58,6 +57,9 @@ def open_conversation():
         except (TypeError, ValueError):
             return jsonify(ok=False, error="owner_user_id inválido"), 400
 
+        # 👇 NUEVO: viene del front, es el user del botón/identidad
+        target_user_id = data.get("target_user_id")
+
         dominio = scope.get("dominio") or "tecnologia"
         locale  = scope.get("locale")  or "es"
 
@@ -80,6 +82,22 @@ def open_conversation():
         alias = client.get("alias")
         email = client.get("email")
 
+        # ========== 1.5) NORMALIZAR PAREJA OWNER/CLIENTE ==========
+
+        # Si el que abre el chat ES el dueño del ámbito,
+        # entonces el "cliente" de la conversación tiene que ser el target (el otro usuario).
+        if client_user_id == owner_user_id:
+            if not target_user_id:
+                return jsonify(ok=False, error="Falta target_user_id para owner del ámbito"), 400
+            try:
+                client_user_id = int(target_user_id)
+            except (TypeError, ValueError):
+                return jsonify(ok=False, error="target_user_id inválido"), 400
+
+        # A partir de acá:
+        #   owner_user_id  = dueño del ámbito (Ola)
+        #   client_user_id = el otro (Mauricio), da igual quién abrió
+
         # ========== 2) CONVERSACIÓN: GET OR CREATE ==========
 
         with get_db_session() as session:
@@ -93,7 +111,7 @@ def open_conversation():
                 codigo_postal_id=codigo_postal_id,
                 locale=locale,
                 publicacion_id=publicacion_id,
-                session=session,  # 👈 ahora sí, sesión correcta
+                session=session,
             )
 
             # ========== 3) HISTORIAL DE MENSAJES ==========
@@ -133,8 +151,6 @@ def open_conversation():
                 ] if x
             )
 
-            # el commit/rollback/close lo maneja el context manager de get_db_session
-
             return jsonify(
                 ok=True,
                 conversation_id=conv.id,
@@ -164,6 +180,7 @@ def open_conversation():
     except Exception as e:
         current_app.logger.exception("Error en /api_chat_bp/open/")
         return jsonify(ok=False, error=str(e)), 500
+
 
 
 
@@ -205,7 +222,6 @@ def get_messages():
         current_app.logger.exception("Error en /api_chat_bp/messages/")
         return jsonify(ok=False, error=str(e)), 500
 
-
 @api_chat_bp.route("/api_chat_bp/send/", methods=["POST"])
 def send():
     data    = request.get_json() or {}
@@ -216,21 +232,17 @@ def send():
     if not conv_id or not text:
         return jsonify(ok=False, error="conversation_id y text son obligatorios"), 400
 
-    # conv_id puede venir como string
     try:
         conv_id = int(conv_id)
     except (TypeError, ValueError):
         return jsonify(ok=False, error="conversation_id inválido"), 400
 
-    # normalizamos role por las dudas
     if role not in {"client", "owner", "ia"}:
         role = "client"
 
     try:
-        # 👇 usamos SIEMPRE la sesión del context manager
         with get_db_session() as session:
 
-            # 1) Buscar la conversación
             conv = (
                 session.query(Conversation)
                        .filter(Conversation.id == conv_id)
@@ -239,7 +251,6 @@ def send():
             if not conv:
                 return jsonify(ok=False, error="conversation no encontrada"), 404
 
-            # 2) Crear mensaje (sin current_user, usamos el role que mandó el front)
             msg = Message(
                 conversation_id = conv.id,
                 role            = role,
@@ -248,12 +259,9 @@ def send():
                 content         = text,
             )
             session.add(msg)
-            session.flush()  # para obtener msg.id antes del commit
+            session.flush()  # para tener msg.id
 
-            # 3) actualizar timestamp de la conversación
-            conv.updated_at = func.now()
-
-            # commit/rollback/close lo hace el context manager
+            conv.updated_at = func.now()  # asegúrate de tener from sqlalchemy import func
 
             return jsonify(
                 ok=True,

@@ -164,8 +164,6 @@ document.addEventListener('click', (ev) => {
   });
 })();
 
-
-
 // ==================== LÓGICA REAL DEL CHAT ====================
 async function chatAmbitoHere(source){
   console.group('[chatAmbitoHere] START');
@@ -230,7 +228,7 @@ async function chatAmbitoHere(source){
       return;
     }
 
-    // 4) targetId = usuario del botón (dueño del ámbito) si viene en el dataset
+    // 4) targetId = usuario del botón (CONTACTO con el que quiero hablar)
     const targetId = Number(
       s.user_id ||
       (source && source.dataset && (source.dataset.userId || source.dataset.userid)) ||
@@ -243,7 +241,7 @@ async function chatAmbitoHere(source){
       const cacheStr = localStorage.getItem('dpia.identityCache.v1');
       if (cacheStr) {
         const cache = JSON.parse(cacheStr);
-        const entry = cache[tel];   // clave = teléfono, como el ejemplo que pasaste
+        const entry = cache[tel];   // clave = teléfono del dueño del ámbito cuando aplica
         if (entry) {
           console.log('[IDENTITYCACHE] entry para tel:', tel, entry);
           ownerFromIdentityCache = entry.usuario_id || entry.user_id || null;
@@ -258,21 +256,22 @@ async function chatAmbitoHere(source){
     }
 
     // 6) Resolver owner_user_id con prioridad:
-    //    1) scope s (owner_user_id / ownerId / user_id del botón)
-    //    2) EMBED_SCOPE.owner_user_id
+    //    1) EMBED_SCOPE.owner_user_id (dueño del ámbito embed)
+    //    2) s.owner_user_id / s.ownerId
     //    3) identityCache[tel].usuario_id
+    //   ⚠️ NUNCA usar s.user_id para owner (ese es el contacto / target)
     let ownerUserId = null;
 
-    if (s.owner_user_id || s.ownerId || s.user_id) {
-      ownerUserId = s.owner_user_id || s.ownerId || s.user_id;
-    } else if (EMBED_SCOPE_SAFE.owner_user_id) {
+    if (EMBED_SCOPE_SAFE.owner_user_id) {
       ownerUserId = EMBED_SCOPE_SAFE.owner_user_id;
+    } else if (s.owner_user_id || s.ownerId) {
+      ownerUserId = s.owner_user_id || s.ownerId;
     } else if (ownerFromIdentityCache) {
       ownerUserId = ownerFromIdentityCache;
     }
 
     if (!ownerUserId){
-      console.warn('[CHAT] owner_user_id no resuelto (ni scope, ni EMBED_SCOPE, ni identityCache)');
+      console.warn('[CHAT] owner_user_id no resuelto (ni EMBED_SCOPE, ni scope, ni identityCache)');
     }
 
     // 7) Armar scope final
@@ -318,8 +317,8 @@ async function chatAmbitoHere(source){
     // 8) PUNTO DE CONTROL ANTES DE OPEN: viewer vs botón / owner
     console.log('[CHECKPOINT-OPEN]', {
       viewer_user_id : viewerId,            // logueado
-      owner_user_id  : scope.owner_user_id, // dueño ámbito / identity
-      targetId_raw   : targetId,            // lo que vino en s.user_id / data-user-id
+      owner_user_id  : scope.owner_user_id, // dueño ámbito
+      targetId_raw   : targetId,            // contacto
       tel,
     });
 
@@ -331,11 +330,12 @@ async function chatAmbitoHere(source){
         alias:   s.alias || EMBED_CLIENT_SAFE.alias || null,
         email:   s.email || EMBED_CLIENT_SAFE.viewer_email || null,
         user_id: viewerId,
-      }
+      },
+      // 👇 esto es lo que usa el backend para fijar bien la pareja cuando el viewer es el owner
+      target_user_id: targetId || null,
     };
 
     console.log('[CHAT] payload /api_chat_bp/open:', payload);
-
 
     const r = await fetch('/api/chat/api_chat_bp/open/', {
       method: 'POST',
@@ -398,3 +398,4 @@ async function chatAmbitoHere(source){
     console.groupEnd();
   }
 }
+
