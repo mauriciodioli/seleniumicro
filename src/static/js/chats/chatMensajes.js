@@ -118,10 +118,17 @@ function renderMessages(list){
   const box = document.getElementById('msgs');
   if (!box) return;
 
-  const msgs  = Array.isArray(list) ? list : [];
-  const scope = Chat.scope || {};   // 👈 usa el scope que ya guardaste
+  const msgs = Array.isArray(list) ? list : [];
 
-  // --- 1) Medimos el scroll ANTES de repintar ---
+  // --- CONTEXTO: quién soy yo y cuál es el par owner/client ---
+  const scope    = (window.Chat && Chat.scope) || window.currentChatScope || {};
+  const viewerIdRaw = (window.getViewerUserId ? window.getViewerUserId() : null);
+
+  const viewerId = viewerIdRaw != null ? Number(viewerIdRaw) : null;
+  const ownerId  = scope.owner_user_id  != null ? Number(scope.owner_user_id)  : null;
+  const clientId = scope.client_user_id != null ? Number(scope.client_user_id) : null;
+
+  // --- 1) Medimos scroll ANTES de repintar ---
   const prevScrollTop    = box.scrollTop;
   const prevScrollHeight = box.scrollHeight;
   const clientHeight     = box.clientHeight || 1;
@@ -143,8 +150,9 @@ function renderMessages(list){
     return;
   }
 
-  // --- 3) Repintamos mensajes ---
+  // --- 3) Repintar mensajes ---
   box.innerHTML = msgs.map(m => {
+    // Mensajes del sistema / IA
     if (m.role === 'system' || m.role === 'ia') {
       const textSys = (m.content || '').replace(/\n/g, '<br>');
       return `
@@ -154,8 +162,21 @@ function renderMessages(list){
         </div>`;
     }
 
-    const mine = isMessageMine(m, scope);
-    const cls  = mine ? 'msg me msg-client' : 'msg msg-owner';
+    // Mensajes humanos: decidir si SON MÍOS o del otro
+    let isMine = false;
+
+    if (viewerId != null) {
+      if (m.role === 'client' && viewerId === clientId) {
+        isMine = true;
+      } else if (m.role === 'owner' && viewerId === ownerId) {
+        isMine = true;
+      }
+    }
+
+    // Clases:
+    //  - msg me msg-client  -> mi mensaje (derecha, azul)
+    //  - msg msg-owner      -> mensaje del otro (izquierda, verde)
+    const cls = isMine ? 'msg me msg-client' : 'msg msg-owner';
 
     const text = (m.content || '').replace(/\n/g, '<br>');
     return `
@@ -165,7 +186,7 @@ function renderMessages(list){
       </div>`;
   }).join('');
 
-  // --- 4) Ajustamos scroll DESPUÉS del repintado ---
+  // --- 4) Ajuste de scroll DESPUÉS de repintar ---
   const newScrollHeight = box.scrollHeight;
 
   if (wasAtBottom) {
@@ -176,73 +197,15 @@ function renderMessages(list){
   }
 }
 
+
+
+// la dejamos global como ya usás en otros lados
 window.renderMessages = renderMessages;
 
 
 
 
 
-
-function isMessageMine(m, scope) {
-  const viewerId   = getViewerId();
-  const ownerId    = scope?.owner_user_id != null ? Number(scope.owner_user_id) : null;
-  const clientId   = scope?.client_user_id != null ? Number(scope.client_user_id) : null;
-  const messageRole = m?.role;
-
-  // Determinación
-  let mine = false;
-  if (messageRole === 'client') {
-    mine = viewerId === clientId;
-  } else if (messageRole === 'owner') {
-    mine = viewerId === ownerId;
-  }
-
-  // 🔥 Punto de control
-  console.groupCollapsed('%c🟦 [CHECK isMessageMine]', 'color:#00e');
-  console.log('📨 Mensaje:', m);
-  console.log('👤 viewerId:', viewerId);
-  console.log('🟢 owner_user_id:', ownerId);
-  console.log('🟠 client_user_id:', clientId);
-  console.log('🎭 msg.role:', messageRole);
-  console.log('📌 ¿Es mío? →', mine);
-  console.groupEnd();
-
-  return mine;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ==================== CARGAR MENSAJES (POST) ====================
 // ==================== CARGAR MENSAJES (POST) ====================
 async function loadMessages(){
   if (!Chat.conversationId) {
@@ -250,7 +213,7 @@ async function loadMessages(){
     return;
   }
 
-  try {
+  try{
     const r = await fetch('/api/chat/api_chat_bp/messages/', {
       method: 'POST',
       headers: {
@@ -262,26 +225,16 @@ async function loadMessages(){
     });
     
     const data = await r.json();
-
-    console.groupCollapsed('%c📨 [LOAD MESSAGES]', 'color:#0af');
-    console.log('conversationId:', Chat.conversationId);
-    console.log('viewerId:', getViewerId());
-    console.log('scope actual:', Chat.scope);
-    console.log('respuesta /messages:', data);
-    console.groupEnd();
-
     if (!r.ok || !data.ok){
       console.error('[CHAT] error en /messages', data);
       return;
     }
 
     renderMessages(data.messages || []);
-  } catch(err) {
+  }catch(err){
     console.error('[CHAT] excepción en loadMessages', err);
   }
 }
-
-// ==================== ENVIAR MENSAJE (POST) ====================
 // ==================== ENVIAR MENSAJE (POST) ====================
 async function sendMessage(text){
   if (!Chat.conversationId){
@@ -296,34 +249,22 @@ async function sendMessage(text){
   const cleanText = (text || '').trim();
   if (!cleanText) return;
 
-  const scope   = Chat.scope || {};
-  const viewerId = getViewerId();
-  const ownerId  = scope.owner_user_id != null ? Number(scope.owner_user_id) : null;
-  const clientId = scope.client_user_id != null ? Number(scope.client_user_id) : null;
-
-  // 🔹 decidir si mando como "owner" o como "client"
-  // si soy el owner → role='owner', si no → 'client'
-  const role = (ownerId && viewerId === ownerId) ? 'owner' : 'client';
-
-  console.groupCollapsed('%c✉️ [SEND MESSAGE]', 'color:#0c0');
-  console.log('texto:', cleanText);
-  console.log('viewerId:', viewerId);
-  console.log('ownerId:', ownerId, 'clientId:', clientId);
-  console.log('role decidido:', role);
-  console.log('scope usado:', scope);
-  console.groupEnd();
-
-  // pinta optimista (SIEMPRE como "me"; luego el repaint lo corrige si hiciera falta)
+  // pinta optimista
   const div = document.createElement('div');
-  div.className = 'msg me msg-client';
-  div.innerHTML = `
-    <div class="msg-body">${cleanText}</div>
-    <div class="msg-meta">${new Date().toISOString()}</div>
-  `;
+  div.className = 'msg me';
+  div.textContent = cleanText;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 
-  try {
+  // 🔹 decidir si mando como "owner" o como "client"
+  const viewerId = Number(window.usuario_id || window.VIEWER_USER_ID || 0);
+  const ownerId  = Chat.scope && Chat.scope.owner_user_id
+    ? Number(Chat.scope.owner_user_id)
+    : null;
+
+  const role = (ownerId && viewerId === ownerId) ? 'owner' : 'client';
+
+  try{
     const r = await fetch('/api/chat/api_chat_bp/send/', {
       method: 'POST',
       headers: {
@@ -339,24 +280,13 @@ async function sendMessage(text){
     });
 
     const data = await r.json();
-
-    console.groupCollapsed('%c🧾 [RESP /send]', 'color:#f80');
-    console.log('payload enviado:', {
-      conversation_id: Chat.conversationId,
-      text: cleanText,
-      as: role
-    });
-    console.log('respuesta /send:', data);
-    console.groupEnd();
-
     if (!r.ok || !data.ok){
       console.error('[CHAT] error en /send', data);
     }
-  } catch(err) {
+  }catch(err){
     console.error('[CHAT] excepción en sendMessage', err);
   }
 }
-
 
 
 
