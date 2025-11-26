@@ -296,12 +296,14 @@ async function sendMessage(text){
   box.scrollTop = box.scrollHeight;
 
   // 🔹 decidir si mando como "owner" o como "client"
-  const viewerId = Number(window.usuario_id || window.VIEWER_USER_ID || 0);
-  const ownerId  = Chat.scope && Chat.scope.owner_user_id
-    ? Number(Chat.scope.owner_user_id)
-    : null;
+ const viewerId = Number(window.usuario_id || window.VIEWER_USER_ID || 0);
+const ownerId  = Chat.scope && Chat.scope.owner_user_id
+  ? Number(Chat.scope.owner_user_id)
+  : null;
 
-  const role = (ownerId && viewerId === ownerId) ? 'owner' : 'client';
+const role = (!ownerId || viewerId === ownerId) ? 'owner' : 'client';
+console.log('[ROLE]', { viewerId, ownerId, role });
+
 
   try{
     const r = await fetch('/api/chat/api_chat_bp/send/', {

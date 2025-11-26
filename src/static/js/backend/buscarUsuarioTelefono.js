@@ -53,7 +53,7 @@ window.getCachedIdentity = function(arg){
 
       const data = await resp.json();
       console.log('[identidad-buscar] data:', data);
-debugger;
+
       if (!resp.ok || !data.ok) {
         Swal.fire('Sin resultados', data.error || 'No se encontró identidad', 'info');
         return;
@@ -258,7 +258,7 @@ window.BuscarUsuarioTelefono = {
     if (kind === 'alias' && typeof value === 'string') {
       value = value.replace(/^@/, '');
     }
-debugger;
+
     let resp, data = {};
     try {
       resp = await fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
@@ -505,7 +505,7 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
   if (!acc || !tel) return;
 
   console.log('[IDENTITY] user recibido:', JSON.parse(JSON.stringify(user)));
-debugger;
+
   const key = userKeyOverride || tel;
 
   // Si ya existe, lo subimos al tope y salimos
@@ -782,7 +782,7 @@ async function procesarChatIdentidades(seed){
     return;
   }
   if (v.type === 'phone' && input) input.value = v.value; // reflejar E.164
-debugger;
+
   // pedir al backend
   const resp = await fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
     method:'POST',
@@ -1147,7 +1147,7 @@ function bootstrapFromUrlContext(){
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT] DOMContentLoaded buscarUsuarioTelefono.js');
-  debugger;
+
   bootstrapFromUrlContext();
 });
 
