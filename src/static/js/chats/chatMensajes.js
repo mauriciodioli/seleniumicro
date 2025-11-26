@@ -120,13 +120,19 @@ function renderMessages(list){
 
   const msgs = Array.isArray(list) ? list : [];
 
+  // --- 0) Contexto para saber quién soy ---
+  const scope    = (window.Chat && Chat.scope) || window.currentChatScope || {};
+  const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
+
+  const ownerId  = scope.owner_user_id ?? null;
+  const clientId = scope.client_user_id ?? null;
+
   // --- 1) Medimos el scroll ANTES de repintar ---
   const prevScrollTop    = box.scrollTop;
   const prevScrollHeight = box.scrollHeight;
   const clientHeight     = box.clientHeight || 1;
 
-  // ¿El usuario estaba "abajo"?
-  // margen de 40px para contemplar pequeños offsets
+  // ¿El usuario estaba "abajo"? margen de 40px para contemplar pequeños offsets
   const wasAtBottom = (prevScrollHeight - (prevScrollTop + clientHeight)) < 40;
 
   // --- 2) Si no hay mensajes, mostramos el placeholder ---
@@ -140,19 +146,37 @@ function renderMessages(list){
           </div>
         </div>
       </div>`;
-    // primer estado: lo dejamos abajo igual
     box.scrollTop = box.scrollHeight;
     return;
   }
 
   // --- 3) Repintamos mensajes ---
   box.innerHTML = msgs.map(m => {
-    const isMine = (m.role === 'client'); // “yo”
+    // ¿es un mensaje del sistema / IA?
+    if (m.role === 'system' || m.role === 'ia') {
+      const textSys = (m.content || '').replace(/\n/g, '<br>');
+      return `
+        <div class="msg msg-system">
+          <div class="msg-body">${textSys}</div>
+          <div class="msg-meta">${m.created_at || ''}</div>
+        </div>`;
+    }
 
-    const cls =
-      isMine             ? 'msg me msg-client' :
-      m.role === 'owner' ? 'msg msg-owner'     :
-                           'msg msg-system';
+    // Mensajes humanos: decidir si son míos o del otro
+    let isMine = false;
+
+    if (viewerId != null) {
+      if (m.role === 'client' && viewerId === clientId) {
+        isMine = true;
+      } else if (m.role === 'owner' && viewerId === ownerId) {
+        isMine = true;
+      }
+    }
+
+    // Clases:
+    //  - "msg me msg-client"  -> burbuja mía (derecha, azul)
+    //  - "msg msg-owner"      -> burbuja del otro (izquierda, verde)
+    const cls = isMine ? 'msg me msg-client' : 'msg msg-owner';
 
     const text = (m.content || '').replace(/\n/g, '<br>');
     return `
@@ -166,17 +190,16 @@ function renderMessages(list){
   const newScrollHeight = box.scrollHeight;
 
   if (wasAtBottom) {
-    // Usuario estaba abajo → lo dejamos ver el último mensaje
-    box.scrollTop = newScrollHeight;
+    box.scrollTop = newScrollHeight;     // dejar al usuario en el último mensaje
   } else {
-    // Usuario estaba leyendo arriba → preservamos posición relativa
     const delta = newScrollHeight - prevScrollHeight;
-    box.scrollTop = Math.max(0, prevScrollTop + delta);
+    box.scrollTop = Math.max(0, prevScrollTop + delta); // preserva posición
   }
 }
 
 // la dejamos global como ya usás en otros lados
 window.renderMessages = renderMessages;
+
 
 
 
@@ -306,30 +329,50 @@ if (btnSend) {
 
 
 
-
-
 function renderMessageBubble(m) {
-  const isClient = (m.role === 'client');
-  const side = isClient ? 'msg--out' : 'msg--in';
+  const scope    = Chat.scope || window.currentChatScope || {};
+  const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
+
+  const ownerId  = scope.owner_user_id ?? null;
+  const clientId = scope.client_user_id ?? null;
+
+  let side = 'msg--in'; // por defecto, entrante
+
+  if (m.role === 'ia') {
+    side = 'msg--bot';
+  } else if (viewerId != null) {
+    const isMine =
+      (m.role === 'client' && viewerId === clientId) ||
+      (m.role === 'owner'  && viewerId === ownerId);
+
+    side = isMine ? 'msg--out' : 'msg--in';
+  }
 
   let innerHTML = '';
 
   if (m.content_type === 'text') {
-    innerHTML = `<p>${escapeHTML(m.content || '')}</p>`;
+    innerHTML = `<div class="msg-body">${escapeHTML(m.content || '')}</div>`;
   } else if (m.content_type === 'image') {
-    innerHTML = `<img src="${m.content}" class="msg-img" alt="imagen">`;
+    innerHTML = `<div class="msg-body"><img src="${m.content}" class="msg-img" alt="imagen"></div>`;
   } else if (m.content_type === 'audio') {
     innerHTML = `
-      <div class="msg-audio msg-audio--unread">
-        <audio controls src="${m.content}"></audio>
+      <div class="msg-body">
+        <div class="msg-audio msg-audio--unread">
+          <audio controls src="${m.content}"></audio>
+        </div>
       </div>
     `;
   }
 
+  const meta = m.created_at
+    ? `<div class="msg-meta">${m.created_at}</div>`
+    : '';
+
   const div = document.createElement('div');
-  div.className = `msg ${side}`;
+  div.className = `msg ${side} msg-${m.role || 'unk'}`;
   div.dataset.id = m.id;
-  div.innerHTML = innerHTML;
+  div.innerHTML = innerHTML + meta;
+
   return div;
 }
 

@@ -356,8 +356,11 @@ async function chatAmbitoHere(source) {
       return;
     }
 
-    Chat.scope          = payload.scope;
+    Chat.scope          = data.scope || payload.scope || {};
     Chat.conversationId = data.conversation_id;
+
+    // opcional, por si querés usarlo sin el objeto Chat
+    window.currentChatScope = Chat.scope;
 
     console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
 
