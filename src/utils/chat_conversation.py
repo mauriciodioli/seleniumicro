@@ -89,6 +89,7 @@ def get_or_create_conversation(
     conv = q.order_by(Conversation.id.desc()).first()
     if conv:
         if conv.owner_user_id == owner_user_id:
+            
             # 💡 Si ya existía, ESTA que llama ES el owner → i_am_server=True
             return conv, True
         # 💡 Si ya existía, ESTE que llama NO es el que la creó → i_am_server=False
