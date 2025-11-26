@@ -388,10 +388,23 @@ const mergedScope = {
   owner_user_id  : scopeFromFront.owner_user_id ?? null,
 };
 
-// Determinar correctamente quién es el client
-mergedScope.client_user_id = (viewerId === mergedScope.owner_user_id)
-  ? (scopeFromBack.client_user_id || scopeFromFront.client_user_id)
-  : viewerId;
+// 🔥 Corrección REAL: si soy el owner, el otro es el client (el del botón)
+// si no soy owner, yo soy client
+const targetId_raw = scopeFromFront.user_id || scopeFromBack.client_user_id || null;
+
+if (viewerId === mergedScope.owner_user_id) {
+  // Soy el dueño → el cliente es el otro (targetId_raw o el valor backend)
+  mergedScope.client_user_id =
+    scopeFromBack.client_user_id ??
+    targetId_raw;
+} else {
+  // Soy visitante → yo soy el cliente
+  mergedScope.client_user_id = viewerId;
+}
+
+// Asegurar que es número
+mergedScope.client_user_id = Number(mergedScope.client_user_id);
+
 
 // Guardar en Chat
 Chat.scope          = mergedScope;
