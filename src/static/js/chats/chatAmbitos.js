@@ -362,6 +362,15 @@ async function chatAmbitoHere(source) {
     // opcional, por si querés usarlo sin el objeto Chat
     window.currentChatScope = Chat.scope;
 
+    
+
+console.groupCollapsed('%c🟩 [CHECK Chat.scope guardado]', 'color:#0a0');
+console.log('Data.scope recibido:', data.scope);
+console.log('Payload.scope enviado:', payload.scope);
+console.log('Scope final usado:', Chat.scope);
+console.groupEnd();
+
+
     console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
 
     setChatHeaderFromOpen(data);
