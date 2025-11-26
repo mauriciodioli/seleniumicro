@@ -121,8 +121,20 @@ function setCtxBadge(s){
 
 function getViewerId() {
   // usa lo que ya tengas para el usuario logueado
-  const v = window.usuario_id ?? window.VIEWER_USER_ID ?? null;
-  return v != null ? Number(v) : null;
+  const v =
+    window.usuario_id ??
+    window.VIEWER_USER_ID ??
+    window.viewer_user_id ??
+    null;
+
+  const num = v != null ? Number(v) : null;
+
+  console.log('%c[CHAT][getViewerId]', 'color:#0af', {
+    raw: v,
+    parsed: num
+  });
+
+  return num;
 }
 
 function viewerIsOwner() {
@@ -130,13 +142,25 @@ function viewerIsOwner() {
   const scope    = (window.Chat && Chat.scope) || {};
   const ownerId  = scope.owner_user_id != null ? Number(scope.owner_user_id) : null;
 
-  return viewerId != null && ownerId != null && viewerId === ownerId;
+  const soyOwner = viewerId != null && ownerId != null && viewerId === ownerId;
+
+  console.log('%c[CHAT][viewerIsOwner]', 'color:#0c0', {
+    viewerId,
+    ownerId,
+    scope,
+    soyOwner
+  });
+
+  return soyOwner;
 }
 
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
   const box = document.getElementById('msgs');
-  if (!box) return;
+  if (!box) {
+    console.warn('[CHAT][renderMessages] sin #msgs');
+    return;
+  }
 
   const msgs = Array.isArray(list) ? list : [];
 
@@ -149,6 +173,7 @@ function renderMessages(list){
 
   // --- 2) Placeholder si no hay mensajes ---
   if (!msgs.length){
+    console.log('[CHAT][renderMessages] sin mensajes, muestro placeholder');
     box.innerHTML = `
       <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
         <div>
@@ -162,13 +187,21 @@ function renderMessages(list){
     return;
   }
 
-  // --- 3) Repintar mensajes ---
-  const soyOwner = viewerIsOwner();   // 👈 se calcula UNA vez
+  const scope    = (window.Chat && Chat.scope) || {};
+  const soyOwner = viewerIsOwner();
 
-  box.innerHTML = msgs.map(m => {
+  console.groupCollapsed('%c[CHAT][renderMessages] estado inicial', 'color:#fb0');
+  console.log('cantidad msgs:', msgs.length);
+  console.log('scope:', scope);
+  console.log('soyOwner:', soyOwner);
+  console.groupEnd();
+
+  // --- 3) Repintar mensajes ---
+  box.innerHTML = msgs.map((m, idx) => {
     // Mensajes del sistema / IA
     if (m.role === 'system' || m.role === 'ia') {
       const textSys = (m.content || '').replace(/\n/g, '<br>');
+      console.log('[CHAT][msg]', idx, 'system/ia', { role: m.role });
       return `
         <div class="msg msg-system">
           <div class="msg-body">${textSys}</div>
@@ -176,15 +209,16 @@ function renderMessages(list){
         </div>`;
     }
 
-    // 👇 Mensajes humanos: decidir si SON MÍOS o del otro
-    // si soy OWNER → mis mensajes son role='owner'
-    // si soy CLIENT → mis mensajes son role='client'
+    // Mensajes humanos: decidir si SON MÍOS o del otro
     const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
+    const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
 
-    // Clases:
-    //  - msg me msg-client  -> mi mensaje (derecha, azul)
-    //  - msg msg-owner      -> mensaje del otro (izquierda, verde)
-    const cls = isMine ? 'msg me msg-client' : 'msg msg-owner';
+    console.log('[CHAT][msg]', idx, {
+      id: m.id,
+      role: m.role,
+      isMine,
+      claseFinal: cls
+    });
 
     const text = (m.content || '').replace(/\n/g, '<br>');
     return `
@@ -205,8 +239,8 @@ function renderMessages(list){
   }
 }
 
-// la dejamos global como ya usás en otros lados
 window.renderMessages = renderMessages;
+
 
 
 
