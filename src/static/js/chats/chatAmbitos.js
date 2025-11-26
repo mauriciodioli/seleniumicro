@@ -360,7 +360,7 @@ async function chatAmbitoHere(source) {
       body: JSON.stringify(payload)
     });
 
-    const data = await r.json();
+   const data = await r.json();
 console.groupCollapsed('[chatAmbitoHere] respuesta /open');
 console.log('data:', data);
 console.log('data.scope:', data.scope);
@@ -376,22 +376,38 @@ if (!r.ok || !data.ok) {
   return;
 }
 
-// 🔥 CORRECCIÓN: fusionar scopes sin perder owner_user_id
+// ⬇️ Nueva versión desde acá
 const scopeFromFront = payload.scope || {};
 const scopeFromBack  = data.scope   || {};
 
-Chat.scope = {
-  ...scopeFromFront,  // prioridad a lo que manda el front (owner_user_id, client_user_id)
-  ...scopeFromBack    // pisás solo si backend devuelve algo explícito (por ej: scope_id, locale corregido)
+// 👇 usamos el `viewerId` que ya está definido arriba en la misma función
+const mergedScope = {
+  ...scopeFromFront,
+  ...scopeFromBack,
+  viewer_user_id : viewerId,
+  owner_user_id  : scopeFromFront.owner_user_id ?? null,
 };
 
+// Determinar correctamente quién es el client
+mergedScope.client_user_id = (viewerId === mergedScope.owner_user_id)
+  ? (scopeFromBack.client_user_id || scopeFromFront.client_user_id)
+  : viewerId;
+
+// Guardar en Chat
+Chat.scope          = mergedScope;
 Chat.conversationId = data.conversation_id;
 
-// Log de control
-console.log('%c[CHECK Chat.scope FINAL]', 'color: #0bf');
+// Rol directo para render
+Chat.viewerRole = (viewerId === mergedScope.owner_user_id) ? 'owner' : 'client';
+
+// 🔎 Logs de control
+console.groupCollapsed('%c[CHECK Chat.scope FINAL]', 'color:#0bf;font-weight:bold');
+console.log('viewerId:', viewerId);
 console.log('scopeFront:', scopeFromFront);
 console.log('scopeBack:', scopeFromBack);
-console.log('usado:', Chat.scope);
+console.log('scope FINAL usado:', Chat.scope);
+console.log('viewerRole:', Chat.viewerRole);
+console.groupEnd();
 
 
     // opcional, por si querés usarlo sin el objeto Chat
