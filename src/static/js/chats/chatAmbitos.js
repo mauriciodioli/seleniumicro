@@ -361,23 +361,38 @@ async function chatAmbitoHere(source) {
     });
 
     const data = await r.json();
-    console.groupCollapsed('[chatAmbitoHere] respuesta /open');
-    console.log('data:', data);
-    console.log('data.scope:', data.scope);
-    console.log('payload.scope enviado:', payload.scope);
-    console.groupEnd();
+console.groupCollapsed('[chatAmbitoHere] respuesta /open');
+console.log('data:', data);
+console.log('data.scope:', data.scope);
+console.log('payload.scope enviado:', payload.scope);
+console.groupEnd();
 
-    if (!r.ok || !data.ok) {
-      console.error('Error al abrir chat', data);
-      if (window.Swal) {
-        Swal.fire('Chat', data?.error || 'No se pudo abrir el chat', 'error');
-      }
-      console.groupEnd();
-      return;
-    }
+if (!r.ok || !data.ok) {
+  console.error('Error al abrir chat', data);
+  if (window.Swal) {
+    Swal.fire('Chat', data?.error || 'No se pudo abrir el chat', 'error');
+  }
+  console.groupEnd();
+  return;
+}
 
-    Chat.scope          = data.scope || payload.scope || {};
-    Chat.conversationId = data.conversation_id;
+// 🔥 CORRECCIÓN: fusionar scopes sin perder owner_user_id
+const scopeFromFront = payload.scope || {};
+const scopeFromBack  = data.scope   || {};
+
+Chat.scope = {
+  ...scopeFromFront,  // prioridad a lo que manda el front (owner_user_id, client_user_id)
+  ...scopeFromBack    // pisás solo si backend devuelve algo explícito (por ej: scope_id, locale corregido)
+};
+
+Chat.conversationId = data.conversation_id;
+
+// Log de control
+console.log('%c[CHECK Chat.scope FINAL]', 'color: #0bf');
+console.log('scopeFront:', scopeFromFront);
+console.log('scopeBack:', scopeFromBack);
+console.log('usado:', Chat.scope);
+
 
     // opcional, por si querés usarlo sin el objeto Chat
     window.currentChatScope = Chat.scope;
