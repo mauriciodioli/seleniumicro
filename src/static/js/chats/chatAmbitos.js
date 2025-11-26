@@ -376,51 +376,48 @@ if (!r.ok || !data.ok) {
   return;
 }
 
-// ⬇️ Nueva versión desde acá
 const scopeFromFront = payload.scope || {};
-const scopeFromBack  = data.scope   || {};
+const scopeFromBack  = data.scope || {};
 
-// 👇 usamos el `viewerId` que ya está definido arriba en la misma función
+// 🔥 El que manda SIEMPRE es el front
+const owner_user_id = Number(scopeFromFront.owner_user_id || scopeFromBack.owner_user_id || null);
+
 const mergedScope = {
-  ...scopeFromFront,
-  ...scopeFromBack,
-  viewer_user_id : viewerId,
-  owner_user_id  : scopeFromFront.owner_user_id ?? null,
+  ...scopeFromBack,   // primero backend
+  ...scopeFromFront,  // front pisa TODO
+  viewer_user_id: viewerId,
+  owner_user_id: owner_user_id, // y lo vuelvo a pisar para que el merge nunca lo pierda
 };
 
-// 🔥 Corrección REAL: si soy el owner, el otro es el client (el del botón)
-// si no soy owner, yo soy client
-const targetId_raw = scopeFromFront.user_id || scopeFromBack.client_user_id || null;
-
-if (viewerId === mergedScope.owner_user_id) {
-  // Soy el dueño → el cliente es el otro (targetId_raw o el valor backend)
+// 👇 Determino client_user_id SIN NOMBRE RARO
+if (viewerId === owner_user_id) {
+  // Soy el dueño → el otro es el cliente
   mergedScope.client_user_id =
-    scopeFromBack.client_user_id ??
-    targetId_raw;
+    Number(scopeFromBack.client_user_id || scopeFromFront.user_id);
 } else {
-  // Soy visitante → yo soy el cliente
+  // Soy el cliente
   mergedScope.client_user_id = viewerId;
 }
 
-// Asegurar que es número
-mergedScope.client_user_id = Number(mergedScope.client_user_id);
+// 🔒 Seguridad: si iguala dueño y cliente, invertimos
+if (mergedScope.client_user_id === mergedScope.owner_user_id) {
+  mergedScope.client_user_id = viewerId;
+}
 
-
-// Guardar en Chat
-Chat.scope          = mergedScope;
+// 📍 Guardamos
+Chat.scope = mergedScope;
 Chat.conversationId = data.conversation_id;
+Chat.viewerRole = (viewerId === owner_user_id) ? 'owner' : 'client';
 
-// Rol directo para render
-Chat.viewerRole = (viewerId === mergedScope.owner_user_id) ? 'owner' : 'client';
-
-// 🔎 Logs de control
-console.groupCollapsed('%c[CHECK Chat.scope FINAL]', 'color:#0bf;font-weight:bold');
+// 🚨 Debug definitivo
+console.groupCollapsed('%c[CHECK Chat.scope FINAL]', 'color:#ff0;font-weight:bold;background:black');
 console.log('viewerId:', viewerId);
-console.log('scopeFront:', scopeFromFront);
-console.log('scopeBack:', scopeFromBack);
-console.log('scope FINAL usado:', Chat.scope);
+console.log('owner_user_id:', mergedScope.owner_user_id);
+console.log('client_user_id:', mergedScope.client_user_id);
 console.log('viewerRole:', Chat.viewerRole);
+console.log('scope FINAL usado:', mergedScope);
 console.groupEnd();
+
 
 
     // opcional, por si querés usarlo sin el objeto Chat
