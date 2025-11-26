@@ -295,15 +295,9 @@ async function sendMessage(text){
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 
-  // 🔹 decidir si mando como "owner" o como "client"
- const viewerId = Number(window.usuario_id || window.VIEWER_USER_ID || 0);
-const ownerId  = Chat.scope && Chat.scope.owner_user_id
-  ? Number(Chat.scope.owner_user_id)
-  : null;
-
-const role = (!ownerId || viewerId === ownerId) ? 'owner' : 'client';
-console.log('[ROLE]', { viewerId, ownerId, role });
-
+  // 🔹 AHORA el rol sale del backend (open), no de un cálculo extraño
+  const role = (Chat.myRole === 'owner') ? 'owner' : 'client';
+  console.log('[ROLE SEND]', { role, isServer: Chat.isServer, viewer: Chat.viewer });
 
   try{
     const r = await fetch('/api/chat/api_chat_bp/send/', {
@@ -316,18 +310,20 @@ console.log('[ROLE]', { viewerId, ownerId, role });
       body: JSON.stringify({
         conversation_id: Chat.conversationId,
         text: cleanText,
-        as: role
+        role: role
       })
     });
 
     const data = await r.json();
     if (!r.ok || !data.ok){
       console.error('[CHAT] error en /send', data);
+      // TODO: revertir optimista si querés
     }
   }catch(err){
     console.error('[CHAT] excepción en sendMessage', err);
   }
 }
+
 
 
 

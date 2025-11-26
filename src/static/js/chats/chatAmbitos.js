@@ -360,7 +360,9 @@ async function chatAmbitoHere(source) {
       body: JSON.stringify(payload)
     });
 
-   const data = await r.json();
+const data = await r.json();
+
+// 🔍 Debug de respuesta /open
 console.groupCollapsed('[chatAmbitoHere] respuesta /open');
 console.log('data:', data);
 console.log('data.scope:', data.scope);
@@ -372,45 +374,64 @@ if (!r.ok || !data.ok) {
   if (window.Swal) {
     Swal.fire('Chat', data?.error || 'No se pudo abrir el chat', 'error');
   }
-  console.groupEnd();
   return;
 }
 
+// ======================
+//  MERGE DE SCOPES
+// ======================
 const scopeFromFront = payload.scope || {};
-const scopeFromBack  = data.scope || {};
+const scopeFromBack  = data.scope   || {};
 
 // 🔥 El que manda SIEMPRE es el front
-const owner_user_id = Number(scopeFromFront.owner_user_id || scopeFromBack.owner_user_id || null);
+const owner_user_id = Number(
+  scopeFromFront.owner_user_id ||
+  scopeFromBack.owner_user_id  ||
+  null
+);
 
 const mergedScope = {
-  ...scopeFromBack,   // primero backend
-  ...scopeFromFront,  // front pisa TODO
+  // primero backend...
+  ...scopeFromBack,
+  // ...y el front pisa TODO
+  ...scopeFromFront,
   viewer_user_id: viewerId,
-  owner_user_id: owner_user_id, // y lo vuelvo a pisar para que el merge nunca lo pierda
+  owner_user_id: owner_user_id, // reforzamos para no perderlo nunca en el merge
 };
 
-// 👇 Determino client_user_id SIN NOMBRE RARO
+// ======================
+//  DETERMINAR CLIENTE
+// ======================
+// viewerId === owner_user_id  → estoy actuando como dueño del ámbito
+// viewerId !== owner_user_id  → estoy actuando como cliente
 if (viewerId === owner_user_id) {
   // Soy el dueño → el otro es el cliente
-  mergedScope.client_user_id =
-    Number(scopeFromBack.client_user_id || scopeFromFront.user_id);
+  mergedScope.client_user_id = Number(
+    scopeFromBack.client_user_id ||
+    scopeFromFront.user_id       // lo que vino como user_id en el front
+  );
 } else {
   // Soy el cliente
   mergedScope.client_user_id = viewerId;
 }
 
-// 🔒 Seguridad: si iguala dueño y cliente, invertimos
+// 🔒 Seguridad: si por algún motivo quedan iguales, el cliente pasa a ser el viewer
 if (mergedScope.client_user_id === mergedScope.owner_user_id) {
   mergedScope.client_user_id = viewerId;
 }
 
-// 📍 Guardamos
-Chat.scope = mergedScope;
+// ======================
+//  GUARDAR EN ESTADO
+// ======================
+Chat.scope          = mergedScope;
 Chat.conversationId = data.conversation_id;
-Chat.viewerRole = (viewerId === owner_user_id) ? 'owner' : 'client';
+Chat.viewerRole     = (viewerId === owner_user_id) ? 'owner' : 'client';
 
 // 🚨 Debug definitivo
-console.groupCollapsed('%c[CHECK Chat.scope FINAL]', 'color:#ff0;font-weight:bold;background:black');
+console.groupCollapsed(
+  '%c[CHECK Chat.scope FINAL]',
+  'color:#ff0;font-weight:bold;background:black'
+);
 console.log('viewerId:', viewerId);
 console.log('owner_user_id:', mergedScope.owner_user_id);
 console.log('client_user_id:', mergedScope.client_user_id);
@@ -418,28 +439,32 @@ console.log('viewerRole:', Chat.viewerRole);
 console.log('scope FINAL usado:', mergedScope);
 console.groupEnd();
 
+// opcional, por si querés usarlo sin el objeto Chat
+window.currentChatScope = Chat.scope;
 
+console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
+console.log('[CHAT] Chat.scope guardado:', Chat.scope);
 
-    // opcional, por si querés usarlo sin el objeto Chat
-    window.currentChatScope = Chat.scope;
+// header del chat
+setChatHeaderFromOpen(data);
 
-    console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
-    console.log('[CHAT] Chat.scope guardado:', Chat.scope);
+// mensajes iniciales
+let msgs = data.messages || [];
+if (data.is_new && data.from_summary) {
+  msgs = [
+    {
+      role:         'system',
+      via:          'dpia',
+      content_type: 'text',
+      content:      `Nuevo chat desde ${data.from_summary}`,
+      created_at:   new Date().toISOString()
+    },
+    ...msgs
+  ];
+}
 
-    setChatHeaderFromOpen(data);
+renderMessages(msgs);
 
-    let msgs = data.messages || [];
-    if (data.is_new && data.from_summary) {
-      msgs = [{
-        role: 'system',
-        via: 'dpia',
-        content_type: 'text',
-        content: `Nuevo chat desde ${data.from_summary}`,
-        created_at: new Date().toISOString()
-      }, ...msgs];
-    }
-
-    renderMessages(msgs);
 
     if (Chat.polling) clearInterval(Chat.polling);
     Chat.polling = setInterval(loadMessages, 2500);

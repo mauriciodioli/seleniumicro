@@ -19,7 +19,6 @@ from sqlalchemy import or_, and_
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
 
-
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
@@ -45,9 +44,13 @@ def open_conversation():
         if not cu_id:
             return jsonify(ok=False, error="Falta client.user_id en el payload"), 400
         try:
-            client_user_id = int(cu_id)
+            # ⚠️ ESTE ES EL QUE LLAMA AL ENDPOINT (VIEWER)
+            viewer_user_id = int(cu_id)
         except (TypeError, ValueError):
             return jsonify(ok=False, error="client.user_id inválido"), 400
+
+        # Por defecto asumimos que el "cliente" es quien llama
+        client_user_id = viewer_user_id
 
         owner_user_id = scope.get("owner_user_id")
         if not owner_user_id:
@@ -84,9 +87,9 @@ def open_conversation():
 
         # ========== 1.5) NORMALIZAR PAREJA OWNER/CLIENTE ==========
 
-        # Si el que abre el chat ES el dueño del ámbito (viewer == owner),
-        # el "cliente" de la conversación tiene que ser el target (el otro usuario).
-        if client_user_id == owner_user_id:
+        # Caso: el que abre es el dueño del ámbito (panel servidor)
+        # → el cliente real es target_user_id
+        if viewer_user_id == owner_user_id:
             if not target_user_id:
                 return jsonify(ok=False, error="Falta targetId_raw para owner del ámbito"), 400
             try:
@@ -94,7 +97,17 @@ def open_conversation():
             except (TypeError, ValueError):
                 return jsonify(ok=False, error="targetId_raw inválido"), 400
 
-        # ========== 2) CONVERSACIÓN: USAR FUNCIÓN MODULAR ==========
+        # En caso contrario (embed público):
+        # viewer_user_id != owner_user_id → viewer es el cliente,
+        # client_user_id ya es el viewer_user_id y está bien así.
+
+        # ========== 1.6) QUIÉN SOY YO EN ESTA CONVERSACIÓN ==========
+
+        # "servidor" = el que puede iniciar la conversación (dueño de ámbito / sistema)
+        i_am_server = (viewer_user_id == owner_user_id)
+        viewer_role = "owner" if i_am_server else "client"
+
+        # ========== 2) CONVERSACIÓN ==========
 
         with get_db_session() as session:
             conv = find_or_create_conversation_for_pair(
@@ -109,8 +122,6 @@ def open_conversation():
                 locale=locale,
                 publicacion_id=publicacion_id,
             )
-
-            # ========== 3) HISTORIAL DE MENSAJES ==========
 
             msgs = (
                 session
@@ -169,6 +180,12 @@ def open_conversation():
                     "tel":   tel,
                     "alias": alias,
                     "email": email,
+                },
+                # 👇 NUEVO: quién soy YO en esta conversación
+                viewer={
+                    "id":        viewer_user_id,
+                    "role":      viewer_role,   # "owner" o "client"
+                    "is_server": i_am_server,   # True/False
                 },
                 messages=messages_json,
             )
