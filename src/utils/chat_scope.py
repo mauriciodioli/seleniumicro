@@ -13,10 +13,16 @@ def make_context_hash(
     cp_key,          # <- puede ser ID numérico, CP string, o None
     locale,
     publicacion_id,
-    owner_user_id,
 ) -> str:
-    raw = f"{dominio}|{ambito_id}|{categoria_id}|{cp_key}|{locale}|{publicacion_id}|{owner_user_id}"
+    """
+    Hash de CONTEXTO puro: NO depende de usuarios.
+    Así, ambos lados (22 y 54) con el mismo ámbito/categoría/CP/idioma
+    comparten el mismo chat_scope.
+    """
+    raw = f"{dominio}|{ambito_id}|{categoria_id}|{cp_key}|{locale}|{publicacion_id}"
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
 
 
 def get_or_create_scope(
@@ -63,14 +69,14 @@ def get_or_create_scope(
         cp_key = cp_txt or None
 
     h = make_context_hash(
-        dominio=dominio,
-        ambito_id=ambito_id,
-        categoria_id=categoria_id,
-        cp_key=cp_key,
-        locale=locale,
-        publicacion_id=publicacion_id,
-        owner_user_id=owner_user_id,
-    )
+            dominio=dominio,
+            ambito_id=ambito_id,
+            categoria_id=categoria_id,
+            cp_key=cp_key,
+            locale=locale,
+            publicacion_id=publicacion_id,
+        )
+
 
     # 1) Buscar primero
     scope = sess.query(ChatScope).filter_by(hash_contextid=h).first()

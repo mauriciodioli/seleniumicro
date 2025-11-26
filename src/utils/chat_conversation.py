@@ -24,12 +24,12 @@ def get_or_create_conversation(
     Devuelve SIEMPRE la misma conversación para la misma pareja de usuarios
     (en cualquier orden) y el mismo scope.
 
-    El que CREA la conversación (primer llamado) queda como owner_user_id.
-
     Retorna:
         (conversation, i_am_server)
-        - i_am_server = True  -> esta llamada CREÓ la conversación
-        - i_am_server = False -> esta llamada reutilizó una conversación existente
+
+        i_am_server = True  -> el usuario pasado como owner_user_id
+                               ES el owner de esta conversación
+        i_am_server = False -> el owner real es el otro (conv.owner_user_id)
     """
 
     sess = session or db.session
@@ -45,7 +45,7 @@ def get_or_create_conversation(
     else:
         publicacion_id = None
 
-    # --- 1) scope (esto ya deduplica por hash_contextid) ---
+    # --- 1) scope (esto ya deduplica por hash_contextid sin usuarios) ---
     scope = get_or_create_scope(
         dominio=dominio,
         ambito_id=ambito_id,
@@ -54,7 +54,7 @@ def get_or_create_conversation(
         codigo_postal_id=codigo_postal_id,
         locale=locale,
         publicacion_id=publicacion_id,
-        owner_user_id=owner_user_id,
+        owner_user_id=owner_user_id,   # se guarda pero NO entra en el hash
         session=sess,
     )
 
@@ -88,13 +88,9 @@ def get_or_create_conversation(
 
     conv = q.order_by(Conversation.id.desc()).first()
     if conv:
-        if conv.owner_user_id == owner_user_id:
-            
-            # 💡 Si ya existía, ESTA que llama ES el owner → i_am_server=True
-            return conv, True
-        # 💡 Si ya existía, ESTE que llama NO es el que la creó → i_am_server=False
-        # (el server real es conv.owner_user_id)
-        return conv, False
+        # 💡 soy "server" si el owner REAL de la conversación soy yo
+        i_am_server = (conv.owner_user_id == owner_user_id)
+        return conv, i_am_server
 
     # --- 3) crear si no existe ---
     conv = Conversation(
@@ -109,5 +105,5 @@ def get_or_create_conversation(
     sess.add(conv)
     sess.flush()  # para tener conv.id
 
-    # 💡 Si llegamos acá, ESTA llamada creó la conversación → i_am_server=True
+    # 💡 si llegamos acá, el que llamó ES el server de esta conv
     return conv, True
