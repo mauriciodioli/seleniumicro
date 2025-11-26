@@ -13,8 +13,13 @@ import os
 from sqlalchemy import func
 from datetime import datetime
 from utils.db_session import get_db_session
+from sqlalchemy import or_, and_
+
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
+
+
+
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
@@ -89,40 +94,21 @@ def open_conversation():
             except (TypeError, ValueError):
                 return jsonify(ok=False, error="targetId_raw inválido"), 400
 
-        # A partir de acá:
-        #   owner_user_id  = dueño del micrositio
-        #   client_user_id = el otro usuario
-        # Y queremos UNA sola conversación por este par (más opcionalmente publicacion_id)
-
-        # ========== 2) CONVERSACIÓN: BUSCAR POR PAR ANTES DE CREAR ==========
+        # ========== 2) CONVERSACIÓN: USAR FUNCIÓN MODULAR ==========
 
         with get_db_session() as session:
-            conv = (
-                session.query(Conversation)
-                .filter(
-                    Conversation.owner_user_id == owner_user_id,
-                    Conversation.client_user_id == client_user_id,
-                    Conversation.publicacion_id == (publicacion_id or None),
-                )
-                .order_by(Conversation.id.asc())
-                .first()
+            conv = find_or_create_conversation_for_pair(
+                session=session,
+                owner_user_id=owner_user_id,
+                client_user_id=client_user_id,
+                dominio=dominio,
+                ambito_id=ambito_id,
+                categoria_id=categoria_id,
+                codigo_postal=codigo_postal,
+                codigo_postal_id=codigo_postal_id,
+                locale=locale,
+                publicacion_id=publicacion_id,
             )
-
-            if not conv:
-                # Si NO existe conversación para ese par (y esa publicación),
-                # recién ahí usamos tu helper para crearla (y resolver scope_id).
-                conv = get_or_create_conversation(
-                    owner_user_id=owner_user_id,
-                    client_user_id=client_user_id,
-                    dominio=dominio,
-                    ambito_id=ambito_id,
-                    categoria_id=categoria_id,
-                    codigo_postal=codigo_postal,
-                    codigo_postal_id=codigo_postal_id,
-                    locale=locale,
-                    publicacion_id=publicacion_id,
-                    session=session,
-                )
 
             # ========== 3) HISTORIAL DE MENSAJES ==========
 
@@ -191,6 +177,70 @@ def open_conversation():
         current_app.logger.exception("Error en /api_chat_bp/open/")
         return jsonify(ok=False, error=str(e)), 500
 
+
+def find_or_create_conversation_for_pair(
+    session,
+    *,
+    owner_user_id: int,
+    client_user_id: int,
+    dominio: str,
+    ambito_id: int,
+    categoria_id: int,
+    codigo_postal: str,
+    codigo_postal_id: int,
+    locale: str,
+    publicacion_id: int | None = None,
+) -> Conversation:
+    """
+    Garantiza UNA sola conversación para el par {owner_user_id, client_user_id}
+    (sin importar el orden) + publicacion_id opcional.
+    """
+
+    # Normalizamos None si viene 0
+    pub_id = publicacion_id or None
+
+    # 1) Buscar conversación existente para el PAR DESORDENADO {owner, client}
+    conv = (
+        session.query(Conversation)
+        .filter(
+            or_(
+                and_(
+                    Conversation.owner_user_id == owner_user_id,
+                    Conversation.client_user_id == client_user_id,
+                ),
+                and_(
+                    Conversation.owner_user_id == client_user_id,
+                    Conversation.client_user_id == owner_user_id,
+                ),
+            ),
+            Conversation.publicacion_id == pub_id,
+        )
+        .order_by(Conversation.id.asc())  # agarro la más vieja
+        .first()
+    )
+
+    if conv:
+        # Opcional: realinear para que quede siempre owner=dueño actual
+        if conv.owner_user_id != owner_user_id or conv.client_user_id != client_user_id:
+            conv.owner_user_id = owner_user_id
+            conv.client_user_id = client_user_id
+            session.flush()
+        return conv
+
+    # 2) Si no existe ninguna, se crea usando tu helper actual
+    conv = get_or_create_conversation(
+        owner_user_id=owner_user_id,
+        client_user_id=client_user_id,
+        dominio=dominio,
+        ambito_id=ambito_id,
+        categoria_id=categoria_id,
+        codigo_postal=codigo_postal,
+        codigo_postal_id=codigo_postal_id,
+        locale=locale,
+        publicacion_id=pub_id,
+        session=session,
+    )
+    return conv
 
 
 @api_chat_bp.route("/api_chat_bp/messages/", methods=["POST"])
