@@ -362,8 +362,6 @@ async function chatAmbitoHere(source) {
     // opcional, por si querés usarlo sin el objeto Chat
     window.currentChatScope = Chat.scope;
 
-    
-
     console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
 
     setChatHeaderFromOpen(data);

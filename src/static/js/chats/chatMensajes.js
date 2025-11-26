@@ -118,33 +118,10 @@ function renderMessages(list){
   const box = document.getElementById('msgs');
   if (!box) return;
 
-  const msgs = Array.isArray(list) ? list : [];
+  const msgs  = Array.isArray(list) ? list : [];
+  const scope = Chat.scope || {};   // 👈 usa el scope que ya guardaste
 
-  // --- CONTEXTO: quién soy yo y cuál es el par owner/client ---
-  const scope    = (window.Chat && Chat.scope) || window.currentChatScope || {};
-
-console.groupCollapsed('%c🟨 [CHECK renderMessages]', 'color:#fb0');
-  console.log('Lista mensajes:', list);
-  console.log('Scope activo:', scope);
-  console.log('viewerId:', getViewerId());
-  console.groupEnd();
-
-
-
-
-
-
-
-
-
-
-  const viewerIdRaw = (window.getViewerUserId ? window.getViewerUserId() : null);
-
-  const viewerId = viewerIdRaw != null ? Number(viewerIdRaw) : null;
-  const ownerId  = scope.owner_user_id  != null ? Number(scope.owner_user_id)  : null;
-  const clientId = scope.client_user_id != null ? Number(scope.client_user_id) : null;
-
-  // --- 1) Medimos scroll ANTES de repintar ---
+  // --- 1) Medimos el scroll ANTES de repintar ---
   const prevScrollTop    = box.scrollTop;
   const prevScrollHeight = box.scrollHeight;
   const clientHeight     = box.clientHeight || 1;
@@ -166,13 +143,8 @@ console.groupCollapsed('%c🟨 [CHECK renderMessages]', 'color:#fb0');
     return;
   }
 
-  // --- 3) Repintar mensajes ---
+  // --- 3) Repintamos mensajes ---
   box.innerHTML = msgs.map(m => {
-   const mine = isMessageMine(m, scope);
-
-  console.log(`🧮 [CHECK burbuja id:${m.id}] role=${m.role} → ${mine ? 'OWN (azul)' : 'OTHER (verde)'}`);
-
-    // Mensajes del sistema / IA
     if (m.role === 'system' || m.role === 'ia') {
       const textSys = (m.content || '').replace(/\n/g, '<br>');
       return `
@@ -182,21 +154,8 @@ console.groupCollapsed('%c🟨 [CHECK renderMessages]', 'color:#fb0');
         </div>`;
     }
 
-    // Mensajes humanos: decidir si SON MÍOS o del otro
-    let isMine = false;
-
-    if (viewerId != null) {
-      if (m.role === 'client' && viewerId === clientId) {
-        isMine = true;
-      } else if (m.role === 'owner' && viewerId === ownerId) {
-        isMine = true;
-      }
-    }
-
-    // Clases:
-    //  - msg me msg-client  -> mi mensaje (derecha, azul)
-    //  - msg msg-owner      -> mensaje del otro (izquierda, verde)
-    const cls = isMine ? 'msg me msg-client' : 'msg msg-owner';
+    const mine = isMessageMine(m, scope);
+    const cls  = mine ? 'msg me msg-client' : 'msg msg-owner';
 
     const text = (m.content || '').replace(/\n/g, '<br>');
     return `
@@ -206,7 +165,7 @@ console.groupCollapsed('%c🟨 [CHECK renderMessages]', 'color:#fb0');
       </div>`;
   }).join('');
 
-  // --- 4) Ajuste de scroll DESPUÉS de repintar ---
+  // --- 4) Ajustamos scroll DESPUÉS del repintado ---
   const newScrollHeight = box.scrollHeight;
 
   if (wasAtBottom) {
@@ -217,9 +176,8 @@ console.groupCollapsed('%c🟨 [CHECK renderMessages]', 'color:#fb0');
   }
 }
 
-
-// la dejamos global como ya usás en otros lados
 window.renderMessages = renderMessages;
+
 
 
 
