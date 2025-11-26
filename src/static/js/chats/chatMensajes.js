@@ -113,20 +113,32 @@ function setCtxBadge(s){
   pill.innerHTML = `<span class="ctx-dot"></span>${label || 'sin contexto'}`;
 }
 
+
+
+
+
+
+
+function getViewerId() {
+  // usa lo que ya tengas para el usuario logueado
+  const v = window.usuario_id ?? window.VIEWER_USER_ID ?? null;
+  return v != null ? Number(v) : null;
+}
+
+function viewerIsOwner() {
+  const viewerId = getViewerId();
+  const scope    = (window.Chat && Chat.scope) || {};
+  const ownerId  = scope.owner_user_id != null ? Number(scope.owner_user_id) : null;
+
+  return viewerId != null && ownerId != null && viewerId === ownerId;
+}
+
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
   const box = document.getElementById('msgs');
   if (!box) return;
 
   const msgs = Array.isArray(list) ? list : [];
-
-  // --- CONTEXTO: quién soy yo y cuál es el par owner/client ---
-  const scope    = (window.Chat && Chat.scope) || window.currentChatScope || {};
-  const viewerIdRaw = (window.getViewerUserId ? window.getViewerUserId() : null);
-
-  const viewerId = viewerIdRaw != null ? Number(viewerIdRaw) : null;
-  const ownerId  = scope.owner_user_id  != null ? Number(scope.owner_user_id)  : null;
-  const clientId = scope.client_user_id != null ? Number(scope.client_user_id) : null;
 
   // --- 1) Medimos scroll ANTES de repintar ---
   const prevScrollTop    = box.scrollTop;
@@ -151,6 +163,8 @@ function renderMessages(list){
   }
 
   // --- 3) Repintar mensajes ---
+  const soyOwner = viewerIsOwner();   // 👈 se calcula UNA vez
+
   box.innerHTML = msgs.map(m => {
     // Mensajes del sistema / IA
     if (m.role === 'system' || m.role === 'ia') {
@@ -162,16 +176,10 @@ function renderMessages(list){
         </div>`;
     }
 
-    // Mensajes humanos: decidir si SON MÍOS o del otro
-    let isMine = false;
-
-    if (viewerId != null) {
-      if (m.role === 'client' && viewerId === clientId) {
-        isMine = true;
-      } else if (m.role === 'owner' && viewerId === ownerId) {
-        isMine = true;
-      }
-    }
+    // 👇 Mensajes humanos: decidir si SON MÍOS o del otro
+    // si soy OWNER → mis mensajes son role='owner'
+    // si soy CLIENT → mis mensajes son role='client'
+    const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
 
     // Clases:
     //  - msg me msg-client  -> mi mensaje (derecha, azul)
@@ -197,11 +205,8 @@ function renderMessages(list){
   }
 }
 
-
-
 // la dejamos global como ya usás en otros lados
 window.renderMessages = renderMessages;
-
 
 
 
