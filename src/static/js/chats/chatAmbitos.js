@@ -165,7 +165,6 @@ document.addEventListener('click', (ev) => {
 })();
 
 
-
 // ==================== LÓGICA REAL DEL CHAT ====================
 async function chatAmbitoHere(source) {
   console.group('[chatAmbitoHere] START');
@@ -202,6 +201,13 @@ async function chatAmbitoHere(source) {
       0
     );
 
+    console.log('[chatAmbitoHere] viewerId resuelto:', {
+      usuario_id      : window.usuario_id,
+      EMBED_CLIENT    : EMBED_CLIENT_SAFE,
+      VIEWER_USER_ID  : window.VIEWER_USER_ID,
+      viewerId_final  : viewerId
+    });
+
     // 3) Teléfono del viewer (cliente que escribe)
     const tel = (
       s.tel ||
@@ -234,6 +240,7 @@ async function chatAmbitoHere(source) {
       (source && source.dataset && (source.dataset.userId || source.dataset.userid)) ||
       0
     );
+    console.log('[chatAmbitoHere] targetId (botón/user_id):', targetId);
 
     // 5) Intentar sacar owner desde localStorage: dpia.identityCache.v1
     let ownerFromIdentityCache = null;
@@ -241,7 +248,7 @@ async function chatAmbitoHere(source) {
       const cacheStr = localStorage.getItem('dpia.identityCache.v1');
       if (cacheStr) {
         const cache = JSON.parse(cacheStr);
-        const entry = cache[tel]; // clave = teléfono, como el ejemplo que pasaste
+        const entry = cache[tel]; // clave = teléfono
         if (entry) {
           console.log('[IDENTITYCACHE] entry para tel:', tel, entry);
           ownerFromIdentityCache = entry.usuario_id || entry.user_id || null;
@@ -268,6 +275,15 @@ async function chatAmbitoHere(source) {
     } else if (ownerFromIdentityCache) {
       ownerUserId = ownerFromIdentityCache;
     }
+
+    console.log('[chatAmbitoHere] fuentes owner_user_id:', {
+      s_owner_user_id : s.owner_user_id,
+      s_ownerId       : s.ownerId,
+      s_user_id       : s.user_id,
+      EMBED_SCOPE_SAFE,
+      ownerFromIdentityCache,
+      ownerUserId_final: ownerUserId
+    });
 
     if (!ownerUserId) {
       console.warn('[CHAT] owner_user_id no resuelto (ni scope, ni EMBED_SCOPE, ni identityCache)');
@@ -311,7 +327,7 @@ async function chatAmbitoHere(source) {
       scope.owner_user_id = Number(ownerUserId);
     }
 
-    console.log('[chatAmbitoHere] scope FINAL:', scope);
+    console.log('[chatAmbitoHere] scope FINAL (antes de /open):', scope);
 
     // 8) PUNTO DE CONTROL ANTES DE OPEN: viewer vs botón / owner
     console.log('[CHECKPOINT-OPEN]', {
@@ -345,7 +361,11 @@ async function chatAmbitoHere(source) {
     });
 
     const data = await r.json();
-    console.log('[chatAmbitoHere] respuesta /open:', data);
+    console.groupCollapsed('[chatAmbitoHere] respuesta /open');
+    console.log('data:', data);
+    console.log('data.scope:', data.scope);
+    console.log('payload.scope enviado:', payload.scope);
+    console.groupEnd();
 
     if (!r.ok || !data.ok) {
       console.error('Error al abrir chat', data);
@@ -363,6 +383,7 @@ async function chatAmbitoHere(source) {
     window.currentChatScope = Chat.scope;
 
     console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
+    console.log('[CHAT] Chat.scope guardado:', Chat.scope);
 
     setChatHeaderFromOpen(data);
 
@@ -398,3 +419,4 @@ async function chatAmbitoHere(source) {
     console.groupEnd();
   }
 }
+
