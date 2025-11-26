@@ -18,12 +18,14 @@ from sqlalchemy import or_, and_
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
 
-
 @api_chat_bp.route("/api_chat_bp/open/", methods=["POST"])
 def open_conversation():
     data   = request.get_json() or {}
     scope  = data.get("scope")  or {}
     client = data.get("client") or {}
+
+    current_app.logger.info("[OPEN_CHAT] payload bruto data=%s", data)
+    current_app.logger.info("[OPEN_CHAT] scope=%s client=%s", scope, client)
 
     # Ojo: publicacion_id puede venir string
     publicacion_id = scope.get("publicacion_id") or 0
@@ -63,6 +65,11 @@ def open_conversation():
         # 👇 viene del front como targetId_raw (id del contacto / botón)
         target_user_id = data.get("targetId_raw")
 
+        current_app.logger.info(
+            "[OPEN_CHAT] viewer_user_id=%s owner_user_id=%s target_user_id=%s tel=%s",
+            viewer_user_id, owner_user_id, target_user_id, tel
+        )
+
         dominio = scope.get("dominio") or "tecnologia"
         locale  = scope.get("locale")  or "es"
 
@@ -90,22 +97,32 @@ def open_conversation():
         # Caso: el que abre es el dueño del ámbito (panel servidor)
         # → el cliente real es target_user_id
         if viewer_user_id == owner_user_id:
+            current_app.logger.info(
+                "[OPEN_CHAT] viewer == owner → modo SERVIDOR, usar target como cliente"
+            )
             if not target_user_id:
                 return jsonify(ok=False, error="Falta targetId_raw para owner del ámbito"), 400
             try:
                 client_user_id = int(target_user_id)
             except (TypeError, ValueError):
                 return jsonify(ok=False, error="targetId_raw inválido"), 400
-
-        # En caso contrario (embed público):
-        # viewer_user_id != owner_user_id → viewer es el cliente,
-        # client_user_id ya es el viewer_user_id y está bien así.
+        else:
+            current_app.logger.info(
+                "[OPEN_CHAT] viewer != owner → modo CLIENTE, client_user_id = viewer_user_id (%s)",
+                client_user_id
+            )
 
         # ========== 1.6) QUIÉN SOY YO EN ESTA CONVERSACIÓN ==========
 
         # "servidor" = el que puede iniciar la conversación (dueño de ámbito / sistema)
         i_am_server = (viewer_user_id == owner_user_id)
         viewer_role = "owner" if i_am_server else "client"
+
+        current_app.logger.info(
+            "[OPEN_CHAT] RESULT ROLES -> viewer_user_id=%s, owner_user_id=%s, client_user_id=%s, "
+            "i_am_server=%s, viewer_role=%s",
+            viewer_user_id, owner_user_id, client_user_id, i_am_server, viewer_role
+        )
 
         # ========== 2) CONVERSACIÓN ==========
 
@@ -123,6 +140,11 @@ def open_conversation():
                 publicacion_id=publicacion_id,
             )
 
+            current_app.logger.info(
+                "[OPEN_CHAT] CONVERSATION id=%s owner=%s client=%s",
+                conv.id, owner_user_id, client_user_id
+            )
+
             msgs = (
                 session
                 .query(Message)
@@ -132,6 +154,10 @@ def open_conversation():
             )
 
             is_new = (len(msgs) == 0)
+            current_app.logger.info(
+                "[OPEN_CHAT] conversation_id=%s, mensajes_existentes=%s, is_new=%s",
+                conv.id, len(msgs), is_new
+            )
 
             def msg_to_dict(m: Message) -> dict:
                 return {
@@ -158,6 +184,12 @@ def open_conversation():
                 ] if x
             )
 
+            current_app.logger.info(
+                "[OPEN_CHAT] RESPUESTA -> conv_id=%s owner=%s client=%s viewer=%s(%s) is_server=%s",
+                conv.id, owner_user_id, client_user_id,
+                viewer_user_id, viewer_role, i_am_server
+            )
+
             return jsonify(
                 ok=True,
                 conversation_id=conv.id,
@@ -181,7 +213,6 @@ def open_conversation():
                     "alias": alias,
                     "email": email,
                 },
-                # 👇 NUEVO: quién soy YO en esta conversación
                 viewer={
                     "id":        viewer_user_id,
                     "role":      viewer_role,   # "owner" o "client"
@@ -193,6 +224,7 @@ def open_conversation():
     except Exception as e:
         current_app.logger.exception("Error en /api_chat_bp/open/")
         return jsonify(ok=False, error=str(e)), 500
+
 
 
 def find_or_create_conversation_for_pair(
