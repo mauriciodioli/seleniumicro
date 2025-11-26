@@ -24,24 +24,17 @@ def make_context_hash(
 
 
 
-
 def get_or_create_scope(
     dominio,
     ambito_id=None,
     categoria_id=None,
-    codigo_postal=None,      # "52-200"
-    codigo_postal_id=None,   # 123 (FK) o None
+    codigo_postal=None,
+    codigo_postal_id=None,
     locale="es",
     publicacion_id=None,
-    owner_user_id=None,
+    owner_user_id=None,   # lo seguimos guardando, pero NO entra en el hash
     session=None,
 ) -> ChatScope:
-    """
-    Usa siempre db.session (o la sesión pasada por parámetro)
-    para buscar/crear el scope.
-
-    No hace commit, solo add/flush. Maneja carrera por UNIQUE(hash_contextid).
-    """
 
     sess = session or db.session
 
@@ -55,28 +48,25 @@ def get_or_create_scope(
         if codigo_postal_id.isdigit():
             cp_id = int(codigo_postal_id)
         else:
-            # si viene "52-200" acá, lo tratamos como texto de CP
             cp_txt = codigo_postal_id
 
-    # Si ya vino codigo_postal explícito, lo respetamos
     if codigo_postal:
         cp_txt = codigo_postal
 
-    # cp_key = lo que identifica el CP en el hash (ID o texto)
     if cp_id is not None:
         cp_key = cp_id
     else:
         cp_key = cp_txt or None
 
+    # 🚨 IMPORTANTE: hash SIN owner_user_id
     h = make_context_hash(
-            dominio=dominio,
-            ambito_id=ambito_id,
-            categoria_id=categoria_id,
-            cp_key=cp_key,
-            locale=locale,
-            publicacion_id=publicacion_id,
-        )
-
+        dominio=dominio,
+        ambito_id=ambito_id,
+        categoria_id=categoria_id,
+        cp_key=cp_key,
+        locale=locale,
+        publicacion_id=publicacion_id,
+    )
 
     # 1) Buscar primero
     scope = sess.query(ChatScope).filter_by(hash_contextid=h).first()
@@ -92,21 +82,19 @@ def get_or_create_scope(
         codigo_postal_id=cp_id,
         locale=locale,
         publicacion_id=publicacion_id,
-        owner_user_id=owner_user_id,
+        owner_user_id=owner_user_id,   # se guarda, pero no define el hash
         hash_contextid=h,
     )
     sess.add(scope)
 
     try:
-        # flush para obtener el id sin hacer commit todavía
         sess.flush()
     except IntegrityError:
-        # Otro request metió el mismo hash entre que buscamos y flusheamos
         sess.rollback()
         scope = sess.query(ChatScope).filter_by(hash_contextid=h).first()
         if scope:
             return scope
-        # Si aún así no existe, eso ya es un bug más serio
         raise
 
     return scope
+
