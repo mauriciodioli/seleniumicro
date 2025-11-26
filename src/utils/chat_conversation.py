@@ -1,11 +1,9 @@
-# services/chat_conversation.py (o donde lo tengas)
 from sqlalchemy.exc import IntegrityError
 from extensions import db
 from models.chats.conversation import Conversation
-from typing import Optional
+from typing import Optional, Tuple
 from utils.chat_scope import get_or_create_scope
-
-
+from sqlalchemy import or_, and_
 
 
 def get_or_create_conversation(
@@ -21,15 +19,17 @@ def get_or_create_conversation(
     publicacion_id: Optional[int] = None,
     channel: str = "dpia",
     session=None,
-) -> Conversation:
+) -> Tuple[Conversation, bool]:
     """
-    Devuelve SIEMPRE la misma conversación para el mismo:
-      - owner_user_id
-      - client_user_id
-      - scope (dominio/ámbito/categoría/CP/locale/publicación/owner)
-      - channel='dpia'
-      - status='open'
-      - ia_active = True
+    Devuelve SIEMPRE la misma conversación para la misma pareja de usuarios
+    (en cualquier orden) y el mismo scope.
+
+    El que CREA la conversación (primer llamado) queda como owner_user_id.
+
+    Retorna:
+        (conversation, i_am_server)
+        - i_am_server = True  -> esta llamada CREÓ la conversación
+        - i_am_server = False -> esta llamada reutilizó una conversación existente
     """
 
     sess = session or db.session
@@ -58,18 +58,25 @@ def get_or_create_conversation(
         session=sess,
     )
 
-    # --- 2) buscar conversación existente coherente ---
-    q = (
-        sess.query(Conversation)
-        .filter(
-            Conversation.scope_id == scope.id,
-            Conversation.owner_user_id == owner_user_id,
-            Conversation.client_user_id == client_user_id,
-            Conversation.channel == channel,
-            Conversation.status == "open",
-            Conversation.ia_active.is_(True),
-        )
-    )
+    # --- 2) buscar conversación EXISTENTE en cualquier orden ---
+    base_filters = [
+        Conversation.scope_id == scope.id,
+        Conversation.channel == channel,
+        Conversation.status == "open",
+        Conversation.ia_active.is_(True),
+        or_(
+            and_(
+                Conversation.owner_user_id == owner_user_id,
+                Conversation.client_user_id == client_user_id,
+            ),
+            and_(
+                Conversation.owner_user_id == client_user_id,
+                Conversation.client_user_id == owner_user_id,
+            ),
+        ),
+    ]
+
+    q = sess.query(Conversation).filter(*base_filters)
 
     if publicacion_id is None:
         q = q.filter(
@@ -79,16 +86,20 @@ def get_or_create_conversation(
     else:
         q = q.filter(Conversation.publicacion_id == publicacion_id)
 
-    # si hay varias, usamos la más nueva
     conv = q.order_by(Conversation.id.desc()).first()
     if conv:
-        return conv
+        if conv.owner_user_id == owner_user_id:
+            # 💡 Si ya existía, ESTA que llama ES el owner → i_am_server=True
+            return conv, True
+        # 💡 Si ya existía, ESTE que llama NO es el que la creó → i_am_server=False
+        # (el server real es conv.owner_user_id)
+        return conv, False
 
     # --- 3) crear si no existe ---
     conv = Conversation(
         scope_id=scope.id,
-        owner_user_id=owner_user_id,
-        client_user_id=client_user_id,
+        owner_user_id=owner_user_id,   # 👈 el que llama AHORA queda como owner
+        client_user_id=client_user_id, # 👈 el otro queda como client
         channel=channel,
         status="open",
         ia_active=True,
@@ -97,4 +108,5 @@ def get_or_create_conversation(
     sess.add(conv)
     sess.flush()  # para tener conv.id
 
-    return conv
+    # 💡 Si llegamos acá, ESTA llamada creó la conversación → i_am_server=True
+    return conv, True

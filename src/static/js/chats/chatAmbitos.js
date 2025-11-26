@@ -362,13 +362,6 @@ async function chatAmbitoHere(source) {
 
 const data = await r.json();
 
-// 🔍 Debug de respuesta /open
-console.groupCollapsed('[chatAmbitoHere] respuesta /open');
-console.log('data:', data);
-console.log('data.scope:', data.scope);
-console.log('payload.scope enviado:', payload.scope);
-console.groupEnd();
-
 if (!r.ok || !data.ok) {
   console.error('Error al abrir chat', data);
   if (window.Swal) {
@@ -383,67 +376,41 @@ if (!r.ok || !data.ok) {
 const scopeFromFront = payload.scope || {};
 const scopeFromBack  = data.scope   || {};
 
-// 🔥 El que manda SIEMPRE es el front
-const owner_user_id = Number(
-  scopeFromFront.owner_user_id ||
-  scopeFromBack.owner_user_id  ||
-  null
-);
+// 👉 Ahora la verdad viene del backend: owner_user_id / client_user_id
+const ownerFromBack  = Number(scopeFromBack.owner_user_id  ?? 0) || null;
+const clientFromBack = Number(scopeFromBack.client_user_id ?? 0) || null;
 
 const mergedScope = {
-  // primero backend...
-  ...scopeFromBack,
-  // ...y el front pisa TODO
+  // el front puede aportar cosas "soft"
   ...scopeFromFront,
+  // pero los IDs duros los manda el backend
+  ...scopeFromBack,
   viewer_user_id: viewerId,
-  owner_user_id: owner_user_id, // reforzamos para no perderlo nunca en el merge
+  owner_user_id: ownerFromBack,
+  client_user_id: clientFromBack,
 };
-
-// ======================
-//  DETERMINAR CLIENTE
-// ======================
-// viewerId === owner_user_id  → estoy actuando como dueño del ámbito
-// viewerId !== owner_user_id  → estoy actuando como cliente
-if (viewerId === owner_user_id) {
-  // Soy el dueño → el otro es el cliente
-  mergedScope.client_user_id = Number(
-    scopeFromBack.client_user_id ||
-    scopeFromFront.user_id       // lo que vino como user_id en el front
-  );
-} else {
-  // Soy el cliente
-  mergedScope.client_user_id = viewerId;
-}
-
-// 🔒 Seguridad: si por algún motivo quedan iguales, el cliente pasa a ser el viewer
-if (mergedScope.client_user_id === mergedScope.owner_user_id) {
-  mergedScope.client_user_id = viewerId;
-}
 
 // ======================
 //  GUARDAR EN ESTADO
 // ======================
 Chat.scope          = mergedScope;
 Chat.conversationId = data.conversation_id;
-Chat.viewerRole     = (viewerId === owner_user_id) ? 'owner' : 'client';
-
-// 🚨 Debug definitivo
-console.groupCollapsed(
-  '%c[CHECK Chat.scope FINAL]',
-  'color:#ff0;font-weight:bold;background:black'
+Chat.isClient       = !!data.is_client;
+Chat.isServer       = !!data.is_server;
+Chat.viewerRole     = data.viewer_role;
+// 🔍 ÚNICO DEBUG IMPORTANTE
+console.log('[CHAT OPEN] convId=%s viewerId=%s owner=%s client=%s role=%s isClient=%s isServer=%s',
+  Chat.conversationId,
+  viewerId,
+  mergedScope.owner_user_id,
+  mergedScope.client_user_id,
+  Chat.viewerRole,
+  Chat.isClient,
+  Chat.isServer
 );
-console.log('viewerId:', viewerId);
-console.log('owner_user_id:', mergedScope.owner_user_id);
-console.log('client_user_id:', mergedScope.client_user_id);
-console.log('viewerRole:', Chat.viewerRole);
-console.log('scope FINAL usado:', mergedScope);
-console.groupEnd();
-
+debugger;
 // opcional, por si querés usarlo sin el objeto Chat
 window.currentChatScope = Chat.scope;
-
-console.log('[CHAT] conversación abierta, id =', Chat.conversationId);
-console.log('[CHAT] Chat.scope guardado:', Chat.scope);
 
 // header del chat
 setChatHeaderFromOpen(data);
@@ -464,6 +431,7 @@ if (data.is_new && data.from_summary) {
 }
 
 renderMessages(msgs);
+
 
 
     if (Chat.polling) clearInterval(Chat.polling);

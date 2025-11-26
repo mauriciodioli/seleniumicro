@@ -138,21 +138,20 @@ function getViewerId() {
 }
 
 function viewerIsOwner() {
-  const viewerId = getViewerId();
-  const scope    = (window.Chat && Chat.scope) || {};
-  const ownerId  = scope.owner_user_id != null ? Number(scope.owner_user_id) : null;
+  // La verdad viene del backend en /open
+  const soyOwner = !!Chat.isServer || Chat.viewerRole === 'owner';
 
-  const soyOwner = viewerId != null && ownerId != null && viewerId === ownerId;
-
-  console.log('%c[CHAT][viewerIsOwner]', 'color:#0c0', {
-    viewerId,
-    ownerId,
-    scope,
-    soyOwner
+  // Debug mínimo
+  console.log('[CHAT][viewerIsOwner]', {
+    soyOwner,
+    viewerRole: Chat.viewerRole,
+    isServer: Chat.isServer,
+    isClient: Chat.isClient
   });
 
   return soyOwner;
 }
+
 
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
@@ -274,8 +273,7 @@ async function loadMessages(){
     console.error('[CHAT] excepción en loadMessages', err);
   }
 }
-// ==================== ENVIAR MENSAJE (POST) ====================
-async function sendMessage(text){
+async function sendMessage(text) {
   if (!Chat.conversationId){
     console.warn('[CHAT] sendMessage sin conversationId');
     alert('Abrí primero un chat tocando “Chatear”.');
@@ -295,11 +293,17 @@ async function sendMessage(text){
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 
-  // 🔹 AHORA el rol sale del backend (open), no de un cálculo extraño
-  const role = (Chat.myRole === 'owner') ? 'owner' : 'client';
-  console.log('[ROLE SEND]', { role, isServer: Chat.isServer, viewer: Chat.viewer });
+  // 🔹 rol SEGÚN LO QUE DIJO EL BACKEND EN /open
+  const role = Chat.viewerRole || (Chat.isServer ? 'owner' : 'client');
 
-  try{
+  console.log('[ROLE SEND]', {
+    role,
+    viewerRole: Chat.viewerRole,
+    isServer: Chat.isServer,
+    isClient: Chat.isClient
+  });
+debugger;
+  try {
     const r = await fetch('/api/chat/api_chat_bp/send/', {
       method: 'POST',
       headers: {
@@ -317,13 +321,12 @@ async function sendMessage(text){
     const data = await r.json();
     if (!r.ok || !data.ok){
       console.error('[CHAT] error en /send', data);
-      // TODO: revertir optimista si querés
+      // opcional: revertir mensaje optimista
     }
-  }catch(err){
+  } catch (err) {
     console.error('[CHAT] excepción en sendMessage', err);
   }
 }
-
 
 
 
