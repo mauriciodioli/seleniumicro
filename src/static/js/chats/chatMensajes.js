@@ -151,83 +151,6 @@ function viewerIsOwner() {
 
   return soyOwner;
 }
-// ==================== RENDER DE MENSAJES ====================
-function renderMessages(list){
-  const box = document.getElementById('msgs');
-  if (!box) return;
-
-  const msgs = Array.isArray(list) ? list : [];
-
-  // 1) Scroll antes
-  const prevScrollTop    = box.scrollTop;
-  const prevScrollHeight = box.scrollHeight;
-  const clientHeight     = box.clientHeight || 1;
-  const wasAtBottom = (prevScrollHeight - (prevScrollTop + clientHeight)) < 40;
-
-  // 2) Placeholder
-  if (!msgs.length){
-    box.innerHTML = `
-      <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
-        <div>
-          <div style="font-size:28px; line-height:1">💬</div>
-          <div style="margin-top:6px">
-            Elegí un ámbito/categoría en el panel del medio y tocá <b>“Chatear”</b>.
-          </div>
-        </div>
-      </div>`;
-    box.scrollTop = box.scrollHeight;
-    return;
-  }
-
-  const scope    = (window.Chat && Chat.scope) || {};
-  const soyOwner = viewerIsOwner && viewerIsOwner();
-  const viewerId = window.getViewerUserId ? window.getViewerUserId() : null;
-
-  // 3) Render
-  box.innerHTML = '';
-  msgs.forEach(m => box.appendChild(renderMessageBubble(m)));
-
-  // 4) Scroll después
-  const newScrollHeight = box.scrollHeight;
-  if (wasAtBottom) {
-    box.scrollTop = newScrollHeight;
-  } else {
-    const delta = newScrollHeight - prevScrollHeight;
-    box.scrollTop = Math.max(0, prevScrollTop + delta);
-  }
-
-  // ================================
-  // 5) MARCAR COMO LEÍDOS
-  // ================================
-  if (!Chat || !Chat.conversationId || !viewerId) return;
-
-  // Mensajes que *no* son míos y que todavía no tienen read_at
-  const noLeidos = msgs.filter(m => {
-    if (!m || m.read_at) return false;
-    if (m.role === 'ia' || m.role === 'system') return false;
-    // Si soy owner, los no leídos son de owner? No. Son del otro rol.
-    if (soyOwner) {
-      return m.role === 'client';
-    } else {
-      return m.role === 'owner';
-    }
-  });
-
-  if (noLeidos.length > 0) {
-    console.log('[CHAT] detectados mensajes no leídos, envío /read', noLeidos.map(m => m.id));
-    markConversationRead(); // lo llamás sin await para no trabar la UI
-  }
-}
-
-window.renderMessages = renderMessages;
-
-
-
-
-
-
-
-// ==================== CARGAR MENSAJES (POST) ====================
 
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
@@ -296,10 +219,26 @@ function renderMessages(list){
     });
 
     const text = (m.content || '').replace(/\n/g, '<br>');
+
+    // 🔴🔵🟢 SOLO CAMBIO AQUÍ: estado para el puntito de color
+    let statusClass = 'msg-status-sent';
+    let statusLabel = 'Enviado';
+
+    if (m.read_at) {
+      statusClass = 'msg-status-read';
+      statusLabel = 'Leído';
+    } else if (m.delivered_at) {
+      statusClass = 'msg-status-delivered';
+      statusLabel = 'Entregado';
+    }
+
     return `
       <div class="${cls}">
         <div class="msg-body">${text}</div>
-        <div class="msg-meta">${m.created_at || ''}</div>
+        <div class="msg-meta">
+          <span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>
+          <span class="msg-meta-text">${m.created_at || ''}</span>
+        </div>
       </div>`;
   }).join('');
 
@@ -317,6 +256,37 @@ function renderMessages(list){
 window.renderMessages = renderMessages;
 
 
+
+
+// ==================== CARGAR MENSAJES (POST) ====================
+async function loadMessages(){
+  if (!Chat.conversationId) {
+    console.warn('[CHAT] loadMessages sin conversationId');
+    return;
+  }
+
+  try{
+    const r = await fetch('/api/chat/api_chat_bp/messages/', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ conversation_id: Chat.conversationId })
+    });
+    
+    const data = await r.json();
+    if (!r.ok || !data.ok){
+      console.error('[CHAT] error en /messages', data);
+      return;
+    }
+
+    renderMessages(data.messages || []);
+  }catch(err){
+    console.error('[CHAT] excepción en loadMessages', err);
+  }
+}
 async function sendMessage(text) {
   if (!Chat.conversationId){
     console.warn('[CHAT] sendMessage sin conversationId');
@@ -375,41 +345,6 @@ debugger;
 
 
 
-
-async function markConversationRead() {
-  if (!window.Chat || !Chat.conversationId) return;
-
-  const viewerId = window.getViewerUserId ? window.getViewerUserId() : null;
-  if (!viewerId) return;
-
-  try {
-    const resp = await fetch('/api/chat/api_chat_bp/read/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        conversation_id: Chat.conversationId,
-        viewer_id: viewerId,
-      }),
-    });
-
-    const data = await resp.json();
-    if (!resp.ok || !data.ok) {
-      console.warn('[CHAT][read] fallo mark_read', data);
-      return;
-    }
-
-    console.log('[CHAT][read] mensajes marcados como leídos:', data.updated_ids || []);
-  } catch (err) {
-    console.error('[CHAT][read] excepción', err);
-  }
-}
-
-
-
 // input de texto
 const msgInput = document.getElementById('msgInput');
 const btnSend  = document.getElementById('sendBtnSenMessage');
@@ -448,7 +383,6 @@ if (btnSend) {
 
 
 
-
 function renderMessageBubble(m) {
   const scope    = Chat.scope || window.currentChatScope || {};
   const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
@@ -458,7 +392,7 @@ function renderMessageBubble(m) {
 
   let side = 'msg--in'; // por defecto, entrante
 
-  if (m.role === 'ia' || m.role === 'system') {
+  if (m.role === 'ia') {
     side = 'msg--bot';
   } else if (viewerId != null) {
     const isMine =
@@ -484,44 +418,34 @@ function renderMessageBubble(m) {
     `;
   }
 
-  // =========================
-  //   META + PUNTITO ESTADO
-  // =========================
-  const created = m.created_at || '';
+  // 🔴🔵🟢 Estado de entrega/lectura (solo visual)
+  let meta = '';
+  if (m.created_at) {
+    let statusClass = 'msg-status-sent';
+    let statusLabel = 'Enviado';
 
-  let statusDot = '';
-
-  // solo me interesa mostrar estado en mensajes salientes de dueño/cliente
-  const isOutgoing = (side === 'msg--out') && (m.role === 'owner' || m.role === 'client');
-
-  if (isOutgoing) {
-    let statusClass = 'msg-status--local'; // default: gris (local)
-
-    // gris: sin delivered_at ni read_at (pendiente local)
-    if (!m.delivered_at && !m.read_at) {
-      statusClass = 'msg-status--local';     // gris
-    }
-    // amarillo: entregado pero no leído
-    else if (m.delivered_at && !m.read_at) {
-      statusClass = 'msg-status--delivered'; // amarillo
-    }
-    // celeste: leído
-    else if (m.read_at) {
-      statusClass = 'msg-status--read';      // celeste
+    if (m.read_at) {
+      statusClass = 'msg-status-read';
+      statusLabel = 'Leído';
+    } else if (m.delivered_at) {
+      statusClass = 'msg-status-delivered';
+      statusLabel = 'Entregado';
     }
 
-    statusDot = `<span class="msg-status ${statusClass}"></span>`;
+    // Para mensajes de IA no tiene sentido el punto → lo dejamos vacío
+    const showDot = (m.role !== 'ia' && m.role !== 'system');
+
+    meta = `
+      <div class="msg-meta">
+        ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
+        <span class="msg-meta-text">${m.created_at}</span>
+      </div>
+    `;
   }
-
-  const meta = (created || statusDot)
-    ? `<div class="msg-meta">${created} ${statusDot}</div>`
-    : '';
 
   const div = document.createElement('div');
   div.className = `msg ${side} msg-${m.role || 'unk'}`;
-  if (m.id != null) {
-    div.dataset.id = m.id;
-  }
+  div.dataset.id = m.id;
   div.innerHTML = innerHTML + meta;
 
   return div;
