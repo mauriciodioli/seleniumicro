@@ -10,18 +10,29 @@ def make_context_hash(
     dominio,
     ambito_id,
     categoria_id,
-    cp_key,          # <- puede ser ID numérico, CP string, o None
+    owner_user_id,
     locale,
-    publicacion_id,
 ) -> str:
     """
-    Hash de CONTEXTO puro: NO depende de usuarios.
-    Así, ambos lados (22 y 54) con el mismo ámbito/categoría/CP/idioma
-    comparten el mismo chat_scope.
-    """
-    raw = f"{dominio}|{ambito_id}|{categoria_id}|{cp_key}|{locale}|{publicacion_id}"
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    Hash de CONTEXTO lógico:
 
+      - owner_user_id  -> dueño del ámbito (servidor)
+      - ambito_id
+      - categoria_id
+      - dominio (por si tenés varios dominios)
+      - locale (si querés separar por idioma)
+
+    NO depende de:
+      - código postal
+      - código_postal_id
+      - publicacion_id
+      - cliente
+
+    Así, cualquier CP comparte el mismo chat_scope si pertenece
+    al mismo owner/ámbito/categoría/idioma.
+    """
+    raw = f"{dominio}|{ambito_id or 0}|{categoria_id or 0}|{owner_user_id or 0}|{locale or ''}"
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def get_or_create_scope(
@@ -32,13 +43,13 @@ def get_or_create_scope(
     codigo_postal_id=None,
     locale="es",
     publicacion_id=None,
-    owner_user_id=None,   # lo seguimos guardando, pero NO entra en el hash
+    owner_user_id=None,   # ESTE define el contexto junto con ámbito/categoría
     session=None,
 ) -> ChatScope:
 
     sess = session or db.session
 
-    # --- Normalizar CP ---
+    # --- Normalizar CP (solo informativo, NO entra en el hash) ---
     cp_id = None
     cp_txt = None
 
@@ -53,19 +64,14 @@ def get_or_create_scope(
     if codigo_postal:
         cp_txt = codigo_postal
 
-    if cp_id is not None:
-        cp_key = cp_id
-    else:
-        cp_key = cp_txt or None
-
-    # 🚨 IMPORTANTE: hash SIN owner_user_id
+    # cp_key ya no se usa para el hash, solo guardamos texto/ID en la fila
+    # Hash SOLO por owner/ambito/categoria/dominio/locale
     h = make_context_hash(
         dominio=dominio,
         ambito_id=ambito_id,
         categoria_id=categoria_id,
-        cp_key=cp_key,
+        owner_user_id=owner_user_id,
         locale=locale,
-        publicacion_id=publicacion_id,
     )
 
     # 1) Buscar primero
@@ -81,8 +87,8 @@ def get_or_create_scope(
         codigo_postal=cp_txt,
         codigo_postal_id=cp_id,
         locale=locale,
-        publicacion_id=publicacion_id,
-        owner_user_id=owner_user_id,   # se guarda, pero no define el hash
+        publicacion_id=publicacion_id,   # se guarda, pero no entra al hash
+        owner_user_id=owner_user_id,
         hash_contextid=h,
     )
     sess.add(scope)
@@ -97,4 +103,3 @@ def get_or_create_scope(
         raise
 
     return scope
-
