@@ -381,45 +381,8 @@ if (btnSend) {
   });
 }
 
-function formatRelativeDateTime(isoString) { 
-  if (!isoString) return '';
 
-  const d = new Date(isoString);
-  if (isNaN(d.getTime())) return isoString;
 
-  const now = new Date();
-  const msPerDay = 24 * 60 * 60 * 1000;
-
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const startOfDate  = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const diffDays = Math.round((startOfToday - startOfDate) / msPerDay);
-
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  const timePart = `${hh}:${mm}`;
-
-  if (diffDays === 0)  return `Hoy ${timePart}`;
-  if (diffDays === 1)  return `Ayer ${timePart}`;
-  if (diffDays === 2)  return `Antes de ayer ${timePart}`;
-
-  const weekDays = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-
-  // 3 a 6 días → día de la semana
-  if (diffDays >= 3 && diffDays < 7) {
-    return `${weekDays[d.getDay()]} ${timePart}`;
-  }
-
-  // 7 a 13 días → “la semana pasada”
-  if (diffDays >= 7 && diffDays < 14) {
-    return `La semana pasada ${weekDays[d.getDay()]} ${timePart}`;
-  }
-
-  // Resto: fecha completa
-  const dd = String(d.getDate()).padStart(2, '0');
-  const mo = String(d.getMonth() + 1).padStart(2, '0');
-  const yyyy = d.getFullYear();
-  return `${dd}/${mo}/${yyyy} ${timePart}`;
-}
 function renderMessageBubble(m) {
   const scope    = Chat.scope || window.currentChatScope || {};
   const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
@@ -469,16 +432,13 @@ function renderMessageBubble(m) {
       statusLabel = 'Entregado';
     }
 
-    // 👉 solo quiero el punto en MIS mensajes (los azules, side === 'msg--out')
-    const isMineSide = (side === 'msg--out');
-    const showDot = isMineSide && (m.role !== 'ia' && m.role !== 'system');
-
-    const metaText = formatRelativeDateTime(m.created_at);
+    // Para mensajes de IA no tiene sentido el punto → lo dejamos vacío
+    const showDot = (m.role !== 'ia' && m.role !== 'system');
 
     meta = `
       <div class="msg-meta">
         ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
-        <span class="msg-meta-text">${metaText}</span>
+        <span class="msg-meta-text">${m.created_at}</span>
       </div>
     `;
   }
@@ -493,7 +453,6 @@ function renderMessageBubble(m) {
 
 
 
-
 window.appendMessageFromServer = function (m) {
   const container = document.getElementById('chatMessages');
   if (!container) return;
@@ -501,7 +460,6 @@ window.appendMessageFromServer = function (m) {
   container.appendChild(node);
   container.scrollTop = container.scrollHeight;
 };
-
 
 
 
