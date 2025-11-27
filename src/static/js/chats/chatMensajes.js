@@ -382,6 +382,36 @@ if (btnSend) {
 }
 
 
+function formatRelativeDateTime(isoString) {
+  if (!isoString) return '';
+
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return isoString;
+
+  const now = new Date();
+  const msPerDay = 24 * 60 * 60 * 1000;
+
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfDate  = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round((startOfToday - startOfDate) / msPerDay);
+
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  const timePart = `${hh}:${mm}`;
+
+  if (diffDays === 0)  return `Hoy ${timePart}`;
+  if (diffDays === 1)  return `Ayer ${timePart}`;
+  if (diffDays === 2)  return `Antes de ayer ${timePart}`;
+  if (diffDays > 2 && diffDays < 7) {
+    const weekDays = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    return `${weekDays[d.getDay()]} ${timePart}`;
+  }
+
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mo = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  return `${dd}/${mo}/${yyyy} ${timePart}`;
+}
 
 function renderMessageBubble(m) {
   const scope    = Chat.scope || window.currentChatScope || {};
@@ -435,10 +465,13 @@ function renderMessageBubble(m) {
     // Para mensajes de IA no tiene sentido el punto → lo dejamos vacío
     const showDot = (m.role !== 'ia' && m.role !== 'system');
 
+    // 👉 ÚNICO CAMBIO: usar fecha formateada
+    const metaText = formatRelativeDateTime(m.created_at);
+
     meta = `
       <div class="msg-meta">
         ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
-        <span class="msg-meta-text">${m.created_at}</span>
+        <span class="msg-meta-text">${metaText}</span>
       </div>
     `;
   }
@@ -453,6 +486,7 @@ function renderMessageBubble(m) {
 
 
 
+
 window.appendMessageFromServer = function (m) {
   const container = document.getElementById('chatMessages');
   if (!container) return;
@@ -460,6 +494,7 @@ window.appendMessageFromServer = function (m) {
   container.appendChild(node);
   container.scrollTop = container.scrollHeight;
 };
+
 
 
 
