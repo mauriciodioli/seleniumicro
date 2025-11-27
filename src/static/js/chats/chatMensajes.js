@@ -228,34 +228,95 @@ window.renderMessages = renderMessages;
 
 
 // ==================== CARGAR MENSAJES (POST) ====================
-async function loadMessages(){
-  if (!Chat.conversationId) {
-    console.warn('[CHAT] loadMessages sin conversationId');
+
+// ==================== RENDER DE MENSAJES ====================
+function renderMessages(list){
+  const box = document.getElementById('msgs');
+  if (!box) {
+    console.warn('[CHAT][renderMessages] sin #msgs');
     return;
   }
 
-  try{
-    const r = await fetch('/api/chat/api_chat_bp/messages/', {
-      method: 'POST',
-      headers: {
-        'Content-Type':'application/json',
-        'Accept':'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({ conversation_id: Chat.conversationId })
-    });
-    
-    const data = await r.json();
-    if (!r.ok || !data.ok){
-      console.error('[CHAT] error en /messages', data);
-      return;
+  const msgs = Array.isArray(list) ? list : [];
+
+  // --- 1) Medimos scroll ANTES de repintar ---
+  const prevScrollTop    = box.scrollTop;
+  const prevScrollHeight = box.scrollHeight;
+  const clientHeight     = box.clientHeight || 1;
+
+  const wasAtBottom = (prevScrollHeight - (prevScrollTop + clientHeight)) < 40;
+
+  // --- 2) Placeholder si no hay mensajes ---
+  if (!msgs.length){
+    console.log('[CHAT][renderMessages] sin mensajes, muestro placeholder');
+    box.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
+        <div>
+          <div style="font-size:28px; line-height:1">💬</div>
+          <div style="margin-top:6px">
+            Elegí un ámbito/categoría en el panel del medio y tocá <b>“Chatear”</b>.
+          </div>
+        </div>
+      </div>`;
+    box.scrollTop = box.scrollHeight;
+    return;
+  }
+
+  const scope    = (window.Chat && Chat.scope) || {};
+  const soyOwner = viewerIsOwner();
+
+  console.groupCollapsed('%c[CHAT][renderMessages] estado inicial', 'color:#fb0');
+  console.log('cantidad msgs:', msgs.length);
+  console.log('scope:', scope);
+  console.log('soyOwner:', soyOwner);
+  console.groupEnd();
+
+  // --- 3) Repintar mensajes ---
+  box.innerHTML = msgs.map((m, idx) => {
+    // Mensajes del sistema / IA
+    if (m.role === 'system' || m.role === 'ia') {
+      const textSys = (m.content || '').replace(/\n/g, '<br>');
+      console.log('[CHAT][msg]', idx, 'system/ia', { role: m.role });
+      return `
+        <div class="msg msg-system">
+          <div class="msg-body">${textSys}</div>
+          <div class="msg-meta">${m.created_at || ''}</div>
+        </div>`;
     }
 
-    renderMessages(data.messages || []);
-  }catch(err){
-    console.error('[CHAT] excepción en loadMessages', err);
+    // Mensajes humanos: decidir si SON MÍOS o del otro
+    const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
+    const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
+
+    console.log('[CHAT][msg]', idx, {
+      id: m.id,
+      role: m.role,
+      isMine,
+      claseFinal: cls
+    });
+
+    const text = (m.content || '').replace(/\n/g, '<br>');
+    return `
+      <div class="${cls}">
+        <div class="msg-body">${text}</div>
+        <div class="msg-meta">${m.created_at || ''}</div>
+      </div>`;
+  }).join('');
+
+  // --- 4) Ajuste de scroll DESPUÉS de repintar ---
+  const newScrollHeight = box.scrollHeight;
+
+  if (wasAtBottom) {
+    box.scrollTop = newScrollHeight;
+  } else {
+    const delta = newScrollHeight - prevScrollHeight;
+    box.scrollTop = Math.max(0, prevScrollTop + delta);
   }
 }
+
+window.renderMessages = renderMessages;
+
+
 async function sendMessage(text) {
   if (!Chat.conversationId){
     console.warn('[CHAT] sendMessage sin conversationId');
