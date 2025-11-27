@@ -412,7 +412,6 @@ function formatRelativeDateTime(isoString) {
   const yyyy = d.getFullYear();
   return `${dd}/${mo}/${yyyy} ${timePart}`;
 }
-
 function renderMessageBubble(m) {
   const scope    = Chat.scope || window.currentChatScope || {};
   const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
@@ -462,10 +461,9 @@ function renderMessageBubble(m) {
       statusLabel = 'Entregado';
     }
 
-    // Para mensajes de IA no tiene sentido el punto → lo dejamos vacío
-    const showDot = (m.role !== 'ia' && m.role !== 'system');
+    // ⚠️ Solo mostrar puntito si es un mensaje mío (azul, msg--out)
+    const showDot = (side === 'msg--out') && (m.role !== 'ia' && m.role !== 'system');
 
-    // 👉 ÚNICO CAMBIO: usar fecha formateada
     const metaText = formatRelativeDateTime(m.created_at);
 
     meta = `
@@ -483,6 +481,7 @@ function renderMessageBubble(m) {
 
   return div;
 }
+
 
 
 
