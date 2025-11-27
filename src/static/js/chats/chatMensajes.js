@@ -151,27 +151,21 @@ function viewerIsOwner() {
 
   return soyOwner;
 }
-
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
   const box = document.getElementById('msgs');
-  if (!box) {
-    console.warn('[CHAT][renderMessages] sin #msgs');
-    return;
-  }
+  if (!box) return;
 
   const msgs = Array.isArray(list) ? list : [];
 
-  // --- 1) Medimos scroll ANTES de repintar ---
+  // 1) Scroll antes
   const prevScrollTop    = box.scrollTop;
   const prevScrollHeight = box.scrollHeight;
   const clientHeight     = box.clientHeight || 1;
-
   const wasAtBottom = (prevScrollHeight - (prevScrollTop + clientHeight)) < 40;
 
-  // --- 2) Placeholder si no hay mensajes ---
+  // 2) Placeholder
   if (!msgs.length){
-    console.log('[CHAT][renderMessages] sin mensajes, muestro placeholder');
     box.innerHTML = `
       <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:.7; text-align:center; padding:20px">
         <div>
@@ -187,34 +181,46 @@ function renderMessages(list){
 
   const scope    = (window.Chat && Chat.scope) || {};
   const soyOwner = viewerIsOwner && viewerIsOwner();
+  const viewerId = window.getViewerUserId ? window.getViewerUserId() : null;
 
-  console.groupCollapsed('%c[CHAT][renderMessages] estado inicial', 'color:#fb0');
-  console.log('cantidad msgs:', msgs.length);
-  console.log('scope:', scope);
-  console.log('soyOwner:', soyOwner);
-  console.groupEnd();
+  // 3) Render
+  box.innerHTML = '';
+  msgs.forEach(m => box.appendChild(renderMessageBubble(m)));
 
-  // --- 3) Repintar mensajes usando renderMessageBubble ---
-  box.innerHTML = ''; // vaciar contenedor
-
-  msgs.forEach((m, idx) => {
-    console.log('[CHAT][msg]', idx, m);
-    const bubble = renderMessageBubble(m);
-    box.appendChild(bubble);
-  });
-
-  // --- 4) Ajuste de scroll DESPUÉS de repintar ---
+  // 4) Scroll después
   const newScrollHeight = box.scrollHeight;
-
   if (wasAtBottom) {
     box.scrollTop = newScrollHeight;
   } else {
     const delta = newScrollHeight - prevScrollHeight;
     box.scrollTop = Math.max(0, prevScrollTop + delta);
   }
+
+  // ================================
+  // 5) MARCAR COMO LEÍDOS
+  // ================================
+  if (!Chat || !Chat.conversationId || !viewerId) return;
+
+  // Mensajes que *no* son míos y que todavía no tienen read_at
+  const noLeidos = msgs.filter(m => {
+    if (!m || m.read_at) return false;
+    if (m.role === 'ia' || m.role === 'system') return false;
+    // Si soy owner, los no leídos son de owner? No. Son del otro rol.
+    if (soyOwner) {
+      return m.role === 'client';
+    } else {
+      return m.role === 'owner';
+    }
+  });
+
+  if (noLeidos.length > 0) {
+    console.log('[CHAT] detectados mensajes no leídos, envío /read', noLeidos.map(m => m.id));
+    markConversationRead(); // lo llamás sin await para no trabar la UI
+  }
 }
 
 window.renderMessages = renderMessages;
+
 
 
 
@@ -305,6 +311,41 @@ debugger;
   }
 }
 
+
+
+
+
+async function markConversationRead() {
+  if (!window.Chat || !Chat.conversationId) return;
+
+  const viewerId = window.getViewerUserId ? window.getViewerUserId() : null;
+  if (!viewerId) return;
+
+  try {
+    const resp = await fetch('/api/chat/api_chat_bp/read/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        conversation_id: Chat.conversationId,
+        viewer_id: viewerId,
+      }),
+    });
+
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) {
+      console.warn('[CHAT][read] fallo mark_read', data);
+      return;
+    }
+
+    console.log('[CHAT][read] mensajes marcados como leídos:', data.updated_ids || []);
+  } catch (err) {
+    console.error('[CHAT][read] excepción', err);
+  }
+}
 
 
 

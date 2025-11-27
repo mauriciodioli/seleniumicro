@@ -362,7 +362,72 @@ def send():
         return jsonify(ok=False, error=str(e)), 500
     
 
+@api_chat_bp.route("/api_chat_bp/read/", methods=["POST"])
+def mark_read():
+    data      = request.get_json() or {}
+    conv_id   = data.get("conversation_id")
+    viewer_id = data.get("viewer_id")
 
+    if not conv_id or not viewer_id:
+        return jsonify(ok=False, error="conversation_id y viewer_id son obligatorios"), 400
+
+    try:
+        conv_id   = int(conv_id)
+        viewer_id = int(viewer_id)
+    except (TypeError, ValueError):
+        return jsonify(ok=False, error="IDs inválidos"), 400
+
+    try:
+        with get_db_session() as session:
+            conv = (
+                session.query(Conversation)
+                       .filter(Conversation.id == conv_id)
+                       .first()
+            )
+            if not conv:
+                return jsonify(ok=False, error="conversation no encontrada"), 404
+
+            # Determinar si el que mira es owner o client
+            if viewer_id == conv.owner_user_id:
+                viewer_role = "owner"
+            elif viewer_id == conv.client_user_id:
+                viewer_role = "client"
+            else:
+                # este usuario ni siquiera pertenece a esta conversación
+                return jsonify(ok=False, error="viewer no pertenece a esta conversación"), 400
+
+            other_role = "client" if viewer_role == "owner" else "owner"
+            now_utc    = datetime.utcnow()
+
+            # Mensajes del OTRO lado, aún no leídos
+            msgs_q = (
+                session.query(Message)
+                       .filter(
+                           and_(
+                               Message.conversation_id == conv_id,
+                               Message.role == other_role,
+                               Message.read_at.is_(None),
+                           )
+                       )
+                       .order_by(Message.id.asc())
+            )
+
+            updated_ids = []
+            for m in msgs_q:
+                m.read_at = now_utc
+                updated_ids.append(m.id)
+
+            # get_db_session() se encarga del commit/rollback
+            return jsonify(
+                ok=True,
+                updated_ids=updated_ids,
+                viewer_role=viewer_role,
+                other_role=other_role,
+            )
+
+    except Exception as e:
+        current_app.logger.exception("Error en /api_chat_bp/read/")
+        return jsonify(ok=False, error=str(e)), 500
 # ==========================================================
 #  NUEVOS ENDPOINTS: IMAGEN / AUDIO / VIDEO
 #  (NO MEZCLAN NADA CON EL DE TEXTO)
