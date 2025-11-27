@@ -381,8 +381,7 @@ if (btnSend) {
   });
 }
 
-
-function formatRelativeDateTime(isoString) {
+function formatRelativeDateTime(isoString) { 
   if (!isoString) return '';
 
   const d = new Date(isoString);
@@ -402,11 +401,20 @@ function formatRelativeDateTime(isoString) {
   if (diffDays === 0)  return `Hoy ${timePart}`;
   if (diffDays === 1)  return `Ayer ${timePart}`;
   if (diffDays === 2)  return `Antes de ayer ${timePart}`;
-  if (diffDays > 2 && diffDays < 7) {
-    const weekDays = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+  const weekDays = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+  // 3 a 6 días → día de la semana
+  if (diffDays >= 3 && diffDays < 7) {
     return `${weekDays[d.getDay()]} ${timePart}`;
   }
 
+  // 7 a 13 días → “la semana pasada”
+  if (diffDays >= 7 && diffDays < 14) {
+    return `La semana pasada ${weekDays[d.getDay()]} ${timePart}`;
+  }
+
+  // Resto: fecha completa
   const dd = String(d.getDate()).padStart(2, '0');
   const mo = String(d.getMonth() + 1).padStart(2, '0');
   const yyyy = d.getFullYear();
@@ -461,10 +469,10 @@ function renderMessageBubble(m) {
       statusLabel = 'Entregado';
     }
 
-    // Para mensajes de IA no tiene sentido el punto → lo dejamos vacío
-    const showDot = (m.role !== 'ia' && m.role !== 'system');
+    // 👉 solo quiero el punto en MIS mensajes (los azules, side === 'msg--out')
+    const isMineSide = (side === 'msg--out');
+    const showDot = isMineSide && (m.role !== 'ia' && m.role !== 'system');
 
-    // 👇 ÚNICO CAMBIO: usamos la fecha formateada
     const metaText = formatRelativeDateTime(m.created_at);
 
     meta = `
@@ -482,6 +490,7 @@ function renderMessageBubble(m) {
 
   return div;
 }
+
 
 
 
