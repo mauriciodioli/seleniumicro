@@ -152,7 +152,6 @@ function viewerIsOwner() {
   return soyOwner;
 }
 
-
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
   const box = document.getElementById('msgs');
@@ -187,7 +186,7 @@ function renderMessages(list){
   }
 
   const scope    = (window.Chat && Chat.scope) || {};
-  const soyOwner = viewerIsOwner();
+  const soyOwner = viewerIsOwner && viewerIsOwner();
 
   console.groupCollapsed('%c[CHAT][renderMessages] estado inicial', 'color:#fb0');
   console.log('cantidad msgs:', msgs.length);
@@ -195,37 +194,14 @@ function renderMessages(list){
   console.log('soyOwner:', soyOwner);
   console.groupEnd();
 
-  // --- 3) Repintar mensajes ---
-  box.innerHTML = msgs.map((m, idx) => {
-    // Mensajes del sistema / IA
-    if (m.role === 'system' || m.role === 'ia') {
-      const textSys = (m.content || '').replace(/\n/g, '<br>');
-      console.log('[CHAT][msg]', idx, 'system/ia', { role: m.role });
-      return `
-        <div class="msg msg-system">
-          <div class="msg-body">${textSys}</div>
-          <div class="msg-meta">${m.created_at || ''}</div>
-        </div>`;
-    }
+  // --- 3) Repintar mensajes usando renderMessageBubble ---
+  box.innerHTML = ''; // vaciar contenedor
 
-    // Mensajes humanos: decidir si SON MÍOS o del otro
-    const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
-    const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
-
-    console.log('[CHAT][msg]', idx, {
-      id: m.id,
-      role: m.role,
-      isMine,
-      claseFinal: cls
-    });
-
-    const text = (m.content || '').replace(/\n/g, '<br>');
-    return `
-      <div class="${cls}">
-        <div class="msg-body">${text}</div>
-        <div class="msg-meta">${m.created_at || ''}</div>
-      </div>`;
-  }).join('');
+  msgs.forEach((m, idx) => {
+    console.log('[CHAT][msg]', idx, m);
+    const bubble = renderMessageBubble(m);
+    box.appendChild(bubble);
+  });
 
   // --- 4) Ajuste de scroll DESPUÉS de repintar ---
   const newScrollHeight = box.scrollHeight;
@@ -239,6 +215,7 @@ function renderMessages(list){
 }
 
 window.renderMessages = renderMessages;
+
 
 
 
@@ -370,7 +347,6 @@ if (btnSend) {
 
 
 
-
 function renderMessageBubble(m) {
   const scope    = Chat.scope || window.currentChatScope || {};
   const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
@@ -380,7 +356,7 @@ function renderMessageBubble(m) {
 
   let side = 'msg--in'; // por defecto, entrante
 
-  if (m.role === 'ia') {
+  if (m.role === 'ia' || m.role === 'system') {
     side = 'msg--bot';
   } else if (viewerId != null) {
     const isMine =
@@ -406,17 +382,49 @@ function renderMessageBubble(m) {
     `;
   }
 
-  const meta = m.created_at
-    ? `<div class="msg-meta">${m.created_at}</div>`
+  // =========================
+  //   META + PUNTITO ESTADO
+  // =========================
+  const created = m.created_at || '';
+
+  let statusDot = '';
+
+  // solo me interesa mostrar estado en mensajes salientes de dueño/cliente
+  const isOutgoing = (side === 'msg--out') && (m.role === 'owner' || m.role === 'client');
+
+  if (isOutgoing) {
+    let statusClass = 'msg-status--local'; // default: gris (local)
+
+    // gris: sin delivered_at ni read_at (pendiente local)
+    if (!m.delivered_at && !m.read_at) {
+      statusClass = 'msg-status--local';     // gris
+    }
+    // amarillo: entregado pero no leído
+    else if (m.delivered_at && !m.read_at) {
+      statusClass = 'msg-status--delivered'; // amarillo
+    }
+    // celeste: leído
+    else if (m.read_at) {
+      statusClass = 'msg-status--read';      // celeste
+    }
+
+    statusDot = `<span class="msg-status ${statusClass}"></span>`;
+  }
+
+  const meta = (created || statusDot)
+    ? `<div class="msg-meta">${created} ${statusDot}</div>`
     : '';
 
   const div = document.createElement('div');
   div.className = `msg ${side} msg-${m.role || 'unk'}`;
-  div.dataset.id = m.id;
+  if (m.id != null) {
+    div.dataset.id = m.id;
+  }
   div.innerHTML = innerHTML + meta;
 
   return div;
 }
+
 
 
 window.appendMessageFromServer = function (m) {

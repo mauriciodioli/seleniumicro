@@ -136,7 +136,9 @@ def open_conversation():
                     "via":          m.via,
                     "content_type": m.content_type,
                     "content":      m.content,
-                    "created_at":   m.created_at.isoformat() if m.created_at else None,
+                    "created_at":   m.created_at.isoformat()   if m.created_at   else None,
+                    "delivered_at": m.delivered_at.isoformat() if m.delivered_at else None,
+                    "read_at":      m.read_at.isoformat()      if m.read_at      else None,
                     "intent":       m.intent,
                     "emotion":      m.emotion,
                     "confidence":   m.confidence,
@@ -281,7 +283,9 @@ def get_messages():
                 "via":          m.via,
                 "content_type": m.content_type,
                 "content":      m.content,
-                "created_at":   m.created_at.isoformat() if m.created_at else None,
+                "created_at":   m.created_at.isoformat()   if m.created_at   else None,
+                "delivered_at": m.delivered_at.isoformat() if m.delivered_at else None,
+                "read_at":      m.read_at.isoformat()      if m.read_at      else None,
             } for m in msgs]
 
             return jsonify(ok=True, messages=payload)
@@ -290,12 +294,13 @@ def get_messages():
         current_app.logger.exception("Error en /api_chat_bp/messages/")
         return jsonify(ok=False, error=str(e)), 500
 
+
 @api_chat_bp.route("/api_chat_bp/send/", methods=["POST"])
 def send():
     data    = request.get_json() or {}
     conv_id = data.get("conversation_id")
     text    = (data.get("text") or "").strip()
-    role    = (data.get("role") ).lower()  # viene del front
+    role    = (data.get("role") or "").lower()  # ⚠️ proteger el None
 
     if not conv_id or not text:
         return jsonify(ok=False, error="conversation_id y text son obligatorios"), 400
@@ -310,7 +315,6 @@ def send():
 
     try:
         with get_db_session() as session:
-
             conv = (
                 session.query(Conversation)
                        .filter(Conversation.id == conv_id)
@@ -319,18 +323,26 @@ def send():
             if not conv:
                 return jsonify(ok=False, error="conversation no encontrada"), 404
 
+            now_utc = datetime.utcnow()
+
             msg = Message(
                 conversation_id = conv.id,
                 role            = role,
                 via             = "dpia",
                 content_type    = "text",
                 content         = text,
+                # si created_at tiene default en el modelo, podés omitirlo
+                created_at      = now_utc,
+                delivered_at    = now_utc,  # ✅ llegó al server
+                read_at         = None,     # aún no leído
             )
             session.add(msg)
             session.flush()  # para tener msg.id
 
-            conv.updated_at = func.now()  # asegúrate de tener from sqlalchemy import func
+            # actualizar "actividad" de la conversación
+            conv.updated_at = func.now()
 
+            # el commit lo hace get_db_session() al salir del with
             return jsonify(
                 ok=True,
                 message={
@@ -340,14 +352,14 @@ def send():
                     "content_type": msg.content_type,
                     "content":      msg.content,
                     "created_at":   msg.created_at.isoformat() if msg.created_at else None,
+                    "delivered_at": msg.delivered_at.isoformat() if msg.delivered_at else None,
+                    "read_at":      msg.read_at.isoformat() if msg.read_at else None,
                 }
             )
 
     except Exception as e:
         current_app.logger.exception("Error en /api_chat_bp/send")
         return jsonify(ok=False, error=str(e)), 500
-
-
     
 
 
@@ -396,14 +408,17 @@ def _save_media_file(file_storage, kind: str) -> str:
 
 
 def _make_message_dict(m: Message) -> dict:
-  return {
-      "id": m.id,
-      "role": m.role,
-      "via": m.via,
-      "content_type": m.content_type,
-      "content": m.content,
-      "created_at": m.created_at.isoformat() if m.created_at else None,
-  }
+    return {
+        "id":           m.id,
+        "role":         m.role,
+        "via":          m.via,
+        "content_type": m.content_type,
+        "content":      m.content,
+        "created_at":   m.created_at.isoformat()   if m.created_at   else None,
+        "delivered_at": m.delivered_at.isoformat() if m.delivered_at else None,
+        "read_at":      m.read_at.isoformat()      if m.read_at      else None,
+    }
+
 
 
 @api_chat_bp.route("/api_chat_bp/image-upload/", methods=["POST"])
@@ -454,13 +469,16 @@ def upload_image():
 
 def _make_message_dict(m: Message) -> dict:
     return {
-        "id": m.id,
-        "role": m.role,
-        "via": m.via,
+        "id":           m.id,
+        "role":         m.role,
+        "via":          m.via,
         "content_type": m.content_type,
-        "content": m.content,
-        "created_at": m.created_at.isoformat() if m.created_at else None,
+        "content":      m.content,
+        "created_at":   m.created_at.isoformat()   if m.created_at   else None,
+        "delivered_at": m.delivered_at.isoformat() if m.delivered_at else None,
+        "read_at":      m.read_at.isoformat()      if m.read_at      else None,
     }
+
 
 
 

@@ -417,16 +417,22 @@ setChatHeaderFromOpen(data);
 
 // mensajes iniciales
 let msgs = data.messages || [];
+
 if (data.is_new && data.from_summary) {
+  const nowIso = new Date().toISOString();
+
   msgs = [
     {
+      id:           `system-${nowIso}`, // algo único para el frontend
       role:         'system',
       via:          'dpia',
       content_type: 'text',
       content:      `Nuevo chat desde ${data.from_summary}`,
-      created_at:   new Date().toISOString()
+      created_at:   nowIso,
+      delivered_at: nowIso,   // ya está “entregado” al abrir
+      read_at:      null,     // nadie lo “leyó” explícitamente
     },
-    ...msgs
+    ...msgs,
   ];
 }
 

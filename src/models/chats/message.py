@@ -1,3 +1,6 @@
+# models/chats/message.py (o donde esté)
+from sqlalchemy import Column, DateTime
+from datetime import datetime
 from extensions import db
 from models.chats.message_media import MessageMedia  # 👈 IMPORTA LA CLASE
 
@@ -28,8 +31,10 @@ class Message(db.Model):
     labels_json = db.Column(db.JSON)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-
-    # 👇 ACÁ ESTABA EL PROBLEMA: usar el nombre de la CLASE, no de la tabla
+    
+    delivered_at = db.Column(DateTime, nullable=True)
+    read_at      = db.Column(DateTime, nullable=True)
+    
     media = db.relationship(
         "MessageMedia",        # NO "message_media"
         backref="message",
