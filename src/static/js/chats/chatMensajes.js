@@ -480,23 +480,11 @@ if (msgInput) {
 
 
 
-// si querés que el click simple del botón también envíe (ojo: en media.js ya manejamos mousedown/mouseup; si usas lo nuevo, podés omitir este listener)
-if (btnSend) {
-  btnSend.addEventListener('click', (e) => {
-    e.preventDefault();
-    enviarTexto();
-  });
-}   
+   
 
 
 
-// si querés que el click simple del botón también envíe (ojo: en media.js ya manejamos mousedown/mouseup; si usas lo nuevo, podés omitir este listener)
-if (btnSend) {
-  btnSend.addEventListener('click', (e) => {
-    e.preventDefault();
-    enviarTexto();
-  });
-}
+
 
 
 function renderMessageBubble(m) {
