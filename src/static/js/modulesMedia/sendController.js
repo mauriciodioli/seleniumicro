@@ -4,12 +4,11 @@ import { startRecording, stopRecording } from './audioModule.js';
 let isRecording = false;
 
 /**
- * CLICK → envía texto si hay, o detiene grabación si estaba grabando
+ * CLICK → enviar texto o detener grabación
  */
 function handleSendButtonClick() {
   const inputField = document.getElementById('msgInput');
 
-  // Si se estaba grabando → detener (enviar audio desde audioModule)
   if (isRecording) {
     stopRecording();
     isRecording = false;
@@ -21,31 +20,27 @@ function handleSendButtonClick() {
   if (!text) return;
 
   console.log('[SEND CONTROLLER] enviar texto:', text);
-  sendMessage(text);     // usa tu función global existente
+
+  // 🟢 Usar función global que ya tenés definida (chatMensajes.js)
+  if (typeof window.sendMessage === 'function') {
+    sendMessage(text);
+  } else {
+    console.error('⚠️ sendMessage no está disponible');
+  }
+
   inputField.value = '';
 }
 
 /**
- * Mantener apretado → empezar a grabar
+ * Mantener apretado → comenzar audio
  */
-function handleSendButtonHoldStart() {
+function handleSendButtonHold() {
   console.log('[SEND CONTROLLER] ▶ startRecording()');
   startRecording();
   isRecording = true;
 }
 
-/**
- * Soltar → detener grabación
- */
-function handleSendButtonHoldEnd() {
-  if (!isRecording) return;
-  console.log('[SEND CONTROLLER] ■ stopRecording()');
-  stopRecording();
-  isRecording = false;
-}
-
 export {
   handleSendButtonClick,
-  handleSendButtonHoldStart,
-  handleSendButtonHoldEnd
+  handleSendButtonHold
 };
