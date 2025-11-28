@@ -15,7 +15,7 @@ const hasMediaRecorder = typeof MediaRecorder !== 'undefined';
 // START RECORDING
 // =======================
 async function startRecording() {
-  alert('[AUDIO] ▶ Iniciando grabación...');
+
 
   if (!hasMediaDevices || !hasMediaRecorder) {
     alert('[AUDIO] ❌ Tu navegador no soporta grabación.');
@@ -24,15 +24,14 @@ async function startRecording() {
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    alert('[AUDIO] 🎙 Micrófono activo.');
+  
 
     audioChunks = [];
     mediaRecorder = new MediaRecorder(stream);
 
-    console.log('[AUDIO] MediaRecorder creado:', mediaRecorder);
 
     mediaRecorder.ondataavailable = (e) => {
-      alert(`[AUDIO] 📦 Chunk capturado (${e.data.size} bytes)`);
+      
       if (e.data.size > 0) audioChunks.push(e.data);
     };
 
@@ -102,6 +101,8 @@ function toggleRecording() {
 async function enviarAudio(blob) {
   const convId = (typeof getConvId === 'function') ? getConvId() : null;
 
+  alert(`[DEBUG AUDIO] getConvId() devolvió: ${convId}`);
+
   alert('[DEBUG AUDIO] 🔍 Preparando envío...');
 
   if (!convId) {
@@ -147,6 +148,7 @@ async function enviarAudio(blob) {
     console.error('[CHAT AUDIO] Error endpoint', err);
   }
 }
+
 
 // =======================
 // EXPOSE TO WINDOW

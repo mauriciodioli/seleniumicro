@@ -451,7 +451,7 @@ async function sendMessage(text) {
     isServer: Chat.isServer,
     isClient: Chat.isClient
   });
-debugger;
+
   try {
     const r = await fetch('/api/chat/api_chat_bp/send/', {
       method: 'POST',
@@ -476,6 +476,39 @@ debugger;
     console.error('[CHAT] excepción en sendMessage', err);
   }
 }
+
+// ================ HELPER GLOBAL PARA AUDIO / MEDIA ================
+// ====================================================
+// Helper global para que AUDIO pueda leer el convId
+// ====================================================
+window.getConvId = function () {
+  // 1) Primero intento con Chat.conversationId (cuando el chat ya está abierto)
+  try {
+    if (window.Chat && Chat.conversationId) {
+      console.log('[getConvId] usando Chat.conversationId =', Chat.conversationId);
+      return Chat.conversationId;
+    }
+  } catch (e) {
+    console.warn('[getConvId] error leyendo Chat.conversationId', e);
+  }
+
+  // 2) Fallback: leo lo último que guardaste en localStorage (dpia.chat.last)
+  try {
+    const raw = localStorage.getItem('dpia.chat.last');
+    if (!raw) {
+      console.warn('[getConvId] no hay dpia.chat.last en localStorage');
+      return null;
+    }
+
+    const saved = JSON.parse(raw);
+    const convId = saved?.conversationId || null;
+    console.log('[getConvId] usando dpia.chat.last.conversationId =', convId);
+    return convId;
+  } catch (e) {
+    console.warn('[getConvId] error parseando dpia.chat.last', e);
+    return null;
+  }
+};
 
 
 
