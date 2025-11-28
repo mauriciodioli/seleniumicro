@@ -110,15 +110,17 @@
 
 
 
-/* ==========================
-   BOTÓN DE GRABAR (NO TOCAR)
-   ========================== */
+
+
+
+
+/* BOTÓN DE GRABAR – COMO LO TENÍAS */
 .chat-btn-audio {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #0d1c33; /* normal */
-  color: #fff;
+  background: #35b6e9; /* normal */
+  color: #0e0d0d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,54 +130,46 @@
   background: #18f197 !important; /* cuando está grabando */
 }
 
-/* ==========================
-   MENSAJES DE AUDIO
-   ========================== */
+/* ============ MENSAJE DE AUDIO ============ */
 
-/* 1) Burbuja de audio: bajamos la ALTURA (casi pegada al player) */
+/* La burbuja del mensaje de audio:
+   casi sin padding extra, solo un borde finito */
 .msg.msg-audio {
-  padding-top: 2px;     /* menos alto */
-  padding-bottom: 2px;  /* menos alto */
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 4px 6px;        /* probá 2px si querés aún menos */
 }
 
-/* 2) El body del audio no suma más relleno ni fondo */
-.msg.msg-audio .msg-body.msg-body--audio {
+/* El body del audio NO agrega más relleno ni fondo */
+.msg.msg-audio .msg-body {
   padding: 0;
   margin: 0;
   background: transparent;
   box-shadow: none;
 }
 
-/* 3) Player: ocupa TODO el ancho de la burbuja, altura fija (controlás “gordura” acá) */
+/* El player ocupa el ancho de la burbuja */
 .msg-audio-player {
+  width: 220px;
+  max-width: 100%;
   display: block;
-  width: 100%;        /* usa todo el ancho disponible */
-  height: 40px;       /* subí/bajá este valor para hacerlo más o menos alto */
-  max-width: 100%;    /* por si algún estilo global lo recortaba */
+  height: 32px;
 }
 
-/* 4) Barra del audio tipo píldora, sin pastilla rara extra */
+/* Panel transparente para que no haya “pastilla” blanca gigante */
 .msg-audio-player::-webkit-media-controls-panel {
-  background-color: rgba(0, 0, 0, 0.10); /* leve, no un rojo fosforescente */
-  border-radius: 999px;
+  background-color: #4a90e2;
+}
+/* Flecha de play oscura/negra en WebKit (Chrome, Android, Edge, Safari) */
+.msg-audio-player::-webkit-media-controls-play-button {
+  filter: invert(1) grayscale(1) brightness(0.3);
 }
 
-/* En tema oscuro un poco más marcada */
-body.theme-dark .msg-audio-player::-webkit-media-controls-panel {
-  background-color: rgba(0, 0, 0, 0.25);
+/* Opcional:
+   si en tema claro querés la flecha más oscura,
+   descomentá esto: */
+/*
+body.theme-light .msg-audio-player::-webkit-media-controls-play-button,
+body.theme-light .msg-audio-player::-webkit-media-controls-volume-slider {
+  filter: invert(1);
 }
-
-/* 5) Flecha de play OSCURA en tema claro */
-body.theme-light .msg-audio-player::-webkit-media-controls-play-button {
-  filter: invert(1) grayscale(1) brightness(0.3); /* casi negra */
-}
-
-/* Meta (hora + puntito) pegada al player */
-.msg.msg-audio .msg-meta {
-  margin-top: 2px;
-  font-size: 11px;
-}
-
+*/
 
