@@ -129,3 +129,22 @@
 .chat-recording .chat-btn-audio {
   background: #18f197 !important; /* rojo cuando graba */
 }
+
+
+
+.msg-audio {
+  background: transparent;      /* el fondo ya lo pone la burbuja */
+  padding: 2px 0;
+}
+
+.msg-audio-player {
+  width: 220px;
+  max-width: 100%;
+}
+.msg-audio-player::-webkit-media-controls-panel {
+  background-color: transparent; /* fondo transparente */
+}
+.msg-audio-player::-webkit-media-controls-play-button,
+.msg-audio-player::-webkit-media-controls-volume-slider {
+  filter: invert(1); /* iconos blancos */
+}

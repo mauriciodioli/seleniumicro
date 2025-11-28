@@ -279,6 +279,27 @@ function viewerIsOwner() {
 
   return soyOwner;
 }
+// ==================== BODY TEXTO ====================
+function renderMessageBodyText(m){
+  const text = (m.content || '').replace(/\n/g, '<br>');
+  return `<div class="msg-body">${text}</div>`;
+}
+
+// ==================== BODY AUDIO ====================
+function renderMessageBodyAudio(m){
+  const src = m.content || '';
+
+  // Si por algún motivo no viene src, caemos a texto
+  if (!src) {
+    return renderMessageBodyText(m);
+  }
+
+  // Player de audio dentro de la burbuja
+  return `
+    <div class="msg-body">
+      <audio controls src="${src}" preload="metadata" style="max-width:100%;"></audio>
+    </div>`;
+}
 
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
@@ -322,7 +343,7 @@ function renderMessages(list){
   console.log('soyOwner:', soyOwner);
   console.groupEnd();
 
-   // --- 3) Repintar mensajes ---
+  // --- 3) Repintar mensajes ---
   box.innerHTML = msgs.map((m, idx) => {
     // Mensajes del sistema / IA
     if (m.role === 'system' || m.role === 'ia') {
@@ -347,11 +368,18 @@ function renderMessages(list){
       claseFinal: cls
     });
 
-    const text = (m.content || '').replace(/\n/g, '<br>');
+    // ========= CUERPO DEL MENSAJE (texto / audio) =========
+    let bodyHtml;
+
+    if (m.content_type === 'audio') {
+      bodyHtml = renderMessageBodyAudio(m);
+    } else {
+      // default: texto (incluye cuando no viene content_type)
+      bodyHtml = renderMessageBodyText(m);
+    }
 
     // 🔴🔵🟢 Estado para el puntito de color
     const { statusClass, statusLabel } = getMsgStatusVisual(m);
-
 
     // ✅ Solo mensajes salientes (mis mensajes) muestran el puntito
     const isHuman = (m.role !== 'ia' && m.role !== 'system');
@@ -367,15 +395,13 @@ function renderMessages(list){
 
     return `
       <div class="${cls}">
-        <div class="msg-body">${text}</div>
+        ${bodyHtml}
         <div class="msg-meta">
           ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
           <span class="msg-meta-text">${formatRelativeDateTime(m.created_at) || ''}</span>
-
         </div>
       </div>`;
   }).join('');
-
 
   // --- 4) Ajuste de scroll DESPUÉS de repintar ---
   const newScrollHeight = box.scrollHeight;
@@ -389,6 +415,7 @@ function renderMessages(list){
 }
 
 window.renderMessages = renderMessages;
+
 
 
 
