@@ -111,16 +111,15 @@
 
 
 
-
-
-
-/* BOTÓN DE GRABAR – COMO LO TENÍAS */
+/* ==========================
+   BOTÓN DE GRABAR (NO TOCAR)
+   ========================== */
 .chat-btn-audio {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #35b6e9; /* normal */
-  color: #0e0d0d;
+  background: #0d1c33; /* normal */
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,15 +129,16 @@
   background: #18f197 !important; /* cuando está grabando */
 }
 
-/* ============ MENSAJE DE AUDIO ============ */
+/* ==========================
+   MENSAJES DE AUDIO
+   ========================== */
 
-/* La burbuja del mensaje de audio:
-   casi sin padding extra, solo un borde finito */
+/* Burbuja de audio: casi como WhatsApp, poco alto */
 .msg.msg-audio {
-  padding: 4px 6px;        /* probá 2px si querés aún menos */
+  padding: 4px 8px 2px;   /* poco aire arriba/abajo */
 }
 
-/* El body del audio NO agrega más relleno ni fondo */
+/* Nada de padding extra en el body */
 .msg.msg-audio .msg-body {
   padding: 0;
   margin: 0;
@@ -146,30 +146,43 @@
   box-shadow: none;
 }
 
-/* El player ocupa el ancho de la burbuja */
+/* Player: ocupa el ancho de la burbuja y es más gordito */
 .msg-audio-player {
-  width: 220px;
+  width: 100%;
   max-width: 100%;
   display: block;
-  height: 32px;
+  height: 38px;           /* subís/bajás esto para más/menos “gordo” */
 }
 
-/* Panel transparente para que no haya “pastilla” blanca gigante */
+/* Barra del audio tipo píldora, ligeramente más oscura que la burbuja */
 .msg-audio-player::-webkit-media-controls-panel {
-  background-color: #4a90e2;
-}
-/* Flecha de play oscura/negra en WebKit (Chrome, Android, Edge, Safari) */
-.msg-audio-player::-webkit-media-controls-play-button {
-  filter: invert(1) grayscale(1) brightness(0.3);
+  background-color: rgba(0, 0, 0, 0.10); /* en claro queda como WhatsApp */
+  border-radius: 999px;
 }
 
-/* Opcional:
-   si en tema claro querés la flecha más oscura,
-   descomentá esto: */
+/* Tema oscuro: un poco más oscura para que se vea bien */
+body.theme-dark .msg-audio-player::-webkit-media-controls-panel {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Flecha de play:
+   - oscura en tema claro
+   - clara en tema oscuro (por defecto) */
+body.theme-light .msg-audio-player::-webkit-media-controls-play-button {
+  filter: invert(1) grayscale(1) brightness(0.3); /* se ve casi negra */
+}
+
+/* Si querés también el volumen, lo sumás: */
 /*
 body.theme-light .msg-audio-player::-webkit-media-controls-play-button,
 body.theme-light .msg-audio-player::-webkit-media-controls-volume-slider {
-  filter: invert(1);
+  filter: invert(1) grayscale(1) brightness(0.3);
 }
 */
+
+/* Meta (Hora + puntito) más pegado al player */
+.msg.msg-audio .msg-meta {
+  margin-top: 2px;
+  font-size: 11px;
+}
 
