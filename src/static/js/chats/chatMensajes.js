@@ -195,52 +195,67 @@ function renderMessages(list){
   console.groupEnd();
 
   // --- 3) Repintar mensajes ---
-  box.innerHTML = msgs.map((m, idx) => {
-    // Mensajes del sistema / IA
-    if (m.role === 'system' || m.role === 'ia') {
-      const textSys = (m.content || '').replace(/\n/g, '<br>');
-      console.log('[CHAT][msg]', idx, 'system/ia', { role: m.role });
-      return `
-        <div class="msg msg-system">
-          <div class="msg-body">${textSys}</div>
-          <div class="msg-meta">${m.created_at || ''}</div>
-        </div>`;
-    }
-
-    // Mensajes humanos: decidir si SON MÍOS o del otro
-    const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
-    const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
-
-    console.log('[CHAT][msg]', idx, {
-      id: m.id,
-      role: m.role,
-      isMine,
-      claseFinal: cls
-    });
-
-    const text = (m.content || '').replace(/\n/g, '<br>');
-
-    // 🔴🔵🟢 SOLO CAMBIO AQUÍ: estado para el puntito de color
-    let statusClass = 'msg-status-sent';
-    let statusLabel = 'Enviado';
-
-    if (m.read_at) {
-      statusClass = 'msg-status-read';
-      statusLabel = 'Leído';
-    } else if (m.delivered_at) {
-      statusClass = 'msg-status-delivered';
-      statusLabel = 'Entregado';
-    }
-
+box.innerHTML = msgs.map((m, idx) => {
+  // Mensajes del sistema / IA
+  if (m.role === 'system' || m.role === 'ia') {
+    const textSys = (m.content || '').replace(/\n/g, '<br>');
+    console.log('[CHAT][msg]', idx, 'system/ia', { role: m.role });
     return `
-      <div class="${cls}">
-        <div class="msg-body">${text}</div>
-        <div class="msg-meta">
-          <span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>
-          <span class="msg-meta-text">${m.created_at || ''}</span>
-        </div>
+      <div class="msg msg-system">
+        <div class="msg-body">${textSys}</div>
+        <div class="msg-meta">${m.created_at || ''}</div>
       </div>`;
-  }).join('');
+  }
+
+  // Mensajes humanos: decidir si SON MÍOS o del otro
+  const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
+  const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
+
+  // 🔎 Punto de control: quién soy y qué se va a dibujar
+  console.log('[CHAT][msg]', idx, {
+    id: m.id,
+    role: m.role,
+    soyOwner,
+    isMine,
+    claseFinal: cls
+  });
+
+  const text = (m.content || '').replace(/\n/g, '<br>');
+
+  // 🔴🔵🟢 Estado para el puntito de color
+  let statusClass = 'msg-status-sent';
+  let statusLabel = 'Enviado';
+
+  if (m.read_at) {
+    statusClass = 'msg-status-read';
+    statusLabel = 'Leído';
+  } else if (m.delivered_at) {
+    statusClass = 'msg-status-delivered';
+    statusLabel = 'Entregado';
+  }
+
+  // ❗ AQUÍ DECIDIMOS SI MUESTRA O NO EL PUNTO
+  const showDot = !isMine && m.role !== 'ia' && m.role !== 'system';
+
+  // 🔎 Punto de control específico del puntito
+  console.log('[CHAT][msg-status]', idx, {
+    id: m.id,
+    role: m.role,
+    isMine,
+    statusClass,
+    showDot
+  });
+
+  return `
+    <div class="${cls}">
+      <div class="msg-body">${text}</div>
+      <div class="msg-meta">
+        ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
+        <span class="msg-meta-text">${m.created_at || ''}</span>
+      </div>
+    </div>`;
+}).join('');
+
 
   // --- 4) Ajuste de scroll DESPUÉS de repintar ---
   const newScrollHeight = box.scrollHeight;
@@ -316,7 +331,7 @@ async function sendMessage(text) {
     isServer: Chat.isServer,
     isClient: Chat.isClient
   });
-debugger;
+
   try {
     const r = await fetch('/api/chat/api_chat_bp/send/', {
       method: 'POST',
@@ -382,36 +397,7 @@ if (btnSend) {
 }
 
 
-function formatRelativeDateTime(isoString) {
-  if (!isoString) return '';
 
-  const d = new Date(isoString);
-  if (isNaN(d.getTime())) return isoString;
-
-  const now = new Date();
-  const msPerDay = 24 * 60 * 60 * 1000;
-
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const startOfDate  = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const diffDays = Math.round((startOfToday - startOfDate) / msPerDay);
-
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  const timePart = `${hh}:${mm}`;
-
-  if (diffDays === 0)  return `Hoy ${timePart}`;
-  if (diffDays === 1)  return `Ayer ${timePart}`;
-  if (diffDays === 2)  return `Antes de ayer ${timePart}`;
-  if (diffDays > 2 && diffDays < 7) {
-    const weekDays = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-    return `${weekDays[d.getDay()]} ${timePart}`;
-  }
-
-  const dd = String(d.getDate()).padStart(2, '0');
-  const mo = String(d.getMonth() + 1).padStart(2, '0');
-  const yyyy = d.getFullYear();
-  return `${dd}/${mo}/${yyyy} ${timePart}`;
-}
 function renderMessageBubble(m) {
   const scope    = Chat.scope || window.currentChatScope || {};
   const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
@@ -420,18 +406,32 @@ function renderMessageBubble(m) {
   const clientId = scope.client_user_id ?? null;
 
   let side = 'msg--in'; // por defecto, entrante
+  let isMine = false;
 
-  if (m.role === 'ia') {
+  if (m.role === 'ia' || m.role === 'system') {
     side = 'msg--bot';
+    isMine = false;
   } else if (viewerId != null) {
-    const isMine =
+    isMine =
       (m.role === 'client' && viewerId === clientId) ||
       (m.role === 'owner'  && viewerId === ownerId);
 
     side = isMine ? 'msg--out' : 'msg--in';
   }
 
+  console.log('[CHAT][bubble-side]', {
+    id: m.id,
+    role: m.role,
+    viewerId,
+    ownerId,
+    clientId,
+    isMine,
+    side
+  });
+
   let innerHTML = '';
+  // ... (resto igual)
+
 
   if (m.content_type === 'text') {
     innerHTML = `<div class="msg-body">${escapeHTML(m.content || '')}</div>`;
@@ -461,18 +461,17 @@ function renderMessageBubble(m) {
       statusLabel = 'Entregado';
     }
 
-    // ⚠️ Solo mostrar puntito si es un mensaje mío (azul, msg--out)
-    const showDot = (side === 'msg--out') && (m.role !== 'ia' && m.role !== 'system');
-
-    const metaText = formatRelativeDateTime(m.created_at);
+    // Para mensajes de IA no tiene sentido el punto → lo dejamos vacío
+    const showDot = (m.role !== 'ia' && m.role !== 'system');
 
     meta = `
       <div class="msg-meta">
         ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
-        <span class="msg-meta-text">${metaText}</span>
+        <span class="msg-meta-text">${m.created_at}</span>
       </div>
     `;
   }
+
 
   const div = document.createElement('div');
   div.className = `msg ${side} msg-${m.role || 'unk'}`;
@@ -484,8 +483,6 @@ function renderMessageBubble(m) {
 
 
 
-
-
 window.appendMessageFromServer = function (m) {
   const container = document.getElementById('chatMessages');
   if (!container) return;
@@ -493,7 +490,6 @@ window.appendMessageFromServer = function (m) {
   container.appendChild(node);
   container.scrollTop = container.scrollHeight;
 };
-
 
 
 
@@ -585,7 +581,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.warn('[CHAT] error leyendo localStorage', err);
   }
 
-  // ✅ CLICK EN BOTÓN ENVIAR
  // ✅ CLICK EN BOTÓN ENVIAR (con preventDefault)
 sendBtn?.addEventListener('click', (e) => {
   e.preventDefault();      // 👈 frena el submit del <form>
