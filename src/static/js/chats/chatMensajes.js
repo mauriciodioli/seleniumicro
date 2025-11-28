@@ -1,4 +1,89 @@
 // ===================== HEADER DEL CHAT (ctxBadge) =====================
+function formatRelativeDateTime(isoString) {
+  if (!isoString) return '';
+
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return isoString; // por si viene raro
+
+  const now = new Date();
+
+  // Helpers base
+  const msPerDay = 24 * 60 * 60 * 1000;
+
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfDate  = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+  const diffDays = Math.round((startOfToday - startOfDate) / msPerDay);
+
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  const timePart = `${hh}:${mm}`;
+
+  // ✅ Hoy / ayer / antes de ayer
+  if (diffDays === 0) return `Hoy ${timePart}`;
+  if (diffDays === 1) return `Ayer ${timePart}`;
+  if (diffDays === 2) return `Antes de ayer ${timePart}`;
+
+  // Semanas (tomando Lunes como inicio de semana)
+  const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  const weekDayName = diasSemana[d.getDay()];
+
+  function startOfWeek(date) {
+    const tmp = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const day = tmp.getDay(); // 0=domingo...6=sábado
+    const diffToMonday = (day + 6) % 7; // lunes=0
+    tmp.setDate(tmp.getDate() - diffToMonday);
+    return tmp;
+  }
+
+  const thisWeekStart = startOfWeek(now);
+  const nextWeekStart = new Date(thisWeekStart);
+  nextWeekStart.setDate(thisWeekStart.getDate() + 7);
+
+  const msgWeekStart = startOfWeek(d);
+  const msgNextWeekStart = new Date(msgWeekStart);
+  msgNextWeekStart.setDate(msgWeekStart.getDate() + 7);
+
+  // 👉 Esta semana (pero más de 2 días atrás)
+  if (msgWeekStart.getTime() === thisWeekStart.getTime()) {
+    return `${capitalize(weekDayName)} ${timePart}`;
+  }
+
+  // 👉 Semana pasada
+  const lastWeekStart = new Date(thisWeekStart);
+  lastWeekStart.setDate(thisWeekStart.getDate() - 7);
+
+  if (msgWeekStart.getTime() === lastWeekStart.getTime()) {
+    return `Semana pasada ${weekDayName} ${timePart}`;
+  }
+
+  // 👉 Mes actual / mes pasado
+  const sameMonth  = d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  const prevMonth  =
+    (d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() - 1) ||
+    (now.getMonth() === 0 && d.getFullYear() === now.getFullYear() - 1 && d.getMonth() === 11);
+
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+
+  if (sameMonth) {
+    return `${day}/${month} ${timePart}`;
+  }
+
+  if (prevMonth) {
+    return `Mes pasado ${day}/${month} ${timePart}`;
+  }
+
+  // 👉 Más viejo: ISO corto
+  const yyyy = d.getFullYear();
+  return `${yyyy}-${month}-${day} ${timePart}`;
+}
+
+// helper chiquito para capitalizar "lunes" -> "Lunes"
+function capitalize(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 function setChatHeaderFromOpen(data) {
   const badge = document.getElementById('ctxBadge');
@@ -250,7 +335,8 @@ function renderMessages(list){
         <div class="msg-body">${text}</div>
         <div class="msg-meta">
           ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
-          <span class="msg-meta-text">${m.created_at || ''}</span>
+          <span class="msg-meta-text">${formatRelativeDateTime(m.created_at) || ''}</span>
+
         </div>
       </div>`;
   }).join('');
@@ -473,7 +559,8 @@ function renderMessageBubble(m) {
     meta = `
       <div class="msg-meta">
         ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
-        <span class="msg-meta-text">${m.created_at}</span>
+        <span class="msg-meta-text">${formatRelativeDateTime(m.created_at)}</span>
+
       </div>
     `;
   }
