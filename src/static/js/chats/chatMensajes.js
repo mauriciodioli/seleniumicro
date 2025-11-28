@@ -279,11 +279,7 @@ function viewerIsOwner() {
 
   return soyOwner;
 }
-// ==================== BODY TEXTO ====================
-function renderMessageBodyText(m){
-  const text = (m.content || '').replace(/\n/g, '<br>');
-  return `<div class="msg-body">${text}</div>`;
-}
+
 
 // ==================== BODY AUDIO ====================
 function renderMessageBodyAudio(m){
@@ -300,7 +296,25 @@ function renderMessageBodyAudio(m){
       ></audio>
     </div>`;
 }
+function renderMessageBodyText(m){
+  const text = (m.content || '').replace(/\n/g, '<br>');
+  return `<div class="msg-body">${text}</div>`;
+}
 
+function renderMessageBodyAudio(m){
+  const src = m.content || '';
+  if (!src) return renderMessageBodyText(m);
+
+  return `
+    <div class="msg-body msg-body--audio">
+      <audio
+        controls
+        src="${src}"
+        preload="none"
+        class="msg-audio-player"
+      ></audio>
+    </div>`;
+}
 
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
@@ -311,6 +325,17 @@ function renderMessages(list){
   }
 
   const msgs = Array.isArray(list) ? list : [];
+
+  // --- 0bis) Evitar repintar si no cambió nada ---
+  const signature = msgs
+    .map(m => `${m.id || 'x'}|${m.status || ''}|${m.content_type || ''}`)
+    .join('::');
+
+  if (box.dataset.lastSignature === signature) {
+    // Nada cambió: no repintamos para no resetear audios
+    return;
+  }
+  box.dataset.lastSignature = signature;
 
   // --- 1) Medimos scroll ANTES de repintar ---
   const prevScrollTop    = box.scrollTop;
@@ -369,13 +394,11 @@ function renderMessages(list){
       claseFinal: cls
     });
 
-    // ========= CUERPO DEL MENSAJE (texto / audio) =========
+    // ========= CUERPO (texto / audio, y futuro img/video) =========
     let bodyHtml;
-
     if (m.content_type === 'audio') {
       bodyHtml = renderMessageBodyAudio(m);
     } else {
-      // default: texto (incluye cuando no viene content_type)
       bodyHtml = renderMessageBodyText(m);
     }
 
@@ -416,6 +439,7 @@ function renderMessages(list){
 }
 
 window.renderMessages = renderMessages;
+
 
 
 

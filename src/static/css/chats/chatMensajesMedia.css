@@ -92,6 +92,14 @@
 }
 
 
+
+
+
+
+
+
+
+
 .msg-audio {
   background: #0f766e; /* verde/teal */
   border-radius: 16px;
@@ -115,36 +123,79 @@
 
 
 
-.chat-btn-audio {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #0d1c33; /* naranja = audio */
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ==========================
+   Variables generales
+   ========================== */
+:root {
+  --chat-audio-max-width-desktop: 240px;
+  --chat-audio-max-width-mobile: 80vw;
+  --chat-audio-height: 32px;
 }
 
-.chat-recording .chat-btn-audio {
-  background: #18f197 !important; /* rojo cuando graba */
+/* ==========================
+   Burbuja de audio (base)
+   ========================== */
+.msg-body--audio {
+  max-width: var(--chat-audio-max-width-desktop);
+  padding: 4px 8px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: inline-block;
 }
 
-
-
-.msg-audio {
-  background: transparent;      /* el fondo ya lo pone la burbuja */
-  padding: 2px 0;
+/* Player dentro de la burbuja */
+.msg-body--audio .msg-audio-player {
+  width: 100%;
+  height: var(--chat-audio-height);
+  display: block;
 }
 
-.msg-audio-player {
-  width: 220px;
-  max-width: 100%;
+/* ==========================
+   Tema claro
+   ========================== */
+body.theme-light .msg-body--audio {
+  /* fondo neutro que funciona sobre cualquier card clara */
+  background-color: rgba(245, 245, 245, 0.95);
+  color: #111;
 }
-.msg-audio-player::-webkit-media-controls-panel {
-  background-color: transparent; /* fondo transparente */
+
+/* Panel de controles del audio en WebKit (Chrome, Edge, Safari) */
+body.theme-light .msg-audio-player::-webkit-media-controls-panel {
+  background-color: transparent;  /* usamos el fondo de la burbuja */
 }
-.msg-audio-player::-webkit-media-controls-play-button,
-.msg-audio-player::-webkit-media-controls-volume-slider {
-  filter: invert(1); /* iconos blancos */
+
+/* 🔹 Truco: invertimos el icono para que se vea OSCURO */
+body.theme-light .msg-audio-player::-webkit-media-controls-play-button {
+  filter: invert(1);  /* icono blanco → negro sobre fondo claro */
+}
+
+/* ==========================
+   Tema oscuro
+   ========================== */
+body.theme-dark .msg-body--audio {
+  /* fondo ligeramente más claro que el fondo general oscuro */
+  background-color: rgba(40, 40, 40, 0.95);
+  color: #f5f5f5;
+}
+
+body.theme-dark .msg-audio-player::-webkit-media-controls-panel {
+  background-color: transparent;
+}
+
+/* En oscuro dejamos el icono claro para que contraste con el fondo oscuro */
+body.theme-dark .msg-audio-player::-webkit-media-controls-play-button {
+  filter: none;  /* icono claro sobre fondo oscuro */
+}
+
+/* ==========================
+   Responsivo (celular)
+   ========================== */
+@media (max-width: 768px) {
+  .msg-body--audio {
+    max-width: var(--chat-audio-max-width-mobile); /* se adapta al ancho de pantalla */
+  }
+
+  .msg-body--audio .msg-audio-player {
+    height: 40px;  /* un poco más alto para dedo gordo en móvil 😄 */
+  }
 }
