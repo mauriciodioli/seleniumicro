@@ -1,4 +1,43 @@
 // ===================== HEADER DEL CHAT (ctxBadge) =====================
+import {
+  handleSendButtonClick,
+  handleSendButtonHoldStart,
+  handleSendButtonHoldEnd
+} from '../modulesMedia/sendController.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sendBtn = document.getElementById('sendBtnSenMessage');
+  if (!sendBtn) return;
+
+  // Click → texto
+  sendBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleSendButtonClick();
+  });
+
+  // Mantener apretado → audio
+  sendBtn.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    handleSendButtonHoldStart();
+  });
+
+  sendBtn.addEventListener('mouseup', (e) => {
+    e.preventDefault();
+    handleSendButtonHoldEnd();
+  });
+
+  // Mobile
+  sendBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleSendButtonHoldStart();
+  }, { passive: false });
+
+  sendBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    handleSendButtonHoldEnd();
+  }, { passive: false });
+});
+
 function getMsgStatusVisual(m) {
   let statusClass = 'msg-status-sent';
   let statusLabel = 'Enviado';
@@ -453,31 +492,33 @@ debugger;
 
 
 // input de texto
+// input de texto
 const msgInput = document.getElementById('msgInput');
-const btnSend  = document.getElementById('sendBtnSenMessage');
 
-// === función que usa el botón y el módulo de media ===
-function enviarTexto(){
-  if (!msgInput) return;
-  const text = (msgInput.value || '').trim();
-  if (!text) return;
-
-  // usa tu función existente
-  sendMessage(text);
-
-  // limpia el input
-  msgInput.value = '';
-}
-
-// si querés que Enter también envíe
+// Enter en el input → enviar texto
 if (msgInput) {
   msgInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      enviarTexto();
+      const text = (msgInput.value || '').trim();
+      if (!text) return;
+      console.log('[CHAT] Enter en input, text=', text, 'convId=', Chat.conversationId);
+      sendMessage(text);
+      msgInput.value = '';
     }
   });
 }
+
+
+
+// si querés que el click simple del botón también envíe (ojo: en media.js ya manejamos mousedown/mouseup; si usas lo nuevo, podés omitir este listener)
+if (btnSend) {
+  btnSend.addEventListener('click', (e) => {
+    e.preventDefault();
+    enviarTexto();
+  });
+}   
+
 
 
 // si querés que el click simple del botón también envíe (ojo: en media.js ya manejamos mousedown/mouseup; si usas lo nuevo, podés omitir este listener)
@@ -640,7 +681,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('[CHAT] refs:', { input, sendBtn });
 
   // restaurar último chat si existe
-  try{
+  try {
     const raw = localStorage.getItem('dpia.chat.last');
     if (raw){
       const saved = JSON.parse(raw);
@@ -652,23 +693,11 @@ document.addEventListener('DOMContentLoaded', () => {
         Chat.polling = setInterval(loadMessages, 2500);
       }
     }
-  }catch(err){
+  } catch(err) {
     console.warn('[CHAT] error leyendo localStorage', err);
   }
 
-  // ✅ CLICK EN BOTÓN ENVIAR
- // ✅ CLICK EN BOTÓN ENVIAR (con preventDefault)
-sendBtn?.addEventListener('click', (e) => {
-  e.preventDefault();      // 👈 frena el submit del <form>
-
-  const text = (input.value || '').trim();
-  if (!text) return;
-  console.log('[CHAT] click sendBtnSenMessage, text=', text, 'convId=', Chat.conversationId);
-  sendMessage(text);
-  input.value = '';
-  input.focus();
-});
-
+  // ⚠️ Ya NO tocamos el click del botón acá
 
   // Enter en el input
   input?.addEventListener('keydown', (e) => {
@@ -686,6 +715,7 @@ sendBtn?.addEventListener('click', (e) => {
     if (Chat.polling) clearInterval(Chat.polling);
   });
 });
+
 
 
 // ==================== ASEGURAR ESTRUCTURA DEL BADGE ====================
