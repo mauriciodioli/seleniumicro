@@ -5,38 +5,7 @@ import {
   handleSendButtonHoldEnd
 } from '../modulesMedia/sendController.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const sendBtn = document.getElementById('sendBtnSenMessage');
-  if (!sendBtn) return;
 
-  // Click → texto
-  sendBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    handleSendButtonClick();
-  });
-
-  // Mantener apretado → audio
-  sendBtn.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    handleSendButtonHoldStart();
-  });
-
-  sendBtn.addEventListener('mouseup', (e) => {
-    e.preventDefault();
-    handleSendButtonHoldEnd();
-  });
-
-  // Mobile
-  sendBtn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    handleSendButtonHoldStart();
-  }, { passive: false });
-
-  sendBtn.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    handleSendButtonHoldEnd();
-  }, { passive: false });
-});
 
 function getMsgStatusVisual(m) {
   let statusClass = 'msg-status-sent';
