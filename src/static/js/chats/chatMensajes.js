@@ -215,6 +215,44 @@ function setCtxBadge(s){
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  const btnAudio = document.getElementById('sendBtnAudio');
+
+  if (!btnAudio) {
+    console.warn('[CHAT AUDIO] Botón de audio no encontrado');
+    return;
+  }
+
+  // ------------------- DESKTOP -------------------
+  btnAudio.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    if (window.startRecording) window.startRecording();
+  });
+
+  btnAudio.addEventListener('mouseup', (e) => {
+    e.preventDefault();
+    if (window.stopRecording) window.stopRecording();
+  });
+
+  // ------------------- MOBILE -------------------
+  btnAudio.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (window.startRecording) window.startRecording();
+  }, { passive: false });
+
+  btnAudio.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (window.stopRecording) window.stopRecording();
+  }, { passive: false });
+
+  console.log('[CHAT AUDIO] Botón de audio vinculado');
+});
+
+
+
+
+
+
 
 
 

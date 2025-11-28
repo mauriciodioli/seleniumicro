@@ -101,3 +101,31 @@
 .msg-audio--read {
   background: #1d4ed8; /* azul */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.chat-btn-audio {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0d1c33; /* naranja = audio */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-recording .chat-btn-audio {
+  background: #18f197 !important; /* rojo cuando graba */
+}

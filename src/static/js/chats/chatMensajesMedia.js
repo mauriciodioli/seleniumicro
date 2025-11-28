@@ -1,4 +1,4 @@
-import { showAudioPreview } from '../modulesMedia/audioModule.js';
+
 import { showImagePreview } from '../modulesMedia/imagenModule.js';
 import { showVideoPreview } from '../modulesMedia/videoModule.js';
 

@@ -1,15 +1,19 @@
 console.log('[CHAT AUDIO] Módulo cargado');
 
-// ✔ Variables globales bien
+// =======================
+// Variables globales
+// =======================
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
 let discardNextAudio = false;
 
-// ✔ Validación correcta
 const hasMediaDevices = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 const hasMediaRecorder = typeof MediaRecorder !== 'undefined';
 
+// =======================
+// START RECORDING
+// =======================
 async function startRecording() {
   if (!hasMediaDevices || !hasMediaRecorder) {
     console.warn('[CHAT AUDIO] Navegador sin soporte');
@@ -28,12 +32,9 @@ async function startRecording() {
     mediaRecorder.onstop = () => {
       const blob = new Blob(audioChunks, { type: 'audio/webm' });
 
-      // ⚠ OJO: deberías resetear discardNextAudio a false después de usarlo
-      if (!discardNextAudio) {
-        enviarAudio(blob);
-      }
-      discardNextAudio = false;
+      if (!discardNextAudio) enviarAudio(blob);
 
+      discardNextAudio = false;
       stream.getTracks().forEach((t) => t.stop());
     };
 
@@ -46,6 +47,9 @@ async function startRecording() {
   }
 }
 
+// =======================
+// STOP RECORDING
+// =======================
 function stopRecording() {
   if (mediaRecorder && isRecording) {
     mediaRecorder.stop();
@@ -54,6 +58,9 @@ function stopRecording() {
   document.body.classList.remove('chat-recording');
 }
 
+// =======================
+// ENVIAR AUDIO
+// =======================
 async function enviarAudio(blob) {
   const convId = getConvId();
   if (!convId || !blob) return;
@@ -62,7 +69,6 @@ async function enviarAudio(blob) {
   fd.append('file', blob, 'audio.webm');
   fd.append('conversation_id', convId);
 
-  // ✔ Correcto
   const role = (window.viewerIsOwner && window.viewerIsOwner()) ? 'owner' : 'client';
   fd.append('as', role);
 
@@ -78,16 +84,16 @@ async function enviarAudio(blob) {
       return;
     }
 
-    pushMessageToUI(data.message);  // ✔ se renderiza
+    pushMessageToUI(data.message);
   } catch (err) {
     console.error('[CHAT AUDIO] Excepción al subir audio', err);
   }
 }
 
-export { startRecording, stopRecording };
-
-// ✔ Correcto si lo importás desde otro archivo
-export function showAudioPreview(file) {
+// =======================
+// PREVIEW (SI SUBEN ARCHIVO, NO GRABADO)
+// =======================
+function showAudioPreview(file) {
   const previewContainer = document.getElementById('mediaPreview');
   if (!previewContainer) {
     console.error('[AUDIO PREVIEW] Contenedor no encontrado.');
@@ -104,3 +110,11 @@ export function showAudioPreview(file) {
 
   previewContainer.appendChild(audioElement);
 }
+
+// =======================
+// EXPOSE TO WINDOW
+// =======================
+window.startRecording   = startRecording;
+window.stopRecording    = stopRecording;
+window.showAudioPreview = showAudioPreview;
+
