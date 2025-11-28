@@ -151,7 +151,6 @@ function viewerIsOwner() {
 
   return soyOwner;
 }
-
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){
   const box = document.getElementById('msgs');
@@ -185,16 +184,20 @@ function renderMessages(list){
     return;
   }
 
-  const scope    = (window.Chat && Chat.scope) || {};
-  const soyOwner = viewerIsOwner();
+  // 🔎 Usamos misma lógica que renderMessageBubble
+  const scope    = (window.Chat && Chat.scope) || window.currentChatScope || {};
+  const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
+
+  const ownerId  = scope.owner_user_id  ?? null;
+  const clientId = scope.client_user_id ?? null;
 
   console.groupCollapsed('%c[CHAT][renderMessages] estado inicial', 'color:#fb0');
   console.log('cantidad msgs:', msgs.length);
   console.log('scope:', scope);
-  console.log('soyOwner:', soyOwner);
+  console.log('viewerId:', viewerId, 'ownerId:', ownerId, 'clientId:', clientId);
   console.groupEnd();
 
-   // --- 3) Repintar mensajes ---
+  // --- 3) Repintar mensajes ---
   box.innerHTML = msgs.map((m, idx) => {
     // Mensajes del sistema / IA
     if (m.role === 'system' || m.role === 'ia') {
@@ -207,14 +210,22 @@ function renderMessages(list){
         </div>`;
     }
 
-    // Mensajes humanos: decidir si SON MÍOS o del otro
-    const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
-    const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
+    // ====== Cálculo real de isMine por IDs (igual que en renderMessageBubble) ======
+    let isMine = false;
+    if (viewerId != null) {
+      isMine =
+        (m.role === 'client' && viewerId === clientId) ||
+        (m.role === 'owner'  && viewerId === ownerId);
+    }
+
+    const cls = isMine ? 'msg me msg-client' : 'msg msg-owner';
 
     console.log('[CHAT][msg]', idx, {
       id: m.id,
       role: m.role,
-      soyOwner,
+      viewerId,
+      ownerId,
+      clientId,
       isMine,
       claseFinal: cls
     });
@@ -233,7 +244,7 @@ function renderMessages(list){
       statusLabel = 'Entregado';
     }
 
-    // ✅ Solo mensajes salientes (mis mensajes) muestran el puntito
+    // ✅ Regla: puntito solo en mensajes que YO mandé (salientes)
     const isHuman = (m.role !== 'ia' && m.role !== 'system');
     const showDot = isHuman && isMine;
 
@@ -255,7 +266,6 @@ function renderMessages(list){
       </div>`;
   }).join('');
 
-
   // --- 4) Ajuste de scroll DESPUÉS de repintar ---
   const newScrollHeight = box.scrollHeight;
 
@@ -266,6 +276,7 @@ function renderMessages(list){
     box.scrollTop = Math.max(0, prevScrollTop + delta);
   }
 }
+
 
 window.renderMessages = renderMessages;
 
