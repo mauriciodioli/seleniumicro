@@ -145,19 +145,24 @@
   flex-direction: column;
   gap: 8px;
   background: #ebe8c7;          /* fondo oscuro */
+  padding: 12px 16px;
 }
 
 /* Mensaje base (burbuja) */
+/* GLOBO DE MENSAJE – BASE (PC) */
 .msg {
   max-width: 70%;
   padding: 8px 12px;
   border-radius: 18px;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 16px;
   word-wrap: break-word;
   white-space: pre-wrap;
   box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+
+  display: inline-flex;
+  flex-direction: column;
 }
+
 .msg--out {
   margin-left: auto;
 }
@@ -174,13 +179,32 @@
 /* Mensajes RECIBIDOS – cualquier .msg que NO tenga .me */
 .msg:not(.me) {
   margin-right: auto;
-  background: #a7fc9c;          /* verde */
-  color: #02130a;
+  background: #5e5e5e;          /* verde */
+  color: #ffffff;
   border-bottom-left-radius: 4px;
 }
+.msg .msg-body {
+  font-weight: bold;
+}
 
+/* Texto de cualquier mensaje */
+.msg-body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 600;      /* semi-bold, no bold loco */
+  line-height: 1.35;     /* más aire entre líneas */
+}
 
-/* Opcional: un poco más de respiro en pantallas chicas */
+/* Mis mensajes (enviados) */
+.msg.me .msg-body {
+  font-weight: 600;   /* semi-bold */
+}
+
+/* Mensajes recibidos */
+.msg:not(.me) .msg-body {
+  font-weight: 500;   /* un paso menos; si sigue pesado ponelo en 400 */
+}
+
+/* ====== MOBILE ====== */
 @media (max-width: 768px) {
   .msgs {
     padding: 8px;
@@ -188,11 +212,10 @@
   }
 
   .msg {
-    max-width: 90%;
-    font-size: 13px;
+    max-width: 90%;          /* más ancho en celular */
+    font-size: 13px;         /* un poco más chico */
   }
 }
-
 
 /* Input fijo en el fondo */
 .chat-input {
@@ -459,11 +482,15 @@ html, body { height: 100%; overflow: hidden; }
 }
 
 /* Meta: fecha más discreta y alineada */
+/* Punto + fecha */
 .msg-meta {
+  margin-top: 2px;
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: 4px;
+  align-items: center;
+  gap: 4px;                   /* espacio entre punto y fecha */
+  font-size: 11px;
+  opacity: 0.8;
 }
 
 .msg-meta-text {

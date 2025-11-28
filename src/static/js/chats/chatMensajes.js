@@ -1,4 +1,19 @@
 // ===================== HEADER DEL CHAT (ctxBadge) =====================
+function getMsgStatusVisual(m) {
+  let statusClass = 'msg-status-sent';
+  let statusLabel = 'Enviado';
+
+  if (m.read_at) {
+    statusClass = 'msg-status-read';
+    statusLabel = 'Leído';
+  } else if (m.delivered_at) {
+    statusClass = 'msg-status-delivered';
+    statusLabel = 'Entregado';
+  }
+
+  return { statusClass, statusLabel };
+}
+
 function formatRelativeDateTime(isoString) {
   if (!isoString) return '';
 
@@ -307,16 +322,8 @@ function renderMessages(list){
     const text = (m.content || '').replace(/\n/g, '<br>');
 
     // 🔴🔵🟢 Estado para el puntito de color
-    let statusClass = 'msg-status-sent';
-    let statusLabel = 'Enviado';
+    const { statusClass, statusLabel } = getMsgStatusVisual(m);
 
-    if (m.read_at) {
-      statusClass = 'msg-status-read';
-      statusLabel = 'Leído';
-    } else if (m.delivered_at) {
-      statusClass = 'msg-status-delivered';
-      statusLabel = 'Entregado';
-    }
 
     // ✅ Solo mensajes salientes (mis mensajes) muestran el puntito
     const isHuman = (m.role !== 'ia' && m.role !== 'system');
@@ -503,15 +510,7 @@ function renderMessageBubble(m) {
     side = isMine ? 'msg--out' : 'msg--in';
   }
 
-  console.log('[CHAT][bubble-side]', {
-    id: m.id,
-    role: m.role,
-    viewerId,
-    ownerId,
-    clientId,
-    isMine,
-    side
-  });
+ 
 
   let innerHTML = '';
 
@@ -532,30 +531,14 @@ function renderMessageBubble(m) {
   // 🔴🔵🟢 Estado de entrega/lectura (solo visual)
   let meta = '';
   if (m.created_at) {
-    let statusClass = 'msg-status-sent';
-    let statusLabel = 'Enviado';
+   const { statusClass, statusLabel } = getMsgStatusVisual(m);
 
-    if (m.read_at) {
-      statusClass = 'msg-status-read';
-      statusLabel = 'Leído';
-    } else if (m.delivered_at) {
-      statusClass = 'msg-status-delivered';
-      statusLabel = 'Entregado';
-    }
 
     // ✅ Solo mensajes humanos salientes (msg--out) muestran el puntito
     const isHuman = (m.role !== 'ia' && m.role !== 'system');
     const showDot = isHuman && (side === 'msg--out');
 
-    console.log('[CHAT][bubble-status]', {
-      id: m.id,
-      role: m.role,
-      isMine,
-      side,
-      statusClass,
-      showDot
-    });
-
+    
     meta = `
       <div class="msg-meta">
         ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
@@ -723,3 +706,41 @@ function setVh(){
 }
 setVh();
 addEventListener('resize', setVh);
+
+
+
+
+
+window.updateMessageStatus = function (m) {
+  if (!m || !m.id) return;
+
+  // buscamos el div del mensaje por data-id
+  const msgEl = document.querySelector(`.msg[data-id="${m.id}"]`);
+  if (!msgEl) {
+    console.warn('[CHAT][updateMessageStatus] no encuentro msg con id', m.id);
+    return;
+  }
+
+  const dotEl = msgEl.querySelector('.msg-status-dot');
+  const metaTextEl = msgEl.querySelector('.msg-meta-text');
+
+  // calculamos de nuevo la clase / label
+  const { statusClass, statusLabel } = getMsgStatusVisual(m);
+
+  if (dotEl) {
+    // limpiamos posibles clases anteriores
+    dotEl.classList.remove('msg-status-sent', 'msg-status-delivered', 'msg-status-read');
+    dotEl.classList.add(statusClass);
+    dotEl.title = statusLabel;
+  }
+
+  if (metaTextEl && m.created_at) {
+    metaTextEl.textContent = formatRelativeDateTime(m.created_at);
+  }
+
+  console.log('[CHAT][updateMessageStatus] aplicado', {
+    id: m.id,
+    statusClass,
+    statusLabel
+  });
+};
