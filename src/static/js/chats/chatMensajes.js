@@ -288,18 +288,19 @@ function renderMessageBodyText(m){
 // ==================== BODY AUDIO ====================
 function renderMessageBodyAudio(m){
   const src = m.content || '';
+  if (!src) return renderMessageBodyText(m);
 
-  // Si por algún motivo no viene src, caemos a texto
-  if (!src) {
-    return renderMessageBodyText(m);
-  }
-
-  // Player de audio dentro de la burbuja
   return `
-    <div class="msg-body">
-      <audio controls src="${src}" preload="metadata" style="max-width:100%;"></audio>
+    <div class="msg-body msg-body--audio">
+      <audio
+        controls
+        src="${src}"
+        preload="none"
+        class="msg-audio-player"
+      ></audio>
     </div>`;
 }
+
 
 // ==================== RENDER DE MENSAJES ====================
 function renderMessages(list){

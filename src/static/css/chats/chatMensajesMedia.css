@@ -148,3 +148,15 @@
 .msg-audio-player::-webkit-media-controls-volume-slider {
   filter: invert(1); /* iconos blancos */
 }
+/* Burbuja especial para audio */
+.msg-body--audio {
+  max-width: 230px;        /* ajustá a gusto */
+  padding: 4px 8px;
+}
+
+/* Player de audio compacto */
+.msg-body--audio .msg-audio-player {
+  width: 100%;
+  height: 32px;            /* 28–36px suele verse bien */
+  display: block;
+}
