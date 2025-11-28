@@ -78,7 +78,9 @@
   <script src="{{ url_for('static', filename='js/chats/chatAmbitos.js') }}" defer></script>
 
   <!-- JS: chat mensajes + media -->
-  <script src="{{ url_for('static', filename='js/chats/chatMensajes.js') }}" defer></script>
+   <script type="module" src="{{ url_for('static', filename='js/chats/chatMensajes.js') }}"></script>
+
+
   <script type="module" src="{{ url_for('static', filename='js/chats/chatMensajesMedia.js') }}"></script>
 </body>
 </html>
