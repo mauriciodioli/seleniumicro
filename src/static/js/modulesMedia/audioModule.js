@@ -15,41 +15,56 @@ const hasMediaRecorder = typeof MediaRecorder !== 'undefined';
 // START RECORDING
 // =======================
 async function startRecording() {
+  alert('[AUDIO] ▶ Iniciando grabación...');
+
   if (!hasMediaDevices || !hasMediaRecorder) {
-    console.warn('[CHAT AUDIO] Navegador sin soporte');
-    alert('[AUDIO] Tu navegador no soporta grabación de audio.');
+    alert('[AUDIO] ❌ Tu navegador no soporta grabación.');
     return;
   }
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    alert('[AUDIO] 🎙 Micrófono activo.');
+
     audioChunks = [];
     mediaRecorder = new MediaRecorder(stream);
 
+    console.log('[AUDIO] MediaRecorder creado:', mediaRecorder);
+
     mediaRecorder.ondataavailable = (e) => {
+      alert(`[AUDIO] 📦 Chunk capturado (${e.data.size} bytes)`);
       if (e.data.size > 0) audioChunks.push(e.data);
     };
 
     mediaRecorder.onstop = () => {
+      alert('[AUDIO] ■ Grabación detenida. Generando blob...');
+
       const blob = new Blob(audioChunks, { type: 'audio/webm' });
 
-      // 🔔 DEBUG 1: tamaño del audio antes de enviar
-      alert(`[DEBUG AUDIO] Blob listo. Tamaño: ${blob.size} bytes`);
+      alert(`[DEBUG] Blob generado: ${blob.size} bytes (${Math.round(blob.size / 1024)} KB)`);
 
-      if (!discardNextAudio) {
-        enviarAudio(blob);
-      }
+      // restablecer
       discardNextAudio = false;
-      stream.getTracks().forEach((t) => t.stop());
+
+      if (confirm(`🤔 ¿Enviar audio de ${Math.round(blob.size / 1024)} KB?`)) {
+        alert('[AUDIO] 📤 Usuario confirmó → enviando...');
+        enviarAudio(blob);
+      } else {
+        alert('[AUDIO] ❌ Envío cancelado por usuario.');
+      }
+
+      stream.getTracks().forEach(t => t.stop());
     };
 
+    // iniciar
     mediaRecorder.start();
     isRecording = true;
     document.body.classList.add('chat-recording');
-    console.log('[CHAT AUDIO] grabación iniciada');
+
+    console.log('[CHAT AUDIO] ▶ Grabación iniciada');
   } catch (err) {
+    alert('[AUDIO] ❌ Error al iniciar la grabación.');
     console.error('[CHAT AUDIO] Error al iniciar grabación', err);
-    alert('[AUDIO] Error al iniciar la grabación.');
     isRecording = false;
   }
 }
@@ -58,46 +73,48 @@ async function startRecording() {
 // STOP RECORDING
 // =======================
 function stopRecording() {
+  alert('[AUDIO] ■ Deteniendo grabación...');
+
   if (mediaRecorder && isRecording) {
     mediaRecorder.stop();
+  } else {
+    alert('[AUDIO] ⚠ No había grabación activa.');
   }
+
   isRecording = false;
   document.body.classList.remove('chat-recording');
-  console.log('[CHAT AUDIO] grabación detenida');
+
+  console.log('[CHAT AUDIO] ■ Grabación finalizada.');
 }
 
 // =======================
 // TOGGLE (click → ON / click → OFF)
 // =======================
 function toggleRecording() {
-  if (!isRecording) {
-    console.log('[CHAT AUDIO] toggle → startRecording');
-    startRecording();
-  } else {
-    console.log('[CHAT AUDIO] toggle → stopRecording');
-    stopRecording();
-  }
+  alert(isRecording ? '[AUDIO] ■ stopRecording()' : '[AUDIO] ▶ startRecording()');
+  if (!isRecording) startRecording();
+  else stopRecording();
 }
 
 // =======================
-// ENVIAR AUDIO AL ENDPOINT
+// ENVIAR AUDIO
 // =======================
 async function enviarAudio(blob) {
-  const convId = getConvId && getConvId();
+  const convId = (typeof getConvId === 'function') ? getConvId() : null;
+
+  alert('[DEBUG AUDIO] 🔍 Preparando envío...');
+
   if (!convId) {
-    alert('[DEBUG AUDIO] ❌ No hay conversation_id, no se envía el audio.');
-    console.warn('[CHAT AUDIO] sin conversation_id');
+    alert('[DEBUG AUDIO] ❌ No existe conversation_id.');
     return;
   }
 
   if (!blob || !blob.size) {
-    alert('[DEBUG AUDIO] ❌ Blob vacío, no se envía.');
-    console.warn('[CHAT AUDIO] blob vacío');
+    alert('[DEBUG AUDIO] ❌ Blob inválido.');
     return;
   }
 
-  // 🔔 DEBUG 2: confirmación antes del fetch
-  alert(`[DEBUG AUDIO] Enviando audio de ${blob.size} bytes a la conversación ${convId}...`);
+  alert(`[DEBUG AUDIO] 📤 Enviando ${blob.size} bytes a conversación ${convId}`);
 
   const fd = new FormData();
   fd.append('file', blob, 'audio.webm');
@@ -114,36 +131,26 @@ async function enviarAudio(blob) {
     });
 
     let data = {};
-    try {
-      data = await resp.json();
-    } catch (e) {
-      console.warn('[CHAT AUDIO] respuesta no-JSON', e);
-    }
+    try { data = await resp.json(); } catch (_) {}
 
-    // 🔔 DEBUG 3: respuesta del endpoint
+    alert(`[DEBUG AUDIO] 📥 Respuesta endpoint: OK=${resp.ok}`);
+
     if (resp.ok && data?.ok) {
-      const msgId = data.message?.id || '(sin id)';
-      alert(`[DEBUG AUDIO] ✅ Audio subido correctamente. message.id = ${msgId}`);
-      console.log('[CHAT AUDIO] subida OK', data);
-
-      if (typeof pushMessageToUI === 'function') {
-        pushMessageToUI(data.message);
-      }
+      alert(`[DEBUG AUDIO] ✔ Audio subido. msg.id=${data.message?.id}`);
+      if (typeof pushMessageToUI === 'function') pushMessageToUI(data.message);
     } else {
-      const errText = data?.error || 'Error desconocido en endpoint';
-      alert(`[DEBUG AUDIO] ❌ Error desde endpoint: ${errText}`);
-      console.error('[CHAT AUDIO] Error al subir audio', data);
+      alert(`[DEBUG AUDIO] ❌ Error desde backend: ${data?.error || 'desconocido'}`);
     }
 
   } catch (err) {
-    alert('[DEBUG AUDIO] ❌ Excepción al llamar al endpoint. Revisar consola.');
-    console.error('[CHAT AUDIO] Excepción al subir audio', err);
+    alert('[DEBUG AUDIO] ❌ Excepción al subir audio.');
+    console.error('[CHAT AUDIO] Error endpoint', err);
   }
 }
 
 // =======================
 // EXPOSE TO WINDOW
 // =======================
-window.startRecording   = startRecording;
-window.stopRecording    = stopRecording;
-window.toggleRecording  = toggleRecording;
+window.startRecording  = startRecording;
+window.stopRecording   = stopRecording;
+window.toggleRecording = toggleRecording;
