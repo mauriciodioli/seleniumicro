@@ -9,6 +9,7 @@ let isRecording = false;
 function handleSendButtonClick() {
   const inputField = document.getElementById('msgInput');
 
+  // Si estaba grabando → detener
   if (isRecording) {
     stopRecording();
     isRecording = false;
@@ -21,9 +22,9 @@ function handleSendButtonClick() {
 
   console.log('[SEND CONTROLLER] enviar texto:', text);
 
-  // 🟢 Usar función global que ya tenés definida (chatMensajes.js)
+  // 👇 CORREGIDO
   if (typeof window.sendMessage === 'function') {
-    sendMessage(text);
+    window.sendMessage(text);
   } else {
     console.error('⚠️ sendMessage no está disponible');
   }
