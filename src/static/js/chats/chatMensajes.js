@@ -194,67 +194,66 @@ function renderMessages(list){
   console.log('soyOwner:', soyOwner);
   console.groupEnd();
 
-  // --- 3) Repintar mensajes ---
-box.innerHTML = msgs.map((m, idx) => {
-  // Mensajes del sistema / IA
-  if (m.role === 'system' || m.role === 'ia') {
-    const textSys = (m.content || '').replace(/\n/g, '<br>');
-    console.log('[CHAT][msg]', idx, 'system/ia', { role: m.role });
+   // --- 3) Repintar mensajes ---
+  box.innerHTML = msgs.map((m, idx) => {
+    // Mensajes del sistema / IA
+    if (m.role === 'system' || m.role === 'ia') {
+      const textSys = (m.content || '').replace(/\n/g, '<br>');
+      console.log('[CHAT][msg]', idx, 'system/ia', { role: m.role });
+      return `
+        <div class="msg msg-system">
+          <div class="msg-body">${textSys}</div>
+          <div class="msg-meta">${m.created_at || ''}</div>
+        </div>`;
+    }
+
+    // Mensajes humanos: decidir si SON MÍOS o del otro
+    const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
+    const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
+
+    console.log('[CHAT][msg]', idx, {
+      id: m.id,
+      role: m.role,
+      soyOwner,
+      isMine,
+      claseFinal: cls
+    });
+
+    const text = (m.content || '').replace(/\n/g, '<br>');
+
+    // 🔴🔵🟢 Estado para el puntito de color
+    let statusClass = 'msg-status-sent';
+    let statusLabel = 'Enviado';
+
+    if (m.read_at) {
+      statusClass = 'msg-status-read';
+      statusLabel = 'Leído';
+    } else if (m.delivered_at) {
+      statusClass = 'msg-status-delivered';
+      statusLabel = 'Entregado';
+    }
+
+    // ✅ Solo mensajes salientes (mis mensajes) muestran el puntito
+    const isHuman = (m.role !== 'ia' && m.role !== 'system');
+    const showDot = isHuman && isMine;
+
+    console.log('[CHAT][msg-status]', idx, {
+      id: m.id,
+      role: m.role,
+      isMine,
+      statusClass,
+      showDot
+    });
+
     return `
-      <div class="msg msg-system">
-        <div class="msg-body">${textSys}</div>
-        <div class="msg-meta">${m.created_at || ''}</div>
+      <div class="${cls}">
+        <div class="msg-body">${text}</div>
+        <div class="msg-meta">
+          ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
+          <span class="msg-meta-text">${m.created_at || ''}</span>
+        </div>
       </div>`;
-  }
-
-  // Mensajes humanos: decidir si SON MÍOS o del otro
-  const isMine = soyOwner ? (m.role === 'owner') : (m.role === 'client');
-  const cls    = isMine ? 'msg me msg-client' : 'msg msg-owner';
-
-  // 🔎 Punto de control: quién soy y qué se va a dibujar
-  console.log('[CHAT][msg]', idx, {
-    id: m.id,
-    role: m.role,
-    soyOwner,
-    isMine,
-    claseFinal: cls
-  });
-
-  const text = (m.content || '').replace(/\n/g, '<br>');
-
-  // 🔴🔵🟢 Estado para el puntito de color
-  let statusClass = 'msg-status-sent';
-  let statusLabel = 'Enviado';
-
-  if (m.read_at) {
-    statusClass = 'msg-status-read';
-    statusLabel = 'Leído';
-  } else if (m.delivered_at) {
-    statusClass = 'msg-status-delivered';
-    statusLabel = 'Entregado';
-  }
-
-  // ❗ AQUÍ DECIDIMOS SI MUESTRA O NO EL PUNTO
-  const showDot = !isMine && m.role !== 'ia' && m.role !== 'system';
-
-  // 🔎 Punto de control específico del puntito
-  console.log('[CHAT][msg-status]', idx, {
-    id: m.id,
-    role: m.role,
-    isMine,
-    statusClass,
-    showDot
-  });
-
-  return `
-    <div class="${cls}">
-      <div class="msg-body">${text}</div>
-      <div class="msg-meta">
-        ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
-        <span class="msg-meta-text">${m.created_at || ''}</span>
-      </div>
-    </div>`;
-}).join('');
+  }).join('');
 
 
   // --- 4) Ajuste de scroll DESPUÉS de repintar ---
@@ -331,7 +330,7 @@ async function sendMessage(text) {
     isServer: Chat.isServer,
     isClient: Chat.isClient
   });
-
+debugger;
   try {
     const r = await fetch('/api/chat/api_chat_bp/send/', {
       method: 'POST',
@@ -397,7 +396,6 @@ if (btnSend) {
 }
 
 
-
 function renderMessageBubble(m) {
   const scope    = Chat.scope || window.currentChatScope || {};
   const viewerId = (window.getViewerUserId ? window.getViewerUserId() : null);
@@ -405,11 +403,11 @@ function renderMessageBubble(m) {
   const ownerId  = scope.owner_user_id ?? null;
   const clientId = scope.client_user_id ?? null;
 
-  let side = 'msg--in'; // por defecto, entrante
+  let side   = 'msg--in'; // por defecto, entrante
   let isMine = false;
 
   if (m.role === 'ia' || m.role === 'system') {
-    side = 'msg--bot';
+    side   = 'msg--bot';
     isMine = false;
   } else if (viewerId != null) {
     isMine =
@@ -430,8 +428,6 @@ function renderMessageBubble(m) {
   });
 
   let innerHTML = '';
-  // ... (resto igual)
-
 
   if (m.content_type === 'text') {
     innerHTML = `<div class="msg-body">${escapeHTML(m.content || '')}</div>`;
@@ -461,8 +457,18 @@ function renderMessageBubble(m) {
       statusLabel = 'Entregado';
     }
 
-    // Para mensajes de IA no tiene sentido el punto → lo dejamos vacío
-    const showDot = (m.role !== 'ia' && m.role !== 'system');
+    // ✅ Solo mensajes humanos salientes (msg--out) muestran el puntito
+    const isHuman = (m.role !== 'ia' && m.role !== 'system');
+    const showDot = isHuman && (side === 'msg--out');
+
+    console.log('[CHAT][bubble-status]', {
+      id: m.id,
+      role: m.role,
+      isMine,
+      side,
+      statusClass,
+      showDot
+    });
 
     meta = `
       <div class="msg-meta">
@@ -471,7 +477,6 @@ function renderMessageBubble(m) {
       </div>
     `;
   }
-
 
   const div = document.createElement('div');
   div.className = `msg ${side} msg-${m.role || 'unk'}`;
@@ -581,6 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.warn('[CHAT] error leyendo localStorage', err);
   }
 
+  // ✅ CLICK EN BOTÓN ENVIAR
  // ✅ CLICK EN BOTÓN ENVIAR (con preventDefault)
 sendBtn?.addEventListener('click', (e) => {
   e.preventDefault();      // 👈 frena el submit del <form>
