@@ -156,20 +156,13 @@
 
 /* Panel transparente para que no haya “pastilla” blanca gigante */
 .msg-audio-player::-webkit-media-controls-panel {
-  background-color: #35b6e9;
+  background-color: #4a90e2;
 }
 /* Flecha de play oscura/negra en WebKit (Chrome, Android, Edge, Safari) */
 .msg-audio-player::-webkit-media-controls-play-button {
   filter: invert(1) grayscale(1) brightness(0.3);
 }
 
-/* 2) Hacer la barra roja más alta, manteniendo el ancho */
-.msg-audio-player {
-  width: 100%;
-  max-width: 100%;
-  display: block;
-  height: 44px;              /* SUBÍ la altura (antes 32px) */
-}
 /* Opcional:
    si en tema claro querés la flecha más oscura,
    descomentá esto: */
