@@ -223,29 +223,19 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // ------------------- DESKTOP -------------------
-  btnAudio.addEventListener('mousedown', (e) => {
+  // 🔁 CLICK = TOGGLE (tipo WhatsApp)
+  btnAudio.addEventListener('click', (e) => {
     e.preventDefault();
-    if (window.startRecording) window.startRecording();
+
+    if (typeof window.toggleRecording === 'function') {
+      window.toggleRecording();
+    } else {
+      console.error('[CHAT AUDIO] window.toggleRecording no está definido');
+      alert('[DEBUG AUDIO] toggleRecording no está disponible.');
+    }
   });
 
-  btnAudio.addEventListener('mouseup', (e) => {
-    e.preventDefault();
-    if (window.stopRecording) window.stopRecording();
-  });
-
-  // ------------------- MOBILE -------------------
-  btnAudio.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    if (window.startRecording) window.startRecording();
-  }, { passive: false });
-
-  btnAudio.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    if (window.stopRecording) window.stopRecording();
-  }, { passive: false });
-
-  console.log('[CHAT AUDIO] Botón de audio vinculado');
+  console.log('[CHAT AUDIO] Botón de audio vinculado (click → toggle)');
 });
 
 
