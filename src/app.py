@@ -58,7 +58,8 @@ from controllers.chats.boot_mock import boot_bp
 from controllers.chats.busquedas.busquedaSelectiva import busquedaSelectiva
 from controllers.chats.micrositio.micrositio import micrositio
 from controllers.chats.chatContexts.api_chat_bp import api_chat_bp
-              # ⬅️ nuevo
+from controllers.chats.medios_audio_image_video.audio_controller import audio_controller
+             
 
 app.register_blueprint(chat_bp)
 
@@ -74,7 +75,8 @@ app.register_blueprint(buscar_usuario_telefono)
 app.register_blueprint(busquedaSelectiva)
 app.register_blueprint(micrositio)
 app.register_blueprint(api_chat_bp)
-app.register_blueprint(boot_bp)    # ⬅️ nuevo
+app.register_blueprint(boot_bp)    
+app.register_blueprint(audio_controller)  # ⬅️ nuevo
 
 
 

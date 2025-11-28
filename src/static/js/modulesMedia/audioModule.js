@@ -1,10 +1,12 @@
 console.log('[CHAT AUDIO] Módulo cargado');
 
+// ✔ Variables globales bien
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
 let discardNextAudio = false;
 
+// ✔ Validación correcta
 const hasMediaDevices = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 const hasMediaRecorder = typeof MediaRecorder !== 'undefined';
 
@@ -25,9 +27,13 @@ async function startRecording() {
 
     mediaRecorder.onstop = () => {
       const blob = new Blob(audioChunks, { type: 'audio/webm' });
+
+      // ⚠ OJO: deberías resetear discardNextAudio a false después de usarlo
       if (!discardNextAudio) {
         enviarAudio(blob);
       }
+      discardNextAudio = false;
+
       stream.getTracks().forEach((t) => t.stop());
     };
 
@@ -56,8 +62,12 @@ async function enviarAudio(blob) {
   fd.append('file', blob, 'audio.webm');
   fd.append('conversation_id', convId);
 
+  // ✔ Correcto
+  const role = (window.viewerIsOwner && window.viewerIsOwner()) ? 'owner' : 'client';
+  fd.append('as', role);
+
   try {
-    const resp = await fetch('/api/chat/api_chat_bp/audio-upload/', {
+    const resp = await fetch('/api/chat/audio_controller/audio-upload/', {
       method: 'POST',
       body: fd,
       credentials: 'include',
@@ -67,10 +77,30 @@ async function enviarAudio(blob) {
       console.error('[CHAT AUDIO] Error al subir audio', data);
       return;
     }
-    pushMessageToUI(data.message);
+
+    pushMessageToUI(data.message);  // ✔ se renderiza
   } catch (err) {
     console.error('[CHAT AUDIO] Excepción al subir audio', err);
   }
 }
 
 export { startRecording, stopRecording };
+
+// ✔ Correcto si lo importás desde otro archivo
+export function showAudioPreview(file) {
+  const previewContainer = document.getElementById('mediaPreview');
+  if (!previewContainer) {
+    console.error('[AUDIO PREVIEW] Contenedor no encontrado.');
+    return;
+  }
+
+  previewContainer.innerHTML = '';
+
+  const audioUrl = URL.createObjectURL(file);
+  const audioElement = document.createElement('audio');
+  audioElement.src = audioUrl;
+  audioElement.controls = true;
+  audioElement.className = 'chat-media-audio';
+
+  previewContainer.appendChild(audioElement);
+}
