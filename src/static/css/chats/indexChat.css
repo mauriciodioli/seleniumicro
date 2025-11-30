@@ -201,15 +201,162 @@ details[open] .id-chev{ transform:rotate(90deg); transition:transform .12s ease;
 /* =========================
    Modo claro rápido (si algún día lo alternás)
 ========================= */
-body.light{
-  --bg:#f4f7fb; --panel:#ffffff; --card:#ffffff; --text:#0b1220; --border:rgba(0,0,0,.08);
-  --badge:#eef2f7;
-  background:#f7f9fc;
+/* =========================
+   🌞 Modo claro · Sobrio / global
+   ========================= */
+body.theme-light{
+  /* Fondos suaves */
+  --bg:           #f3f4f6;   /* fondo general */
+  --panel:        #ffffff;   /* paneles */
+  --card:         #ffffff;   /* cards internas */
+
+  /* Tipografía */
+  --text:         #111827;   /* casi negro */
+  --text-muted:   #6b7280;
+
+  /* Bordes y planos */
+  --border:       #e5e7eb;
+  --badge:        #e5f0ff;
+
+  /* Acentos & CTAs (azul serio) */
+  --accent:        #2563eb;                   /* azul principal */
+  --accent-strong: #1d4ed8;
+  --accent-weak:   rgba(37,99,235,.16);
+
+  /* Fondo de página tipo app seria */
+  background: #edf1f7;
 }
-body.light .btn{ background:#f3f6fb; color:#0b1220; }
-body.light .btn-accent{ color:#00313a; }
-body.light .id-summary:hover{ background:#f6f8fc; }
-body.light .search, body.light .id-field, body.light .chat-input input{ background:#f6f8fc; }
+
+/* =========================
+   NAVBAR · claro sobrio
+   ========================= */
+body.theme-light .nav {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 4px rgba(15,23,42,.06);
+}
+
+/* Punto indicador */
+body.theme-light .dot {
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-weak);
+}
+
+/* Pill de identidad */
+body.theme-light .pill {
+  background: #f3f4ff;
+  color: var(--text);
+  border-color: #d1d5eb;
+}
+
+/* Botón dentro de la nav (My domain / Claro-Oscuro) */
+body.theme-light .nav .btn {
+  background: #f3f4ff;
+  border-color: #d1d5eb;
+  color: #111827;
+}
+body.theme-light .nav .btn:hover {
+  background: #e5e7ff;
+}
+
+/* =========================
+   Botones generales
+   ========================= */
+body.theme-light .btn{
+  background: #f9fafb;
+  color: #111827;
+  border-color: #d1d5db;
+}
+body.theme-light .btn:hover{
+  background: #eef2ff;
+}
+
+body.theme-light .btn-accent{
+  background: var(--accent-strong);
+  color: #ffffff;
+  border-color: var(--accent-strong);
+}
+body.theme-light .btn-accent:hover{
+  filter: brightness(1.05);
+}
+
+/* =========================
+   Panels en MODO CLARO
+   ========================= */
+
+/* Cards grandes: identidades, ámbitos, chat */
+body.theme-light .card,
+body.theme-light .id-card,
+body.theme-light .amb-card,
+body.theme-light .ambito-board,
+body.theme-light .chat{
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #f5f7fb 70%
+  );
+  border-color: #e5e7eb;
+}
+
+/* Items dentro de las cards (accordion, etc.) */
+body.theme-light .id-item,
+body.theme-light .amb-item{
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+/* Summary de cada item (fila clickable) */
+body.theme-light .id-summary,
+body.theme-light .amb-summary{
+  background: #f9fafb;
+}
+body.theme-light .id-summary:hover,
+body.theme-light .amb-summary:hover{
+  background: #eef2ff;
+}
+
+body.theme-light details[open] > .id-summary,
+body.theme-light details[open] > .amb-summary{
+  background: #e5ecff;
+  border-color: var(--accent-weak);
+}
+
+/* Badges (estado activo, etc.) */
+body.theme-light .amb-badge,
+body.theme-light .id-badge{
+  background: #e5f0ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+/* =========================
+   Inputs coherentes
+   ========================= */
+body.theme-light .search,
+body.theme-light .id-field,
+body.theme-light .chat-input input{
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: var(--text);
+}
+
+/* Tabs User / Domain */
+body.theme-light .search-tabs .tab{
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  color: #374151;
+}
+body.theme-light .search-tabs .tab.active{
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+
+
+
+
+
 
 
 

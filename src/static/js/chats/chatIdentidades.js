@@ -24,18 +24,37 @@
 }
 
 /* ===================== TEMA (light/dark) ===================== */
+/* ===================== TEMA (light/dark) ===================== */
 (function initTheme(){
+  const body = document.body;
+
+  // leer preferencia guardada
   const saved = localStorage.getItem('theme');
-  if (saved === 'light') document.body.classList.add('theme-light');
-  if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.body.classList.add('theme-light');
+  if (saved === 'light') {
+    body.classList.add('theme-light');
+  } else if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    body.classList.add('theme-light');
   }
-  const btn = document.getElementById('toggleTheme');
-  if (btn) btn.addEventListener('click', () => {
-    document.body.classList.toggle('theme-light');
-    localStorage.setItem('theme', document.body.classList.contains('theme-light') ? 'light' : 'dark');
+
+  const toggle = document.getElementById('toggleTheme');
+  if (!toggle) return;
+
+  const applyLabel = () => {
+    const isLight = body.classList.contains('theme-light');
+    toggle.textContent = isLight ? '🌙 Oscuro' : '☀️ Claro';
+  };
+
+  applyLabel();
+
+  toggle.addEventListener('click', () => {
+    body.classList.toggle('theme-light');
+    const isLight = body.classList.contains('theme-light');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    applyLabel();
   });
 })();
+
+
 
 /* ===================== CHAT: ESTADO ===================== */
 const threads = {};              // { id: { scope, messages: [], title } }
