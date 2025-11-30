@@ -9,6 +9,7 @@ from utils.phone import normalize_phone
 from utils.chat_users import get_or_create_user_from_phone
 from utils.chat_contacts import get_or_create_contacto_personal
 from utils.chat_conversation import get_or_create_conversation
+from utils.chat_pairs import get_chat_scopes_for_pair
 import os
 from sqlalchemy import func
 from datetime import datetime

@@ -13,6 +13,78 @@ window.getCachedIdentity = function(arg){
   return window.IdentityCache?.get(key) || null;
 };
 
+function normalizeAmbitosForMiddlePanel(ambitosRaw) {
+  const groups = new Map();
+
+  (ambitosRaw || []).forEach(a => {
+    // Caso 1: ámbito normal (ya viene con categorias[])
+    if (Array.isArray(a.categorias) && a.categorias.length) {
+      const key = a.id || a.valor || a.nombre || `amb-${Math.random()}`;
+      let g = groups.get(key);
+      if (!g) {
+        g = {
+          id: a.id || null,
+          nombre: a.nombre || a.valor || '(sin nombre)',
+          valor: a.valor || a.nombre || '',
+          idioma: a.idioma || '',
+          categorias: []
+        };
+        groups.set(key, g);
+      }
+
+      a.categorias.forEach(c => {
+        if (!c || c.id == null) return;
+        const exists = g.categorias.some(x => x.id === c.id);
+        if (!exists) {
+          g.categorias.push({
+            id: c.id,
+            nombre: c.nombre || `Cat ${c.id}`,
+            valor: c.valor || null,
+            idioma: c.idioma || '',
+            from_chat: !!c.from_chat || !!a.from_chat
+          });
+        }
+      });
+
+      return;
+    }
+
+    // Caso 2: registro “plano” que viene desde chat
+    // Ej: { ambito_id, ambito_nombre, categoria_id, categoria_nombre, idioma, from_chat: true, ... }
+    const ambId   = a.ambito_id ?? a.id ?? null;
+    const ambName = a.ambito_nombre || a.nombre || a.valor || '(sin nombre)';
+    const ambVal  = a.valor || a.ambito_nombre || a.nombre || '';
+
+    const key = ambId || ambVal || `amb-chat-${Math.random()}`;
+
+    let g = groups.get(key);
+    if (!g) {
+      g = {
+        id: ambId,
+        nombre: ambName,
+        valor: ambVal,
+        idioma: a.idioma || '',
+        categorias: []
+      };
+      groups.set(key, g);
+    }
+
+    if (a.categoria_id != null) {
+      const exists = g.categorias.some(x => x.id === a.categoria_id);
+      if (!exists) {
+        g.categorias.push({
+          id: a.categoria_id,
+          nombre: a.categoria_nombre || a.categoria_valor || `Cat ${a.categoria_id}`,
+          valor: a.categoria_valor || null,
+          idioma: a.idioma || '',
+          from_chat: true
+        });
+      }
+    }
+  });
+
+  return Array.from(groups.values());
+}
 
 // === Búsqueda de usuario por teléfono/alias/nombre ===
 (function () {
@@ -64,6 +136,7 @@ window.getCachedIdentity = function(arg){
 
       // 2) ámbitos en MyDomain (si está abierto)
       if (Array.isArray(data.ambitos)) {
+       const ambNorm = normalizeAmbitosForMiddlePanel(data.ambitos);
         renderMyDomainAmbitos(data.ambitos);
       }
 

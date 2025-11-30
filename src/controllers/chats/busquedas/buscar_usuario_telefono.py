@@ -23,7 +23,8 @@ from models.chats.contacto import Contacto
 from models.codigoPostal import CodigoPostal
 from controllers.conexionesSheet.datosSheet import  actualizar_estado_en_sheet
 from models.publicaciones.ambito_general import get_or_create_ambito
-
+from utils.db_session import get_db_session
+from utils.chat_pairs import get_chat_scopes_for_pair
 import controllers.conexionesSheet.datosSheet as datoSheet
 import os
 import random
@@ -43,21 +44,21 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # ========== HELPERS DE RESOLUCIÓN DE USUARIO ==========
 
-def _get_user_by_phone(phone: str):
+def _get_user_by_phone(session,phone: str):
     c = (
-        db.session.query(Contacto)
+        session.query(Contacto)
         .filter(Contacto.valor == phone)
         .filter(Contacto.is_active == True)
         .first()
     )
     if not c:
         return None
-    return db.session.query(Usuario).filter(Usuario.id == c.user_id).first()
+    return session.query(Usuario).filter(Usuario.id == c.user_id).first()
 
 
-def _get_user_by_email_like(q: str):
+def _get_user_by_email_like(session,q: str):
     return (
-        db.session.query(Usuario)
+        session.query(Usuario)
         .filter(Usuario.correo_electronico.ilike(f"%{q}%"))
         .first()
     )
@@ -65,10 +66,10 @@ def _get_user_by_email_like(q: str):
 
 # ========== HELPERS DE DATOS DEL USUARIO ==========
 
-def _get_publicaciones_de_usuario(user_id: int) -> list[dict]:
+def _get_publicaciones_de_usuario(session,user_id: int) -> list[dict]:
     """Todas las publicaciones del usuario, normalizadas (excluye 'pendiente')."""
     pubs = (
-        db.session.query(Publicacion)
+        session.query(Publicacion)
         .filter(
             Publicacion.user_id == user_id,
             Publicacion.estado != 'pendiente'   
@@ -121,6 +122,7 @@ def _get_ambitos_from_db_by_name(nombres: set[str]) -> dict:
 
 
 def _get_codigos_postales_from_pubs(pubs: list[dict]) -> list[str]:
+    """Extrae códigos postales únicos desde el listado de publicaciones."""
     seen = set()
     cps = []
     for p in pubs:
@@ -144,7 +146,7 @@ def _get_categorias_from_pubs(user_id,pubs: list[dict]) -> set[int]:
     return cats
 
 
-def _get_categorias_from_categoriaPublicacion(pub_ids: list[int]) -> set[int]:
+def _get_categorias_from_categoriaPublicacion(session,pub_ids: list[int]) -> set[int]:
     """
     Si usaste la tabla puente categoriaPublicacion,
     acá levantamos categorías adicionales que no estaban en publicacion.categoria_id.
@@ -152,7 +154,7 @@ def _get_categorias_from_categoriaPublicacion(pub_ids: list[int]) -> set[int]:
     if not pub_ids:
         return set()
     rows = (
-        db.session.query(CategoriaPublicacion)
+        session.query(CategoriaPublicacion)
         .filter(CategoriaPublicacion.publicacion_id.in_(pub_ids))
         .all()
     )
@@ -163,13 +165,13 @@ def _get_categorias_from_categoriaPublicacion(pub_ids: list[int]) -> set[int]:
     return cats
 
 
-def _get_categorias_de_ambito(ambito_id: int) -> list[dict]:
+def _get_categorias_de_ambito(session,ambito_id: int) -> list[dict]:
     """
     Dado un ambito_id (tabla ambitos.id), trae las categorías
     relacionadas en ambitoCategoriaRelation -> ambitoCategoria.
     """
     rels = (
-        db.session.query(AmbitoCategoriaRelation)
+        session.query(AmbitoCategoriaRelation)
         .filter(AmbitoCategoriaRelation.ambito_id == ambito_id)
         .all()
     )
@@ -178,7 +180,7 @@ def _get_categorias_de_ambito(ambito_id: int) -> list[dict]:
 
     cat_ids = [r.ambitoCategoria_id for r in rels]
     cats = (
-        db.session.query(AmbitoCategoria)
+        session.query(AmbitoCategoria)
         .filter(AmbitoCategoria.id.in_(cat_ids))
         .all()
     )
@@ -195,123 +197,156 @@ def _get_categorias_de_ambito(ambito_id: int) -> list[dict]:
         })
     return out
 
-
 # ========== ENDPOINT PRINCIPAL ==========
-
 @buscar_usuario_telefono.route('/buscar_usuario_telefono/api/chat/identidad-buscar/', methods=['POST'])
 def identidad_buscar():
     data = request.get_json(silent=True) or {}
     q   = (data.get('q') or '').strip()
     typ = (data.get('type') or '').strip() or 'name'
 
+    # opcional: id del que está mirando (viewer), si lo mandás desde el front
+    viewer_id = data.get('viewer_user_id')
+    try:
+        viewer_id = int(viewer_id) if viewer_id is not None else None
+    except (TypeError, ValueError):
+        viewer_id = None
+
     if not q:
         return jsonify({"ok": False, "error": "query-empty"}), 400
 
-    # 1) resolver usuario
-    if typ == "phone":
-        user = _get_user_by_phone(q)
-    elif typ == "alias":
-        # todavía no tenemos alias
-        user = None
-    else:
-        user = _get_user_by_email_like(q)
+    with get_db_session() as session:
+        # 1) resolver usuario
+        if typ == "phone":
+            user = _get_user_by_phone(session, q)
+        elif typ == "alias":
+            # todavía no tenemos alias
+            user = None
+        else:
+            user = _get_user_by_email_like(session, q)
 
-    # ------- si NO hay usuario: devolvemos estructura vacía -------
-    if not user:
-        return jsonify({
+        # ------- si NO hay usuario: devolvemos estructura vacía / mock -------
+        if not user:
+            return jsonify({
+                "ok": True,
+                "user": {
+                    "id": 0,
+                    "nombre": f"Mock · {q}",
+                    "alias": None,
+                    "tel": q if typ == "phone" else None,
+                },
+                "publicaciones": [],
+                "ambitos": [],
+                "categorias": [],
+                "codigos_postales": [],
+                "idiomas": ["es"],
+            }), 200
+
+        # 2) publicaciones del user
+        pubs = _get_publicaciones_de_usuario(session, user.id)
+
+        # 3) categorías usadas POR el user (dos fuentes)
+        pub_ids = [p["id"] for p in pubs]
+
+        # 🔹 SOLO CAMBIO ACÁ: ya no pasamos session
+        cats_direct = _get_categorias_from_pubs(user.id, pubs)
+
+        cats_bridge = _get_categorias_from_categoriaPublicacion(session, pub_ids)
+        categorias_usuario = set(cats_direct).union(cats_bridge)
+
+        # 4) ámbitos a partir de las pubs
+        nombres_amb = {p["ambito"] for p in pubs if p.get("ambito")}
+
+        # 🔹 SOLO CAMBIO ACÁ: _get_ambitos_from_db_by_name no lleva session
+        amb_db = _get_ambitos_from_db_by_name(nombres_amb)
+
+        # índice por 'valor' (sin emoji), que es lo que traen las publicaciones
+        amb_por_valor = {
+            a["valor"]: a
+            for a in amb_db.values()
+            if a.get("valor")
+        }
+
+        # --- ámbitos “normales” del usuario ---
+        ambitos_normales = []
+
+        for nombre in nombres_amb:  # nombre = 'Health', 'Osobisty', etc.
+            a = amb_por_valor.get(nombre)
+            if a:
+                # copiamos para no mutar el original
+                a_out = dict(a)
+
+                # TODAS las categorías del ámbito
+                cats_ambito = _get_categorias_de_ambito(session, a_out["id"])
+
+                # 🔥 FILTRO: solo categorías donde el usuario tiene publicaciones
+                cats_filtradas = [
+                    c for c in cats_ambito
+                    if c.get("id") in categorias_usuario
+                ]
+
+                a_out["categorias"] = cats_filtradas
+                ambitos_normales.append(a_out)
+            else:
+                # ámbito que existe en publicaciones pero no está en la tabla
+                ambitos_normales.append({
+                    "id": None,
+                    "nombre": nombre,
+                    "descripcion": None,
+                    "idioma": None,
+                    "valor": None,
+                    "estado": None,
+                    "categorias": [],
+                })
+
+        # --- ámbitos que vienen del historial de chat entre viewer y este user ---
+        ambitos_finales = list(ambitos_normales)
+
+        if viewer_id is not None:
+            ambitos_chat = get_chat_scopes_for_pair(session, viewer_id, user.id)
+
+            # fusionar, evitando duplicados por (ambito_id, categoria_id)
+            seen = {
+                (a.get("ambito_id"), a.get("categoria_id"))
+                for a in ambitos_normales
+                if a.get("ambito_id") is not None
+            }
+
+            for a in ambitos_chat:
+                key = (a.get("ambito_id"), a.get("categoria_id"))
+                if key in seen:
+                    continue
+                a["from_chat"] = a.get("from_chat", True)
+                ambitos_finales.append(a)
+
+        # 5) códigos postales
+
+        # 🔹 SOLO CAMBIO ACÁ: _get_codigos_postales_from_pubs no lleva session
+        cps = _get_codigos_postales_from_pubs(pubs)
+
+        # 6) idiomas
+        idiomas = []
+        seen_lang = set()
+        for p in pubs:
+            lang = p.get("idioma") or "es"
+            if lang not in seen_lang:
+                seen_lang.add(lang)
+                idiomas.append(lang)
+
+        # ------- respuesta final -------
+        resp = {
             "ok": True,
             "user": {
-                "id": 0,
-                "nombre": f"Mock · {q}",
+                "id": user.id,
+                "nombre": getattr(user, "correo_electronico", None),
                 "alias": None,
                 "tel": q if typ == "phone" else None,
             },
-            "publicaciones": [],
-            "ambitos": [],
-            "categorias": [],
-            "codigos_postales": [],
-            "idiomas": ["es"],
-        }), 200
+            "publicaciones": pubs,
+            "ambitos": ambitos_finales,
+            # solo ids de categorías donde el usuario tiene publicaciones
+            "categorias": list(categorias_usuario),
+            "codigos_postales": cps,
+            "idiomas": idiomas,
+        }
 
-    # 2) publicaciones del user
-    pubs = _get_publicaciones_de_usuario(user.id)
-
-    # 3) categorías usadas POR el user (dos fuentes)
-    pub_ids = [p["id"] for p in pubs]
-    cats_direct = _get_categorias_from_pubs(user.id, pubs)
-    cats_bridge = _get_categorias_from_categoriaPublicacion(pub_ids)
-    categorias_usuario = set(cats_direct).union(cats_bridge)
-
-    # 4) ámbitos a partir de las pubs
-    nombres_amb = {p["ambito"] for p in pubs if p.get("ambito")}
-    amb_db = _get_ambitos_from_db_by_name(nombres_amb)
-
-    # índice por 'valor' (sin emoji), que es lo que traen las publicaciones
-    amb_por_valor = {
-        a["valor"]: a
-        for a in amb_db.values()
-        if a.get("valor")
-    }
-
-    ambitos_final = []
-    for nombre in nombres_amb:  # nombre = 'Health', 'Osobisty', etc.
-        a = amb_por_valor.get(nombre)
-        if a:
-            # copiamos para no mutar el original
-            a_out = dict(a)
-
-            # TODAS las categorías del ámbito
-            cats_ambito = _get_categorias_de_ambito(a_out["id"])
-
-            # 🔥 FILTRO: solo categorías donde el usuario tiene publicaciones
-            cats_filtradas = [
-                c for c in cats_ambito
-                if c.get("id") in categorias_usuario
-            ]
-
-            a_out["categorias"] = cats_filtradas
-            ambitos_final.append(a_out)
-        else:
-            # ámbito que existe en publicaciones pero no está en la tabla
-            ambitos_final.append({
-                "id": None,
-                "nombre": nombre,
-                "descripcion": None,
-                "idioma": None,
-                "valor": None,
-                "estado": None,
-                "categorias": [],
-            })
-
-    # 5) códigos postales
-    cps = _get_codigos_postales_from_pubs(pubs)
-
-    # 6) idiomas
-    idiomas = []
-    seen_lang = set()
-    for p in pubs:
-        lang = p.get("idioma") or "es"
-        if lang not in seen_lang:
-            seen_lang.add(lang)
-            idiomas.append(lang)
-
-    # ------- respuesta final -------
-    resp = {
-        "ok": True,
-        "user": {
-            "id": user.id,
-            "nombre": getattr(user, "correo_electronico", None),
-            "alias": None,
-            "tel": q if typ == "phone" else None,
-        },
-        "publicaciones": pubs,
-        "ambitos": ambitos_final,
-        # solo ids de categorías donde el usuario tiene publicaciones
-        "categorias": list(categorias_usuario),
-        "codigos_postales": cps,
-        "idiomas": idiomas,
-    }
-
-    return jsonify(resp), 200
-
-
+        return jsonify(resp), 200
