@@ -160,56 +160,70 @@ function normalizeAmbitosForMiddlePanel(ambitosRaw) {
   }
 
 
-  // ================== NUEVO: render de ÁMBITOS en MyDomain ==================
-  function renderMyDomainAmbitos(ambitos) {
-    // tu panel está en chats/mydomain/chatDominios.html
-    
-    const mdList = document.getElementById('mdList');              // lista de ámbitos “mis”
-    const ambAcc = document.querySelector('#myDomainView .amb-accordion'); // tu clon con details
+// ================== RENDER de ÁMBITOS en MyDomain ==================
+window.renderMyDomainAmbitos = function(ambitos) {
+  console.log('[renderMyDomainAmbitos] llamado con:', ambitos);
 
-    if (!mdList && !ambAcc) return;
-
-    // limpiamos solo lo que fue generado
-    if (mdList) mdList.innerHTML = '';
-    if (ambAcc) ambAcc.innerHTML = '';
-
-    ambitos.forEach(a => {
-      const nombre = a.nombre || '(sin nombre)';
-      const cats   = Array.isArray(a.categorias) ? a.categorias : [];
-
-      const det = document.createElement('details');
-      det.className = 'amb-item';
-      det.setAttribute('data-ambito', nombre);
-      
-      let catsHtml = '';
-      if (cats.length) {
-        catsHtml = `<ul class="md-cat-list">
-          ${cats.map(c => `
-            <li>
-              <button class="md-cat"
-                      data-ambito="${nombre}"
-                      data-ambitoId="${a.id || ''}"
-                      data-valor="${a.valor ||  ''}"
-                      data-idioma="${a.idioma || ''}"
-                      data-categoria="${c.id}">
-                ${c.nombre}
-              </button>
-            </li>`).join('')}
-        </ul>`;
-      }
-
-      det.innerHTML = `
-        <summary class="amb-summary">
-          <span class="amb-name">${nombre}</span>
-          <span class="amb-badge">${cats.length ? cats.length + ' categorías' : '—'}</span>
-        </summary>
-        ${catsHtml}
-      `;
-
-      if (mdList) mdList.appendChild(det.cloneNode(true));
-      if (ambAcc) ambAcc.appendChild(det);
-    });
+  if (!Array.isArray(ambitos)) {
+    console.warn('[renderMyDomainAmbitos] ambitos NO es array');
+    return;
   }
+
+  console.log('[renderMyDomainAmbitos] cantidad:', ambitos.length);
+
+  // tu panel está en chats/mydomain/chatDominios.html
+  const mdList = document.getElementById('mdList');                   // lista de ámbitos “mis”
+  const ambAcc = document.querySelector('#myDomainView .amb-accordion'); // clon con <details>
+
+  if (!mdList && !ambAcc) {
+    console.warn('[renderMyDomainAmbitos] no hay mdList ni .amb-accordion en el DOM');
+    return;
+  }
+
+  // limpiamos solo lo que fue generado
+  if (mdList) mdList.innerHTML = '';
+  if (ambAcc) ambAcc.innerHTML = '';
+
+  ambitos.forEach((a, idx) => {
+    console.log('[renderMyDomainAmbitos] item', idx, a);
+
+    const nombre = (a && a.nombre) || '(sin nombre)';
+    const cats   = Array.isArray(a && a.categorias) ? a.categorias : [];
+
+    const det = document.createElement('details');
+    det.className = 'amb-item';
+    det.setAttribute('data-ambito', nombre);
+      
+    let catsHtml = '';
+    if (cats.length) {
+      catsHtml = `<ul class="md-cat-list">
+        ${cats.map(c => `
+          <li>
+            <button class="md-cat"
+                    data-ambito="${nombre}"
+                    data-ambitoId="${a.id || ''}"
+                    data-valor="${a.valor || ''}"
+                    data-idioma="${a.idioma || ''}"
+                    data-categoria="${c.id}">
+              ${c.nombre}
+            </button>
+          </li>`).join('')}
+      </ul>`;
+    }
+
+    det.innerHTML = `
+      <summary class="amb-summary">
+        <span class="amb-name">${nombre}</span>
+        <span class="amb-badge">${cats.length ? cats.length + ' categorías' : '—'}</span>
+      </summary>
+      ${catsHtml}
+    `;
+
+    if (mdList) mdList.appendChild(det.cloneNode(true));
+    if (ambAcc) ambAcc.appendChild(det);
+  });
+};
+
 
   // ================== NUEVO: render de PUBLICACIONES en panel derecho ==================
  function jattr(obj) {
@@ -296,7 +310,10 @@ function renderMyDomainPublicaciones(publicaciones) {
  
 
 // === Helper global para refrescar ámbitos/categorías del par actual ===
+// === Helper global para refrescar ámbitos/categorías del par actual ===
 window.refreshAmbitosForPair = function(viewerId, otherKey) {
+  console.log('[refreshAmbitosForPair] INICIO', { viewerId, otherKey });
+
   function classify(query) {
     const q = (query || '').trim();
     if (!q) return { type: 'empty', value: '' };
@@ -306,7 +323,10 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
   }
 
   const kind = classify(otherKey);
-  if (kind.type === 'empty') return;
+  if (kind.type === 'empty') {
+    console.warn('[refreshAmbitosForPair] tipo empty, corto');
+    return;
+  }
 
   fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
     method: 'POST',
@@ -320,19 +340,45 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
       viewer_user_id: viewerId
     })
   })
-  .then(r => r.json())
+  .then(r => {
+    console.log('[refreshAmbitosForPair] HTTP status:', r.status);
+    return r.json();
+  })
   .then(data => {
-    console.log('[refreshAmbitosForPair] data:', data);
+    console.log('[refreshAmbitosForPair] data cruda:', data);
 
-    if (!data || !data.ok) return;
-
-    if (Array.isArray(data.ambitos) && typeof window.renderMyDomainAmbitos === 'function') {
-      window.renderMyDomainAmbitos(data.ambitos);
+    if (!data || !data.ok) {
+      console.warn('[refreshAmbitosForPair] respuesta no OK');
+      return;
     }
+
+    const ambitos = Array.isArray(data.ambitos) ? data.ambitos : [];
+    console.log('[refreshAmbitosForPair] ambitos recibidos:', ambitos);
+
+    // si existe la normalización, la usamos (loggeando)
+    let ambNorm = ambitos;
+    if (typeof window.normalizeAmbitosForMiddlePanel === 'function') {
+      ambNorm = window.normalizeAmbitosForMiddlePanel(ambitos);
+      console.log('[refreshAmbitosForPair] ambitos normalizados:', ambNorm);
+    }
+
+    if (typeof window.renderMyDomainAmbitos === 'function') {
+      console.log('[refreshAmbitosForPair] llamando renderMyDomainAmbitos');
+      window.renderMyDomainAmbitos(ambNorm);
+    } else {
+      console.warn('[refreshAmbitosForPair] renderMyDomainAmbitos NO definida');
+    }
+
     if (Array.isArray(data.publicaciones) && typeof window.renderMyDomainPublicaciones === 'function') {
+      console.log('[refreshAmbitosForPair] renderMyDomainPublicaciones', data.publicaciones.length);
       window.renderMyDomainPublicaciones(data.publicaciones);
     }
+
     if (typeof window.renderMetaBadges === 'function') {
+      console.log('[refreshAmbitosForPair] renderMetaBadges', {
+        cps: data.codigos_postales || [],
+        idiomas: data.idiomas || []
+      });
       window.renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
     }
   })
@@ -340,6 +386,7 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
     console.error('[refreshAmbitosForPair] error', err);
   });
 };
+
 
 
 
