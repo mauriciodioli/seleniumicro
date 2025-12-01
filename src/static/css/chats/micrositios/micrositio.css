@@ -147,3 +147,29 @@
 }
 .is-hidden{ display:none !important; }
 
+/* ===============================
+   Micrositio · Ajuste MODO CLARO
+   =============================== */
+
+/* Fondo del hero + texto claro */
+body.theme-light .ms-hero{
+  background: #0f172a;   /* azul oscuro limpio */
+  color: #f9fafb;        /* texto claro */
+}
+
+/* Título y textos principales dentro del hero */
+body.theme-light .ms-hero .ms-title{
+  color: #f9fafb;
+}
+
+body.theme-light .ms-hero .ms-desc{
+  background: rgba(15,19,34,.92);  /* caja oscura pero legible */
+  color: #e5e7eb;
+}
+
+/* Stats, badge, etc. (si los usás) */
+body.theme-light .ms-hero .ms-stats,
+body.theme-light .ms-hero .ms-badge,
+body.theme-light .ms-hero p{
+  color: #e5e7eb;
+}

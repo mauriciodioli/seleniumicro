@@ -9,10 +9,12 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
     return;
   }
 
-  const label   = fromChat.dominio || fromChat.valor || 'Chat';
+  const label    = fromChat.dominio || fromChat.valor || 'Chat';
   const ambitoId = fromChat.ambito_id || null;
+  const cp       = fromChat.codigo_postal || null;
+  const idioma   = fromChat.locale || null;
 
-  // ¿Ya existe un ámbito con ese id o ese nombre?
+  // ¿Ya existe?
   const exists = Array.from(acc.querySelectorAll('.amb-item')).some(det => {
     const nameEl = det.querySelector('.amb-name');
     if (!nameEl) return false;
@@ -36,21 +38,22 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
     return;
   }
 
-  // Scope mínimo para poder abrir el chat con contexto correcto
   const scopeObj = {
     ambito:       (label || '').toLowerCase(),
     ambito_id:    ambitoId,
     categoria:    fromChat.categoria_id || null,
     categoria_id: fromChat.categoria_id || null,
-    cp:           fromChat.codigo_postal || null,
-    idioma:       fromChat.locale || null,
+    cp:           cp,
+    idioma:       idioma,
     tel:          otherKey || null,
     user_id:      user && user.id || null,
     email:        user && user.nombre || null
   };
 
-  const scopeAttr = JSON.stringify(scopeObj).replace(/"/g, '&quot;');
+  const scopeAttr      = JSON.stringify(scopeObj).replace(/"/g, '&quot;');
   const nombreContacto = (user && user.nombre) || 'contacto';
+  const cpLabel        = cp || '—';
+  const idiomaLabel    = idioma || '—';
 
   const det = document.createElement('details');
   det.className = 'amb-item amb-from-chat';
@@ -62,6 +65,17 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
       <span class="amb-name">🔹 ${label} (desde chat con ${nombreContacto})</span>
       <span class="amb-badge">chat</span>
     </summary>
+
+    <div class="amb-list">
+      <span class="amb-list-item">🟢 Desde chat</span>
+      <span class="amb-list-item">🌐 Idioma: ${idiomaLabel}</span>
+      <span class="amb-list-item">📍 CP: ${cpLabel}</span>
+    </div>
+
+    <summary class="amb-section-summary">
+      <span class="amb-section-title">Categorías</span>
+    </summary>
+
     <div class="amb-subcards">
       <div class="amb-subcard">
         <div class="amb-subcard-head">

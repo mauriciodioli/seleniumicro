@@ -205,26 +205,25 @@ details[open] .id-chev{ transform:rotate(90deg); transition:transform .12s ease;
    🌞 Modo claro · Sobrio / global
    ========================= */
 body.theme-light{
-  /* Fondos suaves */
-  --bg:           #f3f4f6;   /* fondo general */
-  --panel:        #ffffff;   /* paneles */
-  --card:         #ffffff;   /* cards internas */
+  /* Fondo general gris suave */
+  --bg:           #eef1f6;      /* gris muy claro */
+  --panel:        #ffffff;      /* paneles blancos */
+  --card:         #ffffff;
 
-  /* Tipografía */
-  --text:         #111827;   /* casi negro */
+  /* Texto */
+  --text:         #111827;
   --text-muted:   #6b7280;
 
-  /* Bordes y planos */
-  --border:       #e5e7eb;
-  --badge:        #e5f0ff;
+  /* Bordes */
+  --border:       #d8e0ec;
+  --badge:        #e6f3ff;
 
-  /* Acentos & CTAs (azul serio) */
-  --accent:        #2563eb;                   /* azul principal */
-  --accent-strong: #1d4ed8;
-  --accent-weak:   rgba(37,99,235,.16);
+  /* Celeste bandera como acento */
+  --accent:        #00AEEF;     /* celeste bandera */
+  --accent-strong: #0284c7;     /* celeste un poco más oscuro p/ botones */
+  --accent-weak:   rgba(0,174,239,.18);
 
-  /* Fondo de página tipo app seria */
-  background: #edf1f7;
+  background: #eef1f6;
 }
 
 /* =========================
@@ -322,11 +321,12 @@ body.theme-light details[open] > .amb-summary{
 }
 
 /* Badges (estado activo, etc.) */
+/* Badges “activo” en celeste suave */
 body.theme-light .amb-badge,
 body.theme-light .id-badge{
-  background: #e5f0ff;
-  border-color: #bfdbfe;
-  color: #1e3a8a;
+  background: var(--badge);
+  border-color: rgba(0,174,239,.35);
+  color: #02608b;
 }
 
 /* =========================
@@ -346,11 +346,18 @@ body.theme-light .search-tabs .tab{
   border-color: #d1d5db;
   color: #374151;
 }
+/* Tabs User/Domain con celeste */
 body.theme-light .search-tabs .tab.active{
   background: var(--accent);
   border-color: var(--accent);
   color: #ffffff;
 }
+/* Burbujas de mensaje propios en celeste bandera */
+body.theme-light .msg-owner .msg-body{
+  background: var(--accent);
+  color: #02243b;
+}
+
 /* =========================
    Ajustes finos MODO CLARO
    (inputs chat, buscadores, hovers)

@@ -296,7 +296,6 @@ def identidad_buscar():
         if viewer_id is not None:
             ambitos_chat = get_chat_scopes_for_pair(session, viewer_id, user.id)
 
-            # ids de ámbito y categoría que aparecen en scopes de chat
             ambito_ids_chat = {s.get("ambito_id") for s in ambitos_chat if s.get("ambito_id")}
             categoria_ids_chat = {s.get("categoria_id") for s in ambitos_chat if s.get("categoria_id")}
 
@@ -320,9 +319,7 @@ def identidad_buscar():
 
             amb_db_by_id = {a.id: a for a in amb_rows}
             cat_db_by_id = {c.id: c for c in cat_rows}
-
-            # índice de ámbitos ya armados (los "normales")
-            amb_por_id = {a["id"]: a for a in ambitos_normales if a.get("id")}
+            amb_por_id   = {a["id"]: a for a in ambitos_normales if a.get("id")}
 
             seen_pairs = set()
 
@@ -339,7 +336,7 @@ def identidad_buscar():
 
                 a_row = amb_db_by_id.get(aid)
                 if not a_row:
-                    continue  # ámbito no encontrado en tabla ambitos
+                    continue
 
                 # conseguir (o crear) el ámbito de salida
                 a_out = amb_por_id.get(aid)
@@ -355,6 +352,15 @@ def identidad_buscar():
                     }
                     amb_por_id[aid] = a_out
                     ambitos_finales.append(a_out)
+
+                # 🔹 NUEVO: copiar contexto del scope de chat (CP e idioma)
+                cp_chat   = s.get("codigo_postal")
+                locale_chat = s.get("locale")
+
+                if cp_chat:
+                    a_out["codigo_postal"] = cp_chat
+                if locale_chat:
+                    a_out["locale"] = locale_chat
 
                 # si hay categoría asociada, la agregamos
                 if cid:
@@ -373,8 +379,9 @@ def identidad_buscar():
                                 "from_chat": True,
                             })
 
-                        # 🔥 MARCAR TAMBIÉN EL ÁMBITO COMO "from_chat"
+                        # marcar ámbito como proveniente de chat
                         a_out["from_chat"] = True
+
 
 
         # 5) códigos postales
