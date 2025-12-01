@@ -1,5 +1,6 @@
 // static/js/chats/buscarUsuarioTelefono.js
 // ================== ÁMBITO "DESDE CHAT" EN PANEL DEL MEDIO ==================
+// ================== ÁMBITO "DESDE CHAT" EN PANEL DEL MEDIO ==================
 window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
   if (!fromChat) return;
 
@@ -38,11 +39,18 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
     return;
   }
 
+  // 🔹 FIX: si no viene categoria_id, uso la primera categoría del ámbito (ej: 106)
+  const categoriaId =
+    (fromChat.categoria_id != null ? fromChat.categoria_id : null) ??
+    (Array.isArray(fromChat.categorias) && fromChat.categorias.length
+      ? fromChat.categorias[0].id
+      : null);
+
   const scopeObj = {
     ambito:       (label || '').toLowerCase(),
     ambito_id:    ambitoId,
-    categoria:    fromChat.categoria_id || null,
-    categoria_id: fromChat.categoria_id || null,
+    categoria:    categoriaId,
+    categoria_id: categoriaId,
     cp:           cp,
     idioma:       idioma,
     tel:          otherKey || null,
@@ -95,6 +103,7 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
   acc.appendChild(det);
   console.log('[ensureAmbitoFromChatInLeftPanel] agregado ámbito desde chat:', scopeObj);
 };
+
 
 // === API única para leer caché de identidad ===
 window.getCachedIdentity = function(arg){
@@ -471,43 +480,49 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
     }
 
     // 2) Ámbito/categoría del CHAT (from_chat) → badge + panel medio
-    try {
-      if (!Array.isArray(data.ambitos)) return;
+   // 2) 🔥 NUEVO: usar el ámbito/categoría del chat para actualizar el badge del panel derecho
+try {
+  if (!Array.isArray(data.ambitos)) return;
 
-      const fromChat = data.ambitos.find(a => a.from_chat) || null;
-      console.log('[refreshAmbitosForPair] fromChat:', fromChat);
-      if (!fromChat) return;
+  // buscamos primero uno marcado desde el chat
+  const fromChat = data.ambitos.find(a => a.from_chat) || data.ambitos[0] || null;
+  if (!fromChat) return;
 
-      // ----- Badge del chat -----
-      const scopeForBadge = {
-        dominio:     fromChat.dominio || null,
-        ambito:      fromChat.dominio || fromChat.valor || null,
-        ambito_id:   fromChat.ambito_id ?? null,
-        categoria_id:fromChat.categoria_id ?? null,
-        cp:          fromChat.codigo_postal || null,
-        idioma:      fromChat.locale || null,
-        tel:         otherKey
-      };
-      console.log('[refreshAmbitosForPair] scopeForBadge:', scopeForBadge);
+  // 👉 si no viene categoria_id directo, tomo la PRIMER categoría del ámbito (ej: 106)
+  const catFromChat =
+    (fromChat.categoria_id != null ? fromChat.categoria_id : null) ??
+    (Array.isArray(fromChat.categorias) && fromChat.categorias.length
+      ? fromChat.categorias[0].id
+      : null);
 
-      if (typeof window.ctxBadgeEl === 'function' && typeof window.buildCtxLabel === 'function') {
-        const badge = window.ctxBadgeEl();
-        if (badge) {
-          const label = window.buildCtxLabel(scopeForBadge);
-          badge.innerHTML = `<span class="ctx-text">${label}</span>`;
-          badge.setAttribute('title', label);
-          console.log('[refreshAmbitosForPair] badge actualizado desde from_chat');
-        }
-      }
+  // 👉 si no viene ambito_id directo, uso el id del ámbito (53)
+  const ambitoFromChat =
+    (fromChat.ambito_id != null ? fromChat.ambito_id : null) ??
+    (fromChat.id != null ? fromChat.id : null);
 
-      // ----- Ámbito "Tecnologia (desde chat con X)" en panel de Ámbitos -----
-      if (typeof window.ensureAmbitoFromChatInLeftPanel === 'function') {
-        window.ensureAmbitoFromChatInLeftPanel(fromChat, otherKey, data.user || null);
-      }
+  const scopeForBadge = {
+    dominio: fromChat.dominio || null,
+    ambito: fromChat.dominio || fromChat.valor || null,
+    ambito_id: ambitoFromChat,
+    categoria_id: catFromChat,
+    cp: fromChat.codigo_postal || null,
+    idioma: fromChat.locale || fromChat.idioma || null,
+    tel: otherKey
+  };
 
-    } catch (e) {
-      console.warn('[refreshAmbitosForPair] error al procesar ámbitos de chat', e);
+  if (typeof window.ctxBadgeEl === 'function' && typeof window.buildCtxLabel === 'function') {
+    const badge = window.ctxBadgeEl();
+    if (badge) {
+      const label = window.buildCtxLabel(scopeForBadge);
+      badge.innerHTML = `<span class="ctx-text">${label}</span>`;
+      badge.setAttribute('title', label);
+      console.log('[refreshAmbitosForPair] badge actualizado desde from_chat:', scopeForBadge);
     }
+  }
+} catch (e) {
+  console.warn('[refreshAmbitosForPair] error al actualizar badge desde ámbitos de chat', e);
+}
+
 
   })
   .catch(err => {
