@@ -204,7 +204,7 @@ def identidad_buscar():
     q   = (data.get('q') or '').strip()
     typ = (data.get('type') or '').strip() or 'name'
 
-    # opcional: id del que está mirando (viewer), si lo mandás desde el front
+    # opcional: id del que está mirando (viewer)
     viewer_id = data.get('viewer_user_id')
     try:
         viewer_id = int(viewer_id) if viewer_id is not None else None
@@ -219,7 +219,6 @@ def identidad_buscar():
         if typ == "phone":
             user = _get_user_by_phone(session, q)
         elif typ == "alias":
-            # todavía no tenemos alias
             user = None
         else:
             user = _get_user_by_email_like(session, q)
@@ -246,17 +245,12 @@ def identidad_buscar():
 
         # 3) categorías usadas POR el user (dos fuentes)
         pub_ids = [p["id"] for p in pubs]
-
-        # 🔹 SOLO CAMBIO ACÁ: ya no pasamos session
         cats_direct = _get_categorias_from_pubs(user.id, pubs)
-
         cats_bridge = _get_categorias_from_categoriaPublicacion(session, pub_ids)
         categorias_usuario = set(cats_direct).union(cats_bridge)
 
         # 4) ámbitos a partir de las pubs
         nombres_amb = {p["ambito"] for p in pubs if p.get("ambito")}
-
-        # 🔹 SOLO CAMBIO ACÁ: _get_ambitos_from_db_by_name no lleva session
         amb_db = _get_ambitos_from_db_by_name(nombres_amb)
 
         # índice por 'valor' (sin emoji), que es lo que traen las publicaciones
@@ -272,13 +266,12 @@ def identidad_buscar():
         for nombre in nombres_amb:  # nombre = 'Health', 'Osobisty', etc.
             a = amb_por_valor.get(nombre)
             if a:
-                # copiamos para no mutar el original
                 a_out = dict(a)
 
                 # TODAS las categorías del ámbito
                 cats_ambito = _get_categorias_de_ambito(session, a_out["id"])
 
-                # 🔥 FILTRO: solo categorías donde el usuario tiene publicaciones
+                # solo categorías donde el usuario tiene publicaciones
                 cats_filtradas = [
                     c for c in cats_ambito
                     if c.get("id") in categorias_usuario
@@ -287,7 +280,6 @@ def identidad_buscar():
                 a_out["categorias"] = cats_filtradas
                 ambitos_normales.append(a_out)
             else:
-                # ámbito que existe en publicaciones pero no está en la tabla
                 ambitos_normales.append({
                     "id": None,
                     "nombre": nombre,
@@ -304,23 +296,84 @@ def identidad_buscar():
         if viewer_id is not None:
             ambitos_chat = get_chat_scopes_for_pair(session, viewer_id, user.id)
 
-            # fusionar, evitando duplicados por (ambito_id, categoria_id)
-            seen = {
-                (a.get("ambito_id"), a.get("categoria_id"))
-                for a in ambitos_normales
-                if a.get("ambito_id") is not None
-            }
+            # ids de ámbito y categoría que aparecen en scopes de chat
+            ambito_ids_chat = {s.get("ambito_id") for s in ambitos_chat if s.get("ambito_id")}
+            categoria_ids_chat = {s.get("categoria_id") for s in ambitos_chat if s.get("categoria_id")}
 
-            for a in ambitos_chat:
-                key = (a.get("ambito_id"), a.get("categoria_id"))
-                if key in seen:
+            if ambito_ids_chat:
+                amb_rows = (
+                    session.query(Ambitos)
+                    .filter(Ambitos.id.in_(ambito_ids_chat))
+                    .all()
+                )
+            else:
+                amb_rows = []
+
+            if categoria_ids_chat:
+                cat_rows = (
+                    session.query(AmbitoCategoria)
+                    .filter(AmbitoCategoria.id.in_(categoria_ids_chat))
+                    .all()
+                )
+            else:
+                cat_rows = []
+
+            amb_db_by_id = {a.id: a for a in amb_rows}
+            cat_db_by_id = {c.id: c for c in cat_rows}
+
+            # índice de ámbitos ya armados (los "normales")
+            amb_por_id = {a["id"]: a for a in ambitos_normales if a.get("id")}
+
+            seen_pairs = set()
+
+            for s in ambitos_chat:
+                aid = s.get("ambito_id")
+                cid = s.get("categoria_id")
+                if not aid:
                     continue
-                a["from_chat"] = a.get("from_chat", True)
-                ambitos_finales.append(a)
+
+                pair = (aid, cid)
+                if pair in seen_pairs:
+                    continue
+                seen_pairs.add(pair)
+
+                a_row = amb_db_by_id.get(aid)
+                if not a_row:
+                    continue  # ámbito no encontrado en tabla ambitos
+
+                # conseguir (o crear) el ámbito de salida
+                a_out = amb_por_id.get(aid)
+                if not a_out:
+                    a_out = {
+                        "id": a_row.id,
+                        "nombre": a_row.nombre,
+                        "descripcion": a_row.descripcion,
+                        "idioma": a_row.idioma,
+                        "valor": a_row.valor,
+                        "estado": a_row.estado,
+                        "categorias": [],
+                    }
+                    amb_por_id[aid] = a_out
+                    ambitos_finales.append(a_out)
+
+                # si hay categoría asociada, la agregamos
+                if cid:
+                    c_row = cat_db_by_id.get(cid)
+                    if c_row:
+                        ya_esta = any(c["id"] == cid for c in a_out.get("categorias", []))
+                        if not ya_esta:
+                            a_out.setdefault("categorias", []).append({
+                                "id": c_row.id,
+                                "nombre": c_row.nombre,
+                                "descripcion": c_row.descripcion,
+                                "idioma": c_row.idioma,
+                                "valor": c_row.valor,
+                                "estado": c_row.estado,
+                                "categoria_general_id": c_row.categoria_general_id,
+                                "from_chat": True,
+                            })
 
         # 5) códigos postales
-
-        # 🔹 SOLO CAMBIO ACÁ: _get_codigos_postales_from_pubs no lleva session
         cps = _get_codigos_postales_from_pubs(pubs)
 
         # 6) idiomas
@@ -343,7 +396,6 @@ def identidad_buscar():
             },
             "publicaciones": pubs,
             "ambitos": ambitos_finales,
-            # solo ids de categorías donde el usuario tiene publicaciones
             "categorias": list(categorias_usuario),
             "codigos_postales": cps,
             "idiomas": idiomas,

@@ -351,6 +351,111 @@ body.theme-light .search-tabs .tab.active{
   border-color: var(--accent);
   color: #ffffff;
 }
+/* =========================
+   Ajustes finos MODO CLARO
+   (inputs chat, buscadores, hovers)
+   ========================= */
+
+/* --- Barra de input del chat --- */
+body.theme-light .chat-input{
+  background: #f3f4f6;                       /* gris claro suave */
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 14px 14px;
+}
+
+body.theme-light .chat-input input{
+  background: #e5edf5;                       /* gris-azul suave */
+  border: 1px solid rgba(148,163,184,.7);
+  color: var(--text);
+}
+
+/* Botones del chat (clip, mic, send) */
+body.theme-light .chat-btn{
+  background: #e5edf5;
+  border: 1px solid rgba(148,163,184,.7);
+  color: #0f172a;
+}
+body.theme-light .chat-btn:hover{
+  background: #dde7f4;
+}
+
+/* Botón de enviar: acento celeste */
+body.theme-light .chat-btn-send{
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #ffffff;
+}
+body.theme-light .chat-btn-send:hover{
+  filter: brightness(1.05);
+}
+
+/* --- Header de búsqueda (identidades / ámbitos) --- */
+body.theme-light .amb-panel-header{
+  background: #f3f4f6;
+  border-bottom: 1px solid var(--border);
+}
+
+body.theme-light .amb-search{
+  background: #e5edf5;
+  border: 1px solid rgba(148,163,184,.7);
+  border-radius: 999px;
+  padding-inline: 10px;
+}
+body.theme-light .amb-search input{
+  background: transparent;
+  color: var(--text);
+}
+
+/* Tabs User / Domain (un poco más de feedback) */
+body.theme-light .search-tabs .tab:hover:not(.active){
+  background: #e0e7f0;
+}
+
+/* --- Hover en identidades (summary) --- */
+body.theme-light .id-summary{
+  background: #f9fafb;
+  border-radius: 10px;
+}
+body.theme-light .id-summary:hover{
+  background: #e5edf5;                       /* highlight suave */
+}
+body.theme-light details[open] > .id-summary{
+  background: #dde9ff;
+  border: 1px solid var(--accent-weak);
+}
+/* =========================
+   Panel de mensajes · Modo claro
+   ========================= */
+
+/* Fondo del área donde se ven los mensajes */
+body.theme-light .msgs{
+  background: #e5edf5;                 /* gris-azul suave */
+  border-color: #d1d5db;
+}
+
+/* Opcional: un leve gradiente para más profundidad */
+body.theme-light .col-chat .chat{
+  background: linear-gradient(
+    180deg,
+    #f5f7fb 0%,
+    #e5edf5 30%,
+    #dde4f0 100%
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
