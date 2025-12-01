@@ -9,6 +9,7 @@ from utils.phone import normalize_phone
 from utils.chat_users import get_or_create_user_from_phone
 from utils.chat_contacts import get_or_create_contacto_personal
 from utils.chat_conversation import get_or_create_conversation
+from utils.chat_conversation import get_or_reuse_conversation_for_pair_scope
 from utils.chat_pairs import get_chat_scopes_for_pair
 import os
 from sqlalchemy import func
@@ -82,6 +83,10 @@ def open_conversation():
 
         alias = client.get("alias")
         email = client.get("email")
+        
+        # 🔹 NUEVO: viene marcado si el botón es el que creamos "desde chat"
+        from_chat = bool(scope.get("from_chat"))
+
 
         # ========== 1.5) NORMALIZAR PAREJA OWNER/CLIENTE ==========
 
@@ -98,20 +103,35 @@ def open_conversation():
         # ========== 2) CONVERSACIÓN: USAR FUNCIÓN MODULAR ==========
 
         with get_db_session() as session:
-            # 👇 ahora usamos la versión que devuelve (conv, i_am_server)
-            conv, i_am_server = get_or_create_conversation(
-                session=session,
-                owner_user_id=owner_user_id,
-                client_user_id=client_user_id,
-                dominio=dominio,
-                ambito_id=ambito_id,
-                categoria_id=categoria_id,
-                codigo_postal=codigo_postal,
-                codigo_postal_id=codigo_postal_id,
-                locale=locale,
-                publicacion_id=publicacion_id,
-                channel="dpia",
-            )
+            if from_chat:
+                # 👉 caso especial: ya existe un chat entre este par con ese dominio/ámbito/cat
+                conv, i_am_server = find_or_create_conversation_for_pair(
+                    session=session,
+                    owner_user_id=owner_user_id,
+                    client_user_id=client_user_id,
+                    dominio=dominio,
+                    ambito_id=ambito_id,
+                    categoria_id=categoria_id,
+                    codigo_postal=codigo_postal,
+                    codigo_postal_id=codigo_postal_id,
+                    locale=locale,
+                    publicacion_id=publicacion_id,
+                )
+            else:
+                # 👉 comportamiento viejo, no se toca
+                conv, i_am_server = get_or_create_conversation(
+                    session=session,
+                    owner_user_id=owner_user_id,
+                    client_user_id=client_user_id,
+                    dominio=dominio,
+                    ambito_id=ambito_id,
+                    categoria_id=categoria_id,
+                    codigo_postal=codigo_postal,
+                    codigo_postal_id=codigo_postal_id,
+                    locale=locale,
+                    publicacion_id=publicacion_id,
+                    channel="dpia",
+                )
 
             # quien llama es cliente si NO creó la conversación
             viewer_role = "owner" if i_am_server else "client"

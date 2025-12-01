@@ -173,3 +173,20 @@ body.theme-light .ms-hero .ms-badge,
 body.theme-light .ms-hero p{
   color: #e5e7eb;
 }
+
+/* SOLO CELULAR + MODO CLARO */
+@media (max-width: 767px){
+  body.theme-light .ms-hero{
+    background: #ffffff;        /* fondo claro en mobile */
+    color: #111827;             /* texto oscuro */
+  }
+
+  body.theme-light .ms-hero .ms-title{
+    color: #111827;
+  }
+
+  body.theme-light .ms-hero .ms-desc{
+    background: #f3f4f6;        /* cajita gris suave */
+    color: #111827;
+  }
+}

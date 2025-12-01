@@ -47,7 +47,8 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
     idioma:       idioma,
     tel:          otherKey || null,
     user_id:      user && user.id || null,
-    email:        user && user.nombre || null
+    email:        user && user.nombre || null,
+    from_chat:    true,               // 👈 MARCA ESPECIAL
   };
 
   const scopeAttr      = JSON.stringify(scopeObj).replace(/"/g, '&quot;');
