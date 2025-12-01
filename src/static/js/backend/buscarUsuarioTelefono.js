@@ -134,21 +134,24 @@ function normalizeAmbitosForMiddlePanel(ambitosRaw) {
       // 1) identidad en panel izquierdo
       renderIdentityResult(data.user);
 
-      // 2) ámbitos en MyDomain (si está abierto)
+     
+  // 2) ámbitos en MyDomain (si está abierto)
       if (Array.isArray(data.ambitos)) {
-       const ambNorm = normalizeAmbitosForMiddlePanel(data.ambitos);
-        renderMyDomainAmbitos(data.ambitos);
+        const ambNorm = normalizeAmbitosForMiddlePanel(data.ambitos);
+        window.renderMyDomainAmbitos(data.ambitos);   // 👈 usar la versión normalizada
       }
 
       // 3) publicaciones en panel derecho de MyDomain
       if (Array.isArray(data.publicaciones)) {
-        renderMyDomainPublicaciones(data.publicaciones);
+        window.renderMyDomainPublicaciones(data.publicaciones);
       }
 
-      // 4) si querés mostrar CP / idiomas en algún badge:
+      // 4) CP / idiomas en badges
       if (Array.isArray(data.codigos_postales) || Array.isArray(data.idiomas)) {
-        renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
+        window.renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
       }
+
+
 
     } catch (err) {
       console.error('[buscarUsuarioTelefono] error', err);
@@ -292,6 +295,51 @@ function renderMyDomainPublicaciones(publicaciones) {
 
  
 
+// === Helper global para refrescar ámbitos/categorías del par actual ===
+window.refreshAmbitosForPair = function(viewerId, otherKey) {
+  function classify(query) {
+    const q = (query || '').trim();
+    if (!q) return { type: 'empty', value: '' };
+    if (q.startsWith('+')) return { type: 'phone', value: q };
+    if (q.startsWith('@')) return { type: 'alias', value: q.substring(1) };
+    return { type: 'name', value: q };
+  }
+
+  const kind = classify(otherKey);
+  if (kind.type === 'empty') return;
+
+  fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      q: kind.value,
+      type: kind.type,
+      viewer_user_id: viewerId
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    console.log('[refreshAmbitosForPair] data:', data);
+
+    if (!data || !data.ok) return;
+
+    if (Array.isArray(data.ambitos) && typeof window.renderMyDomainAmbitos === 'function') {
+      window.renderMyDomainAmbitos(data.ambitos);
+    }
+    if (Array.isArray(data.publicaciones) && typeof window.renderMyDomainPublicaciones === 'function') {
+      window.renderMyDomainPublicaciones(data.publicaciones);
+    }
+    if (typeof window.renderMetaBadges === 'function') {
+      window.renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
+    }
+  })
+  .catch(err => {
+    console.error('[refreshAmbitosForPair] error', err);
+  });
+};
 
 
 

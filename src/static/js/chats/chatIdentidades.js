@@ -155,8 +155,20 @@ window.chatHere = function(btn){
     if (ambito) ambito.classList.add('is-active-ambito');
 
    if (!window.matchMedia('(max-width: 768px)').matches) {
-  (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
-}
+   (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+
+ // 🔹 NUEVO: refrescar ámbitos/categorías para este par
+    const viewerId = Number(window.VIEWER_USER_ID || window.usuario_id || 0) || null;
+    const otherKey = scope.tel || scope.email || scope.correo || null;
+
+    if (viewerId && otherKey && typeof refreshAmbitosForPair === 'function') {
+      refreshAmbitosForPair(viewerId, otherKey);
+    }
+
+
+
 
   }catch(e){
     console.error(e);
