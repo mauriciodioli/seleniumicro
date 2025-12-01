@@ -747,3 +747,50 @@
 
 
 
+/* ============================
+   Categorías (pastillas) MyDomain
+   ============================ */
+
+/* Lista sin viñetas, alineada en fila */
+body.theme-light .md-cat-list{
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Botón pastilla */
+body.theme-light .md-cat{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 14px;
+  min-height: 26px;
+
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;       /* gris suave */
+  color: #111827;            /* texto oscuro legible */
+
+  font-size: .80rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+
+/* Hover: un poquito de celeste */
+body.theme-light .md-cat:hover{
+  background: #e5f0ff;
+  border-color: #bfdbfe;
+  box-shadow: 0 0 0 1px rgba(191,219,254,.7);
+}
+
+/* Estado “seleccionada” si después le querés sumar una clase .is-active */
+body.theme-light .md-cat.is-active{
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(37,99,235,.8);
+}
