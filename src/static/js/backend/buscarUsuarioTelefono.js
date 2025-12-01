@@ -62,7 +62,7 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
   det.innerHTML = `
     <summary class="amb-summary" data-scope='${scopeAttr}'>
       <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
-      <span class="amb-name">🔹 ${label} (desde chat con ${nombreContacto})</span>
+      <span class="amb-name">🔹 ${label} : ${nombreContacto}</span>
       <span class="amb-badge">chat</span>
     </summary>
 
