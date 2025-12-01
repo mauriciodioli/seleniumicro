@@ -373,6 +373,10 @@ def identidad_buscar():
                                 "from_chat": True,
                             })
 
+                        # 🔥 MARCAR TAMBIÉN EL ÁMBITO COMO "from_chat"
+                        a_out["from_chat"] = True
+
+
         # 5) códigos postales
         cps = _get_codigos_postales_from_pubs(pubs)
 
