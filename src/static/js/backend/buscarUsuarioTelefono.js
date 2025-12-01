@@ -335,10 +335,7 @@ function renderMyDomainPublicaciones(publicaciones) {
  
 
 // === Helper global para refrescar ámbitos/categorías del par actual ===
-// === Helper global para refrescar ámbitos/categorías del par actual ===
 window.refreshAmbitosForPair = function(viewerId, otherKey) {
-  console.log('[refreshAmbitosForPair] INICIO', { viewerId, otherKey });
-
   function classify(query) {
     const q = (query || '').trim();
     if (!q) return { type: 'empty', value: '' };
@@ -348,10 +345,7 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
   }
 
   const kind = classify(otherKey);
-  if (kind.type === 'empty') {
-    console.warn('[refreshAmbitosForPair] tipo empty, corto');
-    return;
-  }
+  if (kind.type === 'empty') return;
 
   fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
     method: 'POST',
@@ -365,53 +359,58 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
       viewer_user_id: viewerId
     })
   })
-  .then(r => {
-    console.log('[refreshAmbitosForPair] HTTP status:', r.status);
-    return r.json();
-  })
+  .then(r => r.json())
   .then(data => {
-    console.log('[refreshAmbitosForPair] data cruda:', data);
+    console.log('[refreshAmbitosForPair] data:', data);
 
-    if (!data || !data.ok) {
-      console.warn('[refreshAmbitosForPair] respuesta no OK');
-      return;
+    if (!data || !data.ok) return;
+
+    // 1) MyDomain: ámbitos / publicaciones / meta
+    if (Array.isArray(data.ambitos) && typeof window.renderMyDomainAmbitos === 'function') {
+      window.renderMyDomainAmbitos(data.ambitos);
     }
-
-    const ambitos = Array.isArray(data.ambitos) ? data.ambitos : [];
-    console.log('[refreshAmbitosForPair] ambitos recibidos:', ambitos);
-
-    // si existe la normalización, la usamos (loggeando)
-    let ambNorm = ambitos;
-    if (typeof window.normalizeAmbitosForMiddlePanel === 'function') {
-      ambNorm = window.normalizeAmbitosForMiddlePanel(ambitos);
-      console.log('[refreshAmbitosForPair] ambitos normalizados:', ambNorm);
-    }
-
-    if (typeof window.renderMyDomainAmbitos === 'function') {
-      console.log('[refreshAmbitosForPair] llamando renderMyDomainAmbitos');
-      window.renderMyDomainAmbitos(ambNorm);
-    } else {
-      console.warn('[refreshAmbitosForPair] renderMyDomainAmbitos NO definida');
-    }
-
     if (Array.isArray(data.publicaciones) && typeof window.renderMyDomainPublicaciones === 'function') {
-      console.log('[refreshAmbitosForPair] renderMyDomainPublicaciones', data.publicaciones.length);
       window.renderMyDomainPublicaciones(data.publicaciones);
     }
-
     if (typeof window.renderMetaBadges === 'function') {
-      console.log('[refreshAmbitosForPair] renderMetaBadges', {
-        cps: data.codigos_postales || [],
-        idiomas: data.idiomas || []
-      });
       window.renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
     }
+
+    // 2) 🔥 NUEVO: actualizar el badge del panel derecho con el ámbito/categoría del chat
+    try {
+      if (!Array.isArray(data.ambitos)) return;
+
+      const fromChat = data.ambitos.find(a => a.from_chat) || data.ambitos[0] || null;
+      if (!fromChat) return;
+
+      const scopeForBadge = {
+        dominio: fromChat.dominio || null,
+        ambito: fromChat.dominio || fromChat.valor || null,
+        ambito_id: fromChat.ambito_id ?? null,
+        categoria_id: fromChat.categoria_id ?? null,
+        cp: fromChat.codigo_postal || null,
+        idioma: fromChat.locale || null,
+        tel: otherKey
+      };
+
+      if (typeof window.ctxBadgeEl === 'function' && typeof window.buildCtxLabel === 'function') {
+        const badge = window.ctxBadgeEl();
+        if (badge) {
+          const label = window.buildCtxLabel(scopeForBadge);
+          badge.innerHTML = `<span class="ctx-text">${label}</span>`;
+          badge.setAttribute('title', label);
+          console.log('[refreshAmbitosForPair] badge actualizado desde from_chat:', scopeForBadge);
+        }
+      }
+    } catch (e) {
+      console.warn('[refreshAmbitosForPair] error al actualizar badge desde ámbitos de chat', e);
+    }
+
   })
   .catch(err => {
     console.error('[refreshAmbitosForPair] error', err);
   });
 };
-
 
 
 

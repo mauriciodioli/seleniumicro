@@ -586,3 +586,48 @@ details[open] .id-chev-btn{ transform:rotate(90deg); }
 }
 
 
+/* =========================
+   panel-header en MODO CLARO
+   ========================= */
+body.theme-light .id-card .panel-header,
+body.theme-light .amb-card .panel-header,
+body.theme-light .panel-header{
+  background: #f3f4f6;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
+}
+
+/* Buscador dentro del panel (identidades/ámbitos) */
+body.theme-light .id-card .panel-header .search,
+body.theme-light .amb-panel-header .amb-search{
+  background: #e5edf5;
+  border: 1px solid rgba(148,163,184,.7);
+}
+
+
+
+
+
+
+
+
+
+/* ===== MyDomain SOLO en modo claro ===== */
+body.theme-light .my-domain-left,
+body.theme-light .my-domain-right{
+  background: #f3f4f6;          /* gris suave, mismo tono que el resto */
+  border-right: 1px solid #e5e7eb;
+  color: var(--text);
+}
+
+/* Acordeón de ámbitos dentro de MyDomain en claro */
+body.theme-light .my-domain-left .amb-summary{
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+body.theme-light .my-domain-left details[open] > .amb-summary{
+  background: #e5ecff;
+  border-color: var(--accent-weak);
+}

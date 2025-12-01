@@ -126,6 +126,7 @@ function buildCtxLabel(scope){
 
 window.chatHere = function(btn){
   try{
+    
     const scope = JSON.parse(btn.getAttribute('data-scope') || '{}');
     const id = ensureThread(scope);
     setActiveThread(id);
