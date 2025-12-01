@@ -190,6 +190,11 @@ window.renderMyDomainAmbitos = function(ambitos) {
     const nombre = (a && a.nombre) || '(sin nombre)';
     const cats   = Array.isArray(a && a.categorias) ? a.categorias : [];
 
+    // ambito "slug" para scope: usamos valor (sin emoji) si existe, si no el nombre
+    const ambitoSlug = (a && a.valor) || nombre;
+    const ambitoId   = a && a.id ? a.id : null;
+    const idioma     = a && a.idioma ? a.idioma : null;
+
     const det = document.createElement('details');
     det.className = 'amb-item';
     det.setAttribute('data-ambito', nombre);
@@ -197,17 +202,36 @@ window.renderMyDomainAmbitos = function(ambitos) {
     let catsHtml = '';
     if (cats.length) {
       catsHtml = `<ul class="md-cat-list">
-        ${cats.map(c => `
-          <li>
-            <button class="md-cat"
-                    data-ambito="${nombre}"
-                    data-ambitoId="${a.id || ''}"
-                    data-valor="${a.valor || ''}"
-                    data-idioma="${a.idioma || ''}"
-                    data-categoria="${c.id}">
-              ${c.nombre}
-            </button>
-          </li>`).join('')}
+        ${cats.map(c => {
+          // ⚙️ armamos el scope que va a usar chatHere()
+          const scopePayload = {
+            ambito: ambitoSlug || null,
+            ambito_id: ambitoId,
+            categoria_id: c.id ?? null,
+            idioma: idioma,
+            // cp lo dejamos null: lo resuelve ensureThread / último scope
+            cp: null,
+            publicacion_id: null
+          };
+
+          // si viene marcado desde el chat, lo propagamos por si querés estilizarlo
+          if (c.from_chat || a.from_chat) {
+            scopePayload.from_chat = true;
+          }
+
+          return `
+            <li>
+              <button class="md-cat"
+                      data-ambito="${nombre}"
+                      data-ambitoId="${ambitoId || ''}"
+                      data-valor="${ambitoSlug || ''}"
+                      data-idioma="${idioma || ''}"
+                      data-categoria="${c.id}"
+                      data-scope='${jattr(scopePayload)}'>
+                ${c.nombre}
+              </button>
+            </li>`;
+        }).join('')}
       </ul>`;
     }
 
@@ -223,6 +247,7 @@ window.renderMyDomainAmbitos = function(ambitos) {
     if (ambAcc) ambAcc.appendChild(det);
   });
 };
+
 
 
   // ================== NUEVO: render de PUBLICACIONES en panel derecho ==================

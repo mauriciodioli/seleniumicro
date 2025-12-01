@@ -126,7 +126,6 @@ function buildCtxLabel(scope){
 
 window.chatHere = function(btn){
   try{
-    
     const scope = JSON.parse(btn.getAttribute('data-scope') || '{}');
     const id = ensureThread(scope);
     setActiveThread(id);
@@ -154,21 +153,31 @@ window.chatHere = function(btn){
     const ambito = btn.closest('.ambito, .ambito-card');
     if (ambito) ambito.classList.add('is-active-ambito');
 
-   if (!window.matchMedia('(max-width: 768px)').matches) {
-   (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
-  }
-
-
- // 🔹 NUEVO: refrescar ámbitos/categorías para este par
-    const viewerId = Number(window.VIEWER_USER_ID || window.usuario_id || 0) || null;
-    const otherKey = scope.tel || scope.email || scope.correo || null;
-
-    if (viewerId && otherKey && typeof refreshAmbitosForPair === 'function') {
-      refreshAmbitosForPair(viewerId, otherKey);
+    if (!window.matchMedia('(max-width: 768px)').matches) {
+      (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
     }
 
+    // 🔹 NUEVO: refrescar ámbitos/categorías para este par
+    const viewerIdRaw = window.VIEWER_USER_ID ?? window.usuario_id ?? null;
+    const viewerId = viewerIdRaw ? Number(viewerIdRaw) : null;
 
+    const otherKey =
+      scope.tel ||
+      scope.phone ||
+      scope.email ||
+      scope.correo ||
+      null;
 
+    if (viewerId && otherKey && typeof window.refreshAmbitosForPair === 'function') {
+      console.log('[chatHere] refreshAmbitosForPair', { viewerId, otherKey, scope });
+      window.refreshAmbitosForPair(viewerId, otherKey);
+    } else {
+      console.log('[chatHere] NO refreshAmbitosForPair', {
+        hasViewer: !!viewerId,
+        otherKey,
+        hasFn: typeof window.refreshAmbitosForPair === 'function'
+      });
+    }
 
   }catch(e){
     console.error(e);

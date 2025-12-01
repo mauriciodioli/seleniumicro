@@ -65,3 +65,14 @@ details[open] .id-chev{ transform:rotate(90deg); }
 .col-identidades > *{ border-radius:0 !important; }
 
 
+/* HOVER en modo CLARO */
+body.theme-light .id-summary:hover{
+  background:#e5edf5 !important;      /* gris clarito suave */
+  box-shadow:inset 0 0 0 1px #c7d2fe !important;
+}
+
+/* ABIERTO en modo CLARO */
+body.theme-light details[open] > .id-summary{
+  background:#dde9ff !important;      /* celeste / gris muy suave */
+  box-shadow:inset 0 0 0 1px #a5b4fc !important;
+}
