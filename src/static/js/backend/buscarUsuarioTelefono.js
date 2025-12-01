@@ -1,4 +1,85 @@
 // static/js/chats/buscarUsuarioTelefono.js
+// ================== ÁMBITO "DESDE CHAT" EN PANEL DEL MEDIO ==================
+window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
+  if (!fromChat) return;
+
+  const acc = document.querySelector('#vistaChatAmbitos .amb-accordion');
+  if (!acc) {
+    console.warn('[ensureAmbitoFromChatInLeftPanel] no hay .amb-accordion en vistaChatAmbitos');
+    return;
+  }
+
+  const label   = fromChat.dominio || fromChat.valor || 'Chat';
+  const ambitoId = fromChat.ambito_id || null;
+
+  // ¿Ya existe un ámbito con ese id o ese nombre?
+  const exists = Array.from(acc.querySelectorAll('.amb-item')).some(det => {
+    const nameEl = det.querySelector('.amb-name');
+    if (!nameEl) return false;
+    const txt = (nameEl.textContent || '').toLowerCase();
+
+    if (ambitoId) {
+      const sum = det.querySelector('.amb-summary');
+      const ds  = sum && sum.getAttribute('data-scope');
+      if (ds) {
+        try {
+          const sc = JSON.parse(ds);
+          if (Number(sc.ambito_id || 0) === Number(ambitoId)) return true;
+        } catch(e) {}
+      }
+    }
+    return txt.includes(label.toLowerCase());
+  });
+
+  if (exists) {
+    console.log('[ensureAmbitoFromChatInLeftPanel] ámbito ya presente, no duplico');
+    return;
+  }
+
+  // Scope mínimo para poder abrir el chat con contexto correcto
+  const scopeObj = {
+    ambito:       (label || '').toLowerCase(),
+    ambito_id:    ambitoId,
+    categoria:    fromChat.categoria_id || null,
+    categoria_id: fromChat.categoria_id || null,
+    cp:           fromChat.codigo_postal || null,
+    idioma:       fromChat.locale || null,
+    tel:          otherKey || null,
+    user_id:      user && user.id || null,
+    email:        user && user.nombre || null
+  };
+
+  const scopeAttr = JSON.stringify(scopeObj).replace(/"/g, '&quot;');
+  const nombreContacto = (user && user.nombre) || 'contacto';
+
+  const det = document.createElement('details');
+  det.className = 'amb-item amb-from-chat';
+  det.open = true;
+
+  det.innerHTML = `
+    <summary class="amb-summary" data-scope='${scopeAttr}'>
+      <button type="button" class="amb-chev-btn" aria-label="Abrir/cerrar">▶</button>
+      <span class="amb-name">🔹 ${label} (desde chat con ${nombreContacto})</span>
+      <span class="amb-badge">chat</span>
+    </summary>
+    <div class="amb-subcards">
+      <div class="amb-subcard">
+        <div class="amb-subcard-head">
+          <span>${label}</span>
+          <button class="btn chat-ambito-btn" type="button"
+                  data-goto="chat"
+                  data-scope='${scopeAttr}'
+                  onclick="window.chatHere?.(this)">
+            Chatear en ${label}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  acc.appendChild(det);
+  console.log('[ensureAmbitoFromChatInLeftPanel] agregado ámbito desde chat:', scopeObj);
+};
 
 // === API única para leer caché de identidad ===
 window.getCachedIdentity = function(arg){
@@ -332,9 +413,7 @@ function renderMyDomainPublicaciones(publicaciones) {
     }
   }
 
- 
-
-// === Helper global para refrescar ámbitos/categorías del par actual ===
+ // ================== REFRESH ÁMBITOS / CATEGORÍAS PARA PAR (viewer, other) ==================
 window.refreshAmbitosForPair = function(viewerId, otherKey) {
   function classify(query) {
     const q = (query || '').trim();
@@ -365,7 +444,7 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
 
     if (!data || !data.ok) return;
 
-    // 1) MyDomain: ámbitos / publicaciones / meta
+    // 1) MyDomain (se mantiene igual, no rompemos nada)
     if (Array.isArray(data.ambitos) && typeof window.renderMyDomainAmbitos === 'function') {
       window.renderMyDomainAmbitos(data.ambitos);
     }
@@ -376,22 +455,25 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
       window.renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
     }
 
-    // 2) 🔥 NUEVO: actualizar el badge del panel derecho con el ámbito/categoría del chat
+    // 2) Ámbito/categoría del CHAT (from_chat) → badge + panel medio
     try {
       if (!Array.isArray(data.ambitos)) return;
 
-      const fromChat = data.ambitos.find(a => a.from_chat) || data.ambitos[0] || null;
+      const fromChat = data.ambitos.find(a => a.from_chat) || null;
+      console.log('[refreshAmbitosForPair] fromChat:', fromChat);
       if (!fromChat) return;
 
+      // ----- Badge del chat -----
       const scopeForBadge = {
-        dominio: fromChat.dominio || null,
-        ambito: fromChat.dominio || fromChat.valor || null,
-        ambito_id: fromChat.ambito_id ?? null,
-        categoria_id: fromChat.categoria_id ?? null,
-        cp: fromChat.codigo_postal || null,
-        idioma: fromChat.locale || null,
-        tel: otherKey
+        dominio:     fromChat.dominio || null,
+        ambito:      fromChat.dominio || fromChat.valor || null,
+        ambito_id:   fromChat.ambito_id ?? null,
+        categoria_id:fromChat.categoria_id ?? null,
+        cp:          fromChat.codigo_postal || null,
+        idioma:      fromChat.locale || null,
+        tel:         otherKey
       };
+      console.log('[refreshAmbitosForPair] scopeForBadge:', scopeForBadge);
 
       if (typeof window.ctxBadgeEl === 'function' && typeof window.buildCtxLabel === 'function') {
         const badge = window.ctxBadgeEl();
@@ -399,11 +481,17 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
           const label = window.buildCtxLabel(scopeForBadge);
           badge.innerHTML = `<span class="ctx-text">${label}</span>`;
           badge.setAttribute('title', label);
-          console.log('[refreshAmbitosForPair] badge actualizado desde from_chat:', scopeForBadge);
+          console.log('[refreshAmbitosForPair] badge actualizado desde from_chat');
         }
       }
+
+      // ----- Ámbito "Tecnologia (desde chat con X)" en panel de Ámbitos -----
+      if (typeof window.ensureAmbitoFromChatInLeftPanel === 'function') {
+        window.ensureAmbitoFromChatInLeftPanel(fromChat, otherKey, data.user || null);
+      }
+
     } catch (e) {
-      console.warn('[refreshAmbitosForPair] error al actualizar badge desde ámbitos de chat', e);
+      console.warn('[refreshAmbitosForPair] error al procesar ámbitos de chat', e);
     }
 
   })
@@ -411,6 +499,7 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
     console.error('[refreshAmbitosForPair] error', err);
   });
 };
+
 
 
 
