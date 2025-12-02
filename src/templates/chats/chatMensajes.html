@@ -32,54 +32,59 @@
       </div>
     </div>
 
-    <!-- Vista previa de medios -->
-    <div id="mediaPreview" class="chat-media-preview"></div>
+    <!-- ⚠️ IMPORTANTE: ya no va #mediaPreview acá -->
+    <!-- <div id="mediaPreview" class="chat-media-preview"></div> -->
   </div>
 
   <!-- Input -->
   <div class="chat-input">
-    <!-- Botón para adjuntar imagen -->
-    <button
-      type="button"
-      id="btnAttach"
-      class="chat-btn chat-btn-attach"
-      aria-label="Adjuntar imagen"
-    >
-      📎
-    </button>
+    <div class="chat-input-inner">
+      <!-- Botón para adjuntar -->
+      <button
+        type="button"
+        id="btnAttach"
+        class="chat-btn chat-btn-attach"
+        aria-label="Adjuntar archivo"
+      >
+        +
+      </button>
 
-    <!-- Input de archivo oculto -->
-    <input
-      type="file"
-      id="fileInput"
-      accept="image/*,video/*,audio/*"
-      hidden
-    >
+      <!-- Input de archivo oculto -->
+      <input
+        type="file"
+        id="fileInput"
+        accept="image/*,video/*,audio/*"
+        hidden
+        multiple
+      >
 
-    <!-- Mensaje de texto -->
-    <input
-      id="msgInput"
-      type="text"
-      placeholder="Escribí un mensaje…"
-      autocomplete="off"
-    >
-<!-- Botón grabar audio -->
-<button
-  id="sendBtnAudio"
-  type="button"
-  class="chat-btn chat-btn-audio"
-  aria-label="Grabar audio"
->
-  🎤
-</button>
-    <!-- Botón enviar / grabar audio -->
-    <button
-      id="sendBtnSenMessage"
-      type="button"
-      class="chat-btn chat-btn-send"
-      aria-label="Enviar / Grabar"
-    >
-      ▶
-    </button>
+      <!-- ⚠️ Sobre este input vamos a inyectar los chips de imagen -->
+      <input
+        id="msgInput"
+        type="text"
+        placeholder="Pregunta lo que quieras"
+        autocomplete="off"
+      >
+
+      <!-- Botón grabar audio -->
+      <button
+        id="sendBtnAudio"
+        type="button"
+        class="chat-btn chat-btn-audio"
+        aria-label="Grabar audio"
+      >
+        🎤
+      </button>
+
+      <!-- Botón enviar -->
+      <button
+        id="sendBtnSenMessage"
+        type="button"
+        class="chat-btn chat-btn-send"
+        aria-label="Enviar"
+      >
+        ⬆
+      </button>
+    </div>
   </div>
 </div>

@@ -1,4 +1,3 @@
-
 import { showImagePreview } from '../modulesMedia/imagenModule.js';
 import { showVideoPreview } from '../modulesMedia/videoModule.js';
 
@@ -7,21 +6,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnAttach = document.getElementById('btnAttach');
   const fileInput = document.getElementById('fileInput');
 
-  if (btnAttach) {
+  if (btnAttach && fileInput) {
     btnAttach.addEventListener('click', () => fileInput.click());
   }
 
   if (fileInput) {
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files?.[0];
-      if (!file) return;
+    // por si acaso, lo forzamos también por JS
+    fileInput.multiple = true;
 
-      if (file.type.startsWith('image/')) {
-        showImagePreview(file);
-      } else if (file.type.startsWith('video/')) {
-        showVideoPreview(file);
-      } else if (file.type.startsWith('audio/')) {
-        showAudioPreview(file);
+    fileInput.addEventListener('change', () => {
+      const files = Array.from(fileInput.files || []);
+      if (!files.length) return;
+
+      for (const file of files) {
+        if (file.type.startsWith('image/')) {
+          showImagePreview(file);          // 👈 un chip por imagen
+        } else if (file.type.startsWith('video/')) {
+          showVideoPreview(file);
+        } else if (file.type.startsWith('audio/')) {
+          showAudioPreview(file);
+        }
       }
     });
   }

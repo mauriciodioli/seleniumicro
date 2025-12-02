@@ -1,70 +1,122 @@
 console.log('[CHAT IMAGE] Módulo cargado');
 
-let pendingImage = null;
+// Ahora soportamos VARIAS imágenes
+let pendingImages = [];       // [{ file, chip }]
+let chipsContainer = null;   // contenedor de los chips (dentro de la barra)
 
-let mediaPreview = null;
-
-function ensureMediaPreview() {
-  console.log('[ensureMediaPreview] Verificando si existe #mediaPreview...');
-  if (mediaPreview) {
-    mediaPreview.style.display = 'block';
-    return mediaPreview;
+/**
+ * Devuelve o crea el contenedor de chips dentro de la barra,
+ * antes del input de texto #msgInput.
+ */
+function ensureChipsContainer() {
+  if (chipsContainer && document.body.contains(chipsContainer)) {
+    return chipsContainer;
   }
 
-  const chatInputBar = document.querySelector('.chat-input');
-  if (!chatInputBar || !chatInputBar.parentElement) {
-    console.warn('[ensureMediaPreview] No encontré .chat-input');
+  const input = document.getElementById('msgInput');   // 👈 AQUÍ VA ESO
+  if (!input) {
+    console.warn('[CHAT IMAGE] No encontré #msgInput');
     return null;
   }
 
-  mediaPreview = document.createElement('div');
-  mediaPreview.id = 'mediaPreview';
-  mediaPreview.className = 'chat-media-preview';
+  // buscamos el contenedor más cercano de la barra del chat
+  const wrapper = input.closest('.chat-input-inner') || input.closest('.chat-input');
+  if (!wrapper) {
+    console.warn('[CHAT IMAGE] No encontré .chat-input-inner ni .chat-input');
+    return null;
+  }
 
-  // botón cerrar
-  const closeButton = document.createElement('button');
-  closeButton.className = 'close-btn';
-  closeButton.innerText = '×';
-  closeButton.addEventListener('click', () => {
-    mediaPreview.style.display = 'none';
-    mediaPreview.innerHTML = ''; // si querés limpiar imagen
-    mediaPreview.appendChild(closeButton); // re-inyectar el botón
-    pendingImage = null;
-  });
-  mediaPreview.appendChild(closeButton);
+  chipsContainer = document.createElement('div');
+  chipsContainer.id = 'chatMediaChips';
+  chipsContainer.className = 'chat-media-chips';
 
-  // 👇 lo insertamos justo ANTES de la barra de input
-  chatInputBar.parentElement.insertBefore(mediaPreview, chatInputBar);
+  // insertamos los chips ANTES del input de texto
+  wrapper.insertBefore(chipsContainer, input);
 
-  return mediaPreview;
+  return chipsContainer;
 }
 
-
+/**
+ * Añade una imagen como chip de preview (tipo ChatGPT).
+ */
 function showImagePreview(file) {
-  console.log('[showImagePreview] Iniciando vista previa...');
-  const previewContainer = ensureMediaPreview();
-  if (!previewContainer) return;
+  console.log('[showImagePreview] Iniciando vista previa como chip...');
+  const container = ensureChipsContainer();
+  if (!container) return;
 
-  const imageUrl = URL.createObjectURL(file);
+  const idx = pendingImages.length;
 
-  // ❗ NO usar innerHTML = '' → borraría el botón
-  // En su lugar, borramos solo la imagen anterior
-  const oldImg = previewContainer.querySelector('img.chat-media-thumb');
-  if (oldImg) oldImg.remove();
+  const chip = document.createElement('div');
+  chip.className = 'chat-media-chip';
+  chip.dataset.index = String(idx);
 
-  const imgElement = document.createElement('img');
-  imgElement.src = imageUrl;
-  imgElement.alt = 'Imagen adjunta';
-  imgElement.className = 'chat-media-thumb';
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(file);
+  img.alt = 'Imagen adjunta';
 
-  // el botón ya está, solo agregamos la nueva imagen
-  previewContainer.appendChild(imgElement);
+  const btnClose = document.createElement('button');
+  btnClose.type = 'button';
+  btnClose.className = 'chat-media-chip-close';
+  btnClose.textContent = '✕';
 
-  pendingImage = file;
-  console.log('[showImagePreview] Imagen pendiente:', pendingImage);
+  btnClose.addEventListener('click', () => {
+    removeImageChip(chip);
+  });
+
+  chip.appendChild(img);
+  chip.appendChild(btnClose);
+  container.appendChild(chip);
+
+  pendingImages.push({ file, chip });
+
+  console.log('[CHAT IMAGE] Imágenes pendientes:', pendingImages.length);
 }
 
+/**
+ * Elimina un chip concreto y actualiza el array pendingImages.
+ */
+function removeImageChip(chipEl) {
+  const idxStr = chipEl.dataset.index;
+  const idx = idxStr != null ? Number(idxStr) : -1;
 
+  chipEl.remove();
+
+  if (idx >= 0 && idx < pendingImages.length) {
+    pendingImages.splice(idx, 1);
+  }
+
+  // reindexamos los dataset.index de los chips restantes
+  pendingImages.forEach((item, i) => {
+    item.chip.dataset.index = String(i);
+  });
+
+  if (pendingImages.length === 0 && chipsContainer) {
+    chipsContainer.innerHTML = '';
+  }
+}
+
+/**
+ * Limpia TODOS los chips (después de enviar).
+ */
+function clearAllImagePreviews() {
+  pendingImages.forEach(({ chip }) => {
+    chip.remove();
+  });
+  pendingImages = [];
+
+  if (chipsContainer) {
+    chipsContainer.innerHTML = '';
+  }
+
+  const fileInput = document.getElementById('fileInput');
+  if (fileInput) {
+    fileInput.value = '';
+  }
+}
+
+/**
+ * Envía UNA imagen al backend (tu lógica anterior).
+ */
 async function enviarImagen(file) {
   console.log('[enviarImagen] Iniciando envío de la imagen...');
   if (!file) {
@@ -82,10 +134,11 @@ async function enviarImagen(file) {
   const fd = new FormData();
   fd.append('file', file, file.name || 'image.png');
   fd.append('conversation_id', convId);
+  // si manejás roles: fd.append('as', 'client');
 
   try {
     console.log('[enviarImagen] Enviando la imagen al servidor...');
-    const resp = await fetch('/api/chat/api_chat_bp/image-upload/', {
+    const resp = await fetch('/api/chat/imagen_controller/image-upload/', {
       method: 'POST',
       body: fd,
       credentials: 'include',
@@ -102,7 +155,9 @@ async function enviarImagen(file) {
   }
 }
 
-export { showImagePreview, enviarImagen, pendingImage };
-
-
-
+export {
+  showImagePreview,
+  enviarImagen,
+  pendingImages,
+  clearAllImagePreviews,
+};

@@ -1,48 +1,88 @@
-/* Contenedor de preview, siempre justo encima del input */
-#mediaPreview {
-  position: relative;          /* nada de absolute/fixed acá */
-  margin: 0 auto 8px;
-  padding: 8px;
-  max-width: 260px;
-  width: 100%;
-  background-color: #d4f1f9;
-  border: 1px solid #00aaff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  z-index: 10;                 /* suficiente dentro del chat */
-  display: none;               /* se muestra sólo cuando hay preview */
-}
-
-/* Imagen dentro del preview */
-#mediaPreview img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 4px;
-}
-
-/* Botón de cerrar en la esquina */
-#mediaPreview .close-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #383737;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+/* Contenedor principal de la barra de input */
+.chat-input {
   display: flex;
-  justify-content: center;
   align-items: center;
-  cursor: pointer;
-  font-size: 12px;
+  gap: 8px;
+  padding: 8px 12px;
 }
 
-/* Mobile: usa casi todo el ancho del chat */
+/* Interior: chips + input + iconos */
+.chat-input-inner {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  gap: 6px;
+  background: #262626;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+/* Input de texto */
+#chatInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #f5f5f5;
+  flex: 1 1 auto;
+  min-width: 40px;
+}
+
+
+
+/* Contenedor de chips dentro de la barra */
+.chat-media-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;         /* que no se aplasten con el input */
+}
+
+/* Cada imagen-miniatura */
+.chat-media-chip {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Imagen dentro del chip */
+.chat-media-chip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Botón X en cada chip */
+.chat-media-chip-close {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: none;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 0;
+}
+
+
+
+
 @media (max-width: 600px) {
-  #mediaPreview {
-    max-width: 100%;
-    margin: 0 8px 6px;
+  .chat-input-inner {
+    padding: 6px 8px;
+  }
+
+  .chat-media-chip {
+    width: 34px;
+    height: 34px;
   }
 }
