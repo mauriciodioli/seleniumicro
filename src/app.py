@@ -59,6 +59,7 @@ from controllers.chats.busquedas.busquedaSelectiva import busquedaSelectiva
 from controllers.chats.micrositio.micrositio import micrositio
 from controllers.chats.chatContexts.api_chat_bp import api_chat_bp
 from controllers.chats.medios_audio_image_video.audio_controller import audio_controller
+from controllers.chats.medios_audio_image_video.imagen_controller import imagen_controller
              
 
 app.register_blueprint(chat_bp)
@@ -76,7 +77,8 @@ app.register_blueprint(busquedaSelectiva)
 app.register_blueprint(micrositio)
 app.register_blueprint(api_chat_bp)
 app.register_blueprint(boot_bp)    
-app.register_blueprint(audio_controller)  # ⬅️ nuevo
+app.register_blueprint(audio_controller)  
+app.register_blueprint(imagen_controller)
 
 
 

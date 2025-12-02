@@ -281,6 +281,41 @@ function viewerIsOwner() {
 }
 
 
+
+// ==================== BODY: IMAGEN ====================
+function renderMessageBodyImage(m) {
+  // content puede venir "url||caption"
+  let raw = m.content || '';
+  let url = raw;
+  let caption = '';
+
+  if (raw.includes('||')) {
+    const parts = raw.split('||');
+    url     = parts[0] || '';
+    caption = parts[1] || '';
+  }
+
+  url = (url || '').trim();
+
+  // normalizo un poco la url: si no viene http ni /, le agrego /
+  if (url && !url.startsWith('http') && !url.startsWith('/')) {
+    url = '/' + url;
+  }
+
+  const safeCaption = caption ? escapeHtml(caption) : '';
+
+  return `
+    <div class="msg-body msg-body-image">
+      <img src="${url}"
+           class="chat-img-msg"
+           alt="${safeCaption || 'Imagen'}"
+           loading="lazy">
+      ${safeCaption ? `<div class="msg-caption">${safeCaption}</div>` : ''}
+    </div>
+  `;
+}
+
+
 // ==================== BODY AUDIO ====================
 function renderMessageBodyAudio(m){
   const src = m.content || '';
@@ -395,12 +430,19 @@ function renderMessages(list){
     });
 
     // ========= CUERPO (texto / audio, y futuro img/video) =========
-    let bodyHtml;
-    if (m.content_type === 'audio') {
-      bodyHtml = renderMessageBodyAudio(m);
-    } else {
-      bodyHtml = renderMessageBodyText(m);
-    }
+    // ========= CUERPO (texto / audio / imagen) =========
+      let bodyHtml;
+      if (m.content_type === 'audio') {
+        bodyHtml = renderMessageBodyAudio(m);    // ✅ audio queda igual
+      } else if (m.content_type === 'image') {
+        console.log('[CHAT][renderMessages] mensaje IMAGE', {
+          id: m.id,
+          content: m.content,
+        });
+        bodyHtml = renderMessageBodyImage(m);    // 🆕 imágenes
+      } else {
+        bodyHtml = renderMessageBodyText(m);     // texto como siempre
+      }
 
     // 🔴🔵🟢 Estado para el puntito de color
     const { statusClass, statusLabel } = getMsgStatusVisual(m);

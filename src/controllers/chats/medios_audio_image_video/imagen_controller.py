@@ -90,48 +90,43 @@ def image_upload():
     if not (file.mimetype or "").startswith("image/"):
         return jsonify(ok=False, error="Tipo de archivo no soportado. Solo imagen."), 400
 
-    session = get_db_session()
-
     try:
-        # 1) guardar archivo igual que audio, pero en downloads/image/
-        public_url = save_image_file_local(file)
-        # Ejemplo: "/static/downloads/image/img_12345678_abcd1234.png"
+        # 👇 toda la parte de DB adentro del with
+        with get_db_session() as session:
+            # 1) guardar archivo
+            public_url = save_image_file_local(file)
+            content = f"{public_url}||{caption}" if caption else public_url
 
-        # Si querés mezclar caption en content, lo mantenemos:
-        content = public_url
-        if caption:
-            content = f"{public_url}||{caption}"
+            # 2) crear Message
+            msg = Message(
+                conversation_id = conv_id,
+                role            = role,
+                via             = "dpia",
+                content_type    = "image",
+                content         = content,
+                created_at      = datetime.utcnow(),
+            )
+            session.add(msg)
+            session.flush()  # para tener msg.id
 
-        # 2) crear Message
-        msg = Message(
-            conversation_id = conv_id,
-            role            = role,
-            via             = "dpia",
-            content_type    = "image",
-            content         = content,
-            created_at      = datetime.utcnow(),
-        )
-        session.add(msg)
-        session.flush()  # para tener msg.id
+            # 3) crear MessageMedia
+            media = MessageMedia(
+                message_id    = msg.id,
+                media_type    = "image",
+                url           = public_url,
+                mime_type     = file.mimetype,
+                duration_ms   = None,
+                metadata_json = None,
+            )
+            session.add(media)
+            session.flush()
 
-        # 3) crear MessageMedia (nuevo)
-        media = MessageMedia(
-            message_id    = msg.id,
-            media_type    = "image",
-            url           = public_url,      # ya viene listo para usar en el front
-            mime_type     = file.mimetype,
-            duration_ms   = None,
-            metadata_json = None,
-        )
-        session.add(media)
+            # ⚠️ CLAVE: armar el dict ANTES de salir del with
+            message_dict = _make_message_dict(msg)
 
-        session.commit()
-
-        return jsonify(ok=True, message=_make_message_dict(msg)), 200
+        # fuera del with, ya no tocamos msg, solo el dict plano
+        return jsonify(ok=True, message=message_dict), 200
 
     except Exception as e:
-        session.rollback()
-        current_app.logger.exception("Error en image_upload")
+        current_app.logger.exception("Error en image_upload: %s", e)
         return jsonify(ok=False, error="server_error"), 500
-    finally:
-        session.close()

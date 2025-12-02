@@ -408,7 +408,6 @@ console.log('[CHAT OPEN] convId=%s viewerId=%s owner=%s client=%s role=%s isClie
   Chat.isClient,
   Chat.isServer
 );
-debugger;
 // opcional, por si querés usarlo sin el objeto Chat
 window.currentChatScope = Chat.scope;
 
