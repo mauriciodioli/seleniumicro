@@ -10,7 +10,7 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
     return;
   }
 
-  const label    = fromChat.dominio || fromChat.valor || 'Chat';
+  const label    = fromChat.dominio || fromChat.valor || fromChat.ambito || 'Chat';
   const ambitoId = fromChat.ambito_id || null;
   const cp       = fromChat.codigo_postal || null;
   const idioma   = fromChat.locale || null;
@@ -39,24 +39,35 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
     return;
   }
 
-  // 🔹 FIX: si no viene categoria_id, uso la primera categoría del ámbito (ej: 106)
-  const categoriaId =
-    (fromChat.categoria_id != null ? fromChat.categoria_id : null) ??
-    (Array.isArray(fromChat.categorias) && fromChat.categorias.length
-      ? fromChat.categorias[0].id
-      : null);
+  // ==== CATEGORÍA: ID + SLUG, IGUAL QUE EN renderChatAmbitos ====
+  let categoriaId    = null;
+  let categoriaSlug  = null;
+  let categoriaNombre = label;
+
+  if (fromChat.categoria_id != null) {
+    categoriaId   = Number(fromChat.categoria_id);
+    categoriaSlug = fromChat.categoria_slug || String(categoriaId);
+  } else if (Array.isArray(fromChat.categorias) && fromChat.categorias.length) {
+    const c0 = fromChat.categorias[0];
+    categoriaId    = c0.id ?? null;
+    categoriaNombre = c0.nombre || categoriaNombre;
+    categoriaSlug  = c0.slug || (categoriaId != null ? String(categoriaId) : slug(categoriaNombre));
+  } else {
+    // Último fallback: usamos el label como slug de categoría
+    categoriaSlug = slug(label);
+  }
 
   const scopeObj = {
-    ambito:       (label || '').toLowerCase(),
+    ambito:       slug(label),
     ambito_id:    ambitoId,
-    categoria:    categoriaId,
-    categoria_id: categoriaId,
+    categoria:    categoriaSlug,  // 👈 SLUG/string
+    categoria_id: categoriaId,    // 👈 numérico (opcional)
     cp:           cp,
     idioma:       idioma,
     tel:          otherKey || null,
     user_id:      user && user.id || null,
-    email:        user && user.nombre || null,
-    from_chat:    true,               // 👈 MARCA ESPECIAL
+    email:        user && (user.email || user.nombre) || null,
+    from_chat:    true,
   };
 
   const scopeAttr      = JSON.stringify(scopeObj).replace(/"/g, '&quot;');
@@ -88,12 +99,12 @@ window.ensureAmbitoFromChatInLeftPanel = function(fromChat, otherKey, user) {
     <div class="amb-subcards">
       <div class="amb-subcard">
         <div class="amb-subcard-head">
-          <span>${label}</span>
+          <span>${categoriaNombre}</span>
           <button class="btn chat-ambito-btn" type="button"
                   data-goto="chat"
                   data-scope='${scopeAttr}'
                   onclick="window.chatHere?.(this)">
-            Chatear en ${label}
+            Chatear en ${categoriaNombre}
           </button>
         </div>
       </div>
@@ -437,8 +448,14 @@ function renderMyDomainPublicaciones(publicaciones) {
     }
   }
 
- // ================== REFRESH ÁMBITOS / CATEGORÍAS PARA PAR (viewer, other) ==================
+
+
+  // ================== REFRESH ÁMBITOS / CATEGORÍAS PARA PAR (viewer, other) ==================
 window.refreshAmbitosForPair = function(viewerId, otherKey) {
+
+  console.groupCollapsed('[refreshAmbitosForPair] INICIO');
+  console.log('[refreshAmbitosForPair] args:', { viewerId, otherKey });
+
   function classify(query) {
     const q = (query || '').trim();
     if (!q) return { type: 'empty', value: '' };
@@ -448,7 +465,20 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
   }
 
   const kind = classify(otherKey);
-  if (kind.type === 'empty') return;
+  console.log('[refreshAmbitosForPair] kind:', kind);
+
+  if (kind.type === 'empty') {
+    console.warn('[refreshAmbitosForPair] otherKey vacío, no hago nada');
+    console.groupEnd();
+    return;
+  }
+
+  const payload = {
+    q: kind.value,
+    type: kind.type,
+    viewer_user_id: viewerId
+  };
+  console.log('[refreshAmbitosForPair] POST payload:', payload);
 
   fetch('/buscar_usuario_telefono/api/chat/identidad-buscar/', {
     method: 'POST',
@@ -456,77 +486,136 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     },
-    body: JSON.stringify({
-      q: kind.value,
-      type: kind.type,
-      viewer_user_id: viewerId
-    })
+    body: JSON.stringify(payload)
   })
-  .then(r => r.json())
+  .then(r => {
+    console.log('[refreshAmbitosForPair] respuesta HTTP status:', r.status);
+    return r.json();
+  })
   .then(data => {
-    console.log('[refreshAmbitosForPair] data:', data);
+    console.log('[refreshAmbitosForPair] data crudo:', data);
 
-    if (!data || !data.ok) return;
+    if (!data || !data.ok) {
+      console.warn('[refreshAmbitosForPair] data.ok es falso o data vacío');
+      console.groupEnd();
+      return;
+    }
+
+    console.log('[refreshAmbitosForPair] ambitos:', data.ambitos);
+    console.log('[refreshAmbitosForPair] publicaciones:', data.publicaciones);
+    console.log('[refreshAmbitosForPair] codigos_postales:', data.codigos_postales);
+    console.log('[refreshAmbitosForPair] idiomas:', data.idiomas);
 
     // 1) MyDomain (se mantiene igual, no rompemos nada)
     if (Array.isArray(data.ambitos) && typeof window.renderMyDomainAmbitos === 'function') {
+      console.log('[refreshAmbitosForPair] → renderMyDomainAmbitos con', data.ambitos.length, 'ámbitos');
       window.renderMyDomainAmbitos(data.ambitos);
+    } else {
+      console.warn('[refreshAmbitosForPair] NO se llamó a renderMyDomainAmbitos (sin ambitos o sin función)');
     }
+
     if (Array.isArray(data.publicaciones) && typeof window.renderMyDomainPublicaciones === 'function') {
+      console.log('[refreshAmbitosForPair] → renderMyDomainPublicaciones con', data.publicaciones.length, 'publicaciones');
       window.renderMyDomainPublicaciones(data.publicaciones);
+    } else {
+      console.warn('[refreshAmbitosForPair] NO se llamó a renderMyDomainPublicaciones (sin publicaciones o sin función)');
     }
+
     if (typeof window.renderMetaBadges === 'function') {
+      console.log('[refreshAmbitosForPair] → renderMetaBadges');
       window.renderMetaBadges(data.codigos_postales || [], data.idiomas || []);
+    } else {
+      console.warn('[refreshAmbitosForPair] NO hay window.renderMetaBadges');
     }
 
-    // 2) Ámbito/categoría del CHAT (from_chat) → badge + panel medio
-   // 2) 🔥 NUEVO: usar el ámbito/categoría del chat para actualizar el badge del panel derecho
-try {
-  if (!Array.isArray(data.ambitos)) return;
-
-  // buscamos primero uno marcado desde el chat
-  const fromChat = data.ambitos.find(a => a.from_chat) || data.ambitos[0] || null;
-  if (!fromChat) return;
-
-  // 👉 si no viene categoria_id directo, tomo la PRIMER categoría del ámbito (ej: 106)
-  const catFromChat =
-    (fromChat.categoria_id != null ? fromChat.categoria_id : null) ??
-    (Array.isArray(fromChat.categorias) && fromChat.categorias.length
-      ? fromChat.categorias[0].id
-      : null);
-
-  // 👉 si no viene ambito_id directo, uso el id del ámbito (53)
-  const ambitoFromChat =
-    (fromChat.ambito_id != null ? fromChat.ambito_id : null) ??
-    (fromChat.id != null ? fromChat.id : null);
-
-  const scopeForBadge = {
-    dominio: fromChat.dominio || null,
-    ambito: fromChat.dominio || fromChat.valor || null,
-    ambito_id: ambitoFromChat,
-    categoria_id: catFromChat,
-    cp: fromChat.codigo_postal || null,
-    idioma: fromChat.locale || fromChat.idioma || null,
-    tel: otherKey
-  };
-
-  if (typeof window.ctxBadgeEl === 'function' && typeof window.buildCtxLabel === 'function') {
-    const badge = window.ctxBadgeEl();
-    if (badge) {
-      const label = window.buildCtxLabel(scopeForBadge);
-      badge.innerHTML = `<span class="ctx-text">${label}</span>`;
-      badge.setAttribute('title', label);
-      console.log('[refreshAmbitosForPair] badge actualizado desde from_chat:', scopeForBadge);
+    // 1.bis) 🔥 NUEVO: actualizar también el panel izquierdo (#vistaChatAmbitos)
+    if (typeof window.renderChatAmbitos === 'function') {
+      console.log('[refreshAmbitosForPair] → renderChatAmbitos con ambitos de identidad-buscar');
+      window.renderChatAmbitos({
+        user: data.user || data.other_user || {},         // si no viene, queda {} y usa defaults
+        ambitos: data.ambitos || [],
+        publicaciones: data.publicaciones || [],
+        idiomas: data.idiomas || [],
+        codigos_postales: data.codigos_postales || []
+      });
+    } else {
+      console.warn('[refreshAmbitosForPair] NO hay window.renderChatAmbitos');
     }
-  }
-} catch (e) {
-  console.warn('[refreshAmbitosForPair] error al actualizar badge desde ámbitos de chat', e);
-}
 
+    // 2) Ámbito/categoría del CHAT (from_chat) → badge
+    try {
+      console.log('[refreshAmbitosForPair] sección badge / from_chat');
 
+      if (!Array.isArray(data.ambitos)) {
+        console.warn('[refreshAmbitosForPair] sin data.ambitos (no array) en sección badge');
+        console.groupEnd();
+        return;
+      }
+
+      console.log('[refreshAmbitosForPair] ambitos (para from_chat):', data.ambitos);
+
+      // buscamos primero uno marcado desde el chat
+      const fromChat = data.ambitos.find(a => a.from_chat) || data.ambitos[0] || null;
+      console.log('[refreshAmbitosForPair] ámbito elegido fromChat:', fromChat);
+
+      if (!fromChat) {
+        console.warn('[refreshAmbitosForPair] no hay from_chat ni primer ámbito');
+        console.groupEnd();
+        return;
+      }
+
+      const catFromChat =
+        (fromChat.categoria_id != null ? fromChat.categoria_id : null) ??
+        (Array.isArray(fromChat.categorias) && fromChat.categorias.length
+          ? fromChat.categorias[0].id
+          : null);
+
+      console.log('[refreshAmbitosForPair] catFromChat (categoria_id o primera cat):', catFromChat);
+
+      const ambitoFromChat =
+        (fromChat.ambito_id != null ? fromChat.ambito_id : null) ??
+        (fromChat.id != null ? fromChat.id : null);
+
+      console.log('[refreshAmbitosForPair] ambitoFromChat (ambito_id o id):', ambitoFromChat);
+
+      const scopeForBadge = {
+        dominio: fromChat.dominio || null,
+        ambito: fromChat.dominio || fromChat.valor || null,
+        ambito_id: ambitoFromChat,
+        categoria_id: catFromChat,
+        cp: fromChat.codigo_postal || null,
+        idioma: fromChat.locale || fromChat.idioma || null,
+        tel: otherKey
+      };
+
+      console.log('[refreshAmbitosForPair] scopeForBadge:', scopeForBadge);
+
+      if (typeof window.ctxBadgeEl === 'function' && typeof window.buildCtxLabel === 'function') {
+        const badge = window.ctxBadgeEl();
+        console.log('[refreshAmbitosForPair] badge element:', badge);
+
+        if (badge) {
+          const label = window.buildCtxLabel(scopeForBadge);
+          console.log('[refreshAmbitosForPair] label construido:', label);
+
+          badge.innerHTML = `<span class="ctx-text">${label}</span>`;
+          badge.setAttribute('title', label);
+          console.log('[refreshAmbitosForPair] badge actualizado desde from_chat');
+        } else {
+          console.warn('[refreshAmbitosForPair] ctxBadgeEl() devolvió null');
+        }
+      } else {
+        console.warn('[refreshAmbitosForPair] ctxBadgeEl o buildCtxLabel no están definidos');
+      }
+    } catch (e) {
+      console.warn('[refreshAmbitosForPair] error al actualizar badge desde ámbitos de chat', e);
+    }
+
+    console.groupEnd();
   })
   .catch(err => {
-    console.error('[refreshAmbitosForPair] error', err);
+    console.error('[refreshAmbitosForPair] error fetch:', err);
+    console.groupEnd();
   });
 };
 
