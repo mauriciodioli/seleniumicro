@@ -281,6 +281,37 @@ function viewerIsOwner() {
 }
 
 
+function renderMessageBodyVideo(m) {
+  let raw = m.content || '';
+  let url = raw;
+  let caption = '';
+
+  if (raw.includes('||')) {
+    const parts = raw.split('||');
+    url     = (parts[0] || '').trim();
+    caption = (parts[1] || '').trim();
+  } else {
+    url = (url || '').trim();
+  }
+
+  if (url && !url.startsWith('http') && !url.startsWith('/')) {
+    url = '/' + url;
+  }
+
+  const safeCaption = caption ? escapeHtml(caption) : '';
+
+  return `
+    <div class="msg-body msg-body-video">
+      <video
+        src="${url}"
+        class="chat-video-msg"
+        controls
+        preload="metadata"
+      ></video>
+      ${safeCaption ? `<div class="msg-caption">${safeCaption}</div>` : ''}
+    </div>
+  `;
+}
 
 // ==================== BODY: IMAGEN ====================
 function renderMessageBodyImage(m) {
@@ -428,21 +459,27 @@ function renderMessages(list){
       isMine,
       claseFinal: cls
     });
+    // ========= CUERPO (texto / audio / imagen / video) =========
+    let bodyHtml;
 
-    // ========= CUERPO (texto / audio, y futuro img/video) =========
-    // ========= CUERPO (texto / audio / imagen) =========
-      let bodyHtml;
-      if (m.content_type === 'audio') {
-        bodyHtml = renderMessageBodyAudio(m);    // ✅ audio queda igual
-      } else if (m.content_type === 'image') {
-        console.log('[CHAT][renderMessages] mensaje IMAGE', {
-          id: m.id,
-          content: m.content,
-        });
-        bodyHtml = renderMessageBodyImage(m);    // 🆕 imágenes
-      } else {
-        bodyHtml = renderMessageBodyText(m);     // texto como siempre
-      }
+    if (m.content_type === 'audio') {
+      bodyHtml = renderMessageBodyAudio(m);          // ✅ audio
+    } else if (m.content_type === 'image') {
+      console.log('[CHAT][renderMessages] mensaje IMAGE', {
+        id: m.id,
+        content: m.content,
+      });
+      bodyHtml = renderMessageBodyImage(m);          // 🖼 imagen
+    } else if (m.content_type === 'video') {
+      console.log('[CHAT][renderMessages] mensaje VIDEO', {
+        id: m.id,
+        content: m.content,
+      });
+      bodyHtml = renderMessageBodyVideo(m);          // 🎥 video
+    } else {
+      bodyHtml = renderMessageBodyText(m);           // ✏ texto
+    }
+
 
     // 🔴🔵🟢 Estado para el puntito de color
     const { statusClass, statusLabel } = getMsgStatusVisual(m);
