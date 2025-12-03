@@ -2,30 +2,46 @@ console.log('[CHAT IMAGE] Módulo cargado');
 
 // Ahora soportamos VARIAS imágenes
 let pendingImages = [];       // [{ file, chip }]
-let chipsContainer = null;   // contenedor de los chips (dentro de la barra)
+let chipsContainer = null;    // contenedor de los chips (dentro de la barra)
 
 /**
  * Devuelve o crea el contenedor de chips dentro de la barra,
- * antes del input de texto #msgInput.
+ * antes del input de texto (#msgInput o #chatInput).
  */
 function ensureChipsContainer() {
+  // Si ya tenemos uno guardado y sigue en el DOM, lo usamos
   if (chipsContainer && document.body.contains(chipsContainer)) {
     return chipsContainer;
   }
 
-  const input = document.getElementById('msgInput');   // 👈 AQUÍ VA ESO
+  // Buscar el input de texto (según el id que uses)
+  const input =
+    document.getElementById('msgInput') ||
+    document.getElementById('chatInput');
+
   if (!input) {
-    console.warn('[CHAT IMAGE] No encontré #msgInput');
+    console.warn('[CHAT IMAGE] No encontré #msgInput ni #chatInput');
     return null;
   }
 
-  // buscamos el contenedor más cercano de la barra del chat
-  const wrapper = input.closest('.chat-input-inner') || input.closest('.chat-input');
+  // Buscamos el wrapper de la barra de chat
+  const wrapper =
+    input.closest('.chat-input-inner') ||
+    input.closest('.chat-input');
+
   if (!wrapper) {
     console.warn('[CHAT IMAGE] No encontré .chat-input-inner ni .chat-input');
     return null;
   }
 
+  // 🔹 Si ya existe un #chatMediaChips en el HTML, LO REUTILIZAMOS
+  let existing = wrapper.querySelector('#chatMediaChips');
+  if (existing) {
+    chipsContainer = existing;
+    return chipsContainer;
+  }
+
+  // 🔹 Si no existe, lo creamos UNA sola vez
   chipsContainer = document.createElement('div');
   chipsContainer.id = 'chatMediaChips';
   chipsContainer.className = 'chat-media-chips';
@@ -35,6 +51,7 @@ function ensureChipsContainer() {
 
   return chipsContainer;
 }
+
 
 /**
  * Añade una imagen como chip de preview (tipo ChatGPT).
@@ -130,11 +147,19 @@ async function enviarImagen(file) {
     return;
   }
 
+  // 🔹 QUIÉN SOY YO
+  const viewerId = Number(window.usuario_id || window.VIEWER_USER_ID || 0);
+  const soyOwner = (typeof viewerIsOwner === 'function') ? viewerIsOwner() : false;
+  const asRole   = soyOwner ? 'owner' : 'client';
+
   console.log('[enviarImagen] Creando FormData para el archivo...');
   const fd = new FormData();
   fd.append('file', file, file.name || 'image.png');
   fd.append('conversation_id', convId);
-  // si manejás roles: fd.append('as', 'client');
+
+  // 🔹 estos dos son la clave
+  fd.append('viewer_user_id', viewerId);
+  fd.append('as', asRole);  // 'owner' o 'client'
 
   try {
     console.log('[enviarImagen] Enviando la imagen al servidor...');
@@ -154,6 +179,7 @@ async function enviarImagen(file) {
     console.error('[enviarImagen] Excepción al subir la imagen:', err);
   }
 }
+
 
 export {
   showImagePreview,

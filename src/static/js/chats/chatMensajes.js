@@ -497,13 +497,30 @@ function renderMessages(list){
     });
 
     return `
-      <div class="${cls}">
-        ${bodyHtml}
-        <div class="msg-meta">
-          ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
-          <span class="msg-meta-text">${formatRelativeDateTime(m.created_at) || ''}</span>
-        </div>
-      </div>`;
+  <div class="${cls}" data-msg-id="${m.id || ''}">
+    ${bodyHtml}
+
+    <button type="button"
+        class="msg-menu-btn-icon-mensajes"
+            aria-label="Opciones de mensaje">
+      <span class="msg-menu-icon">⋮</span>
+    </button>
+
+    <div class="msg-menu-dropdown">
+      <button type="button"
+              class="msg-menu-item msg-menu-delete"
+              data-msg-id="${m.id || ''}">
+        Delete mensaje
+      </button>
+    </div>
+
+    <div class="msg-meta">
+      ${showDot ? `<span class="msg-status-dot ${statusClass}" title="${statusLabel}"></span>` : ''}
+      <span class="msg-meta-text">${formatRelativeDateTime(m.created_at) || ''}</span>
+    </div>
+  </div>`;
+
+
   }).join('');
 
   // --- 4) Ajuste de scroll DESPUÉS de repintar ---

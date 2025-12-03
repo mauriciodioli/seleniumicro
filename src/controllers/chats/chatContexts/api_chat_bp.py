@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify, current_app, url_for
 from werkzeug.utils import secure_filename
 from extensions import db
 from models.chats.message import Message
+from models.chats.message_media import MessageMedia 
 from models.chats.conversation import Conversation
 from models.usuario import Usuario  # ajustá al nombre real
 from utils.phone import normalize_phone
@@ -16,9 +17,110 @@ from sqlalchemy import func
 from datetime import datetime
 from utils.db_session import get_db_session
 from sqlalchemy import or_, and_
+from utils.media_delete import delete_media_file_local
+from utils.imagen_upload import save_image_file_local
 
 
 api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
+
+
+
+from flask import Blueprint, request, jsonify, current_app
+from extensions import db
+from models.chats.message import Message
+from models.chats.message_media import MessageMedia
+from models.chats.conversation import Conversation
+from utils.db_session import get_db_session
+from utils.media_delete import delete_media_file_local
+
+api_chat_bp = Blueprint("api_chat_bp", __name__, url_prefix="/api/chat")
+
+
+@api_chat_bp.route("/message/<int:msg_id>/delete/", methods=["POST"])
+def delete_message(msg_id):
+    """
+    Elimina un mensaje de la conversación.
+
+    - Siempre borra la fila de `message`.
+    - Si hay registros en message_media -> los borra.
+    - Intenta borrar los archivos físicos (imagen / video) asociados.
+    """
+    try:
+        with get_db_session() as session:
+            data = request.get_json(silent=True) or {}
+            viewer_user_id = data.get("viewer_user_id")
+
+            # Normalizar viewer_user_id
+            try:
+                viewer_user_id = int(viewer_user_id) if viewer_user_id is not None else None
+            except (TypeError, ValueError):
+                viewer_user_id = None
+
+            # 1) Buscar mensaje
+            msg: Message = session.get(Message, msg_id)
+            if not msg:
+                return jsonify(ok=False, error="message not found"), 404
+
+            # 2) Buscar conversación
+            conv: Conversation = session.get(Conversation, msg.conversation_id)
+            if not conv:
+                return jsonify(ok=False, error="conversation not found"), 404
+
+            # 3) Validar permisos (owner / client)
+            allowed_ids = {
+                getattr(conv, "owner_user_id", None),
+                getattr(conv, "client_user_id", None),
+            }
+
+            if viewer_user_id and viewer_user_id not in allowed_ids:
+                return jsonify(ok=False, error="not allowed"), 403
+
+            # 4) MEDIA asociada
+            medias = (
+                session.query(MessageMedia)
+                .filter(MessageMedia.message_id == msg.id)
+                .all()
+            )
+
+            # 4a) Borrar archivos físicos (si hay URL)
+            for m in medias:
+                if m.url:
+                    delete_media_file_local(m.url)
+
+            # 4b) Si la URL también está en message.content
+            if msg.content_type in ("image", "video") and msg.content:
+                delete_media_file_local(msg.content)
+
+            # 5) Borrar filas de DB
+            for m in medias:
+                session.delete(m)
+
+            session.delete(msg)
+
+            # get_db_session normalmente hace commit al salir del with
+            return jsonify(ok=True), 200
+
+    except Exception as e:
+        current_app.logger.exception("delete_message error")
+        return jsonify(ok=False, error=str(e)), 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -449,10 +551,6 @@ def mark_read():
     except Exception as e:
         current_app.logger.exception("Error en /api_chat_bp/read/")
         return jsonify(ok=False, error=str(e)), 500
-
-
-
-
 
 
 

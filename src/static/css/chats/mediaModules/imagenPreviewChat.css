@@ -8,13 +8,14 @@
 
 /* Interior: chips + input + iconos */
 .chat-input-inner {
-  display: flex;
-  align-items: center;
-  flex: 1 1 auto;
-  gap: 6px;
-  background: #d6dbdd;
-  border-radius: 999px;
-  padding: 6px 10px;
+ display: flex;
+ flex-wrap: wrap;           /* 👉 permite 2 filas */
+ align-items: center;
+ flex: 1 1 auto;
+ gap: 6px;
+ background: #c2ebfc;
+ border-radius: 999px;
+ padding: 6px 10px;
 }
 
 /* Input de texto */
@@ -30,21 +31,33 @@
 
 
 /* Contenedor de chips dentro de la barra */
+/* Contenedor de chips dentro de la barra */
 .chat-media-chips {
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-shrink: 0;         /* que no se aplasten con el input */
+
+  flex-shrink: 0;
+  flex-basis: 100%;     /* ocupa todo el ancho de la barra */
+  order: -1;            /* se dibuja arriba del input */
+  margin-bottom: 4px;
+
+  /* 👉 clave para que vayan "a lo largo" */
+  flex-wrap: nowrap;    /* NO envolver a otra línea */
+  overflow-x: auto;     /* si no entran, scroll horizontal */
+  overflow-y: hidden;
 }
+
 
 /* Cada imagen-miniatura */
 .chat-media-chip {
   position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: 0 0 4px rgba(0,0,0,0.25);
 }
 
 /* Imagen dentro del chip */
@@ -58,8 +71,8 @@
 /* Botón X en cada chip */
 .chat-media-chip-close {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: -2px;
+  right: -2px;
   width: 18px;
   height: 18px;
   border-radius: 999px;
@@ -83,8 +96,8 @@
   }
 
   .chat-media-chip {
-    width: 34px;
-    height: 34px;
+    width: 46px;
+    height: 46px;
   }
 }
 
@@ -101,14 +114,19 @@
   max-width: min(260px, 70vw);  /* ancho máximo tipo WhatsApp */
   padding: 0;
   background: transparent;
+   
 }
+
 
 /* imagen en sí */
 .chat-img-msg {
   display: block;
   width: 100%;       /* ocupa todo el ancho del contenedor limitado */
-  height: auto;
-  border-radius: 10px;
+  height: 100%;
+  border-radius: 12px;
+   position: relative;
+  top: -43px;   /* <-- esto la sube 10px */
+ 
 }
 
 /* caption (si algún día lo usás) */
@@ -149,7 +167,7 @@
 .chat-video-msg {
   display: block;
   width: 100%;                   /* ocupa todo el ancho limitado */
-  height: auto;
+  height: 80%;
   border-radius: 10px;
   background: #000;              /* marco negro como WhatsApp */
   max-height: 420px;             /* por si es MUY vertical */
@@ -162,4 +180,31 @@
   .msg.msg-owner .msg-body-video {
     max-width: min(220px, 80vw);
   }
+}
+
+
+/* Contenedor de media (imagen y video) */
+.msg-body-image,
+.msg-body-video {
+  padding: 0;
+  margin: 0;
+}
+
+/* Estilo común para IMG y VIDEO */
+
+.chat-video-msg {
+  display: block;
+  width: 100%;        /* llenan el ancho */
+  height: 100%;       /* alto según proporción */
+  max-height: 420px;  /* límite para verticales */
+  border-radius: 14px;
+  background: #000;   /* marco negro (en imagen solo se ve si hay transparencia) */
+  object-fit: cover;  /* recorta un poco sin deformar */
+}
+
+/* Si querés subir TODO 10px dentro de la burbuja */
+
+.msg-body-video {
+  margin-top: -43px;
+  margin-bottom: -28%;
 }

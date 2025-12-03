@@ -101,3 +101,95 @@ function wrapEnviarTextoConMedia() {
     }
   };
 }
+
+
+
+
+
+
+
+
+
+// ==================== MENÚ DE MENSAJES (⋮) ====================
+// Delegación de eventos en #msgs
+document.addEventListener('DOMContentLoaded', () => {
+  const msgsBox = document.getElementById('msgs');
+  if (!msgsBox) return;
+
+  // Clicks dentro de la caja de mensajes
+  msgsBox.addEventListener('click', (ev) => {
+    const btnMenu   = ev.target.closest('.msg-menu-btn-icon-mensajes');   // 👈 cambio acá
+    const btnDelete = ev.target.closest('.msg-menu-delete');
+
+    // Abrir/cerrar menú
+    if (btnMenu) {
+      const dropdown = btnMenu.parentElement.querySelector('.msg-menu-dropdown');
+      const allDropdowns = msgsBox.querySelectorAll('.msg-menu-dropdown');
+      allDropdowns.forEach(d => {
+        if (d !== dropdown) d.classList.remove('open');
+      });
+      dropdown.classList.toggle('open');
+      ev.stopPropagation();
+      return;
+    }
+
+    // Eliminar mensaje
+    if (btnDelete) {
+      const msgId = btnDelete.dataset.msgId;
+      if (msgId) {
+        eliminarMensaje(msgId);
+      }
+    }
+  });
+});
+
+// Cerrar menús al hacer click fuera
+document.addEventListener('click', () => {
+  const dropdowns = document.querySelectorAll('.msg-menu-dropdown.open');
+  dropdowns.forEach(d => d.classList.remove('open'));
+});
+
+
+
+// =========================
+// ELIMINAR MENSAJE (FRONT)
+// =========================
+async function eliminarMensaje(msgId) {
+  if (!msgId) {
+    console.warn('[CHAT] eliminarMensaje sin msgId');
+    return;
+  }
+
+  if (!confirm('¿Eliminar este mensaje?')) return;
+
+  // ID del usuario que está viendo el chat
+  const viewerIdRaw = window.usuario_id ?? window.VIEWER_USER_ID ?? null;
+  const viewerId = viewerIdRaw != null ? Number(viewerIdRaw) : null;
+
+  try {
+    const resp = await fetch(`/api/chat/message/${msgId}/delete/`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ viewer_user_id: viewerId }),
+    });
+
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok || !data?.ok) {
+      console.error('[CHAT] Error al eliminar mensaje', data);
+      alert('No se pudo eliminar el mensaje.');
+      return;
+    }
+
+    // Borro el div del mensaje en el DOM
+    const msgDiv = document.querySelector(`.msg[data-msg-id="${msgId}"]`);
+    if (msgDiv && msgDiv.parentNode) {
+      msgDiv.parentNode.removeChild(msgDiv);
+    }
+
+  } catch (err) {
+    console.error('[CHAT] Excepción al eliminar mensaje', err);
+    alert('Error al eliminar el mensaje.');
+  }
+}

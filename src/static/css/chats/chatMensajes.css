@@ -137,22 +137,21 @@
 /* Lista scrolleable y sin solaparse con el input */
 /* Fondo del panel de mensajes */
 .msgs {
-  padding: 12px;
+
   box-sizing: border-box;
   height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: #ebe8c7;          /* fondo oscuro */
-  padding: 12px 16px;
+  gap: 4px;           /* menos espacio entre mensajes */
+  background: #ebe8c7;
 }
 
 /* Mensaje base (burbuja) */
 /* GLOBO DE MENSAJE – BASE (PC) */
 .msg {
   max-width: 70%;
-  padding: 8px 12px;
+  padding: 3px 5px;
   border-radius: 18px;
   font-size: 16px;
   word-wrap: break-word;
@@ -185,13 +184,14 @@
 }
 .msg .msg-body {
   font-weight: bold;
+  
 }
 
 /* Texto de cualquier mensaje */
 .msg-body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 600;      /* semi-bold, no bold loco */
-  line-height: 1.35;     /* más aire entre líneas */
+ 
 }
 
 /* Mis mensajes (enviados) */
@@ -497,3 +497,123 @@ html, body { height: 100%; overflow: hidden; }
   font-size: 11px;
   opacity: .8;
 }
+
+
+
+
+
+
+
+
+
+
+
+/* La fila del mensaje sirve de referencia, no cambia tamaños */
+.msg {
+  position: relative;
+}
+
+/* RESET total del botón + estilo de icono flotante */
+button.msg-menu-btn-icon-mensajes {
+  all: unset;                      /* sin estilos heredados raros */
+  position: absolute;
+  top: 10px;                       /* ajustá si querés */
+  right: 12px;
+
+  width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  border-radius: 999px;
+
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.7);
+
+  opacity: 0;                      /* NO ocupa espacio, solo se dibuja encima */
+  transition: opacity 0.15s ease, background 0.15s ease;
+  background: transparent;
+}
+.msg-menu-btn-icon-mensajes img {
+  border-radius: 0 !important;
+  display: block;
+  width: 100%;
+}
+
+/* Se ve solo al pasar el mouse por la burbuja (desktop) */
+.msg:hover button.msg-menu-btn-icon-mensajes {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);  /* circulito suave tipo WhatsApp */
+}
+
+/* Menú desplegable sigue igual */
+.msg-menu-dropdown {
+  position: absolute;
+  top: 30px;
+  right: 6px;
+  min-width: 140px;
+  padding: 4px 0;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  font-size: 13px;
+  z-index: 10;
+  display: none;
+}
+.msg-menu-dropdown.open {
+  display: block;
+}
+.msg-menu-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.msg-menu-item:hover {
+  background: #f2f4f8;
+}
+.msg-menu-delete {
+  color: #c62828;
+}
+button.msg-menu-btn-icon-mensajes {
+  all: unset;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+
+  width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  border-radius: 999px;
+
+  font-size: 14px;     /* un poquito más chico ayuda */
+  line-height: 1;      /* <--- clave para centrar el caracter */
+  color: rgba(0, 0, 0, 0.7);
+
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  background: transparent;
+}
+
+.msg-menu-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: rgba(0,0,0,.7);
+
+  position: relative;
+  top: -1px;   /* sube los puntos  */
+  /* left: 1px;  si querés moverlos a un lado */
+}
+
+
+

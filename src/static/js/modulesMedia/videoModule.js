@@ -139,22 +139,26 @@ async function enviarVideo(file) {
     return;
   }
 
-  let role = 'client';
+  // 🔹 quién soy yo
+  const viewerId = Number(window.usuario_id || window.VIEWER_USER_ID || 0);
+
+  let soyOwner = false;
   try {
     if (typeof window.viewerIsOwner === 'function') {
-      const info = window.viewerIsOwner();
-      role = info && info.soyOwner ? 'owner' : 'client';
+      soyOwner = !!window.viewerIsOwner();   // devuelve true/false
     }
   } catch (e) {
-    console.warn('[enviarVideo] no pude resolver viewerIsOwner, uso client por defecto');
+    console.warn('[enviarVideo] no pude resolver viewerIsOwner, asumo client');
   }
 
-  console.log('[enviarVideo] role resuelto para video:', role);
+  const role = soyOwner ? 'owner' : 'client';
+  console.log('[enviarVideo] role resuelto para video:', role, 'viewerId:', viewerId);
 
   const fd = new FormData();
   fd.append('file', file, file.name || 'video.mp4');
   fd.append('conversation_id', convId);
-  fd.append('as', role);   // 👈 idem imágenes
+  fd.append('viewer_user_id', viewerId);  // igual que en imagen
+  fd.append('as', role);                  // 'owner' o 'client'
 
   try {
     const resp = await fetch('/api/chat/video_controller/video-upload/', {
