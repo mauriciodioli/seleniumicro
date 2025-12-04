@@ -155,6 +155,7 @@
 
 /* Caja externa del mensaje: sin fondo, sin padding */
 .msg {
+  position: relative;   
   display: flex;
   flex-direction: column;
   align-items: flex-end;      /* los propios a la derecha */
@@ -170,7 +171,7 @@
   box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   word-wrap: break-word;
-  white-space: pre-wrap;
+  white-space: normal;
 }
 
 /* ENVIADOS (yo) */
@@ -204,18 +205,19 @@
    - color según quién envía
 */
 
+/* Burbuja de media */
 .msg-body.msg-body-image,
 .msg-body.msg-body-video {
-  max-width: min(260px, 70vw);      /* ancho tipo WhatsApp */
-  padding: 4px;                     /* borde de color alrededor de la foto */
+  max-width: min(260px, 70vw);
+  padding: 4px 4px 22px 4px;   /* 👈 dejamos “piso” para la hora adentro */
   border-radius: 18px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  overflow: hidden;                 /* redondea bien la media */
-  white-space: normal;              /* NO pre-wrap aquí */
-  line-height: 0;                   /* sólo imagen/video, sin texto */
+  overflow: hidden;
+  white-space: normal;
+  line-height: 0;              /* la imagen/video no generan aire */
 }
 
-/* Colores de la burbuja de media: igual que texto */
+/* Colores (ya los tenés, solo lo recuerdo) */
 .msg.me .msg-body.msg-body-image,
 .msg.me .msg-body.msg-body-video {
   background: #1ee5ff;
@@ -226,13 +228,29 @@
   background: #5e5e5e;
 }
 
+/* Pie de foto dentro de la burbuja */
+.msg-caption {
+  margin-top: 4px;
+  padding: 0 2px 1px;
+  font-size: 12px;
+  line-height: 1.3;        /* aquí sí texto normal */
+  color: inherit;          /* usa el color de la burbuja (celeste/gris) */
+  white-space: pre-wrap;   /* respeta saltos de línea del usuario */
+}
+
 
 /* Hora / meta */
+/* Hora / puntito dentro de la burbuja, abajo a la derecha */
 .msg-meta {
-  margin-top: 2px;
+  position: absolute;
+  right: 12px;
+  bottom: 4px;                      /* se dibuja sobre el borde inferior de la burbuja */
+  margin-top: 0;
   font-size: 11px;
   opacity: 0.7;
-  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 4px;                         /* espacio entre puntito y hora */
 }
 
 /* ====== MOBILE ====== */
