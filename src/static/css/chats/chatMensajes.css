@@ -149,61 +149,93 @@
 
 /* Mensaje base (burbuja) */
 /* GLOBO DE MENSAJE – BASE (PC) */
+/* =========================
+   BURBUJAS DE MENSAJE
+   ========================= */
+
+/* Caja externa del mensaje: sin fondo, sin padding */
 .msg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;      /* los propios a la derecha */
+  margin: 6px 8px;
+  max-width: 100%;
+}
+
+/* Cuerpo de la burbuja (TEXTO por defecto) */
+.msg-body {
   max-width: 70%;
-  padding: 3px 5px;
+  padding: 6px 8px;          /* borde de la burbuja */
   border-radius: 18px;
-  font-size: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   word-wrap: break-word;
   white-space: pre-wrap;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-
-  display: inline-flex;
-  flex-direction: column;
 }
 
-.msg--out {
+/* ENVIADOS (yo) */
+.msg.me .msg-body {
   margin-left: auto;
-}
-
-/* Mensajes ENVIADOS (tu clase .me) – alineados a la derecha, color cian */
-/* Mensajes ENVIADOS (tu clase .me) – alineados a la derecha, color cian */
-.msg.me {
-  margin-left: auto;
-  background: #1ee5ff;          /* azul/cian */
+  background: #1ee5ff;
   color: #001018;
   border-bottom-right-radius: 4px;
+  font-weight: 600;
 }
 
-/* Mensajes RECIBIDOS – cualquier .msg que NO tenga .me */
-.msg:not(.me) {
+/* RECIBIDOS */
+.msg:not(.me) .msg-body {
   margin-right: auto;
-  background: #5e5e5e;          /* verde */
+  background: #5e5e5e;
   color: #ffffff;
   border-bottom-left-radius: 4px;
-}
-.msg .msg-body {
-  font-weight: bold;
-  
+  font-weight: 500;
 }
 
-/* Texto de cualquier mensaje */
-.msg-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-weight: 600;      /* semi-bold, no bold loco */
- 
+/* ===== BURBUJAS DE MEDIA (IMAGEN / VIDEO) ===== */
+/* Mismo concepto de burbuja, pero:
+   - ancho limitado
+   - SIN padding (altura = altura de la imagen/video)
+   - sin problemas de líneas vacías (line-height:0) */
+
+/* ===== BURBUJAS DE MEDIA (IMAGEN / VIDEO) ===== */
+/* Mismo concepto de burbuja, pero:
+   - ancho limitado
+   - sin aire raro arriba/abajo
+   - color según quién envía
+*/
+
+.msg-body.msg-body-image,
+.msg-body.msg-body-video {
+  max-width: min(260px, 70vw);      /* ancho tipo WhatsApp */
+  padding: 4px;                     /* borde de color alrededor de la foto */
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  overflow: hidden;                 /* redondea bien la media */
+  white-space: normal;              /* NO pre-wrap aquí */
+  line-height: 0;                   /* sólo imagen/video, sin texto */
 }
 
-/* Mis mensajes (enviados) */
-.msg.me .msg-body {
-  font-weight: 600;   /* semi-bold */
+/* Colores de la burbuja de media: igual que texto */
+.msg.me .msg-body.msg-body-image,
+.msg.me .msg-body.msg-body-video {
+  background: #1ee5ff;
 }
 
-/* Mensajes recibidos */
-.msg:not(.me) .msg-body {
-  font-weight: 500;   /* un paso menos; si sigue pesado ponelo en 400 */
+.msg:not(.me) .msg-body.msg-body-image,
+.msg:not(.me) .msg-body.msg-body-video {
+  background: #5e5e5e;
 }
 
+
+/* Hora / meta */
+.msg-meta {
+  margin-top: 2px;
+  font-size: 11px;
+  opacity: 0.7;
+  align-self: flex-end;
+}
+
+/* ====== MOBILE ====== */
 /* ====== MOBILE ====== */
 @media (max-width: 768px) {
   .msgs {
@@ -211,10 +243,24 @@
     gap: 6px;
   }
 
-  .msg {
-    max-width: 90%;          /* más ancho en celular */
-    font-size: 13px;         /* un poco más chico */
+  .msg-body {
+    max-width: 90%;
+    font-size: 13px;
   }
+
+  .msg-body.msg-body-image,
+  .msg-body.msg-body-video {
+    max-width: min(220px, 80vw);
+  }
+}
+
+
+/* La hora debajo, pegada a la burbuja */
+.msg-meta {
+  margin-top: 2px;
+  font-size: 11px;
+  opacity: 0.7;
+  align-self: flex-end;
 }
 
 /* Input fijo en el fondo */

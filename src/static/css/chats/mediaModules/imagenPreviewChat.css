@@ -101,110 +101,21 @@
   }
 }
 
-
-
-
-
-
-/* ===== IMAGEN DENTRO DEL MENSAJE ===== */
-
-/* contenedor de la imagen dentro de la burbuja */
-.msg-body-image {
-  display: inline-block;
-  max-width: min(260px, 70vw);  /* ancho máximo tipo WhatsApp */
-  padding: 0;
-  background: transparent;
-   
-}
-
-
-/* imagen en sí */
 .chat-img-msg {
   display: block;
-  width: 100%;       /* ocupa todo el ancho del contenedor limitado */
-  height: 100%;
-  border-radius: 12px;
-   position: relative;
-  top: -43px;   /* <-- esto la sube 10px */
- 
-}
-
-/* caption (si algún día lo usás) */
-.msg-caption {
-  margin-top: 4px;
-  font-size: 11px;
-  opacity: 0.8;
-}
-
-/* mobile: un poco más angosta todavía */
-@media (max-width: 600px) {
-  .msg-body-image {
-    max-width: min(220px, 80vw);
-  }
-}
-
-
-
-
-
-/* ===== VIDEO DENTRO DEL MENSAJE ===== */
-
-/* Contenedor de video dentro de la burbuja */
-.msg-body-video {
-  display: inline-block;
-  max-width: min(260px, 70vw);   /* mismo ancho que imagen */
-  padding: 0;
-  background: transparent;       /* el color lo pone la burbuja msg me / msg-owner */
-}
-
-/* Que la burbuja no se expanda más allá del video */
-.msg.me .msg-body-video,
-.msg.msg-owner .msg-body-video {
-  max-width: min(260px, 70vw);
-}
-
-/* El <video> en sí */
-.chat-video-msg {
-  display: block;
-  width: 100%;                   /* ocupa todo el ancho limitado */
-  height: 80%;
-  border-radius: 10px;
-  background: #000;              /* marco negro como WhatsApp */
-  max-height: 420px;             /* por si es MUY vertical */
-}
-
-/* Mobile: un poco más angosto */
-@media (max-width: 600px) {
-  .msg-body-video,
-  .msg.me .msg-body-video,
-  .msg.msg-owner .msg-body-video {
-    max-width: min(220px, 80vw);
-  }
-}
-
-
-/* Contenedor de media (imagen y video) */
-.msg-body-image,
-.msg-body-video {
-  padding: 0;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;   /* 18 (burbuja) - 4 (padding) */
   margin: 0;
 }
 
-/* Estilo común para IMG y VIDEO */
-
 .chat-video-msg {
   display: block;
-  width: 100%;        /* llenan el ancho */
-  height: 100%;       /* alto según proporción */
-  max-height: 420px;  /* límite para verticales */
-  border-radius: 14px;
-  background: #000;   /* marco negro (en imagen solo se ve si hay transparencia) */
-  object-fit: cover;  /* recorta un poco sin deformar */
-}
-
-/* Si querés subir TODO 10px dentro de la burbuja */
-
-.msg-body-video {
-  margin-top: -43px;
-  margin-bottom: -28%;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  border-radius: 14px;   /* mismo criterio */
+  background: #000;
+  object-fit: cover;
+  margin: 0;
 }

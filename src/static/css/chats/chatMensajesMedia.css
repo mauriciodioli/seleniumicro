@@ -46,7 +46,7 @@
 }
 
 
-
+/*
 
 .msg {
   display: flex;
@@ -61,7 +61,7 @@
   max-width: 75%;
   border-radius: 14px;
   padding: 6px;
-  background: #dcf8c6; /* estilo WhatsApp salida */
+  background: #dcf8c6; 
 }
 
 .msg-image {
@@ -75,7 +75,7 @@
   width: 220px;
 }
 
-
+*/
 .chat-media-preview {
   padding: 4px 10px;
   background: #050b15;
