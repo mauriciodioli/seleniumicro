@@ -181,20 +181,6 @@ details[open] .id-chev{ transform:rotate(90deg); transition:transform .12s ease;
 @media (max-width: 1200px){
   .wrap{ padding-inline: clamp(8px, 2vw, 12px); }
 }
-@media (max-width: 992px){
-  /* 4-4-4 en tablets */
-  .col-identidades{ grid-column:1 / span 4; }
-  .col-ambitos    { grid-column:5 / span 4; }
-  .col-chat       { grid-column:9 / span 4; }
-}
-@media (max-width: 768px){
-  /* Stack en móvil */
-  .col-identidades,
-  .col-ambitos,
-  .col-chat{ grid-column:1 / -1; }
-  .col-chat .chat{ min-height:420px; }
-  .search-tabs{ gap:6px; }
-}
 
 /* =========================
    Modo claro rápido (si algún día lo alternás)
@@ -513,21 +499,16 @@ body.theme-light .col-chat .chat{
 .hidden{ display:none!important; }
 
 /* --- Comportamiento en pantallas pequeñas --- */
+/* --- Comportamiento en pantallas pequeñas --- */
 @media (max-width: 768px){
-  /* En móvil, las columnas ya se apilan 1/-1. Colapsar = deslizar hacia arriba */
-  .col-identidades,
-  .col-ambitos,
-  .col-chat{ grid-column:1 / -1; }
-
   .ambitos-collapsed .col-ambitos{
-    display:none;                 /* fuera del flujo */
-    opacity:0; transform:translateY(-12px); /* pliega hacia arriba */
+    display:none;
+    opacity:0; transform:translateY(-12px);
   }
   .ambitos-collapsed .col-chat{
-    grid-column:1 / -1;           /* chat full width */
+    grid-column:1 / -1;
   }
 
-  /* Reubicar handle en móvil (pegado arriba a la izquierda del chat) */
   .ambitos-handle{
     left:10px; top:-10px; transform:none;
   }

@@ -273,6 +273,7 @@
 }
 
 
+
 /* La hora debajo, pegada a la burbuja */
 .msg-meta {
   margin-top: 2px;
@@ -407,41 +408,6 @@ html, body { height: 100%; overflow: hidden; }
 
 
 
-/* === Layout deslizante para móvil === */
-@media (max-width: 768px){
-
-  .layout-chat {                /* tu contenedor general */
-    display: flex;
-    width: 300%;                /* tres paneles lado a lado */
-    transition: transform .4s ease-in-out;
-  }
-
-  .col-identidades,
-  .col-ambitos,
-  .col-chat {
-    width: 100%;
-    flex-shrink: 0;
-    height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  /* Estado inicial → muestra Identidades */
-  html:not(.slide-ambitos):not(.slide-chat) .layout-chat {
-    transform: translateX(0);
-  }
-
-  /* Al abrir Ámbitos */
-  html.slide-ambitos .layout-chat {
-    transform: translateX(-100%);
-  }
-
-  /* Al abrir Chat */
-  html.slide-chat .layout-chat {
-    transform: translateX(-200%);
-  }
-}
-
 
 
 
@@ -488,34 +454,26 @@ html, body { height: 100%; overflow: hidden; }
 /* ========= MOBILE (≤ 768px) ========= */
 /* aquí NO recortamos nada, full-height como antes */
 /* === Ajuste SOLO para pantallas pequeñas (chat más arriba) === */
-@media (max-width: 768px){
-
-  :root{
-    --chat-gap-bottom-mobile: 0;   /* probá 40 / 50 / 60 según lo que veas */
+/* ========= MOBILE (≤ 768px) ========= */
+/* === Ajuste SOLO para pantallas pequeñas (chat más arriba) === */
+/* ====== MOBILE ====== */
+@media (max-width: 768px) {
+  .msgs {
+    padding: 8px;
+    gap: 6px;
   }
 
-  /* La columna del chat se vuelve flex para poder “recortar” abajo */
-  .col-chat{
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
+  .msg-body {
+    max-width: 90%;
+    font-size: 13px;
   }
 
-  /* El chat queda pegado arriba y se recorta por abajo */
-.col-chat .chat {
-  display: flex;
-  flex-direction: column;
-  height: 100%;   /* 👈 */
-  min-height: 0;  /* 👈 */
-}
-
-
-  /* El scroll sigue viviendo dentro de los mensajes */
-  .col-chat .chat .msgs{
-    min-height: 0;
-    overflow: auto;
+  .msg-body.msg-body-image,
+  .msg-body.msg-body-video {
+    max-width: min(220px, 80vw);
   }
 }
+
 
 
 
