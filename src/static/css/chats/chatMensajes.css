@@ -491,30 +491,33 @@ html, body { height: 100%; overflow: hidden; }
 @media (max-width: 768px){
 
   :root{
-    --chat-gap-bottom-mobile: 140px;   /* probá 40 / 50 / 60 según lo que veas */
+    --chat-gap-bottom-mobile: 0;
   }
 
-  /* La columna del chat se vuelve flex para poder “recortar” abajo */
-  .col-chat{
+  /* La columna del chat es un flex vertical */
+  .col-chat {
     display: flex;
     flex-direction: column;
     min-height: 0;
   }
 
-  /* El chat queda pegado arriba y se recorta por abajo */
-  .col-chat .chat{
-    flex: 1 1 auto;
-    height: calc(100% - var(--chat-gap-bottom-mobile));
-    margin-top: 0;
-    margin-bottom: var(--chat-gap-bottom-mobile);
+  /* El panel .chat se estira hasta ocupar todo lo disponible */
+  .col-chat .chat {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;   /* 👈 en vez de height:93% */
+    height: auto;
+    min-height: 0;
   }
 
-  /* El scroll sigue viviendo dentro de los mensajes */
-  .col-chat .chat .msgs{
+  /* El scroll vive adentro de .msgs */
+  .col-chat .chat .msgs {
+    flex: 1 1 auto;   /* 👈 que crezca y haga scroll */
     min-height: 0;
     overflow: auto;
   }
 }
+
 
 
 

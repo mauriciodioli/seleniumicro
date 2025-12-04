@@ -138,9 +138,7 @@ details[open] .id-chev{ transform:rotate(90deg); transition:transform .12s ease;
 /* =========================
    Chat
 ========================= */
-.col-chat .chat{
-  display:flex; flex-direction:column; min-height:560px; height:100%;
-}
+.col-chat .chat
 .ctx-badge{
   position:relative; top:10px; left:10px;
   display:inline-flex; align-items:center; gap:8px;
@@ -354,9 +352,10 @@ body.theme-light .search-tabs .tab.active{
 }
 /* Burbujas de mensaje propios en celeste bandera */
 body.theme-light .msg-owner .msg-body{
-  background: transparent;  
-  /* color: #02243b;  // si querés, borrá esta línea y que use el color heredado */
+  background: #5e5e5e;
+  color: #ffffff;
 }
+
 
 
 /* =========================
@@ -546,35 +545,38 @@ details[open] .id-chev-btn{ transform:rotate(90deg); }
 
 
 /* === Mobile: carrusel horizontal con snap === */
-/* --- FIX carrusel horizontal en móvil --- */
 @media (max-width: 768px) {
-  /* 1) Permití overflow-x en el contenedor padre */
+  /* 1) Contenedor principal: que pueda scrollear normal en Y */
   .wrap {
-    overflow: visible; /* antes lo tenías en hidden */
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
-  /* 2) Asegurá el row deslizable */
+  /* 2) Fila deslizable en X, pero sin forzar altura fija */
   .app-grid {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;          /* 👈 nada de height fija acá */
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    height: calc(100dvh - 56px); /* usa tu altura real de nav si querés var */
+
+    min-height: 0;                /* importante para que los hijos calculen bien */
   }
 
-  /* 3) Cada panel ocupa EXACTAMENTE una pantalla */
+  /* 3) Cada panel ocupa el ancho de la pantalla, pero la ALTURA es automática */
   .col-identidades,
   .col-ambitos,
   .col-chat {
-    flex: 0 0 100vw;      /* <-- clave: ancho fijo por panel */
+    flex: 0 0 100vw;
     min-width: 100vw;
     max-width: 100vw;
-    height: calc(100dvh - 56px);
+
+    height: auto;                 /* 👈 antes tenías height: calc(100dvh - 56px) */
     min-height: 0;
     overflow-y: auto;
+
     scroll-snap-align: start;
     overscroll-behavior: contain;
   }

@@ -156,7 +156,7 @@
 
 /* Panel transparente para que no haya “pastilla” blanca gigante */
 .msg-audio-player::-webkit-media-controls-panel {
-  background-color: #4a90e2;
+  background-color: #35b6e9;
 }
 /* Flecha de play oscura/negra en WebKit (Chrome, Android, Edge, Safari) */
 .msg-audio-player::-webkit-media-controls-play-button {
