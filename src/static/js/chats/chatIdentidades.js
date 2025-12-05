@@ -400,10 +400,7 @@ window.setMobileView = function(view){  // 'identidades' | 'ambitos' | 'chat'
   root.classList.add('view-' + view);
 };
 
-window.focusAmbAnchor = function(){
-  const a = document.getElementById('amb-card');
-  if (a) a.scrollIntoView({ behavior:'smooth', block:'start' });
-};
+ 
   function setMobileView(view){  // 'identidades' | 'ambitos' | 'chat'
     if(!isMobile()) return;
     const root = document.documentElement;
@@ -423,12 +420,30 @@ window.focusAmbAnchor = function(){
       }
     }
   });
-function focusAmbAnchor(){
-  const a = document.getElementById('amb-card');
-  if (a) a.scrollIntoView({ behavior:'smooth', block:'start' });
-}
+
 
   
+// === NUEVA FUNCIÓN: SCROLL HORIZONTAL ENTRE PANELES ===
+function scrollToSection(view){        // 'identidades' | 'ambitos' | 'chat'
+  if (!isMobile()) return;
+
+  const grid = document.querySelector('.app-grid');
+  if (!grid) return;
+
+  let target = null;
+  if (view === 'identidades') {
+    target = document.getElementById('col-identidades');
+  } else if (view === 'ambitos') {
+    target = document.getElementById('col-ambitos');
+  } else if (view === 'chat') {
+    target = document.getElementById('col-chat');
+  }
+
+  if (!target) return;
+
+  const x = target.offsetLeft;   // posición horizontal del panel
+  grid.scrollTo({ left: x, behavior: 'smooth' });
+}
 
 
 
@@ -529,9 +544,9 @@ document.addEventListener('click', (e) => {
   if (!summary) return;
 
   if (isMobile()) {
-    
+    scrollToSection('ambitos');   // 👈 desliza a la columna del medio
     setMobileView('ambitos');
-    setTimeout(focusAmbAnchor, 300);
+    //setTimeout(focusAmbAnchor, 300);
   }
 }, ); // ← CAMBIO MÍNIMO
 
