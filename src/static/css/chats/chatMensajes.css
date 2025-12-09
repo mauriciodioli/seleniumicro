@@ -253,24 +253,6 @@
   gap: 4px;                         /* espacio entre puntito y hora */
 }
 
-/* ====== MOBILE ====== */
-/* ====== MOBILE ====== */
-@media (max-width: 768px) {
-  .msgs {
-    padding: 8px;
-    gap: 6px;
-  }
-
-  .msg-body {
-    max-width: 90%;
-    font-size: 13px;
-  }
-
-  .msg-body.msg-body-image,
-  .msg-body.msg-body-video {
-    max-width: min(220px, 80vw);
-  }
-}
 
 
 
@@ -429,7 +411,7 @@ html, body { height: 100%; overflow: hidden; }
   .col-chat{
     display: flex;
     flex-direction: column;
-    min-height: 0;
+   
   }
 
   /* tarjetas más bajas, pegadas arriba y recortadas abajo */
@@ -473,6 +455,7 @@ html, body { height: 100%; overflow: hidden; }
     max-width: min(220px, 80vw);
   }
 }
+
 
 
 

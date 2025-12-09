@@ -14,6 +14,7 @@
   --danger:#ef4444;
   --badge:#1b2437;
   --shadow:0 10px 30px rgba(0,0,0,.35);
+  --footer-h: 56px;
 }
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
@@ -526,27 +527,31 @@ details[open] .id-chev-btn{ transform:rotate(90deg); }
 
 
 /* === Mobile: carrusel horizontal con snap === */
+/* === Mobile: carrusel horizontal con snap === */
 @media (max-width: 768px) {
-  /* 1) Contenedor principal: que pueda scrollear normal en Y */
+
+  /* 1) Contenedor principal: que scrollee normal en Y */
   .wrap {
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: visible;    /* 👈 ya no tiene scroll propio */
   }
 
-  /* 2) Fila deslizable en X, pero sin forzar altura fija */
+  /* 2) Fila deslizable en X, sin altura fija */
   .app-grid {
     display: flex;
     flex-direction: row;
-    overflow-x: auto;
-    overflow-y: visible;          /* 👈 nada de height fija acá */
+
+    overflow-x: auto;       /* swipe lateral entre paneles */
+    overflow-y: hidden;     /* no scrollea en vertical, eso lo hacen las columnas */
+
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
 
-    min-height: 0;                /* importante para que los hijos calculen bien */
+    min-height: 0;          /* importante para que los hijos calculen bien */
   }
 
-  /* 3) Cada panel ocupa el ancho de la pantalla, pero la ALTURA es automática */
+  /* 3) Cada panel ocupa el ancho de la pantalla, altura automática */
   .col-identidades,
   .col-ambitos,
   .col-chat {
@@ -554,12 +559,16 @@ details[open] .id-chev-btn{ transform:rotate(90deg); }
     min-width: 100vw;
     max-width: 100vw;
 
-    height: auto;                 /* 👈 antes tenías height: calc(100dvh - 56px) */
+    height: auto;
     min-height: 0;
-    overflow-y: auto;
+    overflow-y: auto;       /* aquí sí hay scroll vertical */
 
     scroll-snap-align: start;
     overscroll-behavior: contain;
+  }
+  .col-chat {
+    box-sizing: border-box;
+    padding-bottom: 64px;   /* aprox. la altura del footer "Elegí un micrositio" */
   }
 }
 

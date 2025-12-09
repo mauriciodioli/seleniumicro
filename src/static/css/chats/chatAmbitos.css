@@ -1,7 +1,7 @@
 :root{
   --topbar-h: 70px;
   --amb-card-bg: #0b1222;
-  --amb-footer-h: 56px;
+
 }
 
 /* contenedores padres sin scroll propio */
@@ -81,16 +81,6 @@ details[open] > .amb-summary .amb-chev-btn{ transform: rotate(90deg) translateY(
 .amb-mini-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px; }
 .amb-mini-card{ background:#0f1a2b; border:1px solid var(--border); border-radius:8px; padding:8px; display:flex; flex-direction:column; gap:8px; }
 
-/* FOOTER fijo */
-.amb-footer{
-  height: var(--amb-footer-h);
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding:10px 12px;
-  border-top:1px solid var(--border);
-  background: var(--amb-card-bg);
-  box-shadow: 0 -6px 12px rgba(0,0,0,.25);
-}
-.amb-footer .hint{ color:#94a3b8; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* === Estilo "sharp": sin puntas redondeadas === */
 /* Tarjetas y contenedores */
@@ -98,7 +88,7 @@ details[open] > .amb-summary .amb-chev-btn{ transform: rotate(90deg) translateY(
 .id-card,
 .amb-panel-header,
 .amb-accordion,
-.amb-footer,
+
 .id-footer,
 .amb-subcard,
 .amb-mini-card {

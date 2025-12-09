@@ -77,7 +77,8 @@ function gotoPanel(id) {
   if (!el) return;
   // En mobile usamos scrollIntoView; en desktop no hacemos nada
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (isMobile) el.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+
+ if (isMobile) el.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
 }
 
 // Delegación global: dispara por data-goto

@@ -155,7 +155,7 @@ window.chatHere = function(btn){
     if (ambito) ambito.classList.add('is-active-ambito');
 
     if (!window.matchMedia('(max-width: 768px)').matches) {
-      (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth', block:'center' });
+      (mini || subcard || ambito)?.scrollIntoView({ behavior:'smooth',inline: 'start', block:'nearest' });
     }
 
     // 🔹 NUEVO: refrescar ámbitos/categorías para este par
@@ -466,7 +466,8 @@ document.addEventListener('click', function onGoto(e){
 
     setTimeout(() => {
       const a = document.getElementById('amb-card');
-      if (a) a.scrollIntoView({ behavior:'smooth', block:'start' });
+     
+      if (a) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       // 2) la vuelvo a mostrar
       setTimeout(() => {
         document.documentElement.classList.remove('hide-scrollbar');
@@ -544,7 +545,7 @@ document.addEventListener('click', (e) => {
   if (!summary) return;
 
   if (isMobile()) {
-    scrollToSection('ambitos');   // 👈 desliza a la columna del medio
+    summary.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });  // 👈 desliza a la columna del medio
     setMobileView('ambitos');
     //setTimeout(focusAmbAnchor, 300);
   }
