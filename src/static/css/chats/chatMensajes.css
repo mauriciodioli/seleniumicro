@@ -623,3 +623,25 @@ button.msg-menu-btn-icon-mensajes {
 
 
 
+/* ====== AJUSTE MOBILE: SCROLL SOLO EN LOS MENSAJES ====== */
+/* ====== AJUSTE MOBILE: SCROLL SOLO EN LOS MENSAJES ====== */
+@media (max-width: 768px){
+
+  /* 1) Chat con 3 filas: header | mensajes | input
+        y altura limitada al viewport */
+  html.view-chat .col-chat .chat{
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: calc(100dvh - 120px);  /* ajustá 120 si hace falta */
+    max-height: calc(100dvh - 120px);
+  }
+
+  /* 2) SOLO los mensajes scrollean */
+  html.view-chat .col-chat .msgs{
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
