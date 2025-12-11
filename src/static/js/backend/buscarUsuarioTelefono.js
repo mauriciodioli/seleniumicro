@@ -509,7 +509,7 @@ window.refreshAmbitosForPair = function(viewerId, otherKey) {
     // 1) MyDomain (se mantiene igual, no rompemos nada)
     if (Array.isArray(data.ambitos) && typeof window.renderMyDomainAmbitos === 'function') {
       console.log('[refreshAmbitosForPair] → renderMyDomainAmbitos con', data.ambitos.length, 'ámbitos');
-      window.renderMyDomainAmbitos(data.ambitos);
+      //window.renderMyDomainAmbitos(data.ambitos);
     } else {
       console.warn('[refreshAmbitosForPair] NO se llamó a renderMyDomainAmbitos (sin ambitos o sin función)');
     }

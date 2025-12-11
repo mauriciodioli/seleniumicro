@@ -36,17 +36,17 @@ async function startRecording() {
     };
 
     mediaRecorder.onstop = () => {
-      alert('[AUDIO] ■ Grabación detenida. Generando blob...');
+     // alert('[AUDIO] ■ Grabación detenida. Generando blob...');
 
       const blob = new Blob(audioChunks, { type: 'audio/webm' });
 
-      alert(`[DEBUG] Blob generado: ${blob.size} bytes (${Math.round(blob.size / 1024)} KB)`);
+      //alert(`[DEBUG] Blob generado: ${blob.size} bytes (${Math.round(blob.size / 1024)} KB)`);
 
       // restablecer
       discardNextAudio = false;
 
       if (confirm(`🤔 ¿Enviar audio de ${Math.round(blob.size / 1024)} KB?`)) {
-        alert('[AUDIO] 📤 Usuario confirmó → enviando...');
+       // alert('[AUDIO] 📤 Usuario confirmó → enviando...');
         enviarAudio(blob);
       } else {
         alert('[AUDIO] ❌ Envío cancelado por usuario.');
@@ -72,7 +72,7 @@ async function startRecording() {
 // STOP RECORDING
 // =======================
 function stopRecording() {
-  alert('[AUDIO] ■ Deteniendo grabación...');
+ // alert('[AUDIO] ■ Deteniendo grabación...');
 
   if (mediaRecorder && isRecording) {
     mediaRecorder.stop();
@@ -90,7 +90,7 @@ function stopRecording() {
 // TOGGLE (click → ON / click → OFF)
 // =======================
 function toggleRecording() {
-  alert(isRecording ? '[AUDIO] ■ stopRecording()' : '[AUDIO] ▶ startRecording()');
+//  alert(isRecording ? '[AUDIO] ■ stopRecording()' : '[AUDIO] ▶ startRecording()');
   if (!isRecording) startRecording();
   else stopRecording();
 }
@@ -101,9 +101,9 @@ function toggleRecording() {
 async function enviarAudio(blob) {
   const convId = (typeof getConvId === 'function') ? getConvId() : null;
 
-  alert(`[DEBUG AUDIO] getConvId() devolvió: ${convId}`);
+ // alert(`[DEBUG AUDIO] getConvId() devolvió: ${convId}`);
 
-  alert('[DEBUG AUDIO] 🔍 Preparando envío...');
+ // alert('[DEBUG AUDIO] 🔍 Preparando envío...');
 
   if (!convId) {
     alert('[DEBUG AUDIO] ❌ No existe conversation_id.');
@@ -134,10 +134,10 @@ async function enviarAudio(blob) {
     let data = {};
     try { data = await resp.json(); } catch (_) {}
 
-    alert(`[DEBUG AUDIO] 📥 Respuesta endpoint: OK=${resp.ok}`);
+   // alert(`[DEBUG AUDIO] 📥 Respuesta endpoint: OK=${resp.ok}`);
 
     if (resp.ok && data?.ok) {
-      alert(`[DEBUG AUDIO] ✔ Audio subido. msg.id=${data.message?.id}`);
+     // alert(`[DEBUG AUDIO] ✔ Audio subido. msg.id=${data.message?.id}`);
       if (typeof pushMessageToUI === 'function') pushMessageToUI(data.message);
     } else {
       alert(`[DEBUG AUDIO] ❌ Error desde backend: ${data?.error || 'desconocido'}`);

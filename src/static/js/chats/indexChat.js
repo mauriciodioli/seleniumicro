@@ -67,48 +67,101 @@
     });
   })();
 
-
-  
-  // --- Helpers de navegación horizontal móvil ---
-const strip = document.querySelector('.app-grid');
-
-function gotoPanel(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  // En mobile usamos scrollIntoView; en desktop no hacemos nada
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
- if (isMobile) el.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+// ================== HELPER DE VISTA (MOBILE “pantallas”) ==================
+function setView(viewName) {
+  const root = document.documentElement; // <html>
+  root.classList.remove('view-identidades', 'view-ambitos', 'view-chat');
+  if (viewName) {
+    root.classList.add(viewName);
+  }
+  console.log('[setView]', root.className);
 }
 
-// Delegación global: dispara por data-goto
+
+// ================== SCROLL VERTICAL POR data-goto (DENTRO DE ÁMBITOS) ==================
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('[data-goto]');
   if (!btn) return;
 
   const to = btn.getAttribute('data-goto');
-  if (to === 'amb-card') gotoPanel('col-ambitos');
-  else if (to === 'chat') gotoPanel('col-chat');
-  else if (to === 'identidades') gotoPanel('col-identidades');
+  console.log('[indexChat] data-goto click', { to });
+
+  // Solo mantenemos el comportamiento que ya tenías:
+  if (to === 'amb-card') {
+    const card = document.getElementById('amb-card');
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  // OJO: acá NO tocamos columnas, eso lo maneja setView() arriba.
 });
 
-// Atajos específicos que ya tenés en UI:
-// 1) Clic en "nombre de usuario" (badge o header) -> ir a Ámbitos
+
+// ================== ATAJOS EXISTENTES (nombre de usuario / ámbitos / chat) ==================
+
+// 1) Clic en "nombre de usuario" (badge o header) -> ir a Ámbitos (pantalla ámbitos)
 document.addEventListener('click', (e) => {
   if (e.target.closest('.ctx-badge') || e.target.closest('.user-name')) {
-    gotoPanel('col-ambitos');
+    setView('view-ambitos');
   }
 });
 
 // 2) Clic en un item de ámbitos -> ir al Chat
 document.addEventListener('click', (e) => {
   if (e.target.closest('.ambito-item') || e.target.closest('[data-open-chat]')) {
-    gotoPanel('col-chat');
+    setView('view-chat');
   }
 });
 
-// 3) Botones “volver” (si querés)
+// 3) Botones “volver” (si los usás)
+//    backToAmbitos  -> vuelve a ámbitos
+//    backToIdentidades -> vuelve a identidades
 document.addEventListener('click', (e) => {
-  if (e.target.matches('#backToAmbitos')) gotoPanel('col-ambitos');
-  if (e.target.matches('#backToIdentidades')) gotoPanel('col-identidades');
+  if (e.target.matches('#backToAmbitos')) {
+    setView('view-ambitos');
+  }
+  if (e.target.matches('#backToIdentidades')) {
+    setView('view-identidades');
+  }
+});
+
+
+// ================== TABS "USER" / "DOMAIN" EN ÁMBITOS ==================
+document.addEventListener('DOMContentLoaded', () => {
+  const tabUser   = document.getElementById('tabUser');
+  const tabDomain = document.getElementById('tabDomain');
+
+  console.log('[indexChat] tabs ámbitos:', { tabUser, tabDomain });
+  if (!tabUser || !tabDomain) return;
+
+  // USER → volver a la pantalla de identidades (como WhatsApp: lista de contactos)
+  tabUser.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('[indexChat] CLICK User');
+
+    document.body.classList.remove('mode-domain');
+    tabUser.classList.add('active');
+    tabDomain.classList.remove('active');
+
+    setView('view-identidades');
+  });
+
+  // DOMAIN → ir a la pantalla de ámbitos (el comportamiento que ya veías)
+  tabDomain.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('[indexChat] CLICK Domain');
+
+    document.body.classList.add('mode-domain');
+    tabDomain.classList.add('active');
+    tabUser.classList.remove('active');
+
+    // Vista de ámbitos
+    setView('view-ambitos');
+
+    // Además, si querés que baje hasta la card de dominios:
+    const card = document.getElementById('amb-card');
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' }); 
+    }
+  });
 });

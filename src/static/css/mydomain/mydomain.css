@@ -22,6 +22,7 @@
 
 .mobile-back{
   display: none; /* solo mobile */
+    color: #fff;  
 }
 
 /* ====== MOBILE: carrusel ====== */
@@ -64,6 +65,7 @@
     border-radius: 999px;
     font-size: .75rem;
     cursor: pointer;
+      color: #fff;  
   }
 
   /* el botón "← Volver" de escritorio no se ve en mobile */
@@ -478,7 +480,9 @@
     overflow: auto;
   }
   #myDomainRight[data-view="right"]{ transform: translateX(0); }
-  .mobile-back{ display:inline-block; }
+  .mobile-back{ display:inline-block;
+    color: #fff;  
+  }
 }
 
 
@@ -610,7 +614,9 @@
     overflow: auto;
   }
   #myDomainRight[data-view="right"]{ transform: translateX(0); }
-  .mobile-back{ display:inline-block; }
+  .mobile-back{ display:inline-block;
+     color: #fff;            /* ← AQUÍ: texto blanco en mobile */
+  }
 }
 
 
@@ -648,7 +654,7 @@
   .mobile-back{
     background: rgba(15,23,42,.35);
     border: 1px solid var(--border-soft);
-    color: var(--text);
+    color:    #fff;  
   }
   #myDomainRight{
     background: var(--bg-panel);
