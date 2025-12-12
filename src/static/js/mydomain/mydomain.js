@@ -43,6 +43,11 @@ function waLink({ phone = '', text = '' } = {}){
 
 
 
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const mainGrid     = document.querySelector('.app-grid');      // vista 3 columnas
   const myDomainView = document.getElementById('myDomainView');  // vista 2 columnas (si existe)
@@ -91,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.matchMedia('(max-width: 767px)').matches) {
     myDomainRight?.setAttribute('data-view', 'right');
   }
-});
+ });
 
 
   // ===== helpers =====
@@ -299,6 +304,74 @@ function cardHTML(p){
     }catch{ return ''; }
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+// ===== Navegación MyDomain (anti-rebote) =====
+window.MD_NAV = window.MD_NAV || { lock: null, lockUntil: 0 };
+
+function navLock(side, ms = 350){
+  window.MD_NAV.lock = side;                 // 'left' | 'right' | null
+  window.MD_NAV.lockUntil = Date.now() + ms; // tiempo de bloqueo
+}
+
+window.showMyDomainLeft = function(){
+  const view  = document.getElementById('myDomainView');
+  const right = document.getElementById('myDomainRight');
+
+  navLock('left'); // ← evita que un RAF/scroll te vuelva a mandar a right
+
+  view?.classList.add('show');
+  view?.setAttribute('data-view', 'left');
+
+  // este es EL switch real
+  right?.removeAttribute('data-view');
+
+  console.log('[MD] showMyDomainLeft', {
+    view: view?.getAttribute('data-view'),
+    right: right?.getAttribute('data-view')
+  });
+};
+
+window.showMyDomainRight = function(){
+  // si el usuario acaba de pedir left, no lo pises
+  if (Date.now() < (window.MD_NAV.lockUntil || 0) && window.MD_NAV.lock === 'left'){
+    console.log('[MD] showMyDomainRight IGNORADO por lock-left');
+    return;
+  }
+
+  const view  = document.getElementById('myDomainView');
+  const right = document.getElementById('myDomainRight');
+
+  view?.classList.add('show');
+  view?.setAttribute('data-view', 'left');
+  right?.setAttribute('data-view', 'right');
+
+  console.log('[MD] showMyDomainRight', {
+    view: view?.getAttribute('data-view'),
+    right: right?.getAttribute('data-view')
+  });
+};
+
+// ===== Back "← Lista" SIEMPRE (en capture) =====
+(function attachBtnMdBackAlways(){
+  document.addEventListener('click', (e) => {
+    const back = e.target.closest('#btnMdBack');
+    if (!back) return;
+
+    e.preventDefault();
+    e.stopPropagation();     // por si algún handler te lo pisa
+    window.showMyDomainLeft();
+  }, true); // <-- CAPTURE
+})();
 
 
 

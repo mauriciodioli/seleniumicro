@@ -30,20 +30,14 @@
 })();
 
 // ----- Helpers de foco en móvil (compat) -----
-function focusRightPanel(){
-  // conserva tu lógica + compat con helper centralizado
-  const wrap = document.querySelector('.my-domain-wrapper');
-  const right = document.getElementById('myDomainRight');
-  if (!wrap || !right) return;
-  if (window.matchMedia('(max-width: 900px)').matches){
-    right.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' });
-    requestAnimationFrame(() => {
-      wrap.scrollTo({ left: right.offsetLeft, behavior: 'smooth' });
-    });
-  }
-  // sincroniza helper
-  window.UIFocus?.toRight?.();
+// ----- Helpers de foco en móvil (solo cuando corresponde) -----
+function focusRightPanel(force = false){
+  if (!force) return; // <-- clave: no mueve a la derecha salvo que se lo pidas
+
+  window.showMyDomainRight?.();  // setea data-view="right"
+  window.UIFocus?.toRight?.();   // opcional (si no rompe nada)
 }
+
 
 function focusLeftPanel(){
   const wrap = document.querySelector('.my-domain-wrapper');
@@ -171,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = await postJSON(API.dominios, { cp: selLoc.value });
     fillSelect(selDom, data?.items || [], d=>d.valor, d=>d.label, '— Elegí dominio —');
     mdContent.innerHTML = `<p class="hint">Elegí dominio…</p>`;
-    focusRightPanel(); // 👉 lleva la vista al panel derecho
+    //focusRightPanel(); // 👉 lleva la vista al panel derecho
   });
 
   // Dominio -> Categorías
@@ -197,8 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const pubs  = dataP?.items || [];
     renderGrid(pubs);
     fillSelect(selPub, pubs, p=>p.id, p=>p.titulo, '— Opcional: una publicación —');
-    focusRightPanel(); // 👉 muestra grilla a la vista
-    focusRightOnMobile();
+   
+
+
 
     // usuarios
     const dataU = await postJSON(API.usuarios, lastQuery);
@@ -215,7 +210,10 @@ selUsr.addEventListener('change', async () => {
   const user_id = Number(selUsr.value);
   if (!user_id){
     const data = await postJSON(API.publicaciones, lastQuery);
-    return renderGrid(data); // <<<<<< cambia esto (antes pasabas data?.items)
+    renderGrid(data); // <<<<<< cambia esto (antes pasabas data?.items)
+    // opcional: si querés que al volver a "todos" NO mueva, dejalo así:
+    focusRightPanel(false);
+    return;
   }
 
   mdContent.innerHTML = `<p class="muted">Cargando publicaciones del usuario…</p>`;
@@ -223,7 +221,8 @@ selUsr.addEventListener('change', async () => {
     const payload = { ...(lastQuery || {}), user_id }; // por si el backend lo pide
     const data = await postJSON(API.usuarioPublicaciones, payload);
     renderGrid(data);                  // <<<<<< cambia esto (antes pasabas data?.items || [])
-    window.UIFocus?.toRight?.();       // o focusRightPanel();
+    focusRightPanel(true);
+      // o focusRightPanel();
   } catch (e) {
     console.error(e);
     mdContent.innerHTML = `<p class="muted">Error cargando publicaciones del usuario.</p>`;
@@ -241,8 +240,7 @@ selUsr.addEventListener('change', async () => {
       if (!p){ mdContent.innerHTML = `<p class="muted">No encontrada.</p>`; return; }
       resetCascadaUI();
       mdContent.innerHTML = cardHTML(p);
-      focusRightPanel(); // 👉 enfoca la tarjeta
-      focusRightOnMobile();
+      focusRightPanel(true);
     } catch (e) {
       console.error(e);
       mdContent.innerHTML = `<p class="muted">Error cargando publicación.</p>`;
@@ -302,37 +300,33 @@ async function showListFromLastQuery(){
   focusRightOnMobile();
 }
 
-// 1A) Delegado: “Lista” del header derecho o back dentro del micrositio
-// 1A) Delegado: “Lista” del header derecho o back dentro del micrositio -> ir SIEMPRE a panel IZQUIERDO
+// 1A) Delegado: “Lista” (header derecho) o back del micrositio -> SIEMPRE a panel IZQUIERDO
 (function attachBackToLeftFromHeader(){
-  function goPanelLeft(){
-    // Ajustá el contenedor principal de la vista si existe
-    const view = document.getElementById('myDomainView');
-    if (view){
-      // normalizamos el estado visual a "left"
-      view.dataset.view = 'left';               // <div id="myDomainView" data-view="left">
-      view.classList.add('show');               // por si tu CSS usa .show
-    }
-    // opcional: darle foco al panel izquierdo
-    const left = document.getElementById('myDomainLeft');
-    if (left) try { left.focus(); } catch {}
-
-    // y desplazamos en mobile
-    window.UIFocus?.toLeft?.();
-  }
 
   document.addEventListener('click', (e) => {
     const backBtn = e.target.closest('#btnMdBack, [data-ms-back]');
     if (!backBtn) return;
     e.preventDefault();
 
-    // No usamos history.back() ni showListFromLastQuery() aquí.
-    // La consigna es volver al panel IZQUIERDO sin tocar la lógica de datos.
-    // Si estabas en detalle, solo marcamos que ya no estás en modo micrositio.
+    // salir de modo micrositio si aplica
     if (window.__MICROSITIO_MODE__) window.__MICROSITIO_MODE__ = false;
 
-    goPanelLeft();
+    // ✅ Fuente de verdad: volver a lista (panel izquierdo)
+    // (si definiste showMyDomainLeft global, usala)
+    if (typeof window.showMyDomainLeft === 'function') {
+      window.showMyDomainLeft();
+      return;
+    }
+
+    // fallback por si todavía no existe showMyDomainLeft
+    const myDomainView  = document.getElementById('myDomainView');
+    const myDomainRight = document.getElementById('myDomainRight');
+
+    myDomainView?.classList.add('show');
+    myDomainView?.setAttribute('data-view', 'left'); // opcional si lo usás en CSS
+    myDomainRight?.removeAttribute('data-view');     // <-- ESTO es lo importante
   });
+
 })();
 
 
