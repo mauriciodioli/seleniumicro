@@ -620,7 +620,57 @@ button.msg-menu-btn-icon-mensajes {
   top: -1px;   /* sube los puntos  */
   /* left: 1px;  si querés moverlos a un lado */
 }
+/* ===== FIX: evitar que .msg-meta se re-defina y encime ===== */
+.msg-meta{
+  position: absolute;
+  right: 12px;
+  bottom: 4px;
+  margin: 0 !important;     /* mata los margin-top que la enciman */
+  align-self: auto !important;
+}
 
+/* ===== FIX ANCLAJE: que .msg no ocupe todo el ancho ===== */
+.msg{
+  display: inline-flex;     /* clave: shrink-to-fit */
+  max-width: 70%;           /* igual que tu burbuja de texto */
+}
+
+/* Recibidos: el contenedor se va a la izquierda */
+.msg:not(.me){
+  align-self: flex-start;
+}
+
+/* Enviados: el contenedor se va a la derecha */
+.msg.me{
+  align-self: flex-end;
+}
+
+/* Reserva inferior SOLO para texto (porque tu media ya tiene piso 22px) */
+.msg-body:not(.msg-body-image):not(.msg-body-video){
+  padding-bottom: 18px;
+}
+
+/* ===== 3 puntitos: SIEMPRE BLANCOS ===== */
+.msg button.msg-menu-btn-icon-mensajes,
+.msg .msg-menu-icon{
+  color: rgba(255,255,255,.95) !important;
+  text-shadow: 0 1px 1px rgba(0,0,0,.35);
+}
+
+/* ===== FECHA: recibidos blanco, enviados gris ===== */
+.msg:not(.me) .msg-meta,
+.msg:not(.me) .msg-meta-text{
+  color: rgba(255,255,255,.92) !important;
+  opacity: .95 !important;
+  text-shadow: 0 1px 1px rgba(0,0,0,.35);
+}
+
+.msg.me .msg-meta,
+.msg.me .msg-meta-text{
+  color: rgba(0,0,0,.55) !important;  /* gris sobre celeste */
+  opacity: .9 !important;
+  text-shadow: none !important;
+}
 
 
 /* ====== AJUSTE MOBILE: SCROLL SOLO EN LOS MENSAJES ====== */
@@ -644,4 +694,5 @@ button.msg-menu-btn-icon-mensajes {
     -webkit-overflow-scrolling: touch;
   }
 }
+
 
