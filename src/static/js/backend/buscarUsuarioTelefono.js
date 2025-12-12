@@ -932,7 +932,7 @@ function renderIdentityResult(user = {}, { userKeyOverride = null } = {}) {
     <details class="id-item" data-key="${key}">
       <summary class="id-summary" data-scope='${j(scope)}'>
         <button type="button" class="id-chev-btn" aria-label="Abrir/cerrar">▶</button>
-        <span class="id-name" data-goto="amb-card">👤 ${displayName}</span>
+        <span class="id-name " data-goto="amb-card">👤 ${displayName}</span>
         <span class="id-badge" data-goto="chat">${user.last_msg || '+'}</span>
       </summary>
       <div class="id-body">

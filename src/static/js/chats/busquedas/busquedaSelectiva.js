@@ -49,11 +49,7 @@ function focusLeftPanel(){
   window.UIFocus?.toLeft?.();
 }
 
-// Botón “← Volver” (si existe, estático)
-document.getElementById('btnBackToMain')?.addEventListener('click', (e) => {
-  e.preventDefault();
-  focusLeftPanel();
-});
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const $ = s => document.querySelector(s);

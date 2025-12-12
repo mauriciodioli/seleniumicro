@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainGrid     = document.querySelector('.app-grid');      // vista 3 columnas
   const myDomainView = document.getElementById('myDomainView');  // vista 2 columnas (si existe)
   const btnMyDomain  = document.getElementById('btnMyDomain');   // botón de la navbar
-  const btnBackMain  = document.getElementById('btnBackToMain'); // botón dentro de MyDomain
+  
   const mdLeft       = document.getElementById('myDomainLeft');
   const mdContent    = document.getElementById('mdContent');     // panel derecho donde renderizamos
 
@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     openMyDomain();
   });
 
-  // 3) volver a la vista normal (desktop)
-  btnBackMain?.addEventListener('click', closeMyDomain);
 
   // 4) volver a la lista dentro de MyDomain (mobile, overlay)
   document.getElementById('btnMdBack')?.addEventListener('click', () => {

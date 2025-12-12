@@ -448,33 +448,68 @@ function scrollToSection(view){        // 'identidades' | 'ambitos' | 'chat'
 
 
 
+
+
+
+function bumpIdentityToTop(fromEl){
+  const details = fromEl?.closest?.('details.id-item');
+  if (!details) return;
+
+  const list = details.parentElement; // el contenedor que contiene los details
+  if (!list) return;
+
+  // si ya está primero, no hagas nada
+  if (list.firstElementChild !== details) {
+    list.insertBefore(details, list.firstElementChild);
+  }
+}
+
 document.addEventListener('click', function onGoto(e){
   const el = e.target.closest('.id-name[data-goto="amb-card"]');
   if (!el) return;
 
+  bumpIdentityToTop(el);  // ✅ vuelve a subir el contacto seleccionado;
   e.preventDefault();
   e.stopPropagation();
 
-  // cerrar el details si estaba abierto
   const details = el.closest('details');
   if (details && details.open) details.open = false;
 
-  // solo móvil
+  // ✅ cache -> renderChatAmbitos (copiado del badge)
+  const summary  = el.closest('summary.id-summary') || el.closest('summary');
+  let   scopeStr = summary?.getAttribute('data-scope') || '{}';
+  scopeStr = String(scopeStr).replace(/&quot;|&#34;/g, '"').replace(/&amp;/g, '&');
+
+  let scope = {};
+  try { scope = JSON.parse(scopeStr); } catch { scope = {}; }
+
+  const cached =
+    (window.IdentityCache?.get && (window.IdentityCache.get(JSON.stringify(scope)) || window.IdentityCache.get(scope)))
+    || (typeof window.getCachedIdentity === 'function' ? window.getCachedIdentity(scope) : null);
+
+  if (cached && typeof window.renderChatAmbitos === 'function') {
+    window.renderChatAmbitos(cached);
+    document.getElementById('ambQueryPanel')?.classList.add('is-open');
+  } else {
+    console.warn('[id-name→ambitos] Sin datos en cache para scope:', scope);
+  }
+
+  // tu flujo actual (solo móvil)
   if (window.matchMedia('(max-width: 768px)').matches) {
-    document.documentElement.classList.add('hide-scrollbar');   // ← 1) oculto barra
+    document.documentElement.classList.add('hide-scrollbar');
     window.setMobileView && window.setMobileView('ambitos');
 
     setTimeout(() => {
       const a = document.getElementById('amb-card');
-     
       if (a) a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      // 2) la vuelvo a mostrar
+
       setTimeout(() => {
         document.documentElement.classList.remove('hide-scrollbar');
       }, 350);
     }, 200);
   }
 }, { capture: true });
+
 
 
 

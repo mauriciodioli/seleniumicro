@@ -81,10 +81,7 @@ function scrollHeroIntoView(smooth = true){
 
     return `
     <article class="ms-wrap">
-      <div class="ms-head">
-        <button class="btn btn-sm" data-ms-back="1">← Volver</button>
-      </div>
-
+  
       <section class="ms-hero">
         <div class="ms-hero-left">${renderViewer(cover)}</div>
         <div class="ms-hero-body">
