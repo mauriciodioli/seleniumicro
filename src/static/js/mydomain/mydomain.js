@@ -103,10 +103,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function closeMyDomain(){
-    if (mainGrid) mainGrid.style.display = '';
-    if (myDomainView) myDomainView.classList.remove('show');
+function closeMyDomain(){
+  if (mainGrid) mainGrid.style.display = '';
+  if (myDomainView) myDomainView.classList.remove('show');
+
+  // reset mobile panel
+  document.getElementById('myDomainRight')?.removeAttribute('data-view');
+}
+
+// Exponer para que otros scripts puedan cerrar/abrir sin duplicar lógica
+window.openMyDomain  = openMyDomain;
+window.closeMyDomain = closeMyDomain;
+
+  // ===== Swipe right para cerrar MyDomain (solo mobile) =====
+(function enableSwipeClose(){
+  let x0 = null;
+  let y0 = null;
+
+  function onTouchStart(ev){
+    if (!window.matchMedia('(max-width: 767px)').matches) return;
+
+    // solo si MyDomain está abierto
+    if (!myDomainView?.classList.contains('show')) return;
+
+    const t = ev.touches && ev.touches[0];
+    if (!t) return;
+    x0 = t.clientX;
+    y0 = t.clientY;
   }
+
+  function onTouchMove(ev){
+    if (x0 === null || y0 === null) return;
+    const t = ev.touches && ev.touches[0];
+    if (!t) return;
+
+    const dx = t.clientX - x0;
+    const dy = t.clientY - y0;
+
+    // gesto horizontal claro
+    if (Math.abs(dx) > 80 && Math.abs(dy) < 60) {
+      if (dx > 0) {           // swipe right
+        closeMyDomain();
+      }
+      x0 = y0 = null;
+    }
+  }
+
+  document.addEventListener('touchstart', onTouchStart, { passive: true });
+  document.addEventListener('touchmove',  onTouchMove,  { passive: true });
+})();
+
+
+
+
+
+
+
 
   // Helper global para micrositio.js
   window.postJSON = window.postJSON || (async function(url, body){

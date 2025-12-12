@@ -101,98 +101,12 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// ================== FUNCIÓN EXCLUSIVA PARA EL BOTÓN "USER" ==================
-function goToUserIndexView() {
-  console.log('[indexChat] goToUserIndexView → volver a index / identidades');
 
-  const root = document.documentElement;
 
-  // 1) Cerrar MyDomain si está abierto (móvil o desktop)
-  const backMd   = document.getElementById('btnMdBack');      // móvil
-  const backMain = document.getElementById('btnBackToMain');  // desktop
 
-  const visibleBack =
-    (backMd   && backMd.offsetParent   !== null) ? backMd   :
-    (backMain && backMain.offsetParent !== null) ? backMain :
-    null;
 
-  if (visibleBack) {
-    console.log('[indexChat] MyDomain overlay activo, cerrando via botón visible');
-    visibleBack.click();
-  }
 
-  // 1.b) MATAR a la fuerza el overlay de MyDomain (mobile + desktop)
-  // Panel fijo en mobile
-  const myDomainRight = document.getElementById('myDomainRight');
-  if (myDomainRight) {
-    myDomainRight.removeAttribute('data-view');      // quita "right"
-    myDomainRight.style.transform = 'translateX(100%)';
-    myDomainRight.style.display   = 'none';          // lo sacamos del flujo
-  }
 
-  // Contenedor general de MyDomain si existe
-  const myDomainView = document.getElementById('myDomainView');
-  if (myDomainView) {
-    myDomainView.classList.remove('show');
-    myDomainView.style.display = 'none';
-  }
-
-  // Y aseguramos que el GRID principal esté visible
-  const mainWrap = document.querySelector('.wrap');   // el que envuelve .app-grid
-  if (mainWrap) {
-    mainWrap.style.display = '';    // deja que el CSS lo ponga como antes (flex/block)
-    mainWrap.classList.remove('hidden');
-  }
-
-  // 2) Modo USER en el body
-  document.body.classList.remove('mode-domain', 'domain-right');
-  document.body.classList.add('mode-user');
-
-  // 3) Vista identidades (pantalla lógica)
-  setView('view-identidades');   // maneja view-*
-
-  // 4) Resetear el slide en <html> / <body> y dejar identidades
-  root.classList.remove('slide-ambitos', 'slide-chat', 'slide-identidades');
-  root.classList.add('slide-identidades');
-
-  document.body.classList.remove('slide-ambitos', 'slide-chat');
-  document.body.classList.add('slide-identidades');
-
-  // 5) Forzar carrusel visual a la primera columna (por si usa scroll)
-  const appGrid = document.querySelector('.app-grid');
-  if (appGrid) {
-    appGrid.scrollLeft = 0;
-  }
-
-  console.log('[indexChat] after goToUserIndexView', {
-    html: root.className,
-    body: document.body.className,
-    wrapDisplay: mainWrap && getComputedStyle(mainWrap).display,
-    myDomainRight: myDomainRight && {
-      display: getComputedStyle(myDomainRight).display,
-      transform: getComputedStyle(myDomainRight).transform,
-      dataView: myDomainRight.getAttribute('data-view'),
-    }
-  });
-
-  // 6) Tabs
-  const tabUser   = document.getElementById('tabUser');
-  const tabDomain = document.getElementById('tabDomain');
-  if (tabUser)   tabUser.classList.add('active');
-  if (tabDomain) tabDomain.classList.remove('active');
-
-  // 7) Mobile: si además usás gotoPanel, lo mantenemos
-  if (typeof gotoPanel === 'function') {
-    gotoPanel('col-identidades');
-  }
-
-  // 8) Guardar estado (opcional)
-  try {
-    localStorage.setItem('CHAT_MAIN_VIEW', 'user');
-  } catch (e) {
-    console.warn('[indexChat] No se pudo guardar CHAT_MAIN_VIEW', e);
-  }
-}
 
 
 
@@ -203,15 +117,28 @@ function goToUserIndexView() {
 
 
 // ================== TAB USER (SOLO USER) ==================
+// ================== TAB USER ==================
 document.addEventListener('click', (e) => {
   const btnUser = e.target.closest('#tabUser');
-  if (!btnUser) return;              // si no es el botón User, ignoramos
+  if (!btnUser) return;
 
   e.preventDefault();
-  console.log('[indexChat] CLICK User (delegado)', e.target);
+  console.log('[indexChat] CLICK User');
 
-  goToUserIndexView();
+  // 👉 Si MyDomain está abierto, lo cerramos
+  const mdOpen =
+    document.getElementById('myDomainView')?.classList.contains('show');
+
+  if (mdOpen && typeof window.closeMyDomain === 'function') {
+    console.log('[indexChat] User → closeMyDomain()');
+    window.closeMyDomain();
+    return;
+  }
+
+  // 👉 Si NO está abierto, User no hace nada especial
+  // (queda como tab visual / futura navegación)
 });
+
 
 
 // ================== TAB DOMAIN (TOTALMENTE SEPARADO) ==================
