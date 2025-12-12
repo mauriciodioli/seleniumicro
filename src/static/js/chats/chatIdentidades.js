@@ -468,9 +468,11 @@ document.addEventListener('click', function onGoto(e){
   const el = e.target.closest('.id-name[data-goto="amb-card"]');
   if (!el) return;
 
-  bumpIdentityToTop(el);  // ✅ vuelve a subir el contacto seleccionado;
+  bumpIdentityToTop(el);  // ✅ vuelve a subir el contacto seleccionado
+
   e.preventDefault();
   e.stopPropagation();
+  if (e.stopImmediatePropagation) e.stopImmediatePropagation(); // ✅ evita que otro capture lo pise
 
   const details = el.closest('details');
   if (details && details.open) details.open = false;
@@ -493,6 +495,11 @@ document.addEventListener('click', function onGoto(e){
   } else {
     console.warn('[id-name→ambitos] Sin datos en cache para scope:', scope);
   }
+
+  // ✅ LO QUE TE FALTABA: disparar la misma carga que el badge (refreshAmbitosForPair / entrantes)
+  const tmp = document.createElement('button');
+  tmp.setAttribute('data-scope', scopeStr);
+  (window.chatHere || window.chatAmbitoHere)?.(tmp);
 
   // tu flujo actual (solo móvil)
   if (window.matchMedia('(max-width: 768px)').matches) {
